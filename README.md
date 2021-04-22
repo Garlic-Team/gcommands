@@ -28,6 +28,8 @@ client.on("ready", () => {
 client.login("token")
 ```
 
+Example Commands (put to cmdDir)
+
 ping.js
 ```js
 module.exports = {
