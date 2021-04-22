@@ -10,7 +10,7 @@ module.exports = class GCommands {
         if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
         if(!options.cmdDir) return console.log(new Color("&d[GCommands] &cNo default options provided! (cmdDir)",{json:false}).getText());
 
-        if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
+        if(!client) console.log(new Color("&da[GCommands] &cNo discord.js client provided!"));
 
         this.client = client;
         this.commands = new Collection();
