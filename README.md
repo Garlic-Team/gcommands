@@ -39,8 +39,12 @@ ping.js
 module.exports = {
 	name: "ping",
 	description: "Check bot ping",
-	run: async(client, cmd) => {
-		client.api.interactions(cmd.id, cmd.token).callback.post({
+	run: async(client, slash, message) => {
+		if(message) {
+			return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
+		}
+
+		client.api.interactions(slash.id, slash.token).callback.post({
 			data: {
 				type: 4,
 				data: {
@@ -57,10 +61,18 @@ test.js
 module.exports = {
 	name: "test",
 	description: "Test",
-    expectedArgs: "<name>",
-    minArgs: 1,
-	run: async(client, cmd) => {
-		client.api.interactions(cmd.id, cmd.token).callback.post({
+	expectedArgs: "<name>",
+	minArgs: 1,
+	run: async(client, slash, message, args) => {
+		if(message) {
+			if(args[0]) {
+				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
+			} else {
+				return message.channel.send("Need args")
+			}
+		}
+
+		client.api.interactions(slash.id, slash.token).callback.post({
 			data: {
 				type: 4,
 				data: {
