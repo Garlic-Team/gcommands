@@ -17,6 +17,12 @@ module.exports = class GCommands {
         this.cmdDir = options.cmdDir;
         this.ignoreBots = options.ignoreBots ? options.ignoreBots : false;
 
+        if(options.slash.slash == "both") {
+            this.slash = "both"
+
+            this.prefix = options.slash.prefix.toLowerCase();
+        }
+
         if(options.errorMessage) {
             this.errorMessage = options.errorMessage;
         }
@@ -37,6 +43,23 @@ module.exports = class GCommands {
                 }
             }
         })
+
+        if(this.slash == "both") {
+            this.client.on('message', async(message) => {
+                const prefix = this.prefix;
+
+                if (message.author.bot) return;
+                if (!message.guild) return;
+                if (!message.content.startsWith(prefix)) return;
+            
+                const args = message.content.slice(prefix.length).trim().split(/ +/g);
+                const cmd = args.shift().toLowerCase();
+                
+                if (cmd.length === 0) return;
+            
+                this.commands.get(cmd).run(this.client, undefined, message, args)
+            })
+        }
 
         this.__loadCommands();
     }
@@ -101,7 +124,7 @@ module.exports = class GCommands {
 
                 const axios = require("axios");
                 axios(config).then((response) => {
-                    console.log(new Color("&d[GCommands] &aCreated! " + cmd.name, {json:false}).getText());
+                    console.log(new Color("&d[GCommands] &aLoaded: &e➜ &3" + cmd.name, {json:false}).getText());
                 })
                 .catch((err) => {
                     console.log(new Color("&d[GCommands] &cRequest failed! " + err, {json:false}).getText());
@@ -113,7 +136,7 @@ module.exports = class GCommands {
     }
 
     async __deleteAllCmds() {
-        var testlol = await this.__getAllCommands();
+        var allcmds = await this.__getAllCommands();
         var nowCMDS = [];
 
         let keys = Array.from(this.commands.keys());
@@ -121,7 +144,7 @@ module.exports = class GCommands {
             nowCMDS.push(cmdname)
         })
 
-        testlol.forEach(fo => {
+        allcmds.forEach(fo => {
             var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
 
             if(!f) {

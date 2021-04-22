@@ -7,8 +7,12 @@ client.on("ready", () => {
     new GCommands(client, {
         cmdDir: "commands",
         ignoreBots: true,
-        errorMessage: "Error :("
+        errorMessage: "Error :(",
+        slash: {
+           slash: 'both',
+           prefix: '.' 
+        }
     })
 })
 
-client.login("ODM0MDYzNTA3NDI2NjM5OTUz.YH7cLA.1zxmOUGwwT0vkqNgRZhDLsASnqk")
+client.login("token")
