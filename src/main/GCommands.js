@@ -17,34 +17,33 @@ module.exports = class GCommands {
         this.cmdDir = options.cmdDir;
         this.ignoreBots = options.ignoreBots ? options.ignoreBots : false;
 
-        if(options.slash.slash == "both") {
-            this.slash = "both"
-
-            this.prefix = options.slash.prefix.toLowerCase();
-        }
+        this.prefix = options.slash.prefix.toLowerCase();
+        this.slash = options.slash.slash
 
         if(options.errorMessage) {
             this.errorMessage = options.errorMessage;
         }
 
-        this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
-            try {
-                this.commands.get(interaction.data.name).run(this.client, interaction);
-            }catch(e) {
-                if(this.errorMessage) {
-                    client.api.interactions(interaction.id, interaction.token).callback.post({
-                        data: {
-                            type: 4,
+        if((this.slash) || (this.slash == "both")) {
+            this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
+                try {
+                    this.commands.get(interaction.data.name).run(this.client, interaction);
+                }catch(e) {
+                    if(this.errorMessage) {
+                        client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
-                                content: this.errorMessage
+                                type: 4,
+                                data: {
+                                    content: this.errorMessage
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        })
+            })
+        }
 
-        if(this.slash == "both") {
+        if((this.slash == "both") || (!this.slash)) {
             this.client.on('message', async(message) => {
                 const prefix = this.prefix;
 
