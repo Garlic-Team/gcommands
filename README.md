@@ -21,7 +21,11 @@ client.on("ready", () => {
     new GCommands(client, {
         cmdDir: "commands",
         ignoreBots: true,
-        errorMessage: "Error :("
+        errorMessage: "Error :(",
+        slash: {
+           slash: 'both',
+           prefix: '.' 
+        }
     })
 })
 
