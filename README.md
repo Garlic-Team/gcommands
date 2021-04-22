@@ -23,7 +23,7 @@ client.on("ready", () => {
         ignoreBots: true,
         errorMessage: "Error :(",
         slash: {
-           slash: 'both',
+           slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 
         }
     })
