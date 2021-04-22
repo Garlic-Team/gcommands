@@ -46,7 +46,7 @@ module.exports = class GCommands {
 			for (const commandFile of commands) {
 				delete require.cache[commandFile];
 				const { name } = path.parse(commandFile);
-				const File = require("../../"+this.cmdDir+"/"+name);
+				const File = require("../../../../"+this.cmdDir+"/"+name);
 
 				this.commands.set(File.name, File);
 			};
@@ -57,14 +57,13 @@ module.exports = class GCommands {
 
     async __loadEvents() {
         var po = await this.__getAllCommands();
-        console.log(po)
 
         let keys = Array.from(this.commands.keys());
         keys.forEach(async (cmdname) => {
             const options = [];
             const cmd = this.commands.get(cmdname)
 
-            if (cmd.expectedArgs) {
+            if (cmd.expectedArgs && cmd.minArgs) {
                 const split = cmd.expectedArgs
                   .substring(1, cmd.expectedArgs.length - 1)
                   .split(/[>\]] [<\[]/)
@@ -76,20 +75,12 @@ module.exports = class GCommands {
                     name: item.replace(/ /g, '-'),
                     description: item,
                     type: 3,
-                    required: a < 1,
+                    required: a < cmd.minArgs,
                   })
                 }
             }
 
             try {
-                /*this.client.api.applications(this.client.user.id).commands.post({
-                    data: {
-                        name: cmd.name,
-                        description: cmd.description,
-                        options: options
-                    }
-                })*/
-
                 let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
         
                 let cmdd = {
@@ -110,10 +101,10 @@ module.exports = class GCommands {
 
                 const axios = require("axios");
                 axios(config).then((response) => {
-                    console.log("created")
+                    console.log(new Color("&d[GCommands] &aCreated! " + cmd.name, {json:false}).getText());
                 })
                 .catch((err) => {
-                    console.log(new Color("&d[GCommands] &cRequest failed! " + err));
+                    console.log(new Color("&d[GCommands] &cRequest failed! " + err, {json:false}).getText());
                 }) 
             }catch(e) {
                 console.log(e)

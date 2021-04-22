@@ -6,13 +6,13 @@
 
 Instalaltion
 ```
-npm install @garlic-team/gcommands
+npm install gcommands
 ```
 
 How use?<br>
 index.js
 ```js
-const { GCommands } = require("@garlic-team/gcommands");
+const { GCommands } = require("gcommands");
 const Discord = require("discord.js");
 
 const client = new Discord.Client();
