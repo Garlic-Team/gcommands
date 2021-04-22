@@ -136,6 +136,12 @@ module.exports = class GCommands {
 
     async __deleteAllCmds() {
         var allcmds = await this.__getAllCommands();
+        if(!this.slash) {
+            allcmds.forEach(fo => {
+                this.__deleteCmd(fo.id)
+            })
+        }
+
         var nowCMDS = [];
 
         let keys = Array.from(this.commands.keys());

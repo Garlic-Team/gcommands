@@ -1,8 +1,8 @@
 module.exports = {
 	name: "test",
 	description: "Test",
-    expectedArgs: "<name>",
-    minArgs: 1,
+	expectedArgs: "<name>",
+	minArgs: 1,
 	run: async(client, slash, message, args) => {
 		if(message) {
 			if(args[0]) {
