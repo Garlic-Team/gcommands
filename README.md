@@ -28,7 +28,8 @@ client.on("ready", () => {
         slash: {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 
-        }
+        },
+		cooldownMessage: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command."
     })
 })
 
@@ -42,6 +43,7 @@ ping.js
 module.exports = {
 	name: "ping",
 	description: "Check bot ping",
+	cooldown: 3,
 	run: async(client, slash, message) => {
 		if(message) {
 			return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
@@ -66,6 +68,7 @@ module.exports = {
 	description: "Test",
 	expectedArgs: "<name>",
 	minArgs: 1,
+	cooldown: 5,
 	run: async(client, slash, message, args) => {
 		if(message) {
 			if(args[0]) {

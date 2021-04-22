@@ -3,6 +3,7 @@ module.exports = {
 	description: "Test",
 	expectedArgs: "<name>",
 	minArgs: 1,
+	cooldown: 3,
 	run: async(client, slash, message, args) => {
 		if(message) {
 			if(args[0]) {

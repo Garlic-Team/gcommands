@@ -1,33 +1,32 @@
 {
-    "name": "gcommands",
-    "version": "1.0.16",
-    "description": "Open-source slah command handler",
-    "main": "src/index.js",
-    "dependencies": {
-      "axios": "^0.21.1",
-      "discord-slash-commands": "^1.2.4",
-      "discord.js": "^12.5.3",
-      "glob": "^7.1.6",
-      "slash-commands": "^1.4.0"
-    },
-    "scripts": {
-      "test": "node test.js"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git://github.com/garlic-team/gcommands.git"
-    },
-    "keywords": [
-      "gcommands",
-      "cmdhandler",
-      "slashcommandhandler",
-      "slashcmds"
-    ],
-    "author": "Garlic-Team",
-    "license": "ISC",
-    "bugs": {
-      "url": "https://github.com/Garlic-Team/GCommands/issues"
-    },
-    "homepage": "https://github.com/Garlic-Team/GCommands#readme"
-  }
-  
+  "name": "gcommands",
+  "version": "1.0.17",
+  "description": "Open-source slah command handler",
+  "main": "src/index.js",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "discord-slash-commands": "^1.2.4",
+    "discord.js": "^12.5.3",
+    "glob": "^7.1.6",
+    "slash-commands": "^1.4.0"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/garlic-team/gcommands.git"
+  },
+  "keywords": [
+    "gcommands",
+    "cmdhandler",
+    "slashcommandhandler",
+    "slashcmds"
+  ],
+  "author": "Garlic-Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Garlic-Team/GCommands/issues"
+  },
+  "homepage": "https://github.com/Garlic-Team/GCommands#readme"
+}

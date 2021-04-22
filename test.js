@@ -11,7 +11,8 @@ client.on("ready", () => {
         slash: {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 
-        }
+        },
+        cooldownMessage: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command."
     })
 })
 
