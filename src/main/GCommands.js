@@ -113,7 +113,7 @@ module.exports = class GCommands {
                     console.log("created")
                 })
                 .catch((err) => {
-                    console.log(`[ERROR] Request failed\n${err}`);
+                    console.log(new Color("&d[GCommands] &cRequest failed! " + err));
                 }) 
             }catch(e) {
                 console.log(e)
