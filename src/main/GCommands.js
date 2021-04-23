@@ -276,8 +276,8 @@ class Message extends Structures.get("Message") {
             options.buttons = [];
         }
 
-        if(!options.data.allowed_mentions) {
-            options.data.allowed_mentions = { parse: ["users", "roles", "everyone"] };
+        if(!options.allowed_mentions) {
+            options.allowed_mentions = { parse: ["users", "roles", "everyone"] };
         }
 
         if (!Array.isArray(options.buttons)) {
@@ -375,7 +375,7 @@ class Message extends Structures.get("Message") {
             "Content-Type": 'applications/json'
             },
             data: {
-                allowed_mentions: options.data.allowed_mentions,
+                allowed_mentions: options.allowed_mentions,
                 content: content,
                 components: [
                     {
@@ -394,8 +394,8 @@ class Message extends Structures.get("Message") {
             options.buttons = [];
         }
 
-        if(!options.data.allowed_mentions) {
-            options.data.allowed_mentions = { parse: ["users", "roles", "everyone"] };
+        if(!options.allowed_mentions) {
+            options.allowed_mentions = { parse: ["users", "roles", "everyone"] };
         }
 
         if (!Array.isArray(options.buttons)) {
@@ -493,7 +493,7 @@ class Message extends Structures.get("Message") {
             "Content-Type": 'applications/json'
             },
             data: {
-                allowed_mentions: options.data.allowed_mentions,
+                allowed_mentions: options.allowed_mentions,
                 content: content,
                 components: [
                     {
