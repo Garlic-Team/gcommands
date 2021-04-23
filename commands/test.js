@@ -4,6 +4,8 @@ module.exports = {
 	expectedArgs: "<name>",
 	minArgs: 1,
 	cooldown: 3,
+	guildOnly: "id",
+	ownerOnly: "id",
 	run: async(client, slash, message, args) => {
 		if(message) {
 			if(args[0]) {

@@ -3,6 +3,7 @@ const path = require('path');
 const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const { Collection } = require('discord.js');
+const { cpuUsage } = require('process');
 
 module.exports = class GCommands {
     constructor(client, options = {}) {
@@ -22,7 +23,8 @@ module.exports = class GCommands {
 
         this.prefix = options.slash.prefix.toLowerCase() ? options.slash.prefix.toLowerCase() : undefined;
         this.slash = options.slash.slash ? options.slash.slash : true;
-        this.cooldownMessage = options.cooldownMessage ? options.cooldownMessage : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
+        this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
+        this.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
 
         if(options.errorMessage) {
             this.errorMessage = options.errorMessage;
@@ -31,13 +33,14 @@ module.exports = class GCommands {
         if((this.slash) || (this.slash == "both")) {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
                 try {
+                    var commandos = this.commands.get(interaction.data.name);
                     if (!this.cooldowns.has(interaction.data.name)) {
                         this.cooldowns.set(interaction.data.name, new Collection());
                     }
                     
                     const now = Date.now();
                     const timestamps = this.cooldowns.get(interaction.data.name);
-                    const cooldownAmount = (this.commands.get(interaction.data.name).cooldown || 3) * 1000;
+                    const cooldownAmount = (commandos.cooldown || this.cooldownDefault) * 1000;
                     
                     if (timestamps.has(interaction.member.user.id)) {
                         if (timestamps.has(interaction.member.user.id)) {
@@ -61,6 +64,15 @@ module.exports = class GCommands {
 
                     timestamps.set(interaction.member.user.id, now);
                     setTimeout(() => timestamps.delete(interaction.member.user.id), cooldownAmount);
+
+                    if(commandos.ownerOnly) {
+                        if(interaction.member.user.id == commandos.ownerOnly) {
+                            this.commands.get(interaction.data.name).run(this.client, interaction);
+                            return;
+                        } else {
+                            return;
+                        }
+                    }
 
                     this.commands.get(interaction.data.name).run(this.client, interaction);
                 }catch(e) {
@@ -93,13 +105,14 @@ module.exports = class GCommands {
                 if (cmd.length === 0) return;
         
                 try {
+                    var commandos = this.commands.get(cmd);
                     if (!this.cooldowns.has(cmd)) {
                         this.cooldowns.set(cmd, new Collection());
                     }
                     
                     const now = Date.now();
                     const timestamps = this.cooldowns.get(cmd);
-                    const cooldownAmount = (this.commands.get(cmd).cooldown || 3) * 1000;
+                    const cooldownAmount = (commandos.cooldown || this.cooldownDefault) * 1000;
                     
                     if (timestamps.has(message.author.id)) {
                         if (timestamps.has(message.author.id)) {
@@ -114,6 +127,23 @@ module.exports = class GCommands {
 
                     timestamps.set(message.author.id, now);
                     setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+
+                    if(commandos.guildOnly) {
+                        if(message.guild.id == commandos.guildOnly) {
+                            this.commands.get(cmd).run(this.client, undefined, message, args)
+                        } else {
+                            return;
+                        }
+                    } 
+
+                    if(commandos.ownerOnly) {
+                        if(message.author.id == commandos.ownerOnly) {
+                            this.commands.get(cmd).run(this.client, undefined, message, args)
+                            return;
+                        } else {
+                            return;
+                        }
+                    }
 
                     this.commands.get(cmd).run(this.client, undefined, message, args)
                 } catch(e) {
@@ -166,15 +196,17 @@ module.exports = class GCommands {
             }
 
             try {
-                let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
+                var url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
         
-                let cmdd = {
+                if(cmd.guildOnly) url = `https://discord.com/api/v8/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
+
+                var cmdd = {
                     name: cmd.name,
                     description: cmd.description,
                     options: options || []
                 };
         
-                let config = {
+                var config = {
                     method: "POST",
                     headers: {
                         Authorization: `Bot ${this.client.token}`,
@@ -225,7 +257,7 @@ module.exports = class GCommands {
 
     async __deleteCmd(commandId) {
         const app = this.client.api.applications(this.client.user.id)
-    
+
         await app.commands(commandId).delete()
     }
 

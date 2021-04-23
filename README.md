@@ -29,7 +29,10 @@ client.on("ready", () => {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 
         },
-		cooldownMessage: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command."
+        cooldown: {
+            message: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.",
+            default: 3
+        }
     })
 })
 
@@ -69,6 +72,8 @@ module.exports = {
 	expectedArgs: "<name>",
 	minArgs: 1,
 	cooldown: 5,
+	guildOnly: "id",
+	ownerOnly: "id",
 	run: async(client, slash, message, args) => {
 		if(message) {
 			if(args[0]) {
