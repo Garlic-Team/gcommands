@@ -26,7 +26,7 @@
     "discord js slash"
   ],
   "author": "Garlic-Team",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Garlic-Team/GCommands/issues"
   },
