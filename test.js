@@ -14,7 +14,8 @@ client.on("ready", () => {
         cooldown: {
             message: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.",
             default: 3
-        }
+        },
+        debug: true
     })
 })
 

@@ -19,6 +19,7 @@ module.exports = class GCommands {
         this.cooldowns = new Collection();
 
         this.cmdDir = options.cmdDir;
+        this.debugMode = options.debug ? options.debug : false
 
         this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : true;
@@ -246,8 +247,6 @@ module.exports = class GCommands {
                 allcmds = await this.__getAllCommands(this.commands.get(cmdname));
             }
 
-            console.log(allcmds)
-
             if(!this.slash) {
                 allcmds.forEach(fo => {
                     this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
@@ -270,6 +269,10 @@ module.exports = class GCommands {
         const app = this.client.api.applications(this.client.user.id)
         if(guildId) {
             app.guilds(guildId)
+        }
+
+        if(this.debugMode) {
+            console.log("&d[GCommands DEBUG] &3Deleted -> " + commandId + " | " + guildId ? guildId : 0)
         }
 
         await app.commands(commandId).delete()
