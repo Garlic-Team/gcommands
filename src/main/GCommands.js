@@ -40,7 +40,7 @@ module.exports = class GCommands {
                     
                     const now = Date.now();
                     const timestamps = this.cooldowns.get(interaction.data.name);
-                    const cooldownAmount = (commandos.cooldown || this.cooldownDefault) * 1000;
+                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
                     
                     if (timestamps.has(interaction.member.user.id)) {
                         if (timestamps.has(interaction.member.user.id)) {
@@ -112,7 +112,7 @@ module.exports = class GCommands {
                     
                     const now = Date.now();
                     const timestamps = this.cooldowns.get(cmd);
-                    const cooldownAmount = (commandos.cooldown || this.cooldownDefault) * 1000;
+                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
                     
                     if (timestamps.has(message.author.id)) {
                         if (timestamps.has(message.author.id)) {
