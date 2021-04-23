@@ -20,7 +20,7 @@ module.exports = class GCommands {
 
         this.cmdDir = options.cmdDir;
 
-        this.prefix = options.slash.prefix.toLowerCase() ? options.slash.prefix.toLowerCase() : undefined;
+        this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : true;
         this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
         this.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
@@ -251,15 +251,19 @@ module.exports = class GCommands {
             var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
 
             if(!f) {
-                this.__deleteCmd(fo.id)
+                this.__deleteCmd(fo.id, fo.guild_id)
             }
         })
 
         this.__createCommands();
     }
 
-    async __deleteCmd(commandId) {
+    async __deleteCmd(commandId, guildId) {
         const app = this.client.api.applications(this.client.user.id)
+        if(guildId) {
+            app.guilds(guildId)
+        }
+
 
         await app.commands(commandId).delete()
     }
