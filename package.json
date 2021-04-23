@@ -1,14 +1,12 @@
 {
   "name": "gcommands",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Open-source slah command handler",
   "main": "src/index.js",
   "dependencies": {
     "axios": "^0.21.1",
-    "discord-slash-commands": "^1.2.4",
     "discord.js": "^12.5.3",
-    "glob": "^7.1.6",
-    "slash-commands": "^1.4.0"
+    "glob": "^7.1.6"
   },
   "scripts": {
     "test": "node test.js"
