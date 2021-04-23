@@ -128,6 +128,7 @@ module.exports = class GCommands {
                     if(commandos.guildOnly) {
                         if(message.guild.id == commandos.guildOnly) {
                             this.commands.get(cmd).run(this.client, undefined, message, args)
+                            return;
                         } else {
                             return;
                         }
