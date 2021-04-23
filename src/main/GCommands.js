@@ -19,7 +19,6 @@ module.exports = class GCommands {
         this.cooldowns = new Collection();
 
         this.cmdDir = options.cmdDir;
-        this.debugMode = options.debug ? options.debug : false
 
         this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : true;
@@ -44,7 +43,6 @@ module.exports = class GCommands {
                     
                     if (timestamps.has(interaction.member.user.id)) {
                         if (timestamps.has(interaction.member.user.id)) {
-                            console.log(interaction.member.user.id)
                             const expirationTime = timestamps.get(interaction.member.user.id) + cooldownAmount;
                         
                             if (now < expirationTime) {
@@ -234,56 +232,39 @@ module.exports = class GCommands {
     }
 
     async __deleteAllCmds() {
+        var allcmds = await this.__getAllCommands();
+        if(!this.slash) {
+            allcmds.forEach(fo => {
+                this.__deleteCmd(fo.id)
+            })
+        }
+
         var nowCMDS = [];
 
-        var cmdkeys = Array.from(this.commands.keys());
-        cmdkeys.forEach(async(cmdname) => {
+        let keys = Array.from(this.commands.keys());
+        keys.forEach(cmdname => {
             nowCMDS.push(cmdname)
+        })
 
-            var allcmds;
-            if(this.commands.get(cmdname).guildOnly) {
-                allcmds = await this.__getAllCommands(this.commands.get(cmdname).guildOnly);
-            } else {
-                allcmds = await this.__getAllCommands(this.commands.get(cmdname));
-            }
+        allcmds.forEach(fo => {
+            var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
 
-            if(!this.slash) {
-                allcmds.forEach(fo => {
-                    this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
-                })
+            if(!f) {
+                this.__deleteCmd(fo.id)
             }
-    
-            allcmds.forEach(fo => {
-                var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
-    
-                if(!f) {
-                    this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
-                }
-            })
         })
 
         this.__createCommands();
     }
 
-    async __deleteCmd(commandId, guildId) {
+    async __deleteCmd(commandId) {
         const app = this.client.api.applications(this.client.user.id)
-        if(guildId) {
-            app.guilds(guildId)
-        }
-
-        if(this.debugMode) {
-            console.log("&d[GCommands DEBUG] &3Deleted -> " + commandId + " | " + guildId ? guildId : 0)
-        }
 
         await app.commands(commandId).delete()
     }
 
-    async __getAllCommands(guildId) {
+    async __getAllCommands() {
         const app = this.client.api.applications(this.client.user.id)
-        if (guildId) {
-            app.guilds(guildId)
-        }
-
         return await app.commands.get()
     }
 }
