@@ -2,7 +2,7 @@ const { promisify } = require('util');
 const path = require('path');
 const glob = promisify(require('glob'));
 const Color = require("../color/Color");
-const { Collection, Structures } = require('discord.js');
+const { Collection, Structures, APIMessage } = require('discord.js');
 const { cpuUsage } = require('process');
 
 module.exports = class GCommands {
