@@ -21,7 +21,11 @@
     "gcommands",
     "cmdhandler",
     "slashcommandhandler",
-    "slashcmds"
+    "slashcmds",
+    "slash commands",
+    "handler slash commands",
+    "command handler",
+    "discord js slash"
   ],
   "author": "Garlic-Team",
   "license": "ISC",
