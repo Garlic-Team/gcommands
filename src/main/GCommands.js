@@ -233,29 +233,35 @@ module.exports = class GCommands {
     }
 
     async __deleteAllCmds() {
-        var allcmds = await this.__getAllCommands();
-        if(!this.slash) {
-            allcmds.forEach(fo => {
-                this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
-            })
-        }
-
         var nowCMDS = [];
 
-        let keys = Array.from(this.commands.keys());
-        keys.forEach(cmdname => {
+        var cmdkeys = Array.from(this.commands.keys());
+        cmdkeys.forEach(cmdname => {
             nowCMDS.push(cmdname)
-        })
 
-        allcmds.forEach(fo => {
-            var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
-
-            if(!f) {
-                this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
+            var allcmds;
+            if(this.commands.get(cmdname).guildOnly) {
+                allcmds = await this.__getAllCommands(this.commands.get(cmdname).guildOnly);
+            } else {
+                allcmds = await this.__getAllCommands(this.commands.get(cmdname));
             }
-        })
 
-        this.__createCommands();
+            if(!this.slash) {
+                allcmds.forEach(fo => {
+                    this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
+                })
+            }
+    
+            allcmds.forEach(fo => {
+                var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
+    
+                if(!f) {
+                    this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
+                }
+            })
+    
+            this.__createCommands();
+        })
     }
 
     async __deleteCmd(commandId, guildId) {
