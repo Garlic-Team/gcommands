@@ -246,6 +246,8 @@ module.exports = class GCommands {
                 allcmds = await this.__getAllCommands(this.commands.get(cmdname));
             }
 
+            console.log(allcmds)
+
             if(!this.slash) {
                 allcmds.forEach(fo => {
                     this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
@@ -259,9 +261,9 @@ module.exports = class GCommands {
                     this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
                 }
             })
-    
-            this.__createCommands();
         })
+
+        this.__createCommands();
     }
 
     async __deleteCmd(commandId, guildId) {
