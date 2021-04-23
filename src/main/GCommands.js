@@ -236,7 +236,7 @@ module.exports = class GCommands {
         var nowCMDS = [];
 
         var cmdkeys = Array.from(this.commands.keys());
-        cmdkeys.forEach(cmdname => {
+        cmdkeys.forEach(async(cmdname) => {
             nowCMDS.push(cmdname)
 
             var allcmds;
