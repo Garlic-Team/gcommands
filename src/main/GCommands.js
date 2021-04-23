@@ -280,7 +280,7 @@ class Message extends Structures.get("Message") {
       }
 
       if (!Array.isArray(options.buttons)) {
-          throw new Error('The buttons must be an array');
+        return console.log(new Color("&d[GCommands] &cThe buttons must be array.",{json:false}).getText());
       }
 
       let buttons = [];
@@ -290,26 +290,26 @@ class Message extends Structures.get("Message") {
           if (!x.style) x.style = 'blupurple';
 
           if (!styles.includes(x.style)) {
-              throw new Error(`#${i} button has invalid style, recived ${x.style}`);
+            return console.log(new Color(`&d[GCommands] &c#${i} button has invalid style, recived ${x.style}`,{json:false}).getText());
           }
 
           if (!x.label) {
-              throw new Error(`#${i} button don't has a label`);
+            return console.log(new Color(`&d[GCommands] &c#${i} don't has label!`,{json:false}).getText());
           }
 
           if (typeof (x.label) !== 'string') x.label = String(x.label);
 
           if (x.style === 'url') {
-              if (!x.url) {
-                  throw new Error(`If the button style is "url", you must provide url`);
-              }
+            if (!x.url) {
+                return console.log(new Color(`&d[GCommands] &cIf the button style is "url", you must provide url`,{json:false}).getText());
+            }
           } else {
-              if (!x.id) {
-                  throw new Error(`If the button style is not "url", you must provide custom id`);
-              }
-          }
+            if (!x.id) {
+                return console.log(new Color(`&d[GCommands] &cIf the button style is not "url", you must provide custom id`,{json:false}).getText());
+            }
+           }
 
-          let style;
+          var style;
 
           if (x.style === 'blupurple') {
               style = 1;
@@ -347,13 +347,14 @@ class Message extends Structures.get("Message") {
 
           await this.client.channels.cache.get(data.channel_id).messages.fetch();
 
+          var message;
           try {
-            let message = await this.client.channels.cache.get(data.channel_id).messages.cache.get(data.message.id);
+            message = await this.client.channels.cache.get(data.channel_id).messages.cache.get(data.message.id);
           } catch(e) {
-            let message = await this.client.channels.cache.get(data.channel_id)
+            message = await this.client.channels.cache.get(data.channel_id)
           }
 
-          let clicker = await this.client.guilds.cache.get(data.guild_id).members.cache.get(data.member.user.id);
+          var clicker = await this.client.guilds.cache.get(data.guild_id).members.cache.get(data.member.user.id);
 
           this.client.emit('clickButton', {
               version: data.version,
