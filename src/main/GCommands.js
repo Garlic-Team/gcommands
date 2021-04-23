@@ -236,7 +236,7 @@ module.exports = class GCommands {
         var allcmds = await this.__getAllCommands();
         if(!this.slash) {
             allcmds.forEach(fo => {
-                this.__deleteCmd(fo.id)
+                this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
             })
         }
 
@@ -251,7 +251,7 @@ module.exports = class GCommands {
             var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
 
             if(!f) {
-                this.__deleteCmd(fo.id, fo.guild_id)
+                this.__deleteCmd(fo.id, this.commands.get(fo.name).guildOnly)
             }
         })
 
@@ -264,12 +264,15 @@ module.exports = class GCommands {
             app.guilds(guildId)
         }
 
-
         await app.commands(commandId).delete()
     }
 
-    async __getAllCommands() {
+    async __getAllCommands(guildId) {
         const app = this.client.api.applications(this.client.user.id)
+        if (guildId) {
+            app.guilds(guildId)
+        }
+
         return await app.commands.get()
     }
 }
