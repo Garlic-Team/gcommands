@@ -9,8 +9,9 @@ Instalaltion
 npm install gcommands
 ```
 
-### Wiki
+### Support
  - https://github.com/Garlic-Team/GCommands/wiki
+ - https://discord.gg/AjKJSBbGm2
 
 How use?<br>
 index.js
