@@ -250,7 +250,7 @@ module.exports = class GCommands {
             if(error.response) {
                 if(error.response.status == 429) {
                     setTimeout(() => {
-                        this.__tryAgain(config)
+                        this.__tryAgain(cmd, config)
                     }, 5000)
                 }
             }
