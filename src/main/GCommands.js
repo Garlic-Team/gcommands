@@ -4,6 +4,7 @@ const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const { Collection, Structures, APIMessage } = require('discord.js');
 const { cpuUsage } = require('process');
+const { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } = require('constants');
 
 module.exports = class GCommands {
     constructor(client, options = {}) {
@@ -224,12 +225,34 @@ module.exports = class GCommands {
                 axios(config).then((response) => {
                     console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
                 })
-                .catch((err) => {
-                    console.log(new Color("&d[GCommands] &cRequest failed! " + err, {json:false}).getText());
+                .catch((error) => {
+                    console.log(new Color("&d[GCommands] &cRequest failed! " + error, {json:false}).getText());
+                    
+                    if(error.response.status == 429) {
+                        setTimeout(() => {
+                            __tryAgain(config)
+                        }, 3000)
+                    }
                 }) 
             }catch(e) {
                 console.log(e)
             }  
+        })
+    }
+
+    async __tryAgain(config) {
+        const axios = require("axios");
+        axios(config).then((response) => {
+            console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
+        })
+        .catch((error) => {
+            console.log(new Color("&d[GCommands] &cRequest failed! " + error, {json:false}).getText());
+            
+            if(error.response.status == 429) {
+                setTimeout(() => {
+                    __tryAgain(config)
+                }, 3000)
+            }
         })
     }
 
