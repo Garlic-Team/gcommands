@@ -230,7 +230,7 @@ module.exports = class GCommands {
                     
                     if(error.response.status == 429) {
                         setTimeout(() => {
-                            __tryAgain(config)
+                            this.__tryAgain(config)
                         }, 3000)
                     }
                 }) 
@@ -250,7 +250,7 @@ module.exports = class GCommands {
             
             if(error.response.status == 429) {
                 setTimeout(() => {
-                    __tryAgain(config)
+                    this.__tryAgain(config)
                 }, 3000)
             }
         })
