@@ -51,6 +51,7 @@ module.exports = class GCommands {
                                     data: {
                                         type: 4,
                                         data: {
+                                            flags: 64,
                                             content: this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, interaction.data.name)
                                         }
                                     }
@@ -117,7 +118,7 @@ module.exports = class GCommands {
                         
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
-                                return message.reply(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, cmd));
+                                return message.reply(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, cmd)).then(m => {m.delete({timeout:5000})});
                             }
                         }
                     }
