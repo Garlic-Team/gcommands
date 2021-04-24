@@ -10,7 +10,7 @@ npm install gcommands
 ```
 
 ### Support
- - https://github.com/Garlic-Team/GCommands/wiki
+ - https://docs.garlic-team.tk/
  - https://discord.gg/AjKJSBbGm2
 
 How use?<br>
