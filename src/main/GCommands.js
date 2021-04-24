@@ -21,7 +21,7 @@ module.exports = class GCommands {
         this.cmdDir = options.cmdDir;
 
         this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
-        this.slash = options.slash.slash ? options.slash.slash : true;
+        this.slash = options.slash.slash ? options.slash.slash : false;
         this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
         this.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
 
@@ -89,7 +89,7 @@ module.exports = class GCommands {
             })
         }
 
-        if((this.slash == "both") || (!this.slash)) {
+        if((this.slash == false) || (this.slash == "both")) {
             this.client.on('message', async(message) => {
                 const prefix = this.prefix;
 
@@ -230,7 +230,7 @@ module.exports = class GCommands {
                         if(error.response.status == 429) {
                             setTimeout(() => {
                                 this.__tryAgain(cmd, config)
-                            }, 5000)
+                            }, 20000)
                         }
                     }
                 }) 
@@ -251,7 +251,7 @@ module.exports = class GCommands {
                 if(error.response.status == 429) {
                     setTimeout(() => {
                         this.__tryAgain(cmd, config)
-                    }, 5000)
+                    }, 20000)
                 }
             }
         })
