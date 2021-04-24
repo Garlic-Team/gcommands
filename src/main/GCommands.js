@@ -3,8 +3,7 @@ const path = require('path');
 const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const { Collection, Structures, APIMessage } = require('discord.js');
-const { cpuUsage } = require('process');
-const { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } = require('constants');
+const axios = require("axios")
 
 module.exports = class GCommands {
     constructor(client, options = {}) {
@@ -221,17 +220,18 @@ module.exports = class GCommands {
                     url,
                 }
 
-                const axios = require("axios");
                 axios(config).then((response) => {
                     console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
                 })
                 .catch((error) => {
                     console.log(new Color("&d[GCommands] &cRequest failed! " + error, {json:false}).getText());
-                    
-                    if(error.response.status == 429) {
-                        setTimeout(() => {
-                            this.__tryAgain(config)
-                        }, 3000)
+
+                    if(error.response) {
+                        if(error.response.status == 429) {
+                            setTimeout(() => {
+                                this.__tryAgain(cmd, config)
+                            }, 5000)
+                        }
                     }
                 }) 
             }catch(e) {
@@ -240,18 +240,19 @@ module.exports = class GCommands {
         })
     }
 
-    async __tryAgain(config) {
-        const axios = require("axios");
+    async __tryAgain(cmd, config) {
         axios(config).then((response) => {
             console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
         })
         .catch((error) => {
             console.log(new Color("&d[GCommands] &cRequest failed! " + error, {json:false}).getText());
             
-            if(error.response.status == 429) {
-                setTimeout(() => {
-                    this.__tryAgain(config)
-                }, 3000)
+            if(error.response) {
+                if(error.response.status == 429) {
+                    setTimeout(() => {
+                        this.__tryAgain(config)
+                    }, 5000)
+                }
             }
         })
     }
