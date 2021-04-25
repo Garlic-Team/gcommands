@@ -128,8 +128,8 @@ module.exports = {
                             client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
-                                    flags: 64,
                                     data: {
+                                        flags: 64,
                                         content: commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!"
                                     }
                                 }
