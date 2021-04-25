@@ -64,7 +64,7 @@ module.exports = class GCommands {
         keys.forEach(async (cmdname) => {
             var options = [];
             var subCommandGroup = {};
-            var subCommand = {};
+            var subCommand = [];
             const cmd = this.commands.get(cmdname)
 
             if(cmd.subCommandGroup) {
@@ -94,14 +94,42 @@ module.exports = class GCommands {
                 }
 
                 if(cmd.subCommand) {
-                    subCommand = [
+                    cmd.subCommand.forEach(sc => {
+                        var g = []
+                        var optionsSplit = sc.split(";")[1]
+
+                        if(optionsSplit) {
+                            var split = optionsSplit
+                                .substring(1, optionsSplit.length - 1)
+                                .split(/[>\]] [<\[]/)
+                
+                            for (let a = 0; a < split.length; ++a) {
+                                var item = split[a]
+            
+                                g.push({
+                                    name: item.replace(/ /g, '-'),
+                                    description: item,
+                                    type: 3,
+                                    required: a < cmd.minArgs,
+                                })
+                            }
+                        }
+
+                        subCommand.push({
+                            name: sc.split(";")[0],
+                            description: sc.split(";")[0],
+                            type: 1,
+                            options: g || []
+                        })
+                    })
+                    /*subCommand = [
                         {
                             name: cmd.subCommand,
                             description: cmd.subCommand,
                             type: 1,
                             options: options || []
                         }
-                    ]
+                    ]*/
                 }
 
                 if(cmd.subCommandGroup) {
