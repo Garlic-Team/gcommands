@@ -4,7 +4,7 @@ const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const Events = require('./Events');
 const { Collection, Structures, APIMessage } = require('discord.js');
-const axios = require("axios")
+const axios = require("axios");
 
 module.exports = class GCommands {
     constructor(client, options = {}) {
@@ -20,6 +20,7 @@ module.exports = class GCommands {
         this.cooldowns = new Collection();
 
         this.cmdDir = options.cmdDir;
+        this.mongodb = options.mongodb;
 
         this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : false;
@@ -61,8 +62,20 @@ module.exports = class GCommands {
 
         let keys = Array.from(this.commands.keys());
         keys.forEach(async (cmdname) => {
-            const options = [];
+            var options = [];
+            var subCommandGroup = {};
+            var subCommand = {};
             const cmd = this.commands.get(cmdname)
+
+            if(cmd.subCommandGroup) {
+                subCommandGroup = [
+                    {
+                        name: cmd.subCommandGroup,
+                        description: cmd.subCommandGroup,
+                        type: 2
+                    }
+                ]
+            }
 
             if (cmd.expectedArgs && cmd.minArgs) {
                 const split = cmd.expectedArgs
@@ -79,6 +92,28 @@ module.exports = class GCommands {
                     required: a < cmd.minArgs,
                   })
                 }
+
+                if(cmd.subCommand) {
+                    subCommand = [
+                        {
+                            name: cmd.subCommand,
+                            description: cmd.subCommand,
+                            type: 1,
+                            options: options || []
+                        }
+                    ]
+                }
+
+                if(cmd.subCommandGroup) {
+                    subCommandGroup = [
+                        {
+                            name: subCommandGroup[0].name,
+                            description: subCommandGroup[0].name,
+                            type: subCommandGroup[0].type,
+                            options: subCommand
+                        }
+                    ]
+                }
             }
 
             try {
@@ -90,8 +125,22 @@ module.exports = class GCommands {
                     name: cmd.name,
                     description: cmd.description,
                     options: options || []
-                };
-        
+                }
+
+                if(cmd.subCommandGroup && cmd.subCommand) {
+                     cmdd = {
+                        name: cmd.name,
+                        description: cmd.description,
+                        options: subCommandGroup || []
+                    };
+                } else {
+                    cmdd = {
+                        name: cmd.name,
+                        description: cmd.description,
+                        options: options || []
+                    };
+                }
+
                 var config = {
                     method: "POST",
                     headers: {

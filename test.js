@@ -1,7 +1,6 @@
-const { GCommands } = require("./src/index");
 const Discord = require("discord.js");
-
 const client = new Discord.Client();
+const { GCommands } = require("./src/index");
 
 client.on("ready", () => {
     new GCommands(client, {
@@ -18,4 +17,4 @@ client.on("ready", () => {
     })
 })
 
-client.login("token")
+client.login("NzQ1NTk5NjQ4MTEwMjE1MjYw.Xz0HyA.Lxd8ICJec55ZbLW3dprLn2XKBqg")
