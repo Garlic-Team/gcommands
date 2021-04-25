@@ -47,7 +47,7 @@ module.exports = class GCommands {
                 try {
                     File = require("../../../../"+this.cmdDir+"/"+name)
                 } catch(e) {
-                    File = require("../../../"+this.cmdDir+"/"+name)
+                    File = require("../../"+this.cmdDir+"/"+name)
                 }
 
 				this.commands.set(File.name, File);
