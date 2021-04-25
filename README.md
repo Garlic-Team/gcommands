@@ -4,16 +4,20 @@
 
 ---
 
-Instalaltion
+Installation
 ```
+// stable build
 npm install gcommands
+
+// dev build
+npm install github:Garlic-Team/GCommands#dev
 ```
 
 ### Support
  - https://docs.garlic-team.tk/
  - https://discord.gg/AjKJSBbGm2
 
-How use?<br>
+How to use?<br>
 index.js
 ```js
 const { GCommands } = require("gcommands");
