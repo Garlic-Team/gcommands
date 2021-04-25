@@ -7,7 +7,7 @@ module.exports = {
 	guildOnly: "id",
 	ownerOnly: "id",
 	requiredPermission: "ADMINISTRATOR",
-	needPermissionMessage: "You need have ADMINISTRATOR perms.",
+	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
 	run: async(client, slash, message, args) => {
 		if(message) {
 			if(args[0]) {

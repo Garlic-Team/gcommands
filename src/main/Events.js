@@ -60,7 +60,7 @@ module.exports = {
 
                     if(commandos.requiredPermission) {
                         if(!message.member.hasPermission(commandos.requiredPermission)) {
-                            message.channel.send(commandos.needPermissionMessage ? commandos.needPermissionMessage : "You don't have permissions!")
+                            message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
                             return;
                         }
                     }
@@ -130,7 +130,7 @@ module.exports = {
                                     type: 4,
                                     flags: 64,
                                     data: {
-                                        content: commandos.needPermissionMessage ? commandos.needPermissionMessage : "You don't have permissions!"
+                                        content: commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!"
                                     }
                                 }
                             });
