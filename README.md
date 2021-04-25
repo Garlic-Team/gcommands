@@ -6,10 +6,11 @@
 
 Installation
 ```
-// stable build
 npm install gcommands
+```
 
-// dev build
+DEV build
+```
 npm install github:Garlic-Team/GCommands#dev
 ```
 
