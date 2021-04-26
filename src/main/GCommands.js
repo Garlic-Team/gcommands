@@ -40,7 +40,6 @@ module.exports = class GCommands {
     async __loadCommands() {
 		return glob(`./${this.cmdDir}/**/*.js`).then(commands => {
 			for (const commandFile of commands) {
-				delete require.cache[commandFile];
 				const { name } = path.parse(commandFile);
                 var File;
 
@@ -48,7 +47,7 @@ module.exports = class GCommands {
                     File = require("../../../../"+this.cmdDir+"/"+name)
                 } catch(e) {
                     try {
-                        File = require("../../"+this.cmdDir+"/"+commandFile.split("./")[1])
+                        File = require("../../"+commandFile.split("./")[1])
                     } catch(e) {
                         File = require("../../"+this.cmdDir+"/"+name)
                     }
