@@ -47,10 +47,17 @@ module.exports = class GCommands {
                     File = require("../../../../"+this.cmdDir+"/"+name)
                 } catch(e) {
                     try {
-                        File = require("../../"+commandFile.split("./")[1])
-                    } catch(e) {
-                        console.log("../../../../"+commandFile.split("./")[1])
                         File = require("../../../../"+commandFile.split("./")[1])
+                    } catch(e) {
+                        try {
+                            File = require("../../"+this.cmdDir+"/"+name);
+                        } catch(e) {
+                            try {
+                                File = require("../../../"+this.cmdDir+"/"+name);
+                            } catch(e) {
+                                return console.log(new Color("&d[GCommands] &cCan't load " + name));
+                            }
+                        }
                     }
                 }
 
