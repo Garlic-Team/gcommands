@@ -49,7 +49,8 @@ module.exports = class GCommands {
                     try {
                         File = require("../../"+commandFile.split("./")[1])
                     } catch(e) {
-                        File = require("../../../"+commandFile.split("./")[1])
+                        console.log("../../"+commandFile.split("./")[1])
+                        File = require("../../"+commandFile.split("./")[1])
                     }
                 }
 
