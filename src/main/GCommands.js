@@ -40,14 +40,25 @@ module.exports = class GCommands {
     async __loadCommands() {
 		return glob(`./${this.cmdDir}/**/*.js`).then(commands => {
 			for (const commandFile of commands) {
-				delete require.cache[commandFile];
 				const { name } = path.parse(commandFile);
                 var File;
 
                 try {
                     File = require("../../../../"+this.cmdDir+"/"+name)
                 } catch(e) {
-                    File = require("../../"+this.cmdDir+"/"+name)
+                    try {
+                        File = require("../../../../"+commandFile.split("./")[1])
+                    } catch(e) {
+                        try {
+                            File = require("../../"+this.cmdDir+"/"+name);
+                        } catch(e) {
+                            try {
+                                File = require("../../../"+this.cmdDir+"/"+name);
+                            } catch(e) {
+                                return console.log(new Color("&d[GCommands] &cCan't load " + name));
+                            }
+                        }
+                    }
                 }
 
 				this.commands.set(File.name, File);
