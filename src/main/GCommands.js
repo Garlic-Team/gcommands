@@ -3,7 +3,6 @@ const path = require('path');
 const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const Events = require('./Events');
-const { replyAPIMessage } = require('./APIMessageFile');
 const { Collection, Structures, APIMessage } = require('discord.js');
 const axios = require("axios");
 
@@ -134,14 +133,6 @@ module.exports = class GCommands {
                             options: g || []
                         })
                     })
-                    /*subCommand = [
-                        {
-                            name: cmd.subCommand,
-                            description: cmd.subCommand,
-                            type: 1,
-                            options: options || []
-                        }
-                    ]*/
                 }
 
                 if(cmd.subCommandGroup) {
@@ -508,18 +499,8 @@ class MessageStructure extends Structures.get("Message") {
                 message
             })
         });
-        options.buttons = buttons;
-
-        var { data, files } = replyAPIMessage.create(this, content, options).resolveData();
 
         this.client.api.channels[this.channel.id].messages.post({
-            headers: {
-                "Content-Type": 'applications/json'
-            },
-            data,
-            files
-        });
-        /*this.client.api.channels[this.channel.id].messages.post({
             headers: {
             "Content-Type": 'applications/json'
             },
@@ -538,7 +519,7 @@ class MessageStructure extends Structures.get("Message") {
                 options,
                 embed: options.embed || null
             }
-        });*/
+        });
     }
 }
 
