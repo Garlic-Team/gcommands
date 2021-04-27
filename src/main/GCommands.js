@@ -3,6 +3,7 @@ const path = require('path');
 const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const Events = require('./Events');
+const APIMessageFile = require('./APIMessageFile');
 const { Collection, Structures, APIMessage } = require('discord.js');
 const axios = require("axios");
 
@@ -509,7 +510,7 @@ class MessageStructure extends Structures.get("Message") {
         });
         console.log(buttons, options)
 
-        var { data, files } = APIMessageFile.replyCreate(this, content, options, { replyTo: this }).resolveData();
+        var { data, files } = APIMessageFile.reply(this, content, options, { replyTo: this })
 
         this.client.api.channels[this.channel.id].messages.post({
             headers: {
