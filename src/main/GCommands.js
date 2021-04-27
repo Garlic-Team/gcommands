@@ -508,7 +508,17 @@ class MessageStructure extends Structures.get("Message") {
             })
         });
         console.log(buttons, options)
+
+        var { data, files } = APIMessageFile.replyCreate(this, content, options, { replyTo: this }).resolveData();
+
         this.client.api.channels[this.channel.id].messages.post({
+            headers: {
+                "Content-Type": 'applications/json'
+            },
+            data,
+            files
+        });
+        /*this.client.api.channels[this.channel.id].messages.post({
             headers: {
             "Content-Type": 'applications/json'
             },
@@ -521,10 +531,13 @@ class MessageStructure extends Structures.get("Message") {
                         components: buttons
                     }
                 ],
+                message_reference: {
+                    message_id: this.channel.lastMessageID
+                },
                 options,
                 embed: options.embed || null
             }
-        });
+        });*/
     }
 }
 
