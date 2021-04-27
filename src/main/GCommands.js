@@ -508,7 +508,7 @@ class MessageStructure extends Structures.get("Message") {
             })
         });
 
-        console.log(this)
+        console.log(this.channel)
         this.client.api.channels[this.channel.id].messages.post({
             headers: {
             "Content-Type": 'applications/json'
