@@ -1,3 +1,5 @@
+const {APIMessage} = require("discord.js");
+
 class replyAPIMessage extends APIMessage {
     resolveData() {
 
