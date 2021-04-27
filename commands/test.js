@@ -1,7 +1,5 @@
-const { DiscordAPIError, MessageEmbed } = require("discord.js");
-
 module.exports = {
-	name: "guu",
+	name: "test",
 	description: "Test",
 	expectedArgs: '<enable> <test>',
 	subCommandGroup: "group",
