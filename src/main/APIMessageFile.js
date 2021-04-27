@@ -7,11 +7,12 @@ module.exports = {
             return this;
         }
     
-        Object.assign(this.data, {
+        console.log(this)
+        /*Object.assign(this.data, {
             message_reference: {
                 message_id: this.channel.lastMessageID
             }
-        })
+        })*/
     
         this.data.components = [
             {
