@@ -2,8 +2,7 @@ const Color = require("../color/Color");
 const {  APIMessage } = require('discord.js');
 
 module.exports = {
-    buttons: async function (client, content, options) {
-        this.client = client;
+    buttons: async function (content, options) {
         if (!options.buttons) {
             options.buttons = [];
         }
@@ -121,8 +120,7 @@ module.exports = {
         });
     },
 
-    buttonsWithReply: async function (client, content, options) {
-        this.client = client;
+    buttonsWithReply: async function (content, options) {
         if (!options.buttons) {
             options.buttons = [];
         }
@@ -243,8 +241,7 @@ module.exports = {
         });
     },
 
-    inlineReply: async function (client, content, options) {
-        this.client = client;
+    inlineReply: async function (content, options) {
         const mentionRepliedUser = typeof ((options || content || {}).allowedMentions || {}).repliedUser === "undefined" ? true : ((options || content).allowedMentions).repliedUser;
         delete ((options || content || {}).allowedMentions || {}).repliedUser;
 

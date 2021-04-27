@@ -268,15 +268,15 @@ module.exports = class GCommands {
 
 class MessageStructure extends Structures.get("Message") {
     async buttons(content, options) {
-        Message.buttons(this.client, content, options)
+        Message.buttons(content, options)
     }
 
     async inlineReply(content, options) {
-        Message.inlineReply(this.client, content, options)
+        Message.inlineReply(content, options)
     }
 
     async buttonsWithReply(content, options) {
-        Message.inlineReply(this.client, content, options)
+        Message.inlineReply(content, options)
     }
 }
 
