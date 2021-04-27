@@ -523,7 +523,7 @@ class MessageStructure extends Structures.get("Message") {
                 ],
                 options,
                 message_reference: {
-                    message_id: this.options.replyTo.id || this.options.replyTo
+                    message_id: this
                 },
                 embed: options.embed || null
             }
