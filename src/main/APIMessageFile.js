@@ -1,28 +1,30 @@
-const {Collection} = require("discord.js")
-const Color = require("../color/Color");
+class replyAPIMessage extends APIMessage {
+    resolveData() {
 
-module.exports = {
-    reply: async function() {
-        const g = await this;
         if (this.data) {
             return this;
         }
-    
-        console.log(g)
+
+        super.resolveData();
+
         /*Object.assign(this.data, {
             message_reference: {
                 message_id: this.channel.lastMessageID
             }
         })*/
-    
+
         this.data.components = [
             {
                 type: 1,
                 components: this.options.buttons
             }
         ];
-    
+
         delete this.options;
         return this;
     }
+}
+
+module.exports = {
+    replyAPIMessage: replyAPIMessage
 }
