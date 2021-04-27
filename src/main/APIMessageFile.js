@@ -9,7 +9,7 @@ module.exports = {
     
         Object.assign(this.data, {
             message_reference: {
-                message_id: this.options.replyTo.id || this.options.replyTo
+                message_id: this.channel.lastMessageID
             }
         })
     
