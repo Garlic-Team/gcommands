@@ -7,12 +7,6 @@ module.exports = {
             return this;
         }
     
-        this.data.allowed_mentions = this.data.allowed_mentions || {};
-    
-        if (this.options.mention === undefined) {
-            this.options.mention = false;
-        }
-    
         Object.assign(this.data, {
             message_reference: {
                 message_id: this.options.replyTo.id || this.options.replyTo
