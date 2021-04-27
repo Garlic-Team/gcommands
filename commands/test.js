@@ -1,5 +1,7 @@
+const { DiscordAPIError, MessageEmbed } = require("discord.js");
+
 module.exports = {
-	name: "test",
+	name: "guu",
 	description: "Test",
 	expectedArgs: '<enable> <test>',
 	subCommandGroup: "group",
@@ -19,6 +21,7 @@ module.exports = {
 			}
 		}
 
+		//return "My ping is `" + Math.round(client.ws.ping) + "ms`";
 		client.api.interactions(slash.id, slash.token).callback.post({
 			data: {
 				type: 4,

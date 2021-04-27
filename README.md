@@ -15,7 +15,7 @@ npm install github:Garlic-Team/GCommands#dev
 ```
 
 ### Support
- - https://docs.garlic-team.tk/
+ - https://gcommands.js.org
  - https://discord.gg/AjKJSBbGm2
 
 How to use?<br>
