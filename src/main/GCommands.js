@@ -508,7 +508,6 @@ class MessageStructure extends Structures.get("Message") {
             })
         });
 
-        console.log(this.channel)
         this.client.api.channels[this.channel.id].messages.post({
             headers: {
             "Content-Type": 'applications/json'
@@ -524,7 +523,7 @@ class MessageStructure extends Structures.get("Message") {
                 ],
                 options,
                 message_reference: {
-                    message_id: this
+                    message_id: this.channel.lastMessageID
                 },
                 embed: options.embed || null
             }
