@@ -66,6 +66,7 @@ module.exports = {
                     }
 
                     this.commands.get(cmd).run(this.client, undefined, message, args)
+                    this.client.emit("gDebug", "User " + interaction.member.user.id + " used " + interaction.data.name)
                 } catch(e) {
                     if(this.errorMessage) {
                         message.channel.send(this.errorMessage);
@@ -139,6 +140,7 @@ module.exports = {
                     }
 
                     this.commands.get(interaction.data.name).run(this.client, interaction);
+                    this.client.emit("gDebug", "User " + interaction.member.user.id + " used " + interaction.data.name)
                 }catch(e) {
                     console.log(e)
                     if(this.errorMessage) {
