@@ -266,7 +266,7 @@ module.exports = class GCommands {
     }
 }
 
-class Message extends Structures.get("Message") {
+class MessageStructure extends Structures.get("Message") {
     async buttons(content, options) {
         Message.buttons(this.client, content, options)
     }
@@ -280,4 +280,4 @@ class Message extends Structures.get("Message") {
     }
 }
 
-Structures.extend("Message", () => Message);
+Structures.extend("Message", () => MessageStructure);
