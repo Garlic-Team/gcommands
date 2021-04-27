@@ -67,7 +67,7 @@ module.exports = {
                     }
 
                     this.commands.get(cmd).run(this.client, undefined, message, args)
-                    this.client.emit("gDebug", new Color("&d[GCommands] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name))
+                    this.client.emit("gDebug", new Color("&d[GCommands] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 } catch(e) {
                     if(this.errorMessage) {
                         message.channel.send(this.errorMessage);
@@ -141,7 +141,7 @@ module.exports = {
                     }
 
                     this.commands.get(interaction.data.name).run(this.client, interaction);
-                    this.client.emit("gDebug", new Color("&d[GCommands] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name))
+                    this.client.emit("gDebug", new Color("&d[GCommands] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
                     console.log(e)
                     if(this.errorMessage) {
