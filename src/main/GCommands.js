@@ -510,6 +510,8 @@ class MessageStructure extends Structures.get("Message") {
         });
         console.log(buttons, options)
 
+        options.buttons = buttons;
+
         var { data, files } = APIMessageFile.reply(this, content, options, { replyTo: this })
 
         this.client.api.channels[this.channel.id].messages.post({
