@@ -1,4 +1,5 @@
 const {Collection} = require("discord.js")
+const Color = require("../color/Color");
 
 module.exports = {
     normalCommands: async function (client, slash, commands, cooldowns, errorMessage, prefix) {
@@ -66,7 +67,7 @@ module.exports = {
                     }
 
                     this.commands.get(cmd).run(this.client, undefined, message, args)
-                    this.client.emit("gDebug", "User " + interaction.member.user.id + " used " + interaction.data.name)
+                    this.client.emit("gDebug", new Color("&d[GCommands] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name))
                 } catch(e) {
                     if(this.errorMessage) {
                         message.channel.send(this.errorMessage);
@@ -140,7 +141,7 @@ module.exports = {
                     }
 
                     this.commands.get(interaction.data.name).run(this.client, interaction);
-                    this.client.emit("gDebug", "User " + interaction.member.user.id + " used " + interaction.data.name)
+                    this.client.emit("gDebug", new Color("&d[GCommands] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name))
                 }catch(e) {
                     console.log(e)
                     if(this.errorMessage) {
