@@ -508,8 +508,6 @@ class MessageStructure extends Structures.get("Message") {
                 message
             })
         });
-        console.log(buttons, options)
-
         options.buttons = buttons;
 
         var { data, files } = APIMessageFile.reply(this, content, options, { replyTo: this })
