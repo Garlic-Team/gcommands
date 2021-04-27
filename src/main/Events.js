@@ -1,4 +1,5 @@
-const {Collection} = require("discord.js")
+const {Collection,MessageEmbed,APIMessage} = require("discord.js")
+const Color = require("../color/Color");
 
 module.exports = {
     normalCommands: async function (client, slash, commands, cooldowns, errorMessage, prefix) {
@@ -66,6 +67,7 @@ module.exports = {
                     }
 
                     this.commands.get(cmd).run(this.client, undefined, message, args)
+                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 } catch(e) {
                     if(this.errorMessage) {
                         message.channel.send(this.errorMessage);
@@ -138,7 +140,32 @@ module.exports = {
                         }
                     }
 
-                    this.commands.get(interaction.data.name).run(this.client, interaction);
+                    try {
+                        var result = await commandos.run({
+                            client,
+                            interaction
+                        })
+
+                        var data = {
+                            content: result,
+                            allowedMentions: { parse: [], repliedUser: true }
+                        }
+
+                        if (typeof result === 'object') {
+                            const embed = new MessageEmbed(result)
+                            data = await this.createAPIMessage(client, interaction, embed)
+                        }
+
+                        this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                          data: {
+                            type: 4,
+                            data
+                          },
+                        })
+                    } catch(e) {
+                        commandos.run(this.client, interaction);
+                    }
+                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
                     console.log(e)
                     if(this.errorMessage) {
@@ -154,5 +181,13 @@ module.exports = {
                 }
             })
         }
+    },
+
+    createAPIMessage: async function(client, interaction, content) {
+        const apiMessage = await APIMessage.create(client.channels.resolve(interaction.channel_id), content)
+        .resolveData()
+        .resolveFiles();
+        
+        return { ...apiMessage.data, files: apiMessage.files };
     }
 };
