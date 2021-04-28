@@ -38,8 +38,11 @@ module.exports = {
                             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
                         
                             if (now < expirationTime) {
+                                var msc =  this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1))
+                                msc = msc.replace(/{cmdname}/g, interaction.data.name)
+
                                 const timeLeft = (expirationTime - now) / 1000;
-                                return message.reply(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, cmd)).then(m => {m.delete({timeout:5000})});
+                                return message.channel.send(msc)
                             }
                         }
                     }
@@ -101,13 +104,15 @@ module.exports = {
                             const expirationTime = timestamps.get(interaction.member.user.id) + cooldownAmount;
                         
                             if (now < expirationTime) {
+                                var msc =  this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1))
+                                msc = msc.replace(/{cmdname}/g, interaction.data.name)
                                 const timeLeft = (expirationTime - now) / 1000;
                                 client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, interaction.data.name)
+                                            content: msc
                                         }
                                     }
                                 });
@@ -133,6 +138,22 @@ module.exports = {
                                     data: {
                                         flags: 64,
                                         content: commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!"
+                                    }
+                                }
+                            });
+                            return;
+                        }
+                    }
+
+                    if(commandos.requiredRole) {
+                        console.log(interaction.member.user.id)
+                        if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.requiredPermission)) {
+                            client.api.interactions(interaction.id, interaction.token).callback.post({
+                                data: {
+                                    type: 4,
+                                    data: {
+                                        flags: 64,
+                                        content: commandos.requiredRoleMessage ? commandos.requiredRoleMessage : "You don't have role!"
                                     }
                                 }
                             });
