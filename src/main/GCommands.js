@@ -16,8 +16,7 @@ module.exports = class GCommands {
         if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
 
         this.client = client;
-
-        this.client.categories = fs.readdirSync("./commands/");
+	    
         this.client.commands = new Collection();
         this.client.cooldowns = new Collection();
 
@@ -29,6 +28,8 @@ module.exports = class GCommands {
         this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
         this.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
 
+	this.client.categories = fs.readdirSync("./" + this.cmdDir + "/");
+	
         if(options.errorMessage) {
             this.errorMessage = options.errorMessage;
         }
