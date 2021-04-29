@@ -5,6 +5,7 @@ const Color = require("../color/Color");
 const Events = require('./Events');
 const { Collection, Structures, APIMessage } = require('discord.js');
 const axios = require("axios");
+const fs = require("fs");
 
 module.exports = class GCommands {
     constructor(client, options = {}) {
@@ -15,6 +16,10 @@ module.exports = class GCommands {
         if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
 
         this.client = client;
+
+        this.client.categories = fs.readdirSync("./commands/");
+        this.client.commands = new Collection();
+        this.client.aliases = new Collection();
 
         this.commands = new Collection();
         this.cooldowns = new Collection();
@@ -31,41 +36,28 @@ module.exports = class GCommands {
             this.errorMessage = options.errorMessage;
         }
 
+        this.__loadCommands();
+        
         Events.normalCommands(this.client, this.slash, this.commands, this.cooldowns, this.errorMessage, this.prefix)
         Events.slashCommands(this.client, this.slash, this.commands, this.cooldowns, this.errorMessage)
-
-        this.__loadCommands();
     }
 
     async __loadCommands() {
-		return glob(`./${this.cmdDir}/**/*.js`).then(commands => {
-			for (const commandFile of commands) {
-				const { name } = path.parse(commandFile);
-                var File;
+		fs.readdirSync("./" + this.cmdDir).forEach(dir => {
+            const commands = fs.readdirSync(`./${this.cmdDir}/${dir}/`).filter(file => file.endsWith(".js"));
 
-                try {
-                    File = require("../../../../"+this.cmdDir+"/"+name)
-                } catch(e) {
-                    try {
-                        File = require("../../../../"+commandFile.split("./")[1])
-                    } catch(e) {
-                        try {
-                            File = require("../../"+this.cmdDir+"/"+name);
-                        } catch(e) {
-                            try {
-                                File = require("../../../"+this.cmdDir+"/"+name);
-                            } catch(e) {
-                                return console.log(new Color("&d[GCommands] &cCan't load " + name));
-                            }
-                        }
-                    }
+            for (let file of commands) {
+                let pull = require("../" + this.cmdDir + "/" + dir + "/" + file);
+
+                if (pull.name) {
+                    this.commands.set(pull.name, pull);
+                    this.client.commands.set(pull.name, pull);
                 }
 
-				this.commands.set(File.name, File);
-			};
-
-            this.__deleteAllCmds();
+                if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach(alias => this.client.aliases.set(alias, pull.name));
+            }
 		});
+        this.__deleteAllCmds();
     }
 
     async __createCommands() {
@@ -92,7 +84,7 @@ module.exports = class GCommands {
                 const split = cmd.expectedArgs
                   .substring(1, cmd.expectedArgs.length - 1)
                   .split(/[>\]] [<\[]/)
-        
+
                 for (let a = 0; a < split.length; ++a) {
                   const item = split[a]
 
@@ -113,10 +105,10 @@ module.exports = class GCommands {
                             var split = optionsSplit
                                 .substring(1, optionsSplit.length - 1)
                                 .split(/[>\]] [<\[]/)
-                
+
                             for (let a = 0; a < split.length; ++a) {
                                 var item = split[a]
-            
+
                                 g.push({
                                     name: item.replace(/ /g, '-'),
                                     description: item,
@@ -149,7 +141,7 @@ module.exports = class GCommands {
 
             try {
                 var url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
-        
+
                 if(cmd.guildOnly) url = `https://discord.com/api/v8/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
                 var cmdd = {
@@ -178,7 +170,7 @@ module.exports = class GCommands {
                         Authorization: `Bot ${this.client.token}`,
                         "Content-Type": "application/json"
                     },
-                    data: JSON.stringify(cmdd), 
+                    data: JSON.stringify(cmdd),
                     url,
                 }
 
@@ -195,10 +187,10 @@ module.exports = class GCommands {
                             }, 20000)
                         }
                     }
-                }) 
+                })
             }catch(e) {
                 console.log(e)
-            }  
+            }
         })
     }
 
@@ -208,7 +200,7 @@ module.exports = class GCommands {
         })
         .catch((error) => {
             console.log(new Color("&d[GCommands] &cRequest failed! " + error, {json:false}).getText());
-            
+
             if(error.response) {
                 if(error.response.status == 429) {
                     setTimeout(() => {
