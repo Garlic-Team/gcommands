@@ -17,12 +17,12 @@ module.exports = class GCommands {
 
         this.client = client;
 
-        this.client.categories = fs.readdirSync("./commands/");
-        this.client.commands = new Collection();
-        this.client.cooldowns = new Collection();
-
         this.cmdDir = options.cmdDir;
         this.client.mongoDBurl = options.mongodb;
+
+        this.client.categories = fs.readdirSync("./" + this.cmdDir );
+        this.client.commands = new Collection();
+        this.client.cooldowns = new Collection();
 
         this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : false;
