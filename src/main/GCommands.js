@@ -5,6 +5,7 @@ const Color = require("../color/Color");
 const Events = require('./Events');
 const { Collection, Structures, APIMessage } = require('discord.js');
 const axios = require("axios");
+const fs = require("fs");
 
 module.exports = class GCommands {
     constructor(client, options = {}) {
@@ -16,11 +17,12 @@ module.exports = class GCommands {
 
         this.client = client;
 
-        this.commands = new Collection();
-        this.cooldowns = new Collection();
+        this.client.categories = fs.readdirSync("./commands/");
+        this.client.commands = new Collection();
+        this.client.cooldowns = new Collection();
 
         this.cmdDir = options.cmdDir;
-        this.mongodb = options.mongodb;
+        this.client.mongoDBurl = options.mongodb;
 
         this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : false;
@@ -31,10 +33,10 @@ module.exports = class GCommands {
             this.errorMessage = options.errorMessage;
         }
 
-        Events.normalCommands(this.client, this.slash, this.commands, this.cooldowns, this.errorMessage, this.prefix)
-        Events.slashCommands(this.client, this.slash, this.commands, this.cooldowns, this.errorMessage)
-
         this.__loadCommands();
+
+        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.prefix)
+        Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage)
     }
 
     async __loadCommands() {
@@ -61,7 +63,7 @@ module.exports = class GCommands {
                     }
                 }
 
-				this.commands.set(File.name, File);
+				this.client.commands.set(File.name, File);
 			};
 
             this.__deleteAllCmds();
@@ -71,12 +73,12 @@ module.exports = class GCommands {
     async __createCommands() {
         var po = await this.__getAllCommands();
 
-        let keys = Array.from(this.commands.keys());
+        let keys = Array.from(this.client.commands.keys());
         keys.forEach(async (cmdname) => {
             var options = [];
             var subCommandGroup = {};
             var subCommand = [];
-            const cmd = this.commands.get(cmdname)
+            const cmd = this.client.commands.get(cmdname)
 
             if(cmd.subCommandGroup) {
                 subCommandGroup = [
@@ -229,7 +231,7 @@ module.exports = class GCommands {
 
         var nowCMDS = [];
 
-        let keys = Array.from(this.commands.keys());
+        let keys = Array.from(this.client.commands.keys());
         keys.forEach(cmdname => {
             nowCMDS.push(cmdname)
         })
