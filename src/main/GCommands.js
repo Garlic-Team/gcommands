@@ -17,7 +17,6 @@ module.exports = class GCommands {
 
         this.client = client;
 
-        this.client.categories = fs.readdirSync("./commands/");
         this.client.commands = new Collection();
         this.client.aliases = new Collection();
 
@@ -27,6 +26,8 @@ module.exports = class GCommands {
         this.cmdDir = options.cmdDir;
         this.mongodb = options.mongodb;
 
+	this.client.categories = fs.readdirSync("./" + this.cmdDir + "/");
+	    
         this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : false;
         this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
