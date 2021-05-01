@@ -203,8 +203,8 @@ module.exports = class GCommands {
                                 "&aCode: &b" + error.response.data.code,
                                 "&aMessage: &b" + error.response.data.message,
                                 " ",
-                                "&b" + error.response.data.errors.guild_id._errors[0].code,
-                                "&b" + error.response.data.errors.guild_id._errors[0].message,
+                                "&b" + error.response.data.errors.guild_id._errors[0].code ? error.response.data.errors.guild_id._errors[0].code : "unkown",
+                                "&b" + error.response.data.errors.guild_id._errors[0].message ? error.response.data.errors.guild_id._errors[0].message : "unkown",
                                 "&a----------------------"
                             ]).getText())        
                         }
