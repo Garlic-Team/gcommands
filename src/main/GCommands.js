@@ -255,7 +255,9 @@ module.exports = class GCommands {
             }
         })
 
-        this.__createCommands();
+        if((this.slash) || (this.slash == "both")) {
+            this.__createCommands();
+        }
     }
 
     async __deleteCmd(commandId) {
