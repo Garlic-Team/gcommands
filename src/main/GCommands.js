@@ -57,7 +57,8 @@ module.exports = class GCommands {
                             try {
                                 File = require("../../../"+this.cmdDir+"/"+name);
                             } catch(e) {
-                                return console.log(new Color("&d[GCommands] &cCan't load " + name));
+                                this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
+                                return console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
                             }
                         }
                     }
