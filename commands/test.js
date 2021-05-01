@@ -10,6 +10,8 @@ module.exports = {
 	ownerOnly: "id",
 	requiredPermission: "ADMINISTRATOR",
 	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
+	requiredRole: "ROLE ID",
+	requiredRoleMessage: "You doesn't have role!",
 	run: async(client, slash, message, args) => {
 		if(message) {
 			if(args[0]) {

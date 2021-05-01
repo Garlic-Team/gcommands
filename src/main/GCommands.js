@@ -35,8 +35,8 @@ module.exports = class GCommands {
 
         this.__loadCommands();
 
-        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.prefix)
-        Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage)
+        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.prefix)
+        Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault)
     }
 
     async __loadCommands() {
@@ -195,6 +195,17 @@ module.exports = class GCommands {
                             setTimeout(() => {
                                 this.__tryAgain(cmd, config)
                             }, 20000)
+                        } else {
+                            this.client.emit("gDebug", new Color([
+                                "&a----------------------",
+                                "  &d[GCommands Debug] &3",
+                                "&aCode: &b" + error.response.data.code,
+                                "&aMessage: &b" + error.response.data.message,
+                                " ",
+                                "&b" + error.response.data.errors.guild_id._errors[0].code,
+                                "&b" + error.response.data.errors.guild_id._errors[0].message,
+                                "&a----------------------"
+                            ]).getText())        
                         }
                     }
                 }) 
