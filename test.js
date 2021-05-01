@@ -17,4 +17,6 @@ client.on("ready", () => {
     })
 })
 
+client.on("gDebug", (debug) => {console.log(debug)})
+
 client.login("token")

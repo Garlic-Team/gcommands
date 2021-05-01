@@ -2,13 +2,15 @@ const {Collection,MessageEmbed,APIMessage} = require("discord.js")
 const Color = require("../color/Color");
 
 module.exports = {
-    normalCommands: async function (client, slash, commands, cooldowns, errorMessage, prefix) {
+    normalCommands: async function (client, slash, commands, cooldowns, errorMessage, cooldownMessage, cooldownDefault, prefix) {
         this.prefix = prefix
         this.client = client;
         this.slash = slash;
         this.commands = commands;
         this.cooldowns = cooldowns;
         this.errorMessage = errorMessage;
+        this.cooldownMessage = cooldownMessage;
+        this.cooldownDefault = cooldownDefault;
 
         if((this.slash == false) || (this.slash == "both")) {
             this.client.on('message', async(message) => {
@@ -39,7 +41,8 @@ module.exports = {
                         
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
-                                return message.reply(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, cmd)).then(m => {m.delete({timeout:5000})});
+
+                                return message.channel.send(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, cmd))
                             }
                         }
                     }
@@ -66,8 +69,15 @@ module.exports = {
                         }
                     }
 
+                    if(commandos.requiredRole) {
+                        if(!message.member._roles.includes(commandos.requiredRole)) {
+                            message.channel.send(commandos.requiredRoleMessage ? commandos.requiredRoleMessage : "You don't have role!")
+                            return;
+                        }
+                    }
+
                     this.commands.get(cmd).run(this.client, undefined, message, args)
-                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
+                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
                     if(this.errorMessage) {
                         message.channel.send(this.errorMessage);
@@ -77,13 +87,15 @@ module.exports = {
         }
     },
 
-    slashCommands: async function (client, slash, commands, cooldowns, errorMessage) {
+    slashCommands: async function (client, slash, commands, cooldowns, errorMessage, cooldownMessage, cooldownDefault) {
         this.client = client;
         this.slash = slash;
         this.commands = commands;
         this.cooldowns = cooldowns;
         this.errorMessage = errorMessage;
-        
+        this.cooldownMessage = cooldownMessage;
+        this.cooldownDefault = cooldownDefault;
+
         if((this.slash) || (this.slash == "both")) {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
                 try {
@@ -136,6 +148,21 @@ module.exports = {
                                     }
                                 }
                             });
+                            return;
+                        }
+                    }
+
+                    if(commandos.requiredRole) {
+                        if(!interaction.member.roles.includes(commandos.requiredRole)) {
+                            client.api.interactions(interaction.id, interaction.token).callback.post({
+                                data: {
+                                    type: 4,
+                                    data: {
+                                        flags: 64,
+                                        content: commandos.requiredRoleMessage ? commandos.requiredRoleMessage : "You don't have role!"
+                                    }
+                                }
+                            }); 
                             return;
                         }
                     }
