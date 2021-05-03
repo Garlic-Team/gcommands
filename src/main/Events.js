@@ -22,6 +22,10 @@ module.exports = {
                         const guild = await guildSettings.findOne({ id: message.guild.id })
                         if(!guild || !guild.prefix) prefix = this.prefix
                         else prefix = guild.prefix
+                    } else {
+                        var guildSettings = this.client.database.sqlite.get(`guildPrefix_${message.guild.id}`)
+                        if(!guildSettings) prefix = this.prefix
+                        else prefix = guildSettings
                     }
                 }
 
