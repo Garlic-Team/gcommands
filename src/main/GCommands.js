@@ -28,7 +28,7 @@ module.exports = class GCommands {
         this.client.commands = new Collection();
         this.client.cooldowns = new Collection();
 
-        this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
+        this.client.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : false;
         this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
         this.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
@@ -40,7 +40,7 @@ module.exports = class GCommands {
         this.__loadCommands();
         this.__dbLoad();
 
-        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.prefix)
+        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.client.prefix)
         Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault)
     }
 
@@ -321,6 +321,23 @@ class ClientUser extends Structures.get('User') {
             await settings.save()
         } else {
             this.client.database.sqlite.set(`guildPrefix_${guildId}`,`prefix`)
+        }
+    }
+
+    async getGuildPrefix(guildId) {
+        if(!this.client.database.working) return;
+        if(this.client.database.type = "mongodb") {
+            var guildSettings = require('../models/guild')
+
+            const settings = await guildSettings.findOne({ id: guildId})
+            if(!settings) {
+              return this.client.prefix
+            }
+
+            return settings.prefix
+        } else {
+            var settings = this.client.database.sqlite.get(`guildPrefix_${guildId}`)
+            return settings;
         }
     }
 }
