@@ -102,11 +102,13 @@ module.exports = class GCommands {
         var po = await this.__getAllCommands();
 
         let keys = Array.from(this.client.commands.keys());
+
         keys.forEach(async (cmdname) => {
             var options = [];
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
+            if(cmd.slash == false) return;
 
             if(cmd.subCommandGroup) {
                 subCommandGroup = [
