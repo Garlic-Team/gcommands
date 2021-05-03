@@ -203,7 +203,7 @@ module.exports = {
                           },
                         })
                     } catch(e) { 
-                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Check &ahttps://gcommands.js.org/#/errors/slash").getText())
+                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Check &ahttps://gcommands.js.org/#/errors/slash &eOR IGNOR").getText())
                         commandos.run(this.client, interaction);
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
