@@ -19,8 +19,8 @@ module.exports = class GCommands {
 
         this.cmdDir = options.cmdDir;
         this.client.database = {
-            type: options.database.type,
-            url: options.database.url,
+            type: options.database.type ? options.database.type : undefined,
+            url: options.database.url ? options.database.type : undefined,
             working: false
         };
 
