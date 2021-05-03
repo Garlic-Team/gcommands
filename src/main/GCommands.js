@@ -338,10 +338,10 @@ class ClientUser extends Structures.get('User') {
               return this.client.prefix
             }
 
-            return settings.prefix
+            return settings.prefix ? settings.prefix : this.client.prefix
         } else {
             var settings = this.client.database.sqlite.get(`guildPrefix_${guildId}`)
-            return settings;
+            return settings ? settings : this.client.prefix;
         }
     }
 }
