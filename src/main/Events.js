@@ -14,7 +14,16 @@ module.exports = {
 
         if((this.slash == false) || (this.slash == "both")) {
             this.client.on('message', async(message) => {
-                const prefix = this.prefix;
+                var prefix = this.prefix;
+
+                if(this.client.database.working) {
+                    if(this.client.database.type == "mongodb") {
+                        var guildSettings = require('../models/guild')
+                        const guild = await guildSettings.findOne({ id: message.guild.id })
+                        if(!guild || !guild.prefix) prefix = this.prefix
+                        else prefix = guild.prefix
+                    }
+                }
 
                 if (message.author.bot) return;
                 if (!message.guild) return;
@@ -170,7 +179,7 @@ module.exports = {
                     try {
                         var result = await commandos.run({
                             client,
-                            interaction
+                            slash
                         })
 
                         var data = {
@@ -180,21 +189,21 @@ module.exports = {
 
                         if (typeof result === 'object') {
                             const embed = new MessageEmbed(result)
-                            data = await this.createAPIMessage(client, interaction, embed)
+                            data = await this.createAPIMessage(client, slash, embed)
                         }
 
-                        this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                        this.client.api.interactions(slash.id, slash.token).callback.post({
                           data: {
                             type: 4,
                             data
                           },
                         })
-                    } catch(e) {
+                    } catch(e) { 
+                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Check &ahttps://gcommands.js.org/#/errors/slash").getText())
                         commandos.run(this.client, interaction);
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
-                    console.log(e)
                     if(this.errorMessage) {
                         client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {

@@ -13,6 +13,10 @@ client.on("ready", () => {
         cooldown: {
             message: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.",
             default: 3
+        },
+        database: {
+            type: "mongodb", //sqlite/mongodb
+            url: "mongodb+srv://" //mongourl
         }
     })
 })

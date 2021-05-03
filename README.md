@@ -32,14 +32,20 @@ client.on("ready", () => {
         errorMessage: "Error :(",
         slash: {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
-           prefix: '.' 
+           prefix: '.' // default prefix
         },
         cooldown: {
             message: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.",
             default: 3
+        },
+        database: {
+            type: "mongodb", //sqlite/mongodb
+            url: "mongodb+srv://" //mongourl
         }
     })
 })
+
+client.on("gDebug", (debug) => {console.log(debug)})
 
 client.login("token")
 ```

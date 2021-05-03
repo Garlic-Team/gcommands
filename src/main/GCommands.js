@@ -18,7 +18,11 @@ module.exports = class GCommands {
         this.client = client;
 
         this.cmdDir = options.cmdDir;
-        this.client.mongoDBurl = options.mongodb;
+        this.client.database = {
+            type: options.database.type,
+            url: options.database.url,
+            working: false
+        };
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
@@ -34,9 +38,32 @@ module.exports = class GCommands {
         }
 
         this.__loadCommands();
+        this.__dbLoad();
 
         Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.prefix)
         Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault)
+    }
+
+    async __dbLoad() {
+        if(this.client.database.type == "mongodb") {
+            var mongoose = require("mongoose")
+            mongoose.connect(this.client.database.url, { useNewUrlParser: true, useUnifiedTopology: true })
+                .then((connection) => {
+                    console.log(new Color("&d[GCommands] &aMongodb loaded!",{json:false}).getText());
+                    this.client.database.working = true;
+                    return;
+                })
+                .catch((e) => {
+                    console.log(new Color("&d[GCommands] &cMongodb url is not valid.",{json:false}).getText());
+                    this.client.database.working = false;
+                    return;
+                })
+        }
+        else if(this.client.database.type == "sqlite") {
+            var sqliteDb = require("quick.db")
+            this.client.database.working = true;
+            this.client.database.sqlite = sqliteDb;
+        }
     }
 
     async __loadCommands() {
@@ -270,6 +297,29 @@ module.exports = class GCommands {
     async __getAllCommands() {
         const app = this.client.api.applications(this.client.user.id)
         return await app.commands.get()
+    }
+}
+
+class ClientUser extends Structures.get('User') {
+    async setGuildPrefix(prefix, guildId) {
+        if(!this.client.database.working) return;
+        if(this.client.database.type = "mongodb") {
+            var guildSettings = require('../models/guild')
+
+            const settings = await guildSettings.findOne({ id: guildId})
+            if(!settings) {
+              await guildSettings.create({
+                id: guildId,
+                prefix: prefix
+              })
+              return;
+            }
+
+            settings.prefix = prefix
+            await settings.save()
+        } else {
+            this.client.database.sqlite.set(`guildPrefix_${guildId}`,`prefix`)
+        }
     }
 }
 
@@ -540,3 +590,4 @@ class MessageStructure extends Structures.get("Message") {
 }
 
 Structures.extend("Message", () => MessageStructure);
+Structures.extend("User", () => ClientUser);

@@ -19,16 +19,17 @@ module.exports = {
 			} else {
 				return message.channel.send("Need args")
 			}
+			return;
 		}
 
-		//return "My ping is `" + Math.round(client.ws.ping) + "ms`";
-		client.api.interactions(slash.id, slash.token).callback.post({
+		return "My ping is `" + Math.round(client.ws.ping) + "ms`"
+		/*client.api.interactions(slash.id, slash.token).callback.post({
 			data: {
 				type: 4,
 				data: {
 					content: "My ping is `" + Math.round(client.ws.ping) + "ms`"
 				}
 			}
-		})
+		})*/
 	}
 };
