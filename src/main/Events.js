@@ -151,7 +151,7 @@ module.exports = {
 
                     if(commandos.requiredPermission) {
                         if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.requiredPermission)) {
-                            client.api.interactions(interaction.id, interaction.token).callback.post({
+                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
                                     data: {
@@ -166,7 +166,7 @@ module.exports = {
 
                     if(commandos.requiredRole) {
                         if(!interaction.member.roles.includes(commandos.requiredRole)) {
-                            client.api.interactions(interaction.id, interaction.token).callback.post({
+                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
                                     data: {
@@ -180,11 +180,7 @@ module.exports = {
                     }
 
                     try {
-                        var result = await commandos.run({
-                            client,
-                            slash
-                        })
-
+                        var result = await commandos.run(client, interaction)
                         var data = {
                             content: result,
                             allowedMentions: { parse: [], repliedUser: true }
@@ -195,20 +191,20 @@ module.exports = {
                             data = await this.createAPIMessage(client, slash, embed)
                         }
 
-                        this.client.api.interactions(slash.id, slash.token).callback.post({
+                        this.client.api.interactions(interaction.id, interaction.token).callback.post({
                           data: {
                             type: 4,
                             data
                           },
                         })
-                    } catch(e) { 
+                    } catch(e) {
                         this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Check &ahttps://gcommands.js.org/#/errors/slash &eOR IGNOR").getText())
                         commandos.run(this.client, interaction);
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
                     if(this.errorMessage) {
-                        client.api.interactions(interaction.id, interaction.token).callback.post({
+                        this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
                                 type: 4,
                                 data: {

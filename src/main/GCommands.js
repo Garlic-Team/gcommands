@@ -114,6 +114,9 @@ module.exports = class GCommands {
             const cmd = this.client.commands.get(cmdname)
             if(cmd.slash == false) return;
 
+            if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
+            if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
+
             if(cmd.subCommandGroup) {
                 subCommandGroup = [
                     {
@@ -125,17 +128,20 @@ module.exports = class GCommands {
             }
 
             if (cmd.expectedArgs && cmd.minArgs) {
-                const split = cmd.expectedArgs
+                var split = cmd.expectedArgs
                   .substring(1, cmd.expectedArgs.length - 1)
                   .split(/[>\]] [<\[]/)
         
                 for (let a = 0; a < split.length; ++a) {
-                  const item = split[a]
+                  var item = split[a];
+                  var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                  var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                  if(optionType == 1 || optionType == 2) optionType = 3
 
                   options.push({
-                    name: item.replace(/ /g, '-'),
+                    name: option,
                     description: item,
-                    type: 3,
+                    type: parseInt(optionType),
                     required: a < cmd.minArgs,
                   })
                 }
@@ -152,11 +158,14 @@ module.exports = class GCommands {
                 
                             for (let a = 0; a < split.length; ++a) {
                                 var item = split[a]
-            
+                                var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                                var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                                if(optionType == 1 || optionType == 2) optionType = 3
+
                                 g.push({
-                                    name: item.replace(/ /g, '-'),
+                                    name: option,
                                     description: item,
-                                    type: 3,
+                                    type: parseInt(optionType),
                                     required: a < cmd.minArgs,
                                 })
                             }
@@ -230,16 +239,26 @@ module.exports = class GCommands {
                                 this.__tryAgain(cmd, config)
                             }, 20000)
                         } else {
-                            this.client.emit("gDebug", new Color([
-                                "&a----------------------",
-                                "  &d[GCommands Debug] &3",
-                                "&aCode: &b" + error.response.data.code,
-                                "&aMessage: &b" + error.response.data.message,
-                                " ",
-                                "&b" + error.response.data.errors.guild_id._errors[0].code ? error.response.data.errors.guild_id._errors[0].code : "unkown",
-                                "&b" + error.response.data.errors.guild_id._errors[0].message ? error.response.data.errors.guild_id._errors[0].message : "unkown",
-                                "&a----------------------"
-                            ]).getText())        
+                            try {
+                                this.client.emit("gDebug", new Color([
+                                    "&a----------------------",
+                                    "  &d[GCommands Debug] &3",
+                                    "&aCode: &b" + error.response.data.code,
+                                    "&aMessage: &b" + error.response.data.message,
+                                    " ",
+                                    "&b" + error.response.data.errors.guild_id._errors[0].code,
+                                    "&b" + rror.response.data.errors.guild_id._errors[0].message,
+                                    "&a----------------------"
+                                ]).getText())
+                            } catch(e) {
+                                this.client.emit("gDebug", new Color([
+                                    "&a----------------------",
+                                    "  &d[GCommands Debug] &3",
+                                    "&aCode: &b" + error.response.data.code,
+                                    "&aMessage: &b" + error.response.data.message,
+                                    "&a----------------------"
+                                ]).getText())
+                            }  
                         }
                     }
                 }) 

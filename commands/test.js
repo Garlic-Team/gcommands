@@ -1,9 +1,9 @@
 module.exports = {
 	name: "test",
 	description: "Test",
-	expectedArgs: '<enable> <test>',
+	expectedArgs: '<enable:6> <test>',
 	subCommandGroup: "group",
-	subCommand: ["button;<enable> <test>","pog;<disable> <button>"],
+	subCommand: ["button;<enable:6> <test>","pog;<disable> <button>"],
 	minArgs: 1,
 	cooldown: 3,
 	guildOnly: "id",
@@ -12,7 +12,7 @@ module.exports = {
 	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
 	requiredRole: "ROLE ID",
 	requiredRoleMessage: "You doesn't have role!",
-	slash: true,
+	//slash: false,
 	run: async(client, slash, message, args) => {
 		if(message) {
 			if(args[0]) {
@@ -23,6 +23,7 @@ module.exports = {
 			return;
 		}
 
+		console.log(slash.data.resolved.users)
 		return "My ping is `" + Math.round(client.ws.ping) + "ms`"
 		/*client.api.interactions(slash.id, slash.token).callback.post({
 			data: {
@@ -34,3 +35,4 @@ module.exports = {
 		})*/
 	}
 };
+
