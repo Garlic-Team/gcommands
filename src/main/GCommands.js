@@ -288,30 +288,34 @@ module.exports = class GCommands {
     }
 
     async __deleteAllCmds() {
-        var allcmds = await this.__getAllCommands();
-        if(!this.slash) {
-            allcmds.forEach(fo => {
-                this.__deleteCmd(fo.id)
-            })
-        }
-
-        var nowCMDS = [];
-
-        let keys = Array.from(this.client.commands.keys());
-        keys.forEach(cmdname => {
-            nowCMDS.push(cmdname)
-        })
-
-        allcmds.forEach(fo => {
-            var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
-
-            if(!f) {
-                this.__deleteCmd(fo.id)
+        try {
+            var allcmds = await this.__getAllCommands();
+            if(!this.slash) {
+                allcmds.forEach(fo => {
+                    this.__deleteCmd(fo.id)
+                })
             }
-        })
 
-        if((this.slash) || (this.slash == "both")) {
-            this.__createCommands();
+            var nowCMDS = [];
+
+            let keys = Array.from(this.client.commands.keys());
+            keys.forEach(cmdname => {
+                nowCMDS.push(cmdname)
+            })
+
+            allcmds.forEach(fo => {
+                var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
+
+                if(!f) {
+                    this.__deleteCmd(fo.id)
+                }
+            })
+
+            if((this.slash) || (this.slash == "both")) {
+                this.__createCommands();
+            }
+        } catch(e) {
+            this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Can't remove commands!").getText())
         }
     }
 
