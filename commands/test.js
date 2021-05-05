@@ -1,9 +1,9 @@
 module.exports = {
 	name: "test",
 	description: "Test",
-	expectedArgs: '<enable:6> <test>',
+	expectedArgs: '<enable:6:description> <test>',
 	subCommandGroup: "group",
-	subCommand: ["button;<enable:6> <test>","pog;<disable> <button>"],
+	subCommand: ["button;<enable:6:imgood> <test>","pog;<disable> <button>"],
 	minArgs: 1,
 	cooldown: 3,
 	guildOnly: "id",

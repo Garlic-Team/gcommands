@@ -136,11 +136,12 @@ module.exports = class GCommands {
                   var item = split[a];
                   var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
                   var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                  var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
                   if(optionType == 1 || optionType == 2) optionType = 3
 
                   options.push({
                     name: option,
-                    description: item,
+                    description: optionDescription,
                     type: parseInt(optionType),
                     required: a < cmd.minArgs,
                   })
@@ -160,11 +161,12 @@ module.exports = class GCommands {
                                 var item = split[a]
                                 var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
                                 var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                                var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
                                 if(optionType == 1 || optionType == 2) optionType = 3
 
                                 g.push({
                                     name: option,
-                                    description: item,
+                                    description: optionDescription,
                                     type: parseInt(optionType),
                                     required: a < cmd.minArgs,
                                 })
