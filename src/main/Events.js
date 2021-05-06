@@ -187,10 +187,27 @@ module.exports = {
                         }
 
                         if (typeof result === 'object') {
-                            const embed = new MessageEmbed(result)
-                            data = await this.createAPIMessage(client, slash, embed)
+                            if(result.ephemeral == true && typeof result.content != "object") {
+                                data = {
+                                    content: result.content,
+                                    allowedMentions: { parse: [], repliedUser: true },
+                                    flags: 64
+                                }
+                            } else if(typeof result.content == "object" && result.ephemeral == true) {
+                                const embed = new MessageEmbed(result.content)
+                                data = await this.createAPIMessage(client, slash, embed)
+                            } else if(typeof result.content == "object" ) {
+                                const embed = new MessageEmbed(result.content)
+                                data = await this.createAPIMessage(client, slash, embed)
+                            } else {
+                                data = {
+                                    content: result.content,
+                                    allowedMentions: { parse: [], repliedUser: true },
+                                }
+                            }
                         }
 
+                        console.log(data)
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                           data: {
                             type: 4,
