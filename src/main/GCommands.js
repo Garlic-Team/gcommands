@@ -2,6 +2,7 @@ const { promisify } = require('util');
 const path = require('path');
 const glob = promisify(require('glob'));
 const Color = require("../color/Color");
+const GEvents = require("./GEvents");
 const Events = require('./Events');
 const { Collection, Structures, APIMessage } = require('discord.js');
 const axios = require("axios");
@@ -18,13 +19,33 @@ module.exports = class GCommands {
         this.client = client;
 
         this.cmdDir = options.cmdDir;
-        this.client.mongoDBurl = options.mongodb;
+        this.eventDir = options.eventDir;
+
+        if(this.eventDir) {
+            new GEvents(this.client, {
+                eventDir: this.eventDir
+            })
+        }
+
+        if(options.database) {
+            this.client.database = {
+                type: options.database.type ? options.database.type : undefined,
+                url: options.database.url ? options.database.url : undefined,
+                working: false
+            };
+        } else {
+            this.client.database = {
+                type:  undefined,
+                url: undefined,
+                working: false
+            };
+        }
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
         this.client.cooldowns = new Collection();
 
-        this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
+        this.client.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.slash = options.slash.slash ? options.slash.slash : false;
         this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
         this.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
@@ -34,9 +55,32 @@ module.exports = class GCommands {
         }
 
         this.__loadCommands();
+        this.__dbLoad();
 
-        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.prefix)
+        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.client.prefix)
         Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault)
+    }
+
+    async __dbLoad() {
+        if(this.client.database.type == "mongodb") {
+            var mongoose = require("mongoose")
+            mongoose.connect(this.client.database.url, { useNewUrlParser: true, useUnifiedTopology: true })
+                .then((connection) => {
+                    console.log(new Color("&d[GCommands] &aMongodb loaded!",{json:false}).getText());
+                    this.client.database.working = true;
+                    return;
+                })
+                .catch((e) => {
+                    console.log(new Color("&d[GCommands] &cMongodb url is not valid.",{json:false}).getText());
+                    this.client.database.working = false;
+                    return;
+                })
+        }
+        else if(this.client.database.type == "sqlite") {
+            var sqliteDb = require("quick.db")
+            this.client.database.working = true;
+            this.client.database.sqlite = sqliteDb;
+        }
     }
 
     async __loadCommands() {
@@ -47,17 +91,22 @@ module.exports = class GCommands {
 
                 try {
                     File = require("../../../../"+this.cmdDir+"/"+name)
+                    console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                 } catch(e) {
                     try {
                         File = require("../../../../"+commandFile.split("./")[1])
+                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                     } catch(e) {
                         try {
                             File = require("../../"+this.cmdDir+"/"+name);
+                            console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
                             try {
                                 File = require("../../../"+this.cmdDir+"/"+name);
+                                console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                             } catch(e) {
-                                return console.log(new Color("&d[GCommands] &cCan't load " + name));
+                                this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
+                                return console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
                             }
                         }
                     }
@@ -74,11 +123,16 @@ module.exports = class GCommands {
         var po = await this.__getAllCommands();
 
         let keys = Array.from(this.client.commands.keys());
+
         keys.forEach(async (cmdname) => {
             var options = [];
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
+            if(cmd.slash == false) return;
+
+            if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
+            if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
 
             if(cmd.subCommandGroup) {
                 subCommandGroup = [
@@ -91,17 +145,21 @@ module.exports = class GCommands {
             }
 
             if (cmd.expectedArgs && cmd.minArgs) {
-                const split = cmd.expectedArgs
+                var split = cmd.expectedArgs
                   .substring(1, cmd.expectedArgs.length - 1)
                   .split(/[>\]] [<\[]/)
         
                 for (let a = 0; a < split.length; ++a) {
-                  const item = split[a]
+                  var item = split[a];
+                  var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                  var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                  var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                  if(optionType == 1 || optionType == 2) optionType = 3
 
                   options.push({
-                    name: item.replace(/ /g, '-'),
-                    description: item,
-                    type: 3,
+                    name: option,
+                    description: optionDescription,
+                    type: parseInt(optionType),
                     required: a < cmd.minArgs,
                   })
                 }
@@ -118,11 +176,15 @@ module.exports = class GCommands {
                 
                             for (let a = 0; a < split.length; ++a) {
                                 var item = split[a]
-            
+                                var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                                var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                                var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                                if(optionType == 1 || optionType == 2) optionType = 3
+
                                 g.push({
-                                    name: item.replace(/ /g, '-'),
-                                    description: item,
-                                    type: 3,
+                                    name: option,
+                                    description: optionDescription,
+                                    type: parseInt(optionType),
                                     required: a < cmd.minArgs,
                                 })
                             }
@@ -196,16 +258,26 @@ module.exports = class GCommands {
                                 this.__tryAgain(cmd, config)
                             }, 20000)
                         } else {
-                            this.client.emit("gDebug", new Color([
-                                "&a----------------------",
-                                "  &d[GCommands Debug] &3",
-                                "&aCode: &b" + error.response.data.code,
-                                "&aMessage: &b" + error.response.data.message,
-                                " ",
-                                "&b" + error.response.data.errors.guild_id._errors[0].code,
-                                "&b" + error.response.data.errors.guild_id._errors[0].message,
-                                "&a----------------------"
-                            ]).getText())        
+                            try {
+                                this.client.emit("gDebug", new Color([
+                                    "&a----------------------",
+                                    "  &d[GCommands Debug] &3",
+                                    "&aCode: &b" + error.response.data.code,
+                                    "&aMessage: &b" + error.response.data.message,
+                                    " ",
+                                    "&b" + error.response.data.errors.guild_id._errors[0].code,
+                                    "&b" + rror.response.data.errors.guild_id._errors[0].message,
+                                    "&a----------------------"
+                                ]).getText())
+                            } catch(e) {
+                                this.client.emit("gDebug", new Color([
+                                    "&a----------------------",
+                                    "  &d[GCommands Debug] &3",
+                                    "&aCode: &b" + error.response.data.code,
+                                    "&aMessage: &b" + error.response.data.message,
+                                    "&a----------------------"
+                                ]).getText())
+                            }  
                         }
                     }
                 }) 
@@ -233,29 +305,35 @@ module.exports = class GCommands {
     }
 
     async __deleteAllCmds() {
-        var allcmds = await this.__getAllCommands();
-        if(!this.slash) {
-            allcmds.forEach(fo => {
-                this.__deleteCmd(fo.id)
-            })
-        }
-
-        var nowCMDS = [];
-
-        let keys = Array.from(this.client.commands.keys());
-        keys.forEach(cmdname => {
-            nowCMDS.push(cmdname)
-        })
-
-        allcmds.forEach(fo => {
-            var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
-
-            if(!f) {
-                this.__deleteCmd(fo.id)
+        try {
+            var allcmds = await this.__getAllCommands();
+            if(!this.slash) {
+                allcmds.forEach(fo => {
+                    this.__deleteCmd(fo.id)
+                })
             }
-        })
 
-        this.__createCommands();
+            var nowCMDS = [];
+
+            let keys = Array.from(this.client.commands.keys());
+            keys.forEach(cmdname => {
+                nowCMDS.push(cmdname)
+            })
+
+            allcmds.forEach(fo => {
+                var f = nowCMDS.some(v => fo.name.toLowerCase().includes(v.toLowerCase()))
+
+                if(!f) {
+                    this.__deleteCmd(fo.id)
+                }
+            })
+
+            if((this.slash) || (this.slash == "both")) {
+                this.__createCommands();
+            }
+        } catch(e) {
+            this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Can't remove commands!").getText())
+        }
     }
 
     async __deleteCmd(commandId) {
@@ -267,6 +345,46 @@ module.exports = class GCommands {
     async __getAllCommands() {
         const app = this.client.api.applications(this.client.user.id)
         return await app.commands.get()
+    }
+}
+
+class ClientUser extends Structures.get('User') {
+    async setGuildPrefix(prefix, guildId) {
+        if(!this.client.database.working) return;
+        if(this.client.database.type = "mongodb") {
+            var guildSettings = require('../models/guild')
+
+            const settings = await guildSettings.findOne({ id: guildId})
+            if(!settings) {
+              await guildSettings.create({
+                id: guildId,
+                prefix: prefix
+              })
+              return;
+            }
+
+            settings.prefix = prefix
+            await settings.save()
+        } else {
+            this.client.database.sqlite.set(`guildPrefix_${guildId}`,`prefix`)
+        }
+    }
+
+    async getGuildPrefix(guildId) {
+        if(!this.client.database.working) return;
+        if(this.client.database.type = "mongodb") {
+            var guildSettings = require('../models/guild')
+
+            const settings = await guildSettings.findOne({ id: guildId})
+            if(!settings) {
+              return this.client.prefix
+            }
+
+            return settings.prefix ? settings.prefix : this.client.prefix
+        } else {
+            var settings = this.client.database.sqlite.get(`guildPrefix_${guildId}`)
+            return settings ? settings : this.client.prefix;
+        }
     }
 }
 
@@ -398,6 +516,7 @@ class MessageStructure extends Structures.get("Message") {
 
         if (!apiMessage.data.allowed_mentions || Object.keys(apiMessage.data.allowed_mentions).length === 0)
         apiMessage.data.allowed_mentions = { parse: ["users", "roles", "everyone"] };
+        apiMessage.data.embed = options.embed || null
         if (typeof apiMessage.data.allowed_mentions.replied_user === "undefined")
         Object.assign(apiMessage.data.allowed_mentions, { replied_user: mentionRepliedUser });
 
@@ -537,3 +656,4 @@ class MessageStructure extends Structures.get("Message") {
 }
 
 Structures.extend("Message", () => MessageStructure);
+Structures.extend("User", () => ClientUser);

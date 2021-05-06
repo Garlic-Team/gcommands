@@ -14,10 +14,22 @@ module.exports = {
 
         if((this.slash == false) || (this.slash == "both")) {
             this.client.on('message', async(message) => {
-                const prefix = this.prefix;
-
                 if (message.author.bot) return;
                 if (!message.guild) return;
+                var prefix = this.prefix;
+
+                if(this.client.database.working) {
+                    if(this.client.database.type == "mongodb") {
+                        var guildSettings = require('../models/guild')
+                        const guild = await guildSettings.findOne({ id: message.guild.id })
+                        if(!guild || !guild.prefix) prefix = this.prefix
+                        else prefix = guild.prefix
+                    } else {
+                        var guildSettings = this.client.database.sqlite.get(`guildPrefix_${message.guild.id}`)
+                        if(!guildSettings) prefix = this.prefix
+                        else prefix = guildSettings
+                    }
+                }
                 if (!message.content.startsWith(prefix)) return;
             
                 const args = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -139,7 +151,7 @@ module.exports = {
 
                     if(commandos.requiredPermission) {
                         if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.requiredPermission)) {
-                            client.api.interactions(interaction.id, interaction.token).callback.post({
+                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
                                     data: {
@@ -154,7 +166,7 @@ module.exports = {
 
                     if(commandos.requiredRole) {
                         if(!interaction.member.roles.includes(commandos.requiredRole)) {
-                            client.api.interactions(interaction.id, interaction.token).callback.post({
+                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
                                     data: {
@@ -168,11 +180,7 @@ module.exports = {
                     }
 
                     try {
-                        var result = await commandos.run({
-                            client,
-                            interaction
-                        })
-
+                        var result = await commandos.run(client, interaction)
                         var data = {
                             content: result,
                             allowedMentions: { parse: [], repliedUser: true }
@@ -180,7 +188,7 @@ module.exports = {
 
                         if (typeof result === 'object') {
                             const embed = new MessageEmbed(result)
-                            data = await this.createAPIMessage(client, interaction, embed)
+                            data = await this.createAPIMessage(client, slash, embed)
                         }
 
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -190,13 +198,13 @@ module.exports = {
                           },
                         })
                     } catch(e) {
+                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Check &ahttps://gcommands.js.org/#/errors/slash &eOR IGNOR").getText())
                         commandos.run(this.client, interaction);
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
-                    console.log(e)
                     if(this.errorMessage) {
-                        client.api.interactions(interaction.id, interaction.token).callback.post({
+                        this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
                                 type: 4,
                                 data: {
