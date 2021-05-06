@@ -2,6 +2,7 @@ const { promisify } = require('util');
 const path = require('path');
 const glob = promisify(require('glob'));
 const Color = require("../color/Color");
+const GEvents = require("./GEvents");
 const Events = require('./Events');
 const { Collection, Structures, APIMessage } = require('discord.js');
 const axios = require("axios");
@@ -18,11 +19,27 @@ module.exports = class GCommands {
         this.client = client;
 
         this.cmdDir = options.cmdDir;
-        this.client.database = {
-            type: options.database.type ? options.database.type : undefined,
-            url: options.database.url ? options.database.url : undefined,
-            working: false
-        };
+        this.eventDir = options.eventDir;
+
+        if(this.eventDir) {
+            new GEvents(this.client, {
+                eventDir: this.eventDir
+            })
+        }
+
+        if(options.database) {
+            this.client.database = {
+                type: options.database.type ? options.database.type : undefined,
+                url: options.database.url ? options.database.url : undefined,
+                working: false
+            };
+        } else {
+            this.client.database = {
+                type:  undefined,
+                url: undefined,
+                working: false
+            };
+        }
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
