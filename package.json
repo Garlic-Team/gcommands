@@ -1,7 +1,7 @@
 {
   "name": "gcommands",
-  "version": "1.0.51-BETA",
-  "description": "Open-source slah command handler",
+  "version": "1.0.51",
+  "description": "Open-source slah/normal command handler",
   "main": "src/index.js",
   "dependencies": {
     "axios": "^0.21.1",

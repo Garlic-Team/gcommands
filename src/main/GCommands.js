@@ -516,6 +516,7 @@ class MessageStructure extends Structures.get("Message") {
 
         if (!apiMessage.data.allowed_mentions || Object.keys(apiMessage.data.allowed_mentions).length === 0)
         apiMessage.data.allowed_mentions = { parse: ["users", "roles", "everyone"] };
+        apiMessage.data.embed = options.embed || null
         if (typeof apiMessage.data.allowed_mentions.replied_user === "undefined")
         Object.assign(apiMessage.data.allowed_mentions, { replied_user: mentionRepliedUser });
 

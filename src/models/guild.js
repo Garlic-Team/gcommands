@@ -7,7 +7,7 @@ const guild = new mongoose.Schema({
   },
   prefix: {
     type: String,
-    required: false,
+    required: false
   }
 })
 
