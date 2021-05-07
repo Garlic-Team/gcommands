@@ -91,19 +91,19 @@ module.exports = class GCommands {
 
                 try {
                     File = require("../../../../"+this.cmdDir+"/"+name)
-                    console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                    console.log(new Color("&d[GCommands]1 &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                 } catch(e) {
                     try {
                         File = require("../../../../"+commandFile.split("./")[1])
-                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                        console.log(new Color("&d[GCommands]2 &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                     } catch(e) {
                         try {
                             File = require("../../"+this.cmdDir+"/"+name);
-                            console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                            console.log(new Color("&d[GCommands]3 &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
                             try {
                                 File = require("../../../"+this.cmdDir+"/"+name);
-                                console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                                console.log(new Color("&d[GCommands]4 &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                             } catch(e) {
                                 this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
                                 return console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
