@@ -1,4 +1,4 @@
-const versionDiscord = require("../../package-lock.json").dependencies["discord.js"].version
+const versionDiscord = require("../../../package-lock.json").dependencies["discord.js"].version
 const {Collection,MessageEmbed,APIMessage} = require("discord.js")
 const Color = require("../color/Color");
 
