@@ -1,4 +1,3 @@
-const versionDiscord = "12.5.3"//require("../../../../../package-lock.json").dependencies["discord.js"].version
 const {Collection,MessageEmbed,APIMessage} = require("discord.js")
 const Color = require("../color/Color");
 
@@ -76,12 +75,12 @@ module.exports = {
                     }
 
                     if(commandos.requiredPermission) {
-                        if(versionDiscord.includes("12.")) {
+                        try {
                             if(!message.member.hasPermission(commandos.requiredPermission)) {
                                 message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
                                 return;
                             }
-                        } else {
+                        } catch(e) {
                             if(!message.member.permission.has(commandos.requiredPermission)) {
                                 message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
                                 return;
@@ -158,7 +157,7 @@ module.exports = {
                     }
 
                     if(commandos.requiredPermission) {
-                        if(versionDiscord.includes("12.")) {
+                        try {
                             if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.requiredPermission)) {
                                 this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
@@ -171,7 +170,7 @@ module.exports = {
                                 });
                                 return;
                             }
-                        } else {
+                        } catch(e) {
                             if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permission.has(commandos.requiredPermission)) {
                                 this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
