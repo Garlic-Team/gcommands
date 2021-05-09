@@ -1,6 +1,6 @@
 const { User } = require('discord.js');
 
-module.exports = ClientUser => class extends User {
+module.exports = ClientUser => class extends Structures.get("User") {
     async setGuildPrefix(prefix, guildId) {
         if(!this.client.database.working) return;
         if(this.client.database.type = "mongodb") {

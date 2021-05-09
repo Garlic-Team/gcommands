@@ -1,6 +1,6 @@
-const { Message, APIMessage } = require('discord.js');
+const { APIMessage } = require('discord.js');
 
-module.exports = MessageStructure => class extends Message {
+module.exports = MessageStructure => class extends Structures.get("Message") {
     async buttons(content, options) {
         if (!options.buttons) {
             options.buttons = [];
