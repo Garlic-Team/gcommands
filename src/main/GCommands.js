@@ -107,7 +107,6 @@ module.exports = class GCommands {
                                 console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                             } catch(e) {
                                 this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
-                                console.log(e)
                                 return console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
                             }
                         }
@@ -322,13 +321,13 @@ module.exports = class GCommands {
             keys.forEach(cmdname => {
                 nowCMDS.push(cmdname)
 
-                if(this.client.commands.get(cmdname).slash == false) {
+                /*if(this.client.commands.get(cmdname).slash == false) {
                     allcmds.forEach(fo => {
                         if(fo.name == cmdname) {
                             this.__deleteCmd(fo.id)
                         }
                     })
-                }
+                }*/
             })
 
             allcmds.forEach(fo => {
