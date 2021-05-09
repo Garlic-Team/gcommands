@@ -1,4 +1,4 @@
-const { User } = require('discord.js');
+const { User, Structures } = require('discord.js');
 
 module.exports = ClientUser => class extends Structures.get("User") {
     async setGuildPrefix(prefix, guildId) {
