@@ -125,6 +125,7 @@ module.exports = class GCommands {
         var po = await this.__getAllCommands();
 
         let keys = Array.from(this.client.commands.keys());
+        console.log(keys)
 
         keys.forEach(async (cmdname) => {
             var options = [];
@@ -309,7 +310,7 @@ module.exports = class GCommands {
     async __deleteAllCmds() {
         try {
             var allcmds = await this.__getAllCommands();
-            if(!this.slash) {
+            if(!this.client.slash) {
                 allcmds.forEach(fo => {
                     this.__deleteCmd(fo.id)
                 })
@@ -321,13 +322,13 @@ module.exports = class GCommands {
             keys.forEach(cmdname => {
                 nowCMDS.push(cmdname)
 
-                /*if(this.client.commands.get(cmdname).slash == false) {
+                if(this.client.commands.get(cmdname).slash == false) {
                     allcmds.forEach(fo => {
                         if(fo.name == cmdname) {
                             this.__deleteCmd(fo.id)
                         }
                     })
-                }*/
+                }
             })
 
             allcmds.forEach(fo => {
@@ -338,7 +339,7 @@ module.exports = class GCommands {
                 }
             })
 
-            if((this.slash) || (this.slash == "both")) {
+            if((this.client.slash) || (this.client.slash == "both")) {
                 this.__createCommands();
             }
         } catch(e) {
