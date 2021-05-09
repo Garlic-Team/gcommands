@@ -131,7 +131,7 @@ module.exports = class GCommands {
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
-            if(cmd.slash == false || cmd.slash == "false") return;
+            if(cmd.slash != undefined && (cmd.slash == false)) return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
             if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
@@ -351,7 +351,7 @@ module.exports = class GCommands {
             const app = this.client.api.applications(this.client.user.id)
 
             await app.commands(commandId).delete()
-        } catch(e) {return;}
+        } catch(e) {console.log(e)}
     }
 
     async __getAllCommands() {
