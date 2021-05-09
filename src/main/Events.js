@@ -31,7 +31,7 @@ module.exports = {
                         else prefix = guildSettings
                     }
                 }
-                if (!message.content.startsWith(prefix)) return;
+                if (!message.content.toLowerCase().startsWith(prefix)) return;
             
                 const args = message.content.slice(prefix.length).trim().split(/ +/g);
                 const cmd = args.shift().toLowerCase();

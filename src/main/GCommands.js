@@ -47,19 +47,19 @@ module.exports = class GCommands {
         this.client.cooldowns = new Collection();
 
         this.client.prefix = options.slash.prefix ? options.slash.prefix : undefined;
-        this.slash = options.slash.slash ? options.slash.slash : false;
-        this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
-        this.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
+        this.client.slash = options.slash.slash ? options.slash.slash : false;
+        this.client.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
+        this.client.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
 
         if(options.errorMessage) {
-            this.errorMessage = options.errorMessage;
+            this.client.errorMessage = options.errorMessage;
         }
 
         this.__loadCommands();
         this.__dbLoad();
 
-        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.client.prefix)
-        Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault)
+        Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault, this.client.prefix)
+        Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault)
     }
 
     async __dbLoad() {
@@ -107,6 +107,7 @@ module.exports = class GCommands {
                                 console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                             } catch(e) {
                                 this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
+                                console.log(e)
                                 return console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
                             }
                         }
