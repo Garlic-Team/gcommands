@@ -320,6 +320,14 @@ module.exports = class GCommands {
             let keys = Array.from(this.client.commands.keys());
             keys.forEach(cmdname => {
                 nowCMDS.push(cmdname)
+
+                if(this.client.commands.get(cmdname).slash == false) {
+                    allcmds.forEach(fo => {
+                        if(fo.name == cmdname) {
+                            this.__deleteCmd(fo.id)
+                        }
+                    })
+                }
             })
 
             allcmds.forEach(fo => {
@@ -328,8 +336,6 @@ module.exports = class GCommands {
                 if(!f) {
                     this.__deleteCmd(fo.id)
                 }
-
-                if(fo.slash == false || fo.slash == "false")  this.__deleteCmd(fo.id)
             })
 
             if((this.slash) || (this.slash == "both")) {
