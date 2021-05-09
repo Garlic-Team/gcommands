@@ -202,14 +202,18 @@ module.exports = {
                     }
 
                     try {
-                        var result = await commandos.run(client, interaction)
+                        var result = await commandos.run(this.client, interaction)
                         var data = {
                             content: result,
                             allowedMentions: { parse: [], repliedUser: true }
                         }
 
                         if (typeof result === 'object') {
-                            if(result.ephemeral == true && typeof result.content != "object") {
+                            if(typeof result == "object" && !result.content) {
+                                const embed = new MessageEmbed(result)
+                                data = await this.createAPIMessage(this.client, interaction, embed)
+                            }
+                            else if(result.ephemeral == true && typeof result.content != "object") {
                                 data = {
                                     content: result.content,
                                     allowedMentions: { parse: [], repliedUser: true },
@@ -217,10 +221,10 @@ module.exports = {
                                 }
                             } else if(typeof result.content == "object" && result.ephemeral == true) {
                                 const embed = new MessageEmbed(result.content)
-                                data = await this.createAPIMessage(client, slash, embed)
+                                data = await this.createAPIMessage(this.client, interaction, embed)
                             } else if(typeof result.content == "object" ) {
                                 const embed = new MessageEmbed(result.content)
-                                data = await this.createAPIMessage(client, slash, embed)
+                                data = await this.createAPIMessage(this.client, interaction, embed)
                             } else {
                                 data = {
                                     content: result.content,
