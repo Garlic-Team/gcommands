@@ -43,6 +43,7 @@ module.exports = class GCommands {
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
+        this.client.aliases = new Collection();
         this.client.cooldowns = new Collection();
 
         this.client.prefix = options.slash.prefix ? options.slash.prefix : undefined;
@@ -57,7 +58,7 @@ module.exports = class GCommands {
         this.__loadCommands();
         this.__dbLoad();
 
-        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.client.prefix)
+        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.client.prefix)
         Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault)
     }
 
@@ -112,6 +113,7 @@ module.exports = class GCommands {
                     }
                 }
 
+                if (File.aliases && Array.isArray(File.aliases)) File.aliases.forEach(alias => this.client.aliases.set(alias, File.name));
 				this.client.commands.set(File.name, File);
 			};
 
@@ -129,7 +131,7 @@ module.exports = class GCommands {
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
-            if(cmd.slash == false) return;
+            if(cmd.slash == false || cmd.slash == "false") return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
             if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
@@ -326,6 +328,8 @@ module.exports = class GCommands {
                 if(!f) {
                     this.__deleteCmd(fo.id)
                 }
+
+                if(fo.slash == false || fo.slash == "false")  this.__deleteCmd(fo.id)
             })
 
             if((this.slash) || (this.slash == "both")) {
@@ -337,9 +341,11 @@ module.exports = class GCommands {
     }
 
     async __deleteCmd(commandId) {
-        const app = this.client.api.applications(this.client.user.id)
+        try {
+            const app = this.client.api.applications(this.client.user.id)
 
-        await app.commands(commandId).delete()
+            await app.commands(commandId).delete()
+        } catch(e) {return;}
     }
 
     async __getAllCommands() {

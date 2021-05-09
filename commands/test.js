@@ -1,5 +1,6 @@
 module.exports = {
 	name: "test",
+	aliases: ["ccc"],
 	description: "Test",
 	expectedArgs: '<enable:6:description> <test>',
 	subCommandGroup: "group",

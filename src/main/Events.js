@@ -2,11 +2,12 @@ const {Collection,MessageEmbed,APIMessage} = require("discord.js")
 const Color = require("../color/Color");
 
 module.exports = {
-    normalCommands: async function (client, slash, commands, cooldowns, errorMessage, cooldownMessage, cooldownDefault, prefix) {
+    normalCommands: async function (client, slash, commands, aliases, cooldowns, errorMessage, cooldownMessage, cooldownDefault, prefix) {
         this.prefix = prefix
         this.client = client;
         this.slash = slash;
         this.commands = commands;
+        this.aliases = aliases;
         this.cooldowns = cooldowns;
         this.errorMessage = errorMessage;
         this.cooldownMessage = cooldownMessage;
@@ -39,6 +40,8 @@ module.exports = {
         
                 try {
                     var commandos = this.commands.get(cmd);
+                    if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
+
                     if (!this.cooldowns.has(cmd)) {
                         this.cooldowns.set(cmd, new Collection());
                     }
@@ -95,9 +98,10 @@ module.exports = {
                         }
                     }
 
-                    this.commands.get(cmd).run(this.client, undefined, message, args)
+                    commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
+                    console.log(e)
                     if(this.errorMessage) {
                         message.channel.send(this.errorMessage);
                     }
