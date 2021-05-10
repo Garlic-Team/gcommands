@@ -101,7 +101,6 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    console.log(e)
                     if(this.errorMessage) {
                         message.channel.send(this.errorMessage);
                     }
@@ -244,7 +243,7 @@ module.exports = {
                           },
                         })
                     } catch(e) {
-                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Check &ahttps://gcommands.js.org/#/errors/slash &eOR IGNOR").getText())
+                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
                         commandos.run(this.client, interaction);
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
@@ -262,6 +261,17 @@ module.exports = {
                 }
             })
         }
+    },
+
+    loadMoreEvents: async function(client) {
+        this.client = client;
+
+        require("./moreEvents/channel")(this.client)
+        require("./moreEvents/guild")(this.client)
+        require("./moreEvents/guildmember")(this.client)
+        require("./moreEvents/role")(this.client)
+        require("./moreEvents/user")(this.client)
+        require("./moreEvents/voiceupdate")(this.client)
     },
 
     createAPIMessage: async function(client, interaction, content) {

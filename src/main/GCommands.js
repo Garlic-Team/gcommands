@@ -64,6 +64,7 @@ module.exports = class GCommands {
         this.__loadCommands();
         this.__dbLoad();
 
+        Events.loadMoreEvents(this.client)
         if(!this.ownEvents) {
             Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault, this.client.prefix)
             Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault)
