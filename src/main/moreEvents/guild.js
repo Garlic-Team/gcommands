@@ -73,7 +73,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.partnered != newGuild.partnered ) {
-            client.emit("guildPartneredUpdate",
+            client.emit("guildPartnerUpdate",
                 newGuild,
                 oldGuild.partnered,
                 newGuild.partnered
@@ -81,7 +81,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.verified != newGuild.verified ) {
-            client.emit("guildVerifiedUpdate",
+            client.emit("guildVerifyUpdate",
                 newGuild,
                 oldGuild.verified,
                 newGuild.verified

@@ -2,7 +2,7 @@ module.exports = (client) => {
     client.on("guildMemberUpdate", async(oldMember, newMember) => {
         if(oldMember.premiumSince && newMember.premiumSince) {
             client.emit("guildMemberBoost",
-                newUser,
+                newMember,
                 oldMember.premiumSince,
                 newMember.premiumSince
             )
@@ -10,7 +10,7 @@ module.exports = (client) => {
 
         if(oldMember.premiumSince && !newMember.premiumSince) {
             client.emit("guildMemberUnboost",
-                newUser,
+                newMember,
                 oldMember.premiumSince,
                 newMember.premiumSince
             )
