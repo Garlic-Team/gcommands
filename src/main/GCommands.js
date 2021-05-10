@@ -41,6 +41,12 @@ module.exports = class GCommands {
             };
         }
 
+        if(options.ownEvents) {
+            this.ownEvents = true;
+        } else {
+            this.ownEvents = false;
+        }
+
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
         this.client.aliases = new Collection();
@@ -58,8 +64,10 @@ module.exports = class GCommands {
         this.__loadCommands();
         this.__dbLoad();
 
-        Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault, this.client.prefix)
-        Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault)
+        if(!this.ownEvents) {
+            Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault, this.client.prefix)
+            Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault)
+        }
     }
 
     async __dbLoad() {
@@ -125,7 +133,6 @@ module.exports = class GCommands {
         var po = await this.__getAllCommands();
 
         let keys = Array.from(this.client.commands.keys());
-        console.log(keys)
 
         keys.forEach(async (cmdname) => {
             var options = [];
@@ -352,7 +359,7 @@ module.exports = class GCommands {
             const app = this.client.api.applications(this.client.user.id)
 
             await app.commands(commandId).delete()
-        } catch(e) {console.log(e)}
+        } catch(e) {return;}
     }
 
     async __getAllCommands() {
