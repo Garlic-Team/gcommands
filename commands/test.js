@@ -50,7 +50,7 @@ module.exports = {
 	minArgs: 1,
 	cooldown: 3,
 	guildOnly: "id",
-	ownerOnly: "id",
+	userOnly: "id",
 	requiredPermission: "ADMINISTRATOR",
 	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
 	requiredRole: "ROLE ID",

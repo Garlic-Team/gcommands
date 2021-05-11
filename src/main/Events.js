@@ -71,8 +71,8 @@ module.exports = {
                         }
                     } 
 
-                    if(commandos.ownerOnly) {
-                        if(message.author.id != commandos.ownerOnly) {
+                    if(commandos.userOnly) {
+                        if(message.author.id != commandos.userOnly) {
                             return;
                         }
                     }
@@ -153,8 +153,8 @@ module.exports = {
                     timestamps.set(interaction.member.user.id, now);
                     setTimeout(() => timestamps.delete(interaction.member.user.id), cooldownAmount);
 
-                    if(commandos.ownerOnly) {
-                        if(interaction.member.user.id != commandos.ownerOnly) {
+                    if(commandos.userOnly) {
+                        if(interaction.member.user.id != commandos.userOnly) {
                             return;
                         }
                     }
