@@ -1,5 +1,22 @@
+/**
+ * The Color class
+ * @class Color
+ */
 module.exports = class Color {
+
+    /**
+     * Creates new Color instance
+     * @param {string} text 
+     * @param {ColorOptions} options 
+     */
 	constructor(text = "", options = {}) {
+
+        /**
+         * Color options
+         * @param {string} text
+         * @param {ColorOptions} json
+         * @type {ColorOptions}
+        */
 		this.text = text;
 
 		this.json = options.json;
@@ -31,6 +48,12 @@ module.exports = class Color {
 			.replace(/&p/g, "\x1b[7m")
 	}
 
+
+    /**
+     * Internal method to getText
+     * @returns {json}
+	 * @returns {string}
+     */
 	getText() {
 		if(this.json) {
 			return {text:this.text + "\x1b[0m"}
@@ -38,6 +61,11 @@ module.exports = class Color {
 		return this.text + "\x1b[0m";
 	}
 
+    /**
+     * Internal method to getRGB
+     * @returns {json}
+	 * @returns {string}
+     */
 	getRGB() {
 		var get = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(this.text);
 

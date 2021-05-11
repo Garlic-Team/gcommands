@@ -2,6 +2,28 @@ const {Collection,MessageEmbed,APIMessage} = require("discord.js")
 const Color = require("../color/Color");
 
 module.exports = {
+
+    /**
+     * Command
+     * @name ExampleCommand
+     * @param {DiscordClient} client
+     * @param {Object} slash
+     * @param {Object} message
+     * @param {Array} args
+     * @example
+     * module.exports = {
+     *  name: "hi",
+     *  aliases: ["hello"],
+     *  description: "goo",
+     *  run: async(client, slash, message, args) => {
+     *      // code ... 
+     *  }
+    */
+
+    /**
+     * Internal method to normalCommands
+     * @private
+    */
     normalCommands: async function (client, slash, commands, aliases, cooldowns, errorMessage, cooldownMessage, cooldownDefault, prefix) {
         this.prefix = prefix
         this.client = client;
@@ -109,6 +131,10 @@ module.exports = {
         }
     },
 
+    /**
+     * Internal method to slashCommands
+     * @private
+    */
     slashCommands: async function (client, slash, commands, cooldowns, errorMessage, cooldownMessage, cooldownDefault) {
         this.client = client;
         this.slash = slash;
@@ -205,6 +231,19 @@ module.exports = {
                     }
 
                     try {
+
+                        /**
+                         * Return system for slash
+                         * @name ReturnSystem
+                         * @param {DiscordClient} client
+                         * @param {Object} interaction
+                         * @example 
+                         *  return {
+                         *      content: "hi",
+                         *      ephemeral: true,
+                         *      allowedMentions: { parse: [], repliedUser: true }
+                         *  }
+                         */
                         var result = await commandos.run(this.client, interaction)
                         var data = {
                             content: result

@@ -1,6 +1,15 @@
 const Color = require("../color/Color");
 
+/**
+ * The Buttons class
+ * @class Buttons
+ */
 module.exports = class Buttons {
+
+    /**
+     * Creates new Buttons instance
+     * @param {ButtonsOptions} options 
+    */
     constructor(options = {}) {
         if (!options.buttons) {
             options.buttons = [];

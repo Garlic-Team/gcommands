@@ -4,11 +4,27 @@ const { promisify } = require('util');
 const path = require('path');
 const glob = promisify(require('glob'));
 
-module.exports = class GCommands {
+/**
+ * The GEvents class
+ * @class GEvents
+ */
+module.exports = class GEvents {
+
+    /**
+     * Creates new GEvents instance
+     * @param {DiscordClient} client 
+     * @param {GEventsOptions} options 
+    */
     constructor(client, options = {}) {
-        if (typeof client !== 'object') return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
-        if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
-        if(!options.eventDir) return console.log(new Color("&d[GCommands] &cNo default options provided! (eventDir)",{json:false}).getText());
+        if (typeof client !== 'object') return console.log(new Color("&d[GCommands EVENTS] &cNo discord.js client provided!",{json:false}).getText());
+        if (!Object.keys(options).length) return console.log(new Color("&d[GCommands EVENTS] &cNo default options provided!",{json:false}).getText());
+        if(!options.eventDir) return console.log(new Color("&d[GCommands EVENTS] &cNo default options provided! (eventDir)",{json:false}).getText());
+
+        /**
+         * GEventsOptions options
+         * @type {GEventsOptions}
+         * @param {GEventsOptions} eventDir
+        */
 
         this.eventDir = options.eventDir;
 
@@ -18,6 +34,10 @@ module.exports = class GCommands {
         this.__loadEventFiles();
     }
 
+    /**
+     * Internal method to loadEventsFiles
+     * @private
+    */
     async __loadEventFiles() {
         return glob(`./${this.eventDir}/**/*.js`).then(events => {
             for (const eventFile of events) {
@@ -54,6 +74,10 @@ module.exports = class GCommands {
         })
     }
 
+    /**
+     * Internal method to loadEvents
+     * @private
+    */
     async __loadEvents() {
         this.client.events.forEach(event => {
             if (event.once) {

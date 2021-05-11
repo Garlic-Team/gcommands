@@ -1,5 +1,10 @@
 const { APIMessage, Structures } = require('discord.js');
 
+/**
+ * The MessageStructure structure
+ * @class MessageStructure
+ * @private
+ */
 module.exports = MessageStructure => class extends Structures.get("Message") {
     async buttons(content, options) {
         if (!options.buttons) {

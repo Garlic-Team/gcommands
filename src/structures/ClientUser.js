@@ -1,5 +1,10 @@
 const { User, Structures } = require('discord.js');
 
+/**
+ * The ClientUser structure
+ * @class ClientUser
+ * @private
+ */
 module.exports = ClientUser => class extends Structures.get("User") {
     async setGuildPrefix(prefix, guildId) {
         if(!this.client.database.working) return;

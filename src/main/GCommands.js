@@ -8,7 +8,17 @@ const { Collection, Structures, APIMessage, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
 
+/**
+ * The GCommands class
+ * @class GCommands
+ */
 module.exports = class GCommands {
+
+    /**
+     * Creates new GCommands instance
+     * @param {DiscordClient} client 
+     * @param {GCommandsOptions} options 
+     */
     constructor(client, options = {}) {
         if (typeof client !== 'object') return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
         if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
@@ -17,6 +27,20 @@ module.exports = class GCommands {
         if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
 
         this.client = client;
+
+        /**
+         * GCommands options
+         * @param {GCommandsOptions} cmdDir
+         * @param {GCommandsOptions} eventDir
+         * @param {GCommandsOptions} database
+         * @param {GCommandsOptions} ownEvents
+         * @param {GCommandsOptions} prefix
+         * @param {GCommandsOptions} slash
+         * @param {GCommandsOptions} cooldownMessage
+         * @param {GCommandsOptions} cooldownDefault
+         * @param {GCommandsOptions} errorMessage
+         * @type {GCommandsOptions}
+        */
 
         this.cmdDir = options.cmdDir;
         this.eventDir = options.eventDir;
@@ -73,6 +97,10 @@ module.exports = class GCommands {
         }
     }
 
+    /**
+     * Internal method to dbLoad
+     * @private
+     */
     async __dbLoad() {
         if(this.client.database.type == "mongodb") {
             var mongoose = require("mongoose")
@@ -95,6 +123,10 @@ module.exports = class GCommands {
         }
     }
 
+    /**
+     * Internal method to loadCommands
+     * @private
+     */
     async __loadCommands() {
 		return glob(`./${this.cmdDir}/**/*.js`).then(commands => {
 			for (const commandFile of commands) {
@@ -132,6 +164,10 @@ module.exports = class GCommands {
 		});
     }
 
+    /**
+     * Internal method to createCommands
+     * @private
+     */
     async __createCommands() {
         var po = await this.__getAllCommands();
 
@@ -323,6 +359,10 @@ module.exports = class GCommands {
         })
     }
 
+    /**
+     * Internal method to tryAgain
+     * @private
+    */
     async __tryAgain(cmd, config) {
         axios(config).then((response) => {
             console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
@@ -340,6 +380,10 @@ module.exports = class GCommands {
         })
     }
 
+    /**
+     * Internal method to deleteAllCmds
+     * @private
+    */
     async __deleteAllCmds() {
         try {
             var allcmds = await this.__getAllCommands();
@@ -380,6 +424,10 @@ module.exports = class GCommands {
         }
     }
 
+    /**
+     * Internal method to deleteCmd
+     * @private
+    */
     async __deleteCmd(commandId) {
         try {
             const app = this.client.api.applications(this.client.user.id)
@@ -388,6 +436,11 @@ module.exports = class GCommands {
         } catch(e) {return;}
     }
 
+    /**
+     * Internal method to getAllCmds
+     * @returns {object}
+     * @private
+    */
     async __getAllCommands() {
         const app = this.client.api.applications(this.client.user.id)
         return await app.commands.get()
