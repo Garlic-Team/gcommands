@@ -12,13 +12,14 @@ module.exports = ClientUser => class extends Structures.get("User") {
                 id: guildId,
                 prefix: prefix
               })
+
               return;
             }
 
             settings.prefix = prefix
             await settings.save()
         } else {
-            this.client.database.sqlite.set(`guildPrefix_${guildId}`,`prefix`)
+            this.client.database.sqlite.set(`guildPrefix_${guildId}`,prefix)
         }
     }
 

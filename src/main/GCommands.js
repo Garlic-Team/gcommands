@@ -62,6 +62,7 @@ module.exports = class GCommands {
             this.client.errorMessage = options.errorMessage;
         }
 
+        process.setMaxListeners(50);
         this.__loadCommands();
         this.__dbLoad();
 
@@ -156,71 +157,94 @@ module.exports = class GCommands {
                 ]
             }
 
-            if (cmd.expectedArgs && cmd.minArgs) {
-                var split = cmd.expectedArgs
-                  .substring(1, cmd.expectedArgs.length - 1)
-                  .split(/[>\]] [<\[]/)
-        
-                for (let a = 0; a < split.length; ++a) {
-                  var item = split[a];
-                  var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
-                  var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
-                  var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
-                  if(optionType == 1 || optionType == 2) optionType = 3
-
-                  options.push({
-                    name: option,
-                    description: optionDescription,
-                    type: parseInt(optionType),
-                    required: a < cmd.minArgs,
-                  })
-                }
-
-                if(cmd.subCommand) {
-                    cmd.subCommand.forEach(sc => {
-                        var g = []
-                        var optionsSplit = sc.split(";")[1]
-
-                        if(optionsSplit) {
-                            var split = optionsSplit
-                                .substring(1, optionsSplit.length - 1)
-                                .split(/[>\]] [<\[]/)
-                
-                            for (let a = 0; a < split.length; ++a) {
-                                var item = split[a]
-                                var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
-                                var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
-                                var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
-                                if(optionType == 1 || optionType == 2) optionType = 3
-
-                                g.push({
-                                    name: option,
-                                    description: optionDescription,
-                                    type: parseInt(optionType),
-                                    required: a < cmd.minArgs,
-                                })
-                            }
-                        }
-
-                        subCommand.push({
-                            name: sc.split(";")[0],
-                            description: sc.split(";")[0],
-                            type: 1,
-                            options: g || []
+            if (cmd.expectedArgs) {
+                if(typeof cmd.expectedArgs == "object") {
+                    cmd.expectedArgs.forEach(option => {
+                        options.push({
+                            name: option.name,
+                            description: option.description,
+                            type: option.choices ? 3 : parseInt(option.type),
+                            required: option.required ? option.required : false,
+                            choices: option.choices ? option.choices : []
                         })
                     })
-                }
+                } else {
+                    var split = cmd.expectedArgs
+                    .substring(1, cmd.expectedArgs.length - 1)
+                    .split(/[>\]] [<\[]/)
+            
+                    for (let a = 0; a < split.length; ++a) {
+                    var item = split[a];
+                    var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                    var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                    var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                    if(optionType == 1 || optionType == 2) optionType = 3
 
-                if(cmd.subCommandGroup) {
-                    subCommandGroup = [
-                        {
-                            name: subCommandGroup[0].name,
-                            description: subCommandGroup[0].name,
-                            type: subCommandGroup[0].type,
-                            options: subCommand
-                        }
-                    ]
+                    options.push({
+                        name: option,
+                        description: optionDescription,
+                        type: parseInt(optionType),
+                        required: a < cmd.minArgs ? cmd.minArgs : 0,
+                    })
+                    }
                 }
+            }
+
+            if(cmd.subCommand) {
+                cmd.subCommand.forEach(sc => {
+                    try {
+                        if(sc.split(";")[0]) {
+                            var opt = []
+                            var optionsSplit = sc.split(";")[1]
+
+                            if(optionsSplit) {
+                                var split = optionsSplit
+                                    .substring(1, optionsSplit.length - 1)
+                                    .split(/[>\]] [<\[]/)
+                    
+                                for (let a = 0; a < split.length; ++a) {
+                                    var item = split[a]
+                                    var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                                    var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                                    var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                                    if(optionType == 1 || optionType == 2) optionType = 3
+
+                                    opt.push({
+                                        name: option,
+                                        description: optionDescription,
+                                        type: parseInt(optionType),
+                                        required: a < cmd.minArgs,
+                                    })
+                                }
+                            }
+
+                            subCommand.push({
+                                name: sc.split(";")[0],
+                                description: sc.split(";")[0],
+                                type: 1,
+                                options: opt || []
+                            })
+                        }
+                    } catch(e) {
+                        subCommand.push({
+                            name: sc.name,
+                            description: sc.description,
+                            type: 1,
+                            options: sc.options || []
+                        })
+                    }
+                })
+            }
+
+            if(cmd.subCommandGroup) {
+                subCommandGroup = [
+                    {
+                        name: subCommandGroup[0].name,
+                        description: subCommandGroup[0].name,
+                        type: subCommandGroup[0].type,
+                        options: subCommand
+                    }
+                ]
             }
 
             try {
