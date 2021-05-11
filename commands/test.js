@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js");
+
 module.exports = {
 	name: "test",
 	aliases: ["ccc"],
@@ -7,11 +9,11 @@ module.exports = {
 	subCommand: ["button;<enable:6:imgood> <test>","pog;<disable> <button>"],
 	minArgs: 1,
 	cooldown: 3,
-	guildOnly: "id",
-	ownerOnly: "id",
+	guildOnly: "747526604116459691",
+	//ownerOnly: "id",
 	requiredPermission: "ADMINISTRATOR",
 	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
-	requiredRole: "ROLE ID",
+	//requiredRole: "ROLE ID",
 	requiredRoleMessage: "You doesn't have role!",
 	//slash: false,
 	run: async(client, slash, message, args) => {
@@ -26,7 +28,8 @@ module.exports = {
 
 		return {
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
-			ephemeral: true
+			ephemeral: true,
+			allowedMentions: { parse: [], repliedUser: true }
 		}
 
 		/*

@@ -207,8 +207,7 @@ module.exports = {
                     try {
                         var result = await commandos.run(this.client, interaction)
                         var data = {
-                            content: result,
-                            allowedMentions: { parse: [], repliedUser: true }
+                            content: result
                         }
 
                         if (typeof result === 'object') {
@@ -219,7 +218,6 @@ module.exports = {
                             else if(result.ephemeral == true && typeof result.content != "object") {
                                 data = {
                                     content: result.content,
-                                    allowedMentions: { parse: [], repliedUser: true },
                                     flags: 64
                                 }
                             } else if(typeof result.content == "object" && result.ephemeral == true) {
@@ -230,10 +228,15 @@ module.exports = {
                                 data = await this.createAPIMessage(this.client, interaction, embed)
                             } else {
                                 data = {
-                                    content: result.content,
-                                    allowedMentions: { parse: [], repliedUser: true },
+                                    content: result.content
                                 }
                             }
+                        }
+
+                        if(result.allowedMentions) {
+                            data.allowedMentions = result.allowedMentions
+                        } else {
+                            data.allowedMentions = { parse: [], repliedUser: true }
                         }
 
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
