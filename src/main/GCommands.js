@@ -4,7 +4,7 @@ const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const GEvents = require("./GEvents");
 const Events = require('./Events');
-const { Collection, Structures, APIMessage } = require('discord.js');
+const { Collection, Structures, APIMessage, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
 
@@ -20,6 +20,7 @@ module.exports = class GCommands {
 
         this.cmdDir = options.cmdDir;
         this.eventDir = options.eventDir;
+        this.client.discordjsversion = version
 
         if(this.eventDir) {
             new GEvents(this.client, {

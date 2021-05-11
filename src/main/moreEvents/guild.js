@@ -72,6 +72,14 @@ module.exports = (client) => {
             )
         }
 
+        if(oldGuild.maximumMembers != newGuild.maximumMembers ) {
+            client.emit("guildMaximumMembersUpdate",
+                newGuild,
+                oldGuild.maximumMembers,
+                newGuild.maximumMembers
+            )
+        }
+
         if(oldGuild.partnered != newGuild.partnered ) {
             client.emit("guildPartnerUpdate",
                 newGuild,

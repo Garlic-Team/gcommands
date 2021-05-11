@@ -78,12 +78,12 @@ module.exports = {
                     }
 
                     if(commandos.requiredPermission) {
-                        try {
+                        if(this.client.discordjsversion.includes("12.")) {
                             if(!message.member.hasPermission(commandos.requiredPermission)) {
                                 message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
                                 return;
                             }
-                        } catch(e) {
+                        } else {
                             if(!message.member.permission.has(commandos.requiredPermission)) {
                                 message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
                                 return;
@@ -160,7 +160,7 @@ module.exports = {
                     }
 
                     if(commandos.requiredPermission) {
-                        try {
+                        if(this.client.discordjsversion.includes("12.")) {
                             if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.requiredPermission)) {
                                 this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
@@ -173,7 +173,7 @@ module.exports = {
                                 });
                                 return;
                             }
-                        } catch(e) {
+                        } else {
                             if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permission.has(commandos.requiredPermission)) {
                                 this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
