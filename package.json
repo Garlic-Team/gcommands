@@ -1,6 +1,6 @@
 {
   "name": "gcommands",
-  "version": "2.0.1-BETA",
+  "version": "2.0.1",
   "description": "Open-source slash/normal command handler",
   "main": "src/index.js",
   "dependencies": {
