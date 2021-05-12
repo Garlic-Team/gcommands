@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const { SlashCommand } = require("gcommands")
 
 module.exports = {
 	name: "test",
@@ -8,7 +9,7 @@ module.exports = {
 	/*expectedArgs: [
 		{
 			name: "list",
-			type: "3",
+			type: SlashCommand.STRING,
 			description: "helllo",
 			required: true,
 			choices: [
@@ -24,7 +25,7 @@ module.exports = {
 		},
 		{
 			name: "user",
-			type: "6",
+			type: SlashCommand.USER,
 			description: "select user",
 			required: false
 		}
@@ -38,7 +39,7 @@ module.exports = {
 			options: [
 				{
 					name: "enable",
-					type: 6,
+					type: SlashCommand.USER,
 					description: "enable",
 					required: true
 				}
@@ -49,7 +50,7 @@ module.exports = {
 
 	minArgs: 1,
 	cooldown: 3,
-	guildOnly: "id",
+	guildOnly: "id", //["id","id2"]
 	userOnly: "id",
 	requiredPermission: "ADMINISTRATOR",
 	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
