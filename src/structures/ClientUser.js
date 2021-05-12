@@ -1,4 +1,4 @@
-const { User, Structures } = require('discord.js');
+const { User, Structures, APIMessage } = require('discord.js');
 
 /**
  * The ClientUser structure

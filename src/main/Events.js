@@ -94,8 +94,15 @@ module.exports = {
                     } 
 
                     if(commandos.userOnly) {
-                        if(message.author.id != commandos.userOnly) {
-                            return;
+                        if(typeof commandos.userOnly == "object") {
+                            var users = commandos.userOnly.some(v => message.author.id == v)
+                            if(!users) {
+                                return
+                            }
+                        } else {
+                            if(message.author.id != commandos.userOnly) {
+                                return;
+                            }
                         }
                     }
 
@@ -180,8 +187,15 @@ module.exports = {
                     setTimeout(() => timestamps.delete(interaction.member.user.id), cooldownAmount);
 
                     if(commandos.userOnly) {
-                        if(interaction.member.user.id != commandos.userOnly) {
-                            return;
+                        if(typeof commandos.userOnly == "object") {
+                            var users = commandos.userOnly.some(v => interaction.member.user.id == v)
+                            if(!users) {
+                                return;
+                            }
+                        } else {
+                            if(interaction.member.user.id != commandos.userOnly) {
+                                return;
+                            }
                         }
                     }
 
