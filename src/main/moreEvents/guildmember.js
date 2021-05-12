@@ -23,5 +23,11 @@ module.exports = (client) => {
                 newMember.nickname
             );
         }
+
+        if((oldMember.nickname == newMember.nickname) && (oldMember.lastMessageID == newMember.lastMessageID) && (oldMember.premiumSince == newMember.premiumSince)) {
+            client.emit('guildMemberAcceptRules',
+                newMember
+            );
+        }
     })
 }
