@@ -106,6 +106,19 @@ module.exports = {
                         }
                     }
 
+                    if(commandos.channelOnly) {
+                        if(typeof commandos.channelOnly == "object") {
+                            var users = commandos.channelOnly.some(v => message.channel.id == v)
+                            if(!users) {
+                                return
+                            }
+                        } else {
+                            if(message.channel.id != commandos.channelOnly) {
+                                return;
+                            }
+                        }
+                    }
+
                     if(commandos.requiredPermission) {
                         if(this.client.discordjsversion.includes("12.")) {
                             if(!message.member.hasPermission(commandos.requiredPermission)) {
@@ -194,6 +207,19 @@ module.exports = {
                             }
                         } else {
                             if(interaction.member.user.id != commandos.userOnly) {
+                                return;
+                            }
+                        }
+                    }
+
+                    if(commandos.channelOnly) {
+                        if(typeof commandos.channelOnly == "object") {
+                            var users = commandos.channelOnly.some(v => interaction.channel_id == v)
+                            if(!users) {
+                                return;
+                            }
+                        } else {
+                            if(interaction.channel_id != commandos.channelOnly) {
                                 return;
                             }
                         }

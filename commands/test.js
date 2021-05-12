@@ -52,6 +52,7 @@ module.exports = {
 	cooldown: 3,
 	guildOnly: "id", //["id","id2"]
 	userOnly: "id",
+	channelOnly: "id", //["id","id2"]
 	requiredPermission: "ADMINISTRATOR",
 	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
 	requiredRole: "ROLE ID",
@@ -79,4 +80,3 @@ module.exports = {
 		*/
 	}
 };
-
