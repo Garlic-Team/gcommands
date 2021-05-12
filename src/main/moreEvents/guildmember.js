@@ -24,7 +24,7 @@ module.exports = (client) => {
             );
         }
 
-        if((oldMember.nickname == newMember.nickname) && (oldMember.lastMessageID == newMember.lastMessageID) && (oldMember.premiumSince == newMember.premiumSince)) {
+        if((oldMember.nickname == newMember.nickname) && (oldMember.lastMessageID == newMember.lastMessageID) && (oldMember.premiumSince == newMember.premiumSince) && (oldMember._roles.length == 0) && (newMember._roles.length == 0)) {
             client.emit('guildMemberAcceptRules',
                 newMember
             );
