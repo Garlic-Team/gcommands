@@ -31,6 +31,7 @@ client.on("ready", () => {
         cmdDir: "commands",
         eventDir: "events", //when you want event handler
         errorMessage: "Error :(",
+        ownEvents: false,
         slash: {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 

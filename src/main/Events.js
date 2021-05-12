@@ -2,11 +2,34 @@ const {Collection,MessageEmbed,APIMessage} = require("discord.js")
 const Color = require("../color/Color");
 
 module.exports = {
-    normalCommands: async function (client, slash, commands, cooldowns, errorMessage, cooldownMessage, cooldownDefault, prefix) {
+
+    /**
+     * Command
+     * @name ExampleCommand
+     * @param {DiscordClient} client
+     * @param {Object} slash
+     * @param {Object} message
+     * @param {Array} args
+     * @example
+     * module.exports = {
+     *  name: "hi",
+     *  aliases: ["hello"],
+     *  description: "goo",
+     *  run: async(client, slash, message, args) => {
+     *      // code ... 
+     *  }
+    */
+
+    /**
+     * Internal method to normalCommands
+     * @private
+    */
+    normalCommands: async function (client, slash, commands, aliases, cooldowns, errorMessage, cooldownMessage, cooldownDefault, prefix) {
         this.prefix = prefix
         this.client = client;
         this.slash = slash;
         this.commands = commands;
+        this.aliases = aliases;
         this.cooldowns = cooldowns;
         this.errorMessage = errorMessage;
         this.cooldownMessage = cooldownMessage;
@@ -30,7 +53,7 @@ module.exports = {
                         else prefix = guildSettings
                     }
                 }
-                if (!message.content.startsWith(prefix)) return;
+                if (!message.content.toLowerCase().startsWith(prefix)) return;
             
                 const args = message.content.slice(prefix.length).trim().split(/ +/g);
                 const cmd = args.shift().toLowerCase();
@@ -39,6 +62,8 @@ module.exports = {
         
                 try {
                     var commandos = this.commands.get(cmd);
+                    if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
+
                     if (!this.cooldowns.has(cmd)) {
                         this.cooldowns.set(cmd, new Collection());
                     }
@@ -68,16 +93,30 @@ module.exports = {
                         }
                     } 
 
-                    if(commandos.ownerOnly) {
-                        if(message.author.id != commandos.ownerOnly) {
-                            return;
+                    if(commandos.userOnly) {
+                        if(typeof commandos.userOnly == "object") {
+                            var users = commandos.userOnly.some(v => message.author.id == v)
+                            if(!users) {
+                                return
+                            }
+                        } else {
+                            if(message.author.id != commandos.userOnly) {
+                                return;
+                            }
                         }
                     }
 
                     if(commandos.requiredPermission) {
-                        if(!message.member.hasPermission(commandos.requiredPermission)) {
-                            message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
-                            return;
+                        if(this.client.discordjsversion.includes("12.")) {
+                            if(!message.member.hasPermission(commandos.requiredPermission)) {
+                                message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
+                                return;
+                            }
+                        } else {
+                            if(!message.member.permission.has(commandos.requiredPermission)) {
+                                message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
+                                return;
+                            }
                         }
                     }
 
@@ -88,7 +127,7 @@ module.exports = {
                         }
                     }
 
-                    this.commands.get(cmd).run(this.client, undefined, message, args)
+                    commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
                     if(this.errorMessage) {
@@ -99,6 +138,10 @@ module.exports = {
         }
     },
 
+    /**
+     * Internal method to slashCommands
+     * @private
+    */
     slashCommands: async function (client, slash, commands, cooldowns, errorMessage, cooldownMessage, cooldownDefault) {
         this.client = client;
         this.slash = slash;
@@ -143,24 +186,46 @@ module.exports = {
                     timestamps.set(interaction.member.user.id, now);
                     setTimeout(() => timestamps.delete(interaction.member.user.id), cooldownAmount);
 
-                    if(commandos.ownerOnly) {
-                        if(interaction.member.user.id != commandos.ownerOnly) {
-                            return;
+                    if(commandos.userOnly) {
+                        if(typeof commandos.userOnly == "object") {
+                            var users = commandos.userOnly.some(v => interaction.member.user.id == v)
+                            if(!users) {
+                                return;
+                            }
+                        } else {
+                            if(interaction.member.user.id != commandos.userOnly) {
+                                return;
+                            }
                         }
                     }
 
                     if(commandos.requiredPermission) {
-                        if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.requiredPermission)) {
-                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                data: {
-                                    type: 4,
+                        if(this.client.discordjsversion.includes("12.")) {
+                            if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.requiredPermission)) {
+                                this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
-                                        flags: 64,
-                                        content: commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!"
+                                        type: 4,
+                                        data: {
+                                            flags: 64,
+                                            content: commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!"
+                                        }
                                     }
-                                }
-                            });
-                            return;
+                                });
+                                return;
+                            }
+                        } else {
+                            if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permission.has(commandos.requiredPermission)) {
+                                this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                    data: {
+                                        type: 4,
+                                        data: {
+                                            flags: 64,
+                                            content: commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!"
+                                        }
+                                    }
+                                });
+                                return;
+                            } 
                         }
                     }
 
@@ -180,15 +245,51 @@ module.exports = {
                     }
 
                     try {
-                        var result = await commandos.run(client, interaction)
+
+                        /**
+                         * Return system for slash
+                         * @name ReturnSystem
+                         * @param {DiscordClient} client
+                         * @param {Object} interaction
+                         * @example 
+                         *  return {
+                         *      content: "hi",
+                         *      ephemeral: true,
+                         *      allowedMentions: { parse: [], repliedUser: true }
+                         *  }
+                         */
+                        var result = await commandos.run(this.client, interaction)
                         var data = {
-                            content: result,
-                            allowedMentions: { parse: [], repliedUser: true }
+                            content: result
                         }
 
                         if (typeof result === 'object') {
-                            const embed = new MessageEmbed(result)
-                            data = await this.createAPIMessage(client, slash, embed)
+                            if(typeof result == "object" && !result.content) {
+                                const embed = new MessageEmbed(result)
+                                data = await this.createAPIMessage(this.client, interaction, embed)
+                            }
+                            else if(result.ephemeral == true && typeof result.content != "object") {
+                                data = {
+                                    content: result.content,
+                                    flags: 64
+                                }
+                            } else if(typeof result.content == "object" && result.ephemeral == true) {
+                                const embed = new MessageEmbed(result.content)
+                                data = await this.createAPIMessage(this.client, interaction, embed)
+                            } else if(typeof result.content == "object" ) {
+                                const embed = new MessageEmbed(result.content)
+                                data = await this.createAPIMessage(this.client, interaction, embed)
+                            } else {
+                                data = {
+                                    content: result.content
+                                }
+                            }
+                        }
+
+                        if(result.allowedMentions) {
+                            data.allowedMentions = result.allowedMentions
+                        } else {
+                            data.allowedMentions = { parse: [], repliedUser: true }
                         }
 
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -198,7 +299,7 @@ module.exports = {
                           },
                         })
                     } catch(e) {
-                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Check &ahttps://gcommands.js.org/#/errors/slash &eOR IGNOR").getText())
+                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
                         commandos.run(this.client, interaction);
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
@@ -216,6 +317,17 @@ module.exports = {
                 }
             })
         }
+    },
+
+    loadMoreEvents: async function(client) {
+        this.client = client;
+
+        require("./moreEvents/channel")(this.client)
+        require("./moreEvents/guild")(this.client)
+        require("./moreEvents/guildmember")(this.client)
+        require("./moreEvents/role")(this.client)
+        require("./moreEvents/user")(this.client)
+        require("./moreEvents/voiceupdate")(this.client)
     },
 
     createAPIMessage: async function(client, interaction, content) {

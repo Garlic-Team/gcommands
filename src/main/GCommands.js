@@ -4,11 +4,21 @@ const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const GEvents = require("./GEvents");
 const Events = require('./Events');
-const { Collection, Structures, APIMessage } = require('discord.js');
+const { Collection, Structures, APIMessage, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
 
+/**
+ * The GCommands class
+ * @class GCommands
+ */
 module.exports = class GCommands {
+
+    /**
+     * Creates new GCommands instance
+     * @param {DiscordClient} client 
+     * @param {GCommandsOptions} options 
+     */
     constructor(client, options = {}) {
         if (typeof client !== 'object') return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
         if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
@@ -18,8 +28,23 @@ module.exports = class GCommands {
 
         this.client = client;
 
+        /**
+         * GCommands options
+         * @param {GCommandsOptions} cmdDir
+         * @param {GCommandsOptions} eventDir
+         * @param {GCommandsOptions} database
+         * @param {GCommandsOptions} ownEvents
+         * @param {GCommandsOptions} prefix
+         * @param {GCommandsOptions} slash
+         * @param {GCommandsOptions} cooldownMessage
+         * @param {GCommandsOptions} cooldownDefault
+         * @param {GCommandsOptions} errorMessage
+         * @type {GCommandsOptions}
+        */
+
         this.cmdDir = options.cmdDir;
         this.eventDir = options.eventDir;
+        this.client.discordjsversion = version
 
         if(this.eventDir) {
             new GEvents(this.client, {
@@ -41,26 +66,41 @@ module.exports = class GCommands {
             };
         }
 
+        if(options.ownEvents) {
+            this.ownEvents = true;
+        } else {
+            this.ownEvents = false;
+        }
+
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
+        this.client.aliases = new Collection();
         this.client.cooldowns = new Collection();
 
         this.client.prefix = options.slash.prefix ? options.slash.prefix : undefined;
-        this.slash = options.slash.slash ? options.slash.slash : false;
-        this.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
-        this.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
+        this.client.slash = options.slash.slash ? options.slash.slash : false;
+        this.client.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
+        this.client.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
 
         if(options.errorMessage) {
-            this.errorMessage = options.errorMessage;
+            this.client.errorMessage = options.errorMessage;
         }
 
+        process.setMaxListeners(50);
         this.__loadCommands();
         this.__dbLoad();
 
-        Events.normalCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault, this.client.prefix)
-        Events.slashCommands(this.client, this.slash, this.client.commands, this.client.cooldowns, this.errorMessage, this.cooldownMessage, this.cooldownDefault)
+        Events.loadMoreEvents(this.client)
+        if(!this.ownEvents) {
+            Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault, this.client.prefix)
+            Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault)
+        }
     }
 
+    /**
+     * Internal method to dbLoad
+     * @private
+     */
     async __dbLoad() {
         if(this.client.database.type == "mongodb") {
             var mongoose = require("mongoose")
@@ -83,6 +123,10 @@ module.exports = class GCommands {
         }
     }
 
+    /**
+     * Internal method to loadCommands
+     * @private
+     */
     async __loadCommands() {
 		return glob(`./${this.cmdDir}/**/*.js`).then(commands => {
 			for (const commandFile of commands) {
@@ -112,6 +156,7 @@ module.exports = class GCommands {
                     }
                 }
 
+                if (File.aliases && Array.isArray(File.aliases)) File.aliases.forEach(alias => this.client.aliases.set(alias, File.name));
 				this.client.commands.set(File.name, File);
 			};
 
@@ -119,6 +164,10 @@ module.exports = class GCommands {
 		});
     }
 
+    /**
+     * Internal method to createCommands
+     * @private
+     */
     async __createCommands() {
         var po = await this.__getAllCommands();
 
@@ -129,7 +178,7 @@ module.exports = class GCommands {
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
-            if(cmd.slash == false) return;
+            if(cmd.slash != undefined && (cmd.slash == false)) return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
             if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
@@ -144,71 +193,94 @@ module.exports = class GCommands {
                 ]
             }
 
-            if (cmd.expectedArgs && cmd.minArgs) {
-                var split = cmd.expectedArgs
-                  .substring(1, cmd.expectedArgs.length - 1)
-                  .split(/[>\]] [<\[]/)
-        
-                for (let a = 0; a < split.length; ++a) {
-                  var item = split[a];
-                  var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
-                  var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
-                  var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
-                  if(optionType == 1 || optionType == 2) optionType = 3
-
-                  options.push({
-                    name: option,
-                    description: optionDescription,
-                    type: parseInt(optionType),
-                    required: a < cmd.minArgs,
-                  })
-                }
-
-                if(cmd.subCommand) {
-                    cmd.subCommand.forEach(sc => {
-                        var g = []
-                        var optionsSplit = sc.split(";")[1]
-
-                        if(optionsSplit) {
-                            var split = optionsSplit
-                                .substring(1, optionsSplit.length - 1)
-                                .split(/[>\]] [<\[]/)
-                
-                            for (let a = 0; a < split.length; ++a) {
-                                var item = split[a]
-                                var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
-                                var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
-                                var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
-                                if(optionType == 1 || optionType == 2) optionType = 3
-
-                                g.push({
-                                    name: option,
-                                    description: optionDescription,
-                                    type: parseInt(optionType),
-                                    required: a < cmd.minArgs,
-                                })
-                            }
-                        }
-
-                        subCommand.push({
-                            name: sc.split(";")[0],
-                            description: sc.split(";")[0],
-                            type: 1,
-                            options: g || []
+            if (cmd.expectedArgs) {
+                if(typeof cmd.expectedArgs == "object") {
+                    cmd.expectedArgs.forEach(option => {
+                        options.push({
+                            name: option.name,
+                            description: option.description,
+                            type: option.choices ? 3 : parseInt(option.type),
+                            required: option.required ? option.required : false,
+                            choices: option.choices ? option.choices : []
                         })
                     })
-                }
+                } else {
+                    var split = cmd.expectedArgs
+                    .substring(1, cmd.expectedArgs.length - 1)
+                    .split(/[>\]] [<\[]/)
+            
+                    for (let a = 0; a < split.length; ++a) {
+                    var item = split[a];
+                    var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                    var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                    var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                    if(optionType == 1 || optionType == 2) optionType = 3
 
-                if(cmd.subCommandGroup) {
-                    subCommandGroup = [
-                        {
-                            name: subCommandGroup[0].name,
-                            description: subCommandGroup[0].name,
-                            type: subCommandGroup[0].type,
-                            options: subCommand
-                        }
-                    ]
+                    options.push({
+                        name: option,
+                        description: optionDescription,
+                        type: parseInt(optionType),
+                        required: a < cmd.minArgs ? cmd.minArgs : 0,
+                    })
+                    }
                 }
+            }
+
+            if(cmd.subCommand) {
+                cmd.subCommand.forEach(sc => {
+                    try {
+                        if(sc.split(";")[0]) {
+                            var opt = []
+                            var optionsSplit = sc.split(";")[1]
+
+                            if(optionsSplit) {
+                                var split = optionsSplit
+                                    .substring(1, optionsSplit.length - 1)
+                                    .split(/[>\]] [<\[]/)
+                    
+                                for (let a = 0; a < split.length; ++a) {
+                                    var item = split[a]
+                                    var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                                    var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                                    var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                                    if(optionType == 1 || optionType == 2) optionType = 3
+
+                                    opt.push({
+                                        name: option,
+                                        description: optionDescription,
+                                        type: parseInt(optionType),
+                                        required: a < cmd.minArgs,
+                                    })
+                                }
+                            }
+
+                            subCommand.push({
+                                name: sc.split(";")[0],
+                                description: sc.split(";")[0],
+                                type: 1,
+                                options: opt || []
+                            })
+                        }
+                    } catch(e) {
+                        subCommand.push({
+                            name: sc.name,
+                            description: sc.description,
+                            type: 1,
+                            options: sc.options || []
+                        })
+                    }
+                })
+            }
+
+            if(cmd.subCommandGroup) {
+                subCommandGroup = [
+                    {
+                        name: subCommandGroup[0].name,
+                        description: subCommandGroup[0].name,
+                        type: subCommandGroup[0].type,
+                        options: subCommand
+                    }
+                ]
             }
 
             try {
@@ -287,6 +359,10 @@ module.exports = class GCommands {
         })
     }
 
+    /**
+     * Internal method to tryAgain
+     * @private
+    */
     async __tryAgain(cmd, config) {
         axios(config).then((response) => {
             console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
@@ -304,10 +380,14 @@ module.exports = class GCommands {
         })
     }
 
+    /**
+     * Internal method to deleteAllCmds
+     * @private
+    */
     async __deleteAllCmds() {
         try {
             var allcmds = await this.__getAllCommands();
-            if(!this.slash) {
+            if(!this.client.slash) {
                 allcmds.forEach(fo => {
                     this.__deleteCmd(fo.id)
                 })
@@ -318,6 +398,14 @@ module.exports = class GCommands {
             let keys = Array.from(this.client.commands.keys());
             keys.forEach(cmdname => {
                 nowCMDS.push(cmdname)
+
+                if(this.client.commands.get(cmdname).slash == false) {
+                    allcmds.forEach(fo => {
+                        if(fo.name == cmdname) {
+                            this.__deleteCmd(fo.id)
+                        }
+                    })
+                }
             })
 
             allcmds.forEach(fo => {
@@ -328,7 +416,7 @@ module.exports = class GCommands {
                 }
             })
 
-            if((this.slash) || (this.slash == "both")) {
+            if((this.client.slash) || (this.client.slash == "both")) {
                 this.__createCommands();
             }
         } catch(e) {
@@ -336,324 +424,28 @@ module.exports = class GCommands {
         }
     }
 
+    /**
+     * Internal method to deleteCmd
+     * @private
+    */
     async __deleteCmd(commandId) {
-        const app = this.client.api.applications(this.client.user.id)
+        try {
+            const app = this.client.api.applications(this.client.user.id)
 
-        await app.commands(commandId).delete()
+            await app.commands(commandId).delete()
+        } catch(e) {return;}
     }
 
+    /**
+     * Internal method to getAllCmds
+     * @returns {object}
+     * @private
+    */
     async __getAllCommands() {
         const app = this.client.api.applications(this.client.user.id)
         return await app.commands.get()
     }
 }
 
-class ClientUser extends Structures.get('User') {
-    async setGuildPrefix(prefix, guildId) {
-        if(!this.client.database.working) return;
-        if(this.client.database.type = "mongodb") {
-            var guildSettings = require('../models/guild')
-
-            const settings = await guildSettings.findOne({ id: guildId})
-            if(!settings) {
-              await guildSettings.create({
-                id: guildId,
-                prefix: prefix
-              })
-              return;
-            }
-
-            settings.prefix = prefix
-            await settings.save()
-        } else {
-            this.client.database.sqlite.set(`guildPrefix_${guildId}`,`prefix`)
-        }
-    }
-
-    async getGuildPrefix(guildId) {
-        if(!this.client.database.working) return;
-        if(this.client.database.type = "mongodb") {
-            var guildSettings = require('../models/guild')
-
-            const settings = await guildSettings.findOne({ id: guildId})
-            if(!settings) {
-              return this.client.prefix
-            }
-
-            return settings.prefix ? settings.prefix : this.client.prefix
-        } else {
-            var settings = this.client.database.sqlite.get(`guildPrefix_${guildId}`)
-            return settings ? settings : this.client.prefix;
-        }
-    }
-}
-
-class MessageStructure extends Structures.get("Message") {
-    async buttons(content, options) {
-        if (!options.buttons) {
-            options.buttons = [];
-        }
-
-        if(!options.allowedMentions) {
-            options.allowedMentions = { parse: ["users", "roles", "everyone"] };
-        }
-
-        if (!Array.isArray(options.buttons)) {
-            return console.log(new Color("&d[GCommands] &cThe buttons must be array.",{json:false}).getText());
-        }
-
-        var buttons = [];
-        var styles = ['blupurple', 'grey', 'green', 'red', 'url'];
-
-        options.buttons.forEach((x, i) => {
-            if (!x.style) x.style = 'blupurple';
-
-            if (!styles.includes(x.style)) {
-                return console.log(new Color(`&d[GCommands] &c#${i} button has invalid style, recived ${x.style}`,{json:false}).getText());
-            }
-
-            if (!x.label) {
-                return console.log(new Color(`&d[GCommands] &c#${i} don't has label!`,{json:false}).getText());
-            }
-
-            if (typeof (x.label) !== 'string') x.label = String(x.label);
-
-            if (x.style === 'url') {
-                if (!x.url) {
-                    return console.log(new Color(`&d[GCommands] &cIf the button style is "url", you must provide url`,{json:false}).getText());
-                }
-            } else {
-                if (!x.id) {
-                    return console.log(new Color(`&d[GCommands] &cIf the button style is not "url", you must provide custom id`,{json:false}).getText());
-                }
-            }
-
-            var style;
-
-            if (x.style === 'blupurple') {
-                style = 1;
-            } else if (x.style === 'grey') {
-                style = 2;
-            } else if (x.style === 'green') {
-                style = 3;
-            } else if (x.style === 'red') {
-                style = 4;
-            } else if (x.style === 'url') {
-                style = 5;
-            }
-
-            var data = {
-                type: 2,
-                style: style,
-                label: x.label,
-                custom_id: x.id || null,
-                url: x.url || null
-            }
-
-            buttons.push(data);
-        })
-
-        options.buttons === null;
-
-        this.client.ws.on('INTERACTION_CREATE', async (data) => {
-            let typeStyles = {
-                1: 'blupurple',
-                2: 'grey',
-                3: 'green',
-                4: 'red',
-                5: 'url'
-            };
-
-            await this.client.channels.cache.get(data.channel_id).messages.fetch();
-
-            var message;
-            try {
-                message = await this.client.channels.cache.get(data.channel_id).messages.cache.get(data.message.id);
-            } catch(e) {
-                message = await this.client.channels.cache.get(data.channel_id)
-            }
-
-            var clicker = await this.client.guilds.cache.get(data.guild_id).members.cache.get(data.member.user.id);
-
-            this.client.emit('clickButton', {
-                version: data.version,
-                type: data.type,
-                style: typeStyles[data.type],
-                token: data.token,
-                id: data.data.custom_id,
-                discordId: data.id,
-                applicationId: data.application_id,
-                clicker: clicker,
-                message
-            })
-        });
-
-        this.client.api.channels[this.channel.id].messages.post({
-            headers: {
-            "Content-Type": 'applications/json'
-            },
-            data: {
-                allowed_mentions: options.allowedMentions,
-                content: content,
-                components: [
-                    {
-                        type: 1,
-                        components: buttons
-                    }
-                ],
-                options,
-                embed: options.embed || null
-            }
-        });
-    }
-
-    async inlineReply(content, options) {
-        const mentionRepliedUser = typeof ((options || content || {}).allowedMentions || {}).repliedUser === "undefined" ? true : ((options || content).allowedMentions).repliedUser;
-        delete ((options || content || {}).allowedMentions || {}).repliedUser;
-
-        const apiMessage = content instanceof APIMessage ? content.resolveData() : APIMessage.create(this.channel, content, options).resolveData();
-        Object.assign(apiMessage.data, { message_reference: { message_id: this.id } });
-
-        if (!apiMessage.data.allowed_mentions || Object.keys(apiMessage.data.allowed_mentions).length === 0)
-        apiMessage.data.allowed_mentions = { parse: ["users", "roles", "everyone"] };
-        apiMessage.data.embed = options.embed || null
-        if (typeof apiMessage.data.allowed_mentions.replied_user === "undefined")
-        Object.assign(apiMessage.data.allowed_mentions, { replied_user: mentionRepliedUser });
-
-        if (Array.isArray(apiMessage.data.content)) {
-            return Promise.all(apiMessage.split().map(x => {
-                x.data.allowed_mentions = apiMessage.data.allowed_mentions;
-                return x;
-            }).map(this.inlineReply.bind(this)));
-        }
-
-        const { data, files } = await apiMessage.resolveFiles();
-        return this.client.api.channels[this.channel.id].messages
-            .post({ data, files })
-            .then(d => this.client.actions.MessageCreate.handle(d).message);
-    }
-
-    async buttonsWithReply(content, options) {
-        if (!options.buttons) {
-            options.buttons = [];
-        }
-
-        if(!options.allowedMentions) {
-            options.allowedMentions = { parse: ["users", "roles", "everyone"] };
-        }
-
-        if (!Array.isArray(options.buttons)) {
-            return console.log(new Color("&d[GCommands] &cThe buttons must be array.",{json:false}).getText());
-        }
-
-        var buttons = [];
-        var styles = ['blupurple', 'grey', 'green', 'red', 'url'];
-
-        options.buttons.forEach((x, i) => {
-            if (!x.style) x.style = 'blupurple';
-
-            if (!styles.includes(x.style)) {
-                return console.log(new Color(`&d[GCommands] &c#${i} button has invalid style, recived ${x.style}`,{json:false}).getText());
-            }
-
-            if (!x.label) {
-                return console.log(new Color(`&d[GCommands] &c#${i} don't has label!`,{json:false}).getText());
-            }
-
-            if (typeof (x.label) !== 'string') x.label = String(x.label);
-
-            if (x.style === 'url') {
-                if (!x.url) {
-                    return console.log(new Color(`&d[GCommands] &cIf the button style is "url", you must provide url`,{json:false}).getText());
-                }
-            } else {
-                if (!x.id) {
-                    return console.log(new Color(`&d[GCommands] &cIf the button style is not "url", you must provide custom id`,{json:false}).getText());
-                }
-            }
-
-            var style;
-
-            if (x.style === 'blupurple') {
-                style = 1;
-            } else if (x.style === 'grey') {
-                style = 2;
-            } else if (x.style === 'green') {
-                style = 3;
-            } else if (x.style === 'red') {
-                style = 4;
-            } else if (x.style === 'url') {
-                style = 5;
-            }
-
-            var data = {
-                type: 2,
-                style: style,
-                label: x.label,
-                custom_id: x.id || null,
-                url: x.url || null
-            }
-
-            buttons.push(data);
-        })
-
-        options.buttons === null;
-
-        this.client.ws.on('INTERACTION_CREATE', async (data) => {
-            let typeStyles = {
-                1: 'blupurple',
-                2: 'grey',
-                3: 'green',
-                4: 'red',
-                5: 'url'
-            };
-
-            await this.client.channels.cache.get(data.channel_id).messages.fetch();
-
-            var message;
-            try {
-                message = await this.client.channels.cache.get(data.channel_id).messages.cache.get(data.message.id);
-            } catch(e) {
-                message = await this.client.channels.cache.get(data.channel_id)
-            }
-
-            var clicker = await this.client.guilds.cache.get(data.guild_id).members.cache.get(data.member.user.id);
-
-            this.client.emit('clickButton', {
-                version: data.version,
-                type: data.type,
-                style: typeStyles[data.type],
-                token: data.token,
-                id: data.data.custom_id,
-                discordId: data.id,
-                applicationId: data.application_id,
-                clicker: clicker,
-                message
-            })
-        });
-
-        this.client.api.channels[this.channel.id].messages.post({
-            headers: {
-            "Content-Type": 'applications/json'
-            },
-            data: {
-                allowed_mentions: options.allowedMentions,
-                content: content,
-                components: [
-                    {
-                        type: 1,
-                        components: buttons
-                    }
-                ],
-                message_reference: {
-                    message_id: this.channel.lastMessageID
-                },
-                options,
-                embed: options.embed || null
-            }
-        });
-    }
-}
-
-Structures.extend("Message", () => MessageStructure);
-Structures.extend("User", () => ClientUser);
+Structures.extend("Message", require("../structures/MessageStructure"))
+Structures.extend("User", require("../structures/ClientUser"))
