@@ -312,7 +312,7 @@ module.exports = {
                             }
                         }
 
-                        if(result.allowedMentions) {
+                        if(typeof result == "object" && result.allowedMentions) {
                             data.allowedMentions = result.allowedMentions
                         } else {
                             data.allowedMentions = { parse: [], repliedUser: true }
