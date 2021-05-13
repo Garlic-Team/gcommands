@@ -229,39 +229,38 @@ module.exports = class GCommands {
             if(cmd.subCommand) {
                 cmd.subCommand.forEach(sc => {
                     try {
-                        if(sc.split(";")[0]) {
-                            var opt = []
-                            var optionsSplit = sc.split(";")[1]
+                        var opt = []
+                        var optionsSplit = sc.split(";")[1]
 
-                            if(optionsSplit) {
-                                var split = optionsSplit
-                                    .substring(1, optionsSplit.length - 1)
-                                    .split(/[>\]] [<\[]/)
-                    
-                                for (let a = 0; a < split.length; ++a) {
-                                    var item = split[a]
-                                    var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
-                                    var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
-                                    var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
-                                    if(optionType == 1 || optionType == 2) optionType = 3
+                        if(optionsSplit) {
+                            var split = optionsSplit
+                                .substring(1, optionsSplit.length - 1)
+                                .split(/[>\]] [<\[]/)
+                
+                            for (let a = 0; a < split.length; ++a) {
+                                var item = split[a]
+                                var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                                var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                                var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                                if(optionType == 1 || optionType == 2) optionType = 3
 
-                                    opt.push({
-                                        name: option,
-                                        description: optionDescription,
-                                        type: parseInt(optionType),
-                                        required: a < cmd.minArgs,
-                                    })
-                                }
+                                opt.push({
+                                    name: option,
+                                    description: optionDescription,
+                                    type: parseInt(optionType),
+                                    required: a < cmd.minArgs,
+                                })
                             }
-
-                            subCommand.push({
-                                name: sc.split(";")[0],
-                                description: sc.split(";")[0],
-                                type: 1,
-                                options: opt || []
-                            })
                         }
+
+                        subCommand.push({
+                            name: sc.split(";")[0],
+                            description: sc.split(";")[0],
+                            type: 1,
+                            options: opt || []
+                        })
                     } catch(e) {
+                        this.client.emit("gDebug", new Color("[GCommands DEBUG] " + e + " &eignor!").getText())
                         subCommand.push({
                             name: sc.name,
                             description: sc.description,
