@@ -407,15 +407,7 @@ module.exports = {
                                 const embed = new MessageEmbed(result)
                                 data = await this.createAPIMessage(this.client, interaction, embed)
                             }
-                            else if(result.ephemeral == true && typeof result.content != "object") {
-                                data = {
-                                    content: result.content,
-                                    flags: 64
-                                }
-                            } else if(typeof result.content == "object" && result.ephemeral == true) {
-                                const embed = new MessageEmbed(result.content)
-                                data = await this.createAPIMessage(this.client, interaction, embed)
-                            } else if(typeof result.content == "object" ) {
+                            else if(typeof result.content == "object" ) {
                                 const embed = new MessageEmbed(result.content)
                                 data = await this.createAPIMessage(this.client, interaction, embed)
                             } else {
@@ -429,6 +421,14 @@ module.exports = {
                             data.allowedMentions = result.allowedMentions
                         } else {
                             data.allowedMentions = { parse: [], repliedUser: true }
+                        }
+
+                        if(typeof result == "object" && result.ephemeral) {
+                            data.flags = 64
+                        }
+
+                        if(typeof result == "object" && result.files) {
+                            data.files = result.files
                         }
 
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
