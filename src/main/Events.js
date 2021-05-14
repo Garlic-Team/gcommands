@@ -64,12 +64,12 @@ module.exports = {
                     var commandos = this.commands.get(cmd);
                     if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
 
-                    if (!this.cooldowns.has(cmd)) {
-                        this.cooldowns.set(cmd, new Collection());
+                    if (!this.cooldowns.has(commandos.name)) {
+                        this.cooldowns.set(commandos.name, new Collection());
                     }
                     
                     const now = Date.now();
-                    const timestamps = this.cooldowns.get(cmd);
+                    const timestamps = this.cooldowns.get(commandos.name);
                     const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
                     
                     if (timestamps.has(message.author.id)) {
@@ -79,7 +79,7 @@ module.exports = {
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
 
-                                return message.channel.send(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, cmd))
+                                return message.channel.send(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name))
                             }
                         }
                     }
@@ -168,12 +168,12 @@ module.exports = {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
                 try {
                     var commandos = this.commands.get(interaction.data.name);
-                    if (!this.cooldowns.has(interaction.data.name)) {
-                        this.cooldowns.set(interaction.data.name, new Collection());
+                    if (!this.cooldowns.has(commandos.name)) {
+                        this.cooldowns.set(commandos.name, new Collection());
                     }
                     
                     const now = Date.now();
-                    const timestamps = this.cooldowns.get(interaction.data.name);
+                    const timestamps = this.cooldowns.get(commandos.name);
                     const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
                     
                     if (timestamps.has(interaction.member.user.id)) {
@@ -187,7 +187,7 @@ module.exports = {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, interaction.data.name)
+                                            content: this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name)
                                         }
                                     }
                                 });

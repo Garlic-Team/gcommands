@@ -150,7 +150,7 @@ module.exports = class GCommands {
                                 console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                             } catch(e) {
                                 this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
-                                return console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
+                                console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
                             }
                         }
                     }
