@@ -148,6 +148,119 @@ module.exports = {
                     }
                 }
             })
+
+            this.client.on('messageUpdate', async(oldMessage, message) => {
+                if (message.author.bot) return;
+                if (!message.guild) return;
+                var prefix = this.prefix;
+
+                if(this.client.database.working) {
+                    if(this.client.database.type == "mongodb") {
+                        var guildSettings = require('../models/guild')
+                        const guild = await guildSettings.findOne({ id: message.guild.id })
+                        if(!guild || !guild.prefix) prefix = this.prefix
+                        else prefix = guild.prefix
+                    } else {
+                        var guildSettings = this.client.database.sqlite.get(`guildPrefix_${message.guild.id}`)
+                        if(!guildSettings) prefix = this.prefix
+                        else prefix = guildSettings
+                    }
+                }
+                if (!message.content.toLowerCase().startsWith(prefix)) return;
+            
+                const args = message.content.slice(prefix.length).trim().split(/ +/g);
+                const cmd = args.shift().toLowerCase();
+                
+                if (cmd.length === 0) return;
+        
+                try {
+                    var commandos = this.commands.get(cmd);
+                    if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
+
+                    if (!this.cooldowns.has(commandos.name)) {
+                        this.cooldowns.set(commandos.name, new Collection());
+                    }
+                    
+                    const now = Date.now();
+                    const timestamps = this.cooldowns.get(commandos.name);
+                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
+                    
+                    if (timestamps.has(message.author.id)) {
+                        if (timestamps.has(message.author.id)) {
+                            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+                        
+                            if (now < expirationTime) {
+                                const timeLeft = (expirationTime - now) / 1000;
+
+                                return message.channel.send(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name))
+                            }
+                        }
+                    }
+
+                    timestamps.set(message.author.id, now);
+                    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+
+                    if(commandos.guildOnly) {
+                        if(message.guild.id != commandos.guildOnly) {
+                            return;
+                        }
+                    } 
+
+                    if(commandos.userOnly) {
+                        if(typeof commandos.userOnly == "object") {
+                            var users = commandos.userOnly.some(v => message.author.id == v)
+                            if(!users) {
+                                return
+                            }
+                        } else {
+                            if(message.author.id != commandos.userOnly) {
+                                return;
+                            }
+                        }
+                    }
+
+                    if(commandos.channelOnly) {
+                        if(typeof commandos.channelOnly == "object") {
+                            var users = commandos.channelOnly.some(v => message.channel.id == v)
+                            if(!users) {
+                                return
+                            }
+                        } else {
+                            if(message.channel.id != commandos.channelOnly) {
+                                return;
+                            }
+                        }
+                    }
+
+                    if(commandos.requiredPermission) {
+                        if(this.client.discordjsversion.includes("12.")) {
+                            if(!message.member.hasPermission(commandos.requiredPermission)) {
+                                message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
+                                return;
+                            }
+                        } else {
+                            if(!message.member.permission.has(commandos.requiredPermission)) {
+                                message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
+                                return;
+                            }
+                        }
+                    }
+
+                    if(commandos.requiredRole) {
+                        if(!message.member._roles.includes(commandos.requiredRole)) {
+                            message.channel.send(commandos.requiredRoleMessage ? commandos.requiredRoleMessage : "You don't have role!")
+                            return;
+                        }
+                    }
+
+                    commandos.run(this.client, undefined, message, args)
+                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
+                } catch(e) {
+                    if(this.errorMessage) {
+                        message.channel.send(this.errorMessage);
+                    }
+                }
+            })
         }
     },
 
