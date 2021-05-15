@@ -427,10 +427,6 @@ module.exports = {
                             data.flags = 64
                         }
 
-                        if(typeof result == "object" && result.files) {
-                            data.files = result.files
-                        }
-
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                           data: {
                             type: 4,
