@@ -418,6 +418,8 @@ module.exports = class GCommands {
             if((this.client.slash) || (this.client.slash == "both")) {
                 this.__createCommands();
             }
+
+            console.log(new Color("&d[GCommands TIP] &3Are guild commands not deleted when you delete them? Use this site for remove &ehttps://gcommands-slash-gui.netlify.app/"))
         } catch(e) {
             this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Can't remove commands!").getText())
         }
