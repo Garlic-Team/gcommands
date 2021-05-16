@@ -37,16 +37,12 @@ module.exports = {
             this.client.on('message', async(message) => {
                 if (message.author.bot) return;
                 if (!message.guild) return;
-                var prefix = this.prefix;
-                var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})>`, "gi")
+                var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
+                var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.prefix
 
-                if(mentionRegex) {
-                    prefix = `${mentionRegex[0]} `
-                } else {
-                    if(this.client.database.working) {
-                        var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
-                        prefix = guildSettings
-                    }
+                if(this.client.database.working) {
+                    var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
+                    prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
                 }
 
                 if (!message.content.startsWith(prefix)) return;
@@ -78,7 +74,7 @@ module.exports = {
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
 
-                                return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name))
+                                return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name))
                             }
                         }
                     }
@@ -152,16 +148,12 @@ module.exports = {
             this.client.on('messageUpdate', async(oldMessage, message) => {
                 if (message.author.bot) return;
                 if (!message.guild) return;
-                var prefix = this.prefix;
-                var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})>`, "gi")
+                var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
+                var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.prefix
 
-                if(mentionRegex) {
-                    prefix = `${mentionRegex[0]} `
-                } else {
-                    if(this.client.database.working) {
-                        var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
-                        prefix = guildSettings
-                    }
+                if(this.client.database.working) {
+                    var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
+                    prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
                 }
 
                 if (!message.content.startsWith(prefix)) return;
@@ -193,7 +185,7 @@ module.exports = {
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
 
-                                return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name))
+                                return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name))
                             }
                         }
                     }
@@ -302,7 +294,7 @@ module.exports = {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name)
+                                            content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name)
                                         }
                                     }
                                 });
