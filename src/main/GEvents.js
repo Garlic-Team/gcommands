@@ -46,11 +46,21 @@ module.exports = class GEvents {
                 var File;
 
                 try {
-                    File = require("../../"+this.eventDir+"/"+name);
+                    File = require("../../../../"+this.eventDir+"/"+name)
                     console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                 } catch(e) {
-                    this.client.emit("gDebug", new Color("&d[GCommands EVENTS Debug] "+e).getText())
-                    return console.log(new Color("&d[GCommands EVENTS] &cCan't load " + name).getText());
+                    try {
+                        File = require("../../../../"+eventFile.split("./")[1])
+                        console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                    } catch(e) {
+                        try {
+                            File = require("../../"+this.eventDir+"/"+name);
+                            console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                        } catch(e) {
+                            this.client.emit("gDebug", new Color("&d[GCommands EVENTS Debug] "+e).getText())
+                            return console.log(new Color("&d[GCommands EVENTS] &cCan't load " + name).getText());
+                        }
+                    }
                 }
 
 				this.client.events.set(File.name, File);
