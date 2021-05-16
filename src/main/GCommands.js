@@ -372,7 +372,7 @@ module.exports = class GCommands {
             console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
         })
         .catch((error) => {
-            console.log(new Color("&d[GCommands] &cRequest failed! " + error, {json:false}).getText());
+            console.log(new Color("&d[GCommands] &cRequest failed! " + error + " &e("+cmd.name+")", {json:false}).getText());
             
             if(error.response) {
                 if(error.response.status == 429) {
