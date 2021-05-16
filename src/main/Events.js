@@ -40,9 +40,10 @@ module.exports = {
                 var prefix = this.prefix;
 
                 if(this.client.database.working) {
-                    var guildSettings = this.client.user.getGuildPrefix(message.guild.id)
-                    prefix = guildSettings.prefix
+                    var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
+                    prefix = guildSettings
                 }
+
                 if (!message.content.toLowerCase().startsWith(prefix)) return;
             
                 const args = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -149,8 +150,8 @@ module.exports = {
                 var prefix = this.prefix;
 
                 if(this.client.database.working) {
-                    var guildSettings = this.client.user.getGuildPrefix(message.guild.id)
-                    prefix = guildSettings.prefix
+                    var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
+                    prefix = guildSettings
                 }
                 if (!message.content.toLowerCase().startsWith(prefix)) return;
             
