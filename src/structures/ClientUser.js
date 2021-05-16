@@ -55,4 +55,16 @@ module.exports = ClientUser => class extends Structures.get("User") {
             return settings ? settings : this.client.prefix;
         }
     }
+
+    async addInhibitor(inhibitor) {
+		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
+		if(this.client.inhibitors.has(inhibitor)) return false;
+		this.client.inhibitors.add(inhibitor);
+		return true;
+	}
+
+    async removeInhibitor(inhibitor) {
+		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
+		return this.inhibitors.delete(inhibitor);
+	}
 }

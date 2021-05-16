@@ -54,6 +54,9 @@ module.exports = {
                     var commandos = this.commands.get(cmd);
                     if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
 
+                    var inhibit = await this.inhibit(undefined, message)
+                    if(inhibit == false) return;
+
                     if (!this.cooldowns.has(commandos.name)) {
                         this.cooldowns.set(commandos.name, new Collection());
                     }
@@ -133,8 +136,9 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    if(this.client.languageFile.UNKOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKOWN_COMMAND[this.client.language]);
+                    console.log(e)
+                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
+                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("COMMAND",commandos.name));
                     }
                 }
             })
@@ -167,6 +171,9 @@ module.exports = {
                     var commandos = this.commands.get(cmd);
                     if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
 
+                    var inhibit = await this.inhibit(undefined, message)
+                    if(inhibit == false) return;
+
                     if (!this.cooldowns.has(commandos.name)) {
                         this.cooldowns.set(commandos.name, new Collection());
                     }
@@ -246,8 +253,8 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    if(this.client.languageFile.UNKOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKOWN_COMMAND[this.client.language]);
+                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
+                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("COMMAND",commandos.name));
                     }
                 }
             })
@@ -272,7 +279,10 @@ module.exports = {
                     if (!this.cooldowns.has(commandos.name)) {
                         this.cooldowns.set(commandos.name, new Collection());
                     }
-                    
+
+                    var inhibit = await this.inhibit(interaction, undefined)
+                    if(inhibit == false) return;
+
                     const now = Date.now();
                     const timestamps = this.cooldowns.get(commandos.name);
                     const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
@@ -427,12 +437,12 @@ module.exports = {
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
-                    if(this.client.languageFile.UNKOWN_COMMAND[this.client.language]) {
+                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
                                 type: 4,
                                 data: {
-                                    content: this.client.languageFile.UNKOWN_COMMAND[this.client.language]
+                                    content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("COMMAND",commandos.name)
                                 }
                             }
                         });
@@ -459,5 +469,13 @@ module.exports = {
         .resolveFiles();
         
         return { ...apiMessage.data, files: apiMessage.files };
+    },
+
+    inhibit: async function(slash, message) {
+		for(const inhibitor of this.client.inhibitors) {
+			let inhibit = inhibitor(slash, message);
+			return inhibit;
+		}
+		return null;
     }
 };

@@ -7,7 +7,7 @@ client.on("ready", () => {
     new GCommands(client, {
         cmdDir: "commands",
         eventDir: "events", //when you want event handler
-        language: "czech",
+        language: "czech", //english, spanish, portuguese, russian, german, czech, slovak
         ownEvents: false,
         slash: {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
@@ -20,6 +20,24 @@ client.on("ready", () => {
             type: "mongodb", //sqlite/mongodb
             url: "mongodb+srv://" //mongourl
         }
+    })
+
+    client.user.addInhibitor((slash, message) => {
+        if(message && message.author.id == "126454") {
+            message.channel.send("blacklisted")
+            return false;
+        }
+
+        if(slash && slash.member.user.id == "126454")
+            client.api.interactions(slash.id, slash.token).callback.post({
+                data: {
+                    type: 4,
+                    data: {
+                        flags: 64,
+                        content: "blacklisted"
+                    }
+                }
+            });
     })
 })
 
