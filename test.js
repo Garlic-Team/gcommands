@@ -8,7 +8,6 @@ client.on("ready", () => {
         cmdDir: "commands",
         eventDir: "events", //when you want event handler
         language: "czech", //english, spanish, portuguese, russian, german, czech, slovak
-        ownEvents: false,
         slash: {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 

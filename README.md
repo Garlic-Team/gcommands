@@ -30,14 +30,11 @@ client.on("ready", () => {
     new GCommands(client, {
         cmdDir: "commands",
         eventDir: "events", //when you want event handler
-        errorMessage: "Error :(",
-        ownEvents: false,
         slash: {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 
         },
         cooldown: {
-            message: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.",
             default: 3
         },
         database: {
