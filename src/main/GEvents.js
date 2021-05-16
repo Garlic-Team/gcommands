@@ -64,9 +64,8 @@ module.exports = class GEvents {
                 }
 
 				this.client.events.set(File.name, File);
-
-                this.__loadEvents()
             }
+            this.__loadEvents()
         })
     }
 
@@ -76,6 +75,7 @@ module.exports = class GEvents {
     */
     async __loadEvents() {
         this.client.events.forEach(event => {
+            console.log(event)
             if (event.once) {
                 this.client.once(event.name, (...args) => event.run(this.client, ...args));
             } else {
