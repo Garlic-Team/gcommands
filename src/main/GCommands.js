@@ -147,8 +147,13 @@ module.exports = class GCommands {
                     File = require("../../"+this.cmdDir+"/"+name);
                     console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                 } catch(e) {
-                    this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
-                    console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
+                    try {
+                        File = require("../../../"+this.cmdDir+"/"+name);
+                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                    } catch(e) {
+                        this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
+                        console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
+                    }
                 }
 
                 if (File.aliases && Array.isArray(File.aliases)) File.aliases.forEach(alias => this.client.aliases.set(alias, File.name));
