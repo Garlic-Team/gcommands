@@ -42,16 +42,8 @@ module.exports = {
                 var prefix = this.prefix;
 
                 if(this.client.database.working) {
-                    if(this.client.database.type == "mongodb") {
-                        var guildSettings = require('../models/guild')
-                        const guild = await guildSettings.findOne({ id: message.guild.id })
-                        if(!guild || !guild.prefix) prefix = this.prefix
-                        else prefix = guild.prefix
-                    } else {
-                        var guildSettings = this.client.database.sqlite.get(`guildPrefix_${message.guild.id}`)
-                        if(!guildSettings) prefix = this.prefix
-                        else prefix = guildSettings
-                    }
+                    var guildSettings = this.client.user.getGuildPrefix(message.guild.id)
+                    prefix = guildSettings.prefix
                 }
                 if (!message.content.toLowerCase().startsWith(prefix)) return;
             

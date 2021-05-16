@@ -56,6 +56,13 @@ module.exports = class GCommands {
             this.client.database = {
                 type: options.database.type ? options.database.type : undefined,
                 url: options.database.url ? options.database.url : undefined,
+
+                host: options.database.host ? options.database.host : undefined,
+                username: options.database.username ? options.database.username : undefined,
+                password: options.database.password ? options.database.password : undefined,
+                databaseName: options.database.databaseName ? options.database.databaseName : undefined,
+                port: options.database.port ? options.database.port : undefined,
+
                 working: false
             };
         } else {
@@ -120,6 +127,17 @@ module.exports = class GCommands {
             var sqliteDb = require("quick.db")
             this.client.database.working = true;
             this.client.database.sqlite = sqliteDb;
+        } else if(this.client.database.type == "mariadb") {
+            var mariaDb = require("quick-mariadb");
+            this.client.database.working = true;
+            this.client.database.mariadb = mariaDb;
+            this.client.database.mariadbOptions = {
+                host: this.client.database.host,
+                user: this.client.database.username,
+                password: this.client.database.password,
+                database: this.client.database.databaseName,
+                port: this.client.database.port
+            }
         }
     }
 
