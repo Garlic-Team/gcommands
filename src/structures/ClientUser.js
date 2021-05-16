@@ -8,7 +8,7 @@ const Color = require('../color/Color');
  */
 module.exports = ClientUser => class extends Structures.get("User") {
     async setGuildPrefix(prefix, guildId) {
-        if(!this.client.database.working) return;
+        if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
             var guildSettings = require('../models/guild')
 
@@ -37,7 +37,7 @@ module.exports = ClientUser => class extends Structures.get("User") {
     }
 
     async getGuildPrefix(guildId) {
-        if(!this.client.database.working) return;
+        if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
             var guildSettings = require('../models/guild')
 

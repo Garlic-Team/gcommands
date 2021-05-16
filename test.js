@@ -1,10 +1,11 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const { GCommands } = require("./src/index");
+
 const axios = require("axios")
 
 client.on("ready", () => {
-    new GCommands(client, {
+    const GCommandsClient = new GCommands(client, {
         cmdDir: "commands",
         eventDir: "events", //when you want event handler
         language: "czech", //english, spanish, portuguese, russian, german, czech, slovak

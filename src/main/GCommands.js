@@ -7,6 +7,7 @@ const Events = require('./Events');
 const { Collection, Structures, APIMessage, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
+const EventEmitter = require('events');
 
 /**
  * The GCommands class
@@ -61,19 +62,22 @@ module.exports = class GCommands {
             this.client.database = {
                 type: options.database.type ? options.database.type : undefined,
                 url: options.database.url ? options.database.url : undefined,
-
                 host: options.database.host ? options.database.host : undefined,
                 username: options.database.username ? options.database.username : undefined,
                 password: options.database.password ? options.database.password : undefined,
                 databaseName: options.database.databaseName ? options.database.databaseName : undefined,
                 port: options.database.port ? options.database.port : undefined,
-
                 working: false
             };
         } else {
             this.client.database = {
                 type:  undefined,
                 url: undefined,
+                host: undefined,
+                username: undefined,
+                password: undefined,
+                databaseName: undefined,
+                port: undefined,
                 working: false
             };
         }
