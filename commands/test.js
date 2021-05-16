@@ -54,9 +54,7 @@ module.exports = {
 	userOnly: "id",
 	channelOnly: "id", //["id","id2"]
 	requiredPermission: "ADMINISTRATOR",
-	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
 	requiredRole: "ROLE ID",
-	requiredRoleMessage: "You doesn't have role!",
 	//slash: false,
 	run: async(client, slash, message, args) => {
 		if(message) {

@@ -23,6 +23,7 @@ module.exports = class GCommands {
         if (typeof client !== 'object') return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
         if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
         if(!options.cmdDir) return console.log(new Color("&d[GCommands] &cNo default options provided! (cmdDir)",{json:false}).getText());
+        if(!options.language) return console.log(new Color("&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech))",{json:false}).getText());
 
         if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
 
@@ -45,6 +46,10 @@ module.exports = class GCommands {
         this.cmdDir = options.cmdDir;
         this.eventDir = options.eventDir;
         this.client.discordjsversion = version
+
+        if(!options.ownLanguageFile) this.client.languageFile = require("../utils/message.json")
+        else this.client.languageFile = options.ownLanguageFile
+        this.client.language = options.language
 
         if(this.eventDir) {
             new GEvents(this.client, {
@@ -86,12 +91,7 @@ module.exports = class GCommands {
 
         this.client.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.client.slash = options.slash.slash ? options.slash.slash : false;
-        this.client.cooldownMessage = options.cooldown.message ? options.cooldown.message : "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.";
         this.client.cooldownDefault = options.cooldown.default ? options.cooldown.default : 0;
-
-        if(options.errorMessage) {
-            this.client.errorMessage = options.errorMessage;
-        }
 
         process.setMaxListeners(50);
         this.__loadCommands();
@@ -99,8 +99,8 @@ module.exports = class GCommands {
 
         Events.loadMoreEvents(this.client)
         if(!this.ownEvents) {
-            Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault, this.client.prefix)
-            Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.errorMessage, this.client.cooldownMessage, this.client.cooldownDefault)
+            Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix)
+            Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault)
         }
     }
 
@@ -437,7 +437,7 @@ module.exports = class GCommands {
                 this.__createCommands();
             }
 
-            console.log(new Color("&d[GCommands TIP] &3Are guild commands not deleted when you delete them? Use this site for remove &ehttps://gcommands-slash-gui.netlify.app/"))
+            console.log(new Color("&d[GCommands TIP] &3Are guild commands not deleted when you delete them? Use this site for remove &ehttps://gcommands-slash-gui.netlify.app/").getText())
         } catch(e) {
             this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Can't remove commands!").getText())
         }

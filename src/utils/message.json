@@ -1,0 +1,34 @@
+{
+    "MISSING_PERMISSIONS": {
+		"english": "You must have the {PERMISSION} permission in order to use this command.",
+		"spanish": "Debe tener el permiso {PERMISSION} para poder utilizar este comando.",
+		"portuguese": "Você precisa ter a permissão {PERMISSION} para utilizar este comando.",
+		"russian": "У вас должно быть право {PERMISSION}, чтобы использовать эту команду. ",
+		"german": "Du benötigst die Berechtigung {PERMISSION}, um diesen Befehl nutzen zu können.",
+        "czech": "Chybí ti {PERMISSION} oprávnění k použití tohoto příkazu."
+    },
+	"MISSING_ROLES": {
+		"english": "You do not have the required roles to use this command! You need one of the following: {ROLES}",
+		"spanish": "¡No tienes los roles necesarios para usar este comando! Necesita uno de los siguientes: {ROLES}",
+		"portuguese": "Você não tem o cargo necessário para usar este comando! Você precisa de um dos seguintes: {ROLES}",
+		"russian": "У вас нет необходимых ролей для использования этой команды! Вам понадобится одно из следующего: {ROLES}",
+		"german": "Sie haben nicht die erforderlichen Rollen, um diesen Befehl zu verwenden! Sie benötigen eine der folgenden Möglichkeiten: {ROLES}",
+        "czech": "Nemáš potřebné role na použití tohoto příkazu! Potřebuješ jednu z: {ROLES}"
+	},
+	"COOLDOWN": {
+		"english": "You must wait {COOLDOWN} before using that command again.",
+		"spanish": "Debe esperar {COOLDOWN} antes de usar ese comando nuevamente.",
+		"portuguese": "Você precisa esperar {COOLDOWN} antes de usar este comando novamente.",
+		"russian": "Вы должны подождать {COOLDOWN} перед использованием данной команды снова.",
+		"german": "Du musst {COOLDOWN} warten, bevor du diesen Befehl erneut nutzen kannst.",
+        "czech": "Počkej {COOLDOWN}, než použiješ příkaz znova."
+	},
+	"UNKNOWN_COMMAND": {
+		"english": "Could not find command {COMMAND}!",
+		"spanish": "¡No se pudo encontrar el comando {COMMAND}!",
+		"portuguese": "Não foi possível encontrar o comando {COMMAND}!",
+		"russian": "Не удалось найти команду {COMMAND}!",
+		"german": "Konnte den Befehl {COMMAND} nicht finden!",
+		"czech": "Příkaz {COMMAND} nebyl nalezen!"
+	}
+}

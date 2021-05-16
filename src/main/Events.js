@@ -24,15 +24,13 @@ module.exports = {
      * Internal method to normalCommands
      * @private
     */
-    normalCommands: async function (client, slash, commands, aliases, cooldowns, errorMessage, cooldownMessage, cooldownDefault, prefix) {
+    normalCommands: async function (client, slash, commands, aliases, cooldowns, cooldownDefault, prefix) {
         this.prefix = prefix
         this.client = client;
         this.slash = slash;
         this.commands = commands;
         this.aliases = aliases;
         this.cooldowns = cooldowns;
-        this.errorMessage = errorMessage;
-        this.cooldownMessage = cooldownMessage;
         this.cooldownDefault = cooldownDefault;
 
         if((this.slash == false) || (this.slash == "both")) {
@@ -71,7 +69,7 @@ module.exports = {
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
 
-                                return message.channel.send(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name))
+                                return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name))
                             }
                         }
                     }
@@ -114,12 +112,12 @@ module.exports = {
                     if(commandos.requiredPermission) {
                         if(this.client.discordjsversion.includes("12.")) {
                             if(!message.member.hasPermission(commandos.requiredPermission)) {
-                                message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
+                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.requiredPermission))
                                 return;
                             }
                         } else {
                             if(!message.member.permission.has(commandos.requiredPermission)) {
-                                message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
+                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.requiredPermission))
                                 return;
                             }
                         }
@@ -127,7 +125,7 @@ module.exports = {
 
                     if(commandos.requiredRole) {
                         if(!message.member._roles.includes(commandos.requiredRole)) {
-                            message.channel.send(commandos.requiredRoleMessage ? commandos.requiredRoleMessage : "You don't have role!")
+                            message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.requiredRole))
                             return;
                         }
                     }
@@ -135,8 +133,8 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    if(this.errorMessage) {
-                        message.channel.send(this.errorMessage);
+                    if(this.client.languageFile.UNKOWN_COMMAND[this.client.language]) {
+                        message.channel.send(this.client.languageFile.UNKOWN_COMMAND[this.client.language]);
                     }
                 }
             })
@@ -184,7 +182,7 @@ module.exports = {
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
 
-                                return message.channel.send(this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name))
+                                return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name))
                             }
                         }
                     }
@@ -227,12 +225,12 @@ module.exports = {
                     if(commandos.requiredPermission) {
                         if(this.client.discordjsversion.includes("12.")) {
                             if(!message.member.hasPermission(commandos.requiredPermission)) {
-                                message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
+                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.requiredPermission))
                                 return;
                             }
                         } else {
                             if(!message.member.permission.has(commandos.requiredPermission)) {
-                                message.channel.send(commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!")
+                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.requiredPermission))
                                 return;
                             }
                         }
@@ -240,7 +238,7 @@ module.exports = {
 
                     if(commandos.requiredRole) {
                         if(!message.member._roles.includes(commandos.requiredRole)) {
-                            message.channel.send(commandos.requiredRoleMessage ? commandos.requiredRoleMessage : "You don't have role!")
+                            message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.requiredRole))
                             return;
                         }
                     }
@@ -248,8 +246,8 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    if(this.errorMessage) {
-                        message.channel.send(this.errorMessage);
+                    if(this.client.languageFile.UNKOWN_COMMAND[this.client.language]) {
+                        message.channel.send(this.client.languageFile.UNKOWN_COMMAND[this.client.language]);
                     }
                 }
             })
@@ -260,13 +258,11 @@ module.exports = {
      * Internal method to slashCommands
      * @private
     */
-    slashCommands: async function (client, slash, commands, cooldowns, errorMessage, cooldownMessage, cooldownDefault) {
+    slashCommands: async function (client, slash, commands, cooldowns, cooldownDefault) {
         this.client = client;
         this.slash = slash;
         this.commands = commands;
         this.cooldowns = cooldowns;
-        this.errorMessage = errorMessage;
-        this.cooldownMessage = cooldownMessage;
         this.cooldownDefault = cooldownDefault;
 
         if((this.slash) || (this.slash == "both")) {
@@ -292,7 +288,7 @@ module.exports = {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: this.cooldownMessage.replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name)
+                                            content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{cooldown}/g, timeLeft.toFixed(1)).replace(/{cmdname}/g, commandos.name)
                                         }
                                     }
                                 });
@@ -338,7 +334,7 @@ module.exports = {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!"
+                                            content:  this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.requiredPermission)
                                         }
                                     }
                                 });
@@ -351,7 +347,7 @@ module.exports = {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: commandos.requiredPermissionMessage ? commandos.requiredPermissionMessage : "You don't have permissions!"
+                                            content: this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.requiredPermission)
                                         }
                                     }
                                 });
@@ -367,7 +363,7 @@ module.exports = {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: commandos.requiredRoleMessage ? commandos.requiredRoleMessage : "You don't have role!"
+                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.requiredRole)
                                     }
                                 }
                             }); 
@@ -431,12 +427,12 @@ module.exports = {
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
-                    if(this.errorMessage) {
+                    if(this.client.languageFile.UNKOWN_COMMAND[this.client.language]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
                                 type: 4,
                                 data: {
-                                    content: this.errorMessage
+                                    content: this.client.languageFile.UNKOWN_COMMAND[this.client.language]
                                 }
                             }
                         });
