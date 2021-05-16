@@ -38,13 +38,18 @@ module.exports = {
                 if (message.author.bot) return;
                 if (!message.guild) return;
                 var prefix = this.prefix;
+                var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})>`, "gi")
 
-                if(this.client.database.working) {
-                    var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
-                    prefix = guildSettings
+                if(mentionRegex) {
+                    prefix = `${mentionRegex[0]} `
+                } else {
+                    if(this.client.database.working) {
+                        var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
+                        prefix = guildSettings
+                    }
                 }
 
-                if (!message.content.toLowerCase().startsWith(prefix)) return;
+                if (!message.content.startsWith(prefix)) return;
             
                 const args = message.content.slice(prefix.length).trim().split(/ +/g);
                 const cmd = args.shift().toLowerCase();
@@ -148,12 +153,18 @@ module.exports = {
                 if (message.author.bot) return;
                 if (!message.guild) return;
                 var prefix = this.prefix;
+                var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})>`, "gi")
 
-                if(this.client.database.working) {
-                    var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
-                    prefix = guildSettings
+                if(mentionRegex) {
+                    prefix = `${mentionRegex[0]} `
+                } else {
+                    if(this.client.database.working) {
+                        var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
+                        prefix = guildSettings
+                    }
                 }
-                if (!message.content.toLowerCase().startsWith(prefix)) return;
+
+                if (!message.content.startsWith(prefix)) return;
             
                 const args = message.content.slice(prefix.length).trim().split(/ +/g);
                 const cmd = args.shift().toLowerCase();
