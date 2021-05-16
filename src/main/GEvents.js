@@ -58,7 +58,7 @@ module.exports = class GEvents {
                             console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
                             this.client.emit("gDebug", new Color("&d[GCommands EVENTS Debug] "+e).getText())
-                            return console.log(new Color("&d[GCommands EVENTS] &cCan't load " + name).getText());
+                            console.log(new Color("&d[GCommands EVENTS] &cCan't load " + name).getText());
                         }
                     }
                 }
