@@ -2,7 +2,6 @@ const { Collection } = require("discord.js");
 const Color = require("../color/Color");
 const { promisify } = require('util');
 const path = require('path');
-const { fstat } = require("fs");
 const glob = promisify(require('glob'));
 
 /**
@@ -75,7 +74,6 @@ module.exports = class GEvents {
     */
     async __loadEvents() {
         this.client.events.forEach(event => {
-            console.log(event)
             if (event.once) {
                 this.client.once(event.name, (...args) => event.run(this.client, ...args));
             } else {

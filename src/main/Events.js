@@ -56,7 +56,7 @@ module.exports = {
                     var commandos = this.commands.get(cmd);
                     if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
 
-                    var inhibit = await this.inhibit(undefined, message)
+                    var inhibit = await this.inhibit(commandos, undefined, message)
                     if(inhibit == false) return;
 
                     if (!this.cooldowns.has(commandos.name)) {
@@ -167,7 +167,7 @@ module.exports = {
                     var commandos = this.commands.get(cmd);
                     if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
 
-                    var inhibit = await this.inhibit(undefined, message)
+                    var inhibit = await this.inhibit(commandos, undefined, message)
                     if(inhibit == false) return;
 
                     if (!this.cooldowns.has(commandos.name)) {
@@ -276,7 +276,7 @@ module.exports = {
                         this.cooldowns.set(commandos.name, new Collection());
                     }
 
-                    var inhibit = await this.inhibit(interaction, undefined)
+                    var inhibit = await this.inhibit(commandos, interaction, undefined)
                     if(inhibit == false) return;
 
                     const now = Date.now();
@@ -467,9 +467,9 @@ module.exports = {
         return { ...apiMessage.data, files: apiMessage.files };
     },
 
-    inhibit: async function(slash, message) {
+    inhibit: async function(cmd, slash, message) {
 		for(const inhibitor of this.client.inhibitors) {
-			let inhibit = inhibitor(slash, message);
+			let inhibit = inhibitor(cmd, slash, message);
 			return inhibit;
 		}
 		return null;
