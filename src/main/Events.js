@@ -140,7 +140,7 @@ module.exports = {
                 } catch(e) {
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",commandos.name));
+                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
                     }
                 }
             })
@@ -251,7 +251,7 @@ module.exports = {
                 } catch(e) {
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",commandos.name));
+                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
                     }
                 }
             })
@@ -440,7 +440,7 @@ module.exports = {
                             data: {
                                 type: 4,
                                 data: {
-                                    content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",commandos.name)
+                                    content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",interaction.data.name)
                                 }
                             }
                         });
