@@ -138,6 +138,7 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
+                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",commandos.name));
                     }
@@ -248,6 +249,7 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
+                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",commandos.name));
                     }
@@ -432,6 +434,7 @@ module.exports = {
                     }
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
+                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
