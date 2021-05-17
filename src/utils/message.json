@@ -15,7 +15,7 @@
 		"russian": "У вас нет необходимых ролей для использования этой команды! Вам понадобится одно из следующего: {ROLES}",
 		"german": "Sie haben nicht die erforderlichen Rollen, um diesen Befehl zu verwenden! Sie benötigen eine der folgenden Möglichkeiten: {ROLES}",
         "czech": "Nemáš potřebné role na použití tohoto příkazu! Potřebuješ jednu z: {ROLES}",
-		"sloval": "Nemáš potrebné role na použitie tohito príkazu! Potrebuješ jednu z: {ROLES}"
+		"slovak": "Nemáš potrebné role na použitie tohito príkazu! Potrebuješ jednu z: {ROLES}"
 	},
 	"COOLDOWN": {
 		"english": "You must wait {COOLDOWN} before using that command again.",

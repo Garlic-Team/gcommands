@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-//const { SlashCommand } = require("gcommands")
+const { SlashCommand } = require("gcommands")
 
 module.exports = {
 	name: "test",
@@ -62,11 +62,11 @@ module.exports = {
 
 	minArgs: 1,
 	cooldown: 3,
-	guildOnly: "747526604116459691", //["id","id2"]
-	//userOnly: "id", //["id","id2"]
-	//channelOnly: "id", //["id","id2"]
+	guildOnly: "id", //["id","id2"]
+	userOnly: "id", //["id","id2"]
+	channelOnly: "id", //["id","id2"]
 	requiredPermission: "ADMINISTRATOR",
-	//requiredRole: "ROLE ID",
+	requiredRole: "ROLE ID",
 	//slash: false,
 	run: async(client, slash, message, args) => {
 		if(message) {
