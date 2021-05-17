@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { SlashCommand } = require("gcommands")
+//const { SlashCommand } = require("gcommands")
 
 module.exports = {
 	name: "test",
@@ -44,17 +44,29 @@ module.exports = {
 					required: true
 				}
 			]
+		},
+		{
+			name: "button2",
+			description: "channel idk",
+			options: [
+				{
+					name: "channel",
+					type: SlashCommand.CHANNEL,
+					description: "channel",
+					required: true
+				}
+			]
 		}
 	],
 	//subCommand: ["button;<enable:6:imgood> <test>","pog;<disable> <button>"],
 
 	minArgs: 1,
 	cooldown: 3,
-	guildOnly: "id", //["id","id2"]
-	userOnly: "id",
-	channelOnly: "id", //["id","id2"]
+	guildOnly: "747526604116459691", //["id","id2"]
+	//userOnly: "id", //["id","id2"]
+	//channelOnly: "id", //["id","id2"]
 	requiredPermission: "ADMINISTRATOR",
-	requiredRole: "ROLE ID",
+	//requiredRole: "ROLE ID",
 	//slash: false,
 	run: async(client, slash, message, args) => {
 		if(message) {
@@ -66,6 +78,7 @@ module.exports = {
 			return;
 		}
 
+		console.log(args)
 		return {
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			ephemeral: true,

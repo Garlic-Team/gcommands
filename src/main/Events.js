@@ -138,9 +138,8 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    console.log(e)
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("COMMAND",commandos.name));
+                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",commandos.name));
                     }
                 }
             })
@@ -250,7 +249,7 @@ module.exports = {
                     this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("COMMAND",commandos.name));
+                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",commandos.name));
                     }
                 }
             })
@@ -391,7 +390,7 @@ module.exports = {
                          *      allowedMentions: { parse: [], repliedUser: true }
                          *  }
                          */
-                        var result = await commandos.run(this.client, interaction)
+                        var result = await commandos.run(this.client, interaction, undefined, this.getSlashArgs(interaction.data.options || []))
                         var data = {
                             content: result
                         }
@@ -438,7 +437,7 @@ module.exports = {
                             data: {
                                 type: 4,
                                 data: {
-                                    content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("COMMAND",commandos.name)
+                                    content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",commandos.name)
                                 }
                             }
                         });
@@ -465,6 +464,18 @@ module.exports = {
         .resolveFiles();
         
         return { ...apiMessage.data, files: apiMessage.files };
+    },
+
+    getSlashArgs: function(options) {
+        var args = {};
+        for (var o of options) {
+          if (o.type == 1) args[o.name] = this.getSlashArgs(o.options || []);
+          else if (o.type == 2) args[o.name] = this.getSlashArgs(o.options || []); 
+          else {
+              args[o.name] = o.value;
+          }
+        }
+        return args;
     },
 
     inhibit: async function(cmd, slash, message) {

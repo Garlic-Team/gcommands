@@ -268,7 +268,7 @@ module.exports = class GCommands {
                             options: opt || []
                         })
                     } catch(e) {
-                        this.client.emit("gDebug", new Color("[GCommands DEBUG] " + e + " &eignor!").getText())
+                        this.client.emit("gDebug", new Color("&d[GCommands DEBUG] &3" + e + " &eignor!").getText())
                         subCommand.push({
                             name: sc.name,
                             description: sc.description,
