@@ -4,6 +4,7 @@ const glob = promisify(require('glob'));
 const Color = require("../color/Color");
 const GEvents = require("./GEvents");
 const Events = require('./Events');
+const cmdDeleter = require('../utils/cmdDeleter');
 const { Collection, Structures, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
@@ -46,6 +47,7 @@ module.exports = class GCommands {
         this.cmdDir = options.cmdDir;
         this.eventDir = options.eventDir;
         this.client.discordjsversion = version
+        this.unkownCommandMessage = options.unkownCommandMessage ? options.unkownCommandMessage : true
 
         if(!options.ownLanguageFile) this.client.languageFile = require("../utils/message.json")
         else this.client.languageFile = options.ownLanguageFile
@@ -95,8 +97,8 @@ module.exports = class GCommands {
         this.__dbLoad();
 
         Events.loadMoreEvents(this.client)
-        Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix)
-        Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault)
+        Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix, this.unkownCommandMessage)
+        Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault, this.unkownCommandMessage)
     }
 
     /**
@@ -359,7 +361,7 @@ module.exports = class GCommands {
                             }  
                         }
                     }
-                }) 
+                })
             }catch(e) {
                 console.log(e)
             }  
@@ -391,12 +393,12 @@ module.exports = class GCommands {
      * Internal method to deleteAllGlobalCmds
      * @private
     */
-    async __deleteAllGlobalCmds() {
+     async __deleteAllGlobalCmds() {
         try {
-            var allcmds = await this.__getAllCommands();
+            var allcmds = await cmdDeleter.__getAllCommands(this.client);
             if(!this.client.slash) {
                 allcmds.forEach(cmd => {
-                    this.__deleteCmd(cmd.id)
+                    cmdDeleter.__deleteCmd(this.client, cmd.id)
                 })
             }
 
@@ -409,7 +411,7 @@ module.exports = class GCommands {
                 if(this.client.commands.get(cmdname).slash == false) {
                     allcmds.forEach(cmd => {
                         if(cmd.name == cmdname) {
-                            this.__deleteCmd(cmd.id)
+                            cmdDeleter.__deleteCmd(this.client, cmd.id)
                         }
                     })
                 }
@@ -419,7 +421,7 @@ module.exports = class GCommands {
                 var f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
 
                 if(!f) {
-                    this.__deleteCmd(cmd.id)
+                    cmdDeleter.__deleteCmd(this.client, cmd.id)
                 }
             })
         } catch(e) {
@@ -436,11 +438,11 @@ module.exports = class GCommands {
     async __deleteAllGuildCmds() {
         try {
             this.client.guilds.forEach(async(guild) => {
-                var allcmds = await this.__getAllCommands(guild.id);
+                var allcmds = await cmdDeleter.__getAllCommands(this.client, guild.id);
 
                 if(!this.client.slash) {
                     allcmds.forEach(cmd => {
-                        this.__deleteCmd(cmd.id, guild.id)
+                        cmdDeleter.__deleteCmd(this.client, cmd.id, guild.id)
                     })
                 }
 
@@ -449,21 +451,21 @@ module.exports = class GCommands {
                 var keys = Array.from(this.client.commands.keys());
                 keys.forEach(cmdname => {
                     nowCMDS.push(cmdname)
-    
+
                     if(this.client.commands.get(cmdname).slash == false) {
                         allcmds.forEach(cmd => {
                             if(fo.name == cmdname) {
-                                this.__deleteCmd(cmd.id, guild.id)
+                                cmdDeleter.__deleteCmd(this.client, cmd.id, guild.id)
                             }
                         })
                     }
                 })
-    
+
                 allcmds.forEach(cmd => {
                     var f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
-    
+
                     if(!f) {
-                        this.__deleteCmd(cmd.id, guild.id)
+                        cmdDeleter.__deleteCmd(this.client, cmd.id, guild.id)
                     }
                 })
             })
@@ -479,35 +481,6 @@ module.exports = class GCommands {
                 this.__createCommands();
             }
         }
-    }
-
-    /**
-     * Internal method to deleteCmd
-     * @private
-    */
-    async __deleteCmd(commandId, guildId = undefined) {
-        try {
-            const app = this.client.api.applications(this.client.user.id)
-            if(guildId) {
-                app.guilds(guildId)
-            }
-
-            await app.commands(commandId).delete()
-        } catch(e) {return;}
-    }
-
-    /**
-     * Internal method to getAllCmds
-     * @returns {object}
-     * @private
-    */
-    async __getAllCommands(guildId = undefined) {
-        const app = this.client.api.applications(this.client.user.id)
-        if(guildId) {
-            app.guilds(guildId)
-        }
-
-        return await app.commands.get()
     }
 }
 

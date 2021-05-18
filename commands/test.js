@@ -1,5 +1,4 @@
-const { MessageEmbed } = require("discord.js");
-const { SlashCommand } = require("gcommands")
+//const { SlashCommand } = require("gcommands")
 
 module.exports = {
 	name: "test",
@@ -39,7 +38,7 @@ module.exports = {
 			options: [
 				{
 					name: "enable",
-					type: SlashCommand.USER,
+					type: "6",//SlashCommand.USER,
 					description: "enable",
 					required: true
 				}
@@ -51,7 +50,7 @@ module.exports = {
 			options: [
 				{
 					name: "channel",
-					type: SlashCommand.CHANNEL,
+					type: "7",//SlashCommand.CHANNEL,
 					description: "channel",
 					required: true
 				}
@@ -62,13 +61,15 @@ module.exports = {
 
 	minArgs: 1,
 	cooldown: 3,
-	guildOnly: "id", //["id","id2"]
-	userOnly: "id", //["id","id2"]
-	channelOnly: "id", //["id","id2"]
-	requiredPermission: "ADMINISTRATOR",
-	requiredRole: "ROLE ID",
+	guildOnly: "747526604116459691", //["id","id2"]
+	//userOnly: "id", //["id","id2"]
+	//channelOnly: "id", //["id","id2"]
+	userRequiredPermissions: ["ADMINISTRATOR","MANAGE_GUILD"],
+	clientRequiredPermissions: ["ADMINISTRATOR"],
+	//requiredRole: "ROLE ID",
 	//slash: false,
 	run: async(client, slash, message, args) => {
+		console.log(args)
 		if(message) {
 			if(args[0]) {
 				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
@@ -78,7 +79,6 @@ module.exports = {
 			return;
 		}
 
-		console.log(args)
 		return {
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			ephemeral: true,

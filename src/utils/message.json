@@ -8,6 +8,15 @@
         "czech": "Chybí ti {PERMISSION} oprávnění k použití tohoto příkazu.",
 		"slovak": "Chýba ti {PERMISSION} oprávnenie k použitiu tohoto príkazu."
     },
+    "MISSING_CLIENT_PERMISSIONS": {
+		"english": "The client must have {PERMISSION} permission to use this command.",
+		"spanish": "Para usar este comando, el cliente debe tener el permiso {PERMISSION}.",
+		"portuguese": "O cliente deve ter permissão {PERMISSION} para usar este comando.",
+		"russian": "Чтобы использовать эту команду, клиент должен иметь полномочия {PERMISSION}.",
+		"german": "Der Client benötigt die Berechtigung {PERMISSION}, um diesen Befehl verwenden zu können.",
+        "czech": "Client musí mít {PERMISSION} oprávnění k použití tohoto příkazu.",
+		"slovak": "Client musí mať {PERMISSION} oprávnenia k použitiu tohoto príkazu."
+    },
 	"MISSING_ROLES": {
 		"english": "You do not have the required roles to use this command! You need one of the following: {ROLES}",
 		"spanish": "¡No tienes los roles necesarios para usar este comando! Necesita uno de los siguientes: {ROLES}",
