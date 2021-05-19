@@ -1,5 +1,5 @@
 const {Collection,MessageEmbed,APIMessage} = require("discord.js")
-const Color = require("../color/Color");
+const Color = require("./color/Color");
 
 module.exports = {
     /**

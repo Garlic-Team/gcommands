@@ -1,4 +1,4 @@
-const Color = require("../color/Color");
+const Color = require("./color/Color");
 
 /**
  * The Buttons class

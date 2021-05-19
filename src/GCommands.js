@@ -1,12 +1,12 @@
 const { promisify } = require('util');
 const path = require('path');
 const glob = promisify(require('glob'));
-const Color = require("../color/Color");
+const Color = require("./utils/color/Color");
 const GEvents = require("./GEvents");
-const Events = require('./Events');
-const cmdDeleter = require('../utils/cmdDeleter');
+const Events = require('./utils/Events');
+const cmdDeleter = require('./utils/cmdUtils');
 const GCommandsDispatcher = require("./GCommandsDispatcher")
-const { Collection, Structures, version } = require('discord.js');
+const { Collection, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
 
@@ -49,7 +49,7 @@ module.exports = class GCommands {
         this.client.discordjsversion = version
         this.unkownCommandMessage = options.unkownCommandMessage ? options.unkownCommandMessage : true
 
-        if(!options.ownLanguageFile) this.client.languageFile = require("../utils/message.json")
+        if(!options.ownLanguageFile) this.client.languageFile = require("./utils/message.json")
         else this.client.languageFile = options.ownLanguageFile
         this.client.language = options.language
 
@@ -151,15 +151,15 @@ module.exports = class GCommands {
                 var File;
 
                 try {
-                    File = require("../../../../"+this.cmdDir+"/"+name)
+                    File = require("../../../"+this.cmdDir+"/"+name)
                     console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                 } catch(e) {
                     try {
-                        File = require("../../../../"+commandFile.split("./")[1])
+                        File = require("../../../"+commandFile.split("./")[1])
                         console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                     } catch(e) {
                         try {
-                            File = require("../../"+this.cmdDir+"/"+name);
+                            File = require("../"+this.cmdDir+"/"+name);
                             console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
                             this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
@@ -272,7 +272,6 @@ module.exports = class GCommands {
                             options: opt || []
                         })
                     } catch(e) {
-                        this.client.emit("gDebug", new Color("&d[GCommands DEBUG] &3" + e + " &eignor!").getText())
                         subCommand.push({
                             name: sc.name,
                             description: sc.description,

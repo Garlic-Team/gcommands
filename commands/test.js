@@ -66,10 +66,12 @@ module.exports = {
 	//channelOnly: "id", //["id","id2"]
 	userRequiredPermissions: ["ADMINISTRATOR","MANAGE_GUILD"],
 	clientRequiredPermissions: ["ADMINISTRATOR"],
+	usage: "usage lol",
 	//requiredRole: "ROLE ID",
 	//slash: false,
 	run: async(client, slash, message, args) => {
 		console.log(await message.guild.commandPrefix())
+		console.log(args)
 		if(message) {
 			if(args[0]) {
 				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")

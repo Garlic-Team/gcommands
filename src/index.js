@@ -1,11 +1,11 @@
 module.exports = {
-    GCommands: require("./main/GCommands.js"),
-    GEvents: require("./main/GEvents"),
-    GCommandsDispatcher: require("./main/GCommandsDispatcher"),
-    GCommandsGuild: require("./structures/GuildStructure"),
-    GCommandsMessage: require("./structures/MessageStructure"),
-    Color: require("./color/Color"),
-    Buttons: require("./main/Buttons"),
+    GCommands: require("./GCommands.js"),
+    GEvents: require("./GEvents"),
+    GCommandsDispatcher: require("./GCommandsDispatcher"),
+    GCommandsGuild: require("./extentions/guild"),
+    GCommandsMessage: require("./extentions/message"),
+    Color: require("./utils/color/Color"),
+    Buttons: require("./utils/Buttons"),
     SlashCommand: {
         STRING: 3,
         INTEGER: 4,

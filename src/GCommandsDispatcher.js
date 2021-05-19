@@ -11,7 +11,7 @@ module.exports = class GCommandsDispatcher {
     async setGuildPrefix(prefix, guildId) {
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
-            var guildSettings = require('../models/guild')
+            var guildSettings = require('../utils/models/guild')
 
             const settings = await guildSettings.findOne({ id: guildId})
             if(!settings) {
@@ -40,7 +40,7 @@ module.exports = class GCommandsDispatcher {
     async getGuildPrefix(guildId) {
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
-            var guildSettings = require('../models/guild')
+            var guildSettings = require('../utils/models/guild')
 
             const settings = await guildSettings.findOne({ id: guildId})
             if(!settings) {

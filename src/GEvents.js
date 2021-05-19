@@ -1,5 +1,5 @@
 const { Collection } = require("discord.js");
-const Color = require("../color/Color");
+const Color = require("./utils/color/Color");
 const { promisify } = require('util');
 const path = require('path');
 const glob = promisify(require('glob'));
@@ -45,15 +45,15 @@ module.exports = class GEvents {
                 var File;
 
                 try {
-                    File = require("../../../../"+this.eventDir+"/"+name)
+                    File = require("../../../"+this.eventDir+"/"+name)
                     console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                 } catch(e) {
                     try {
-                        File = require("../../../../"+eventFile.split("./")[1])
+                        File = require("../../../"+eventFile.split("./")[1])
                         console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                     } catch(e) {
                         try {
-                            File = require("../../"+this.eventDir+"/"+name);
+                            File = require("../"+this.eventDir+"/"+name);
                             console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
                             this.client.emit("gDebug", new Color("&d[GCommands EVENTS Debug] "+e).getText())

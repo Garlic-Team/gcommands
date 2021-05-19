@@ -1,5 +1,5 @@
 const {Collection,MessageEmbed,APIMessage} = require("discord.js")
-const Color = require("../color/Color");
+const Color = require("./color/Color");
 
 module.exports = {
 
@@ -632,12 +632,12 @@ module.exports = {
     loadMoreEvents: async function(client) {
         this.client = client;
 
-        require("./moreEvents/channel")(this.client)
-        require("./moreEvents/guild")(this.client)
-        require("./moreEvents/guildmember")(this.client)
-        require("./moreEvents/role")(this.client)
-        require("./moreEvents/user")(this.client)
-        require("./moreEvents/voiceupdate")(this.client)
+        require("../moreEvents/channel")(this.client)
+        require("../moreEvents/guild")(this.client)
+        require("../moreEvents/guildmember")(this.client)
+        require("../moreEvents/role")(this.client)
+        require("../moreEvents/user")(this.client)
+        require("../moreEvents/voiceupdate")(this.client)
     },
 
     createAPIMessage: async function(client, interaction, content) {
