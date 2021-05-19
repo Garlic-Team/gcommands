@@ -8,7 +8,7 @@ module.exports = {
 	/*expectedArgs: [
 		{
 			name: "list",
-			type: SlashCommand.STRING,
+			type: 3,//SlashCommand.STRING,
 			description: "helllo",
 			required: true,
 			choices: [
@@ -24,40 +24,47 @@ module.exports = {
 		},
 		{
 			name: "user",
-			type: SlashCommand.USER,
+			type: 6,//SlashCommand.USER,
 			description: "select user",
 			required: false
 		}
 	],*/
-
-	subCommandGroup: "group",
-	subCommand: [
-		{
-			name: "button",
-			description: "button idk",
-			options: [
-				{
-					name: "enable",
-					type: "6",//SlashCommand.USER,
-					description: "enable",
-					required: true
-				}
-			]
-		},
-		{
-			name: "button2",
-			description: "channel idk",
-			options: [
-				{
-					name: "channel",
-					type: "7",//SlashCommand.CHANNEL,
-					description: "channel",
-					required: true
-				}
-			]
-		}
-	],
-	//subCommand: ["button;<enable:6:imgood> <test>","pog;<disable> <button>"],
+	/*expectedArgs: [
+        {
+            name: "user",
+            description: "Get or edit permissions for a user",
+            type: 2, // 2 is type SUB_COMMAND_GROUP
+            options: [
+                {
+                    name: "get",
+                    description: "Get permissions for a user",
+                    type: 1 // 1 is type SUB_COMMAND
+                },
+                {
+                    name: "edit",
+                    description: "Edit permissions for a user",
+                    type: 1
+                }
+            ]
+        },
+        {
+            name: "role",
+            description: "Get or edit permissions for a role",
+            type: 2,
+            options: [
+                {
+                    name: "get",
+                    description: "Get permissions for a role",
+                    type: 1
+                },
+                {
+                    name: "edit",
+                    description: "Edit permissions for a role",
+                    type: 1
+                }
+            ]
+        }
+	],*/
 
 	minArgs: 1,
 	cooldown: 3,

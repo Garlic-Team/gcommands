@@ -215,7 +215,8 @@ module.exports = class GCommands {
                             description: option.description,
                             type: option.choices ? 3 : parseInt(option.type),
                             required: option.required ? option.required : false,
-                            choices: option.choices ? option.choices : []
+                            choices: option.choices ? option.choices : [],
+                            options: option.options ? option.options : []
                         })
                     })
                 } else {
@@ -224,18 +225,18 @@ module.exports = class GCommands {
                     .split(/[>\]] [<\[]/)
             
                     for (let a = 0; a < split.length; ++a) {
-                    var item = split[a];
-                    var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
-                    var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
-                    var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
-                    if(optionType == 1 || optionType == 2) optionType = 3
+                        var item = split[a];
+                        var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                        var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                        var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                        if(optionType == 1 || optionType == 2) optionType = 3
 
-                    options.push({
-                        name: option,
-                        description: optionDescription,
-                        type: parseInt(optionType),
-                        required: a < cmd.minArgs ? cmd.minArgs : 0,
-                    })
+                        options.push({
+                            name: option,
+                            description: optionDescription,
+                            type: parseInt(optionType),
+                            required: a < cmd.minArgs ? cmd.minArgs : 0,
+                        })
                     }
                 }
             }
@@ -319,6 +320,7 @@ module.exports = class GCommands {
                         options: options || []
                     };
                 }
+                console.log(cmdd)
 
                 var config = {
                     method: "POST",

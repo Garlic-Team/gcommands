@@ -8,6 +8,8 @@ module.exports = {
     Color: require("./utils/color/Color"),
     Buttons: require("./utils/Buttons"),
     SlashCommand: {
+        SUB_COMMAND: 1,
+        SUB_COMMAND_GROUP: 2,
         STRING: 3,
         INTEGER: 4,
         BOOLEAN: 5,
