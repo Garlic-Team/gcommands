@@ -44,4 +44,4 @@ client.on("ready", () => {
 
 client.on("gDebug", (debug) => {console.log(debug)})
 
-client.login("token")
+client.login("NzQ1NTk5NjQ4MTEwMjE1MjYw.Xz0HyA.1GDM8et0erhlZi6Vb0S3G1Jq_1g")

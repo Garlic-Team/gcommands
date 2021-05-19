@@ -38,7 +38,15 @@ module.exports = {
                 {
                     name: "get",
                     description: "Get permissions for a user",
-                    type: 1 // 1 is type SUB_COMMAND
+                    type: 1, // 1 is type SUB_COMMAND
+                    options: [
+                        {
+                            name: "user",
+                        	description: "The user to get",
+                            type: 6,
+                            required: true
+                        }
+                    ]
                 },
                 {
                     name: "edit",
@@ -77,9 +85,9 @@ module.exports = {
 	//requiredRole: "ROLE ID",
 	//slash: false,
 	run: async(client, slash, message, args) => {
-		console.log(await message.guild.commandPrefix())
 		console.log(args)
 		if(message) {
+			console.log(await message.guild.commandPrefix())
 			if(args[0]) {
 				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
 			} else {

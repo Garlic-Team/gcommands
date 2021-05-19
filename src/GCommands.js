@@ -321,7 +321,6 @@ module.exports = class GCommands {
                         options: options || []
                     };
                 }
-                console.log(cmdd)
 
                 var config = {
                     method: "POST",
