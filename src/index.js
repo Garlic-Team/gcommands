@@ -1,4 +1,5 @@
 module.exports = {
+    GCommandsBase: require("./GCommandsBase"),
     GCommands: require("./GCommands.js"),
     GEvents: require("./GEvents"),
     GCommandsDispatcher: require("./GCommandsDispatcher"),

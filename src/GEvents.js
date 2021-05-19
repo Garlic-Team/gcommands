@@ -2,6 +2,7 @@ const { Collection } = require("discord.js");
 const Color = require("./utils/color/Color");
 const { promisify } = require('util');
 const path = require('path');
+const { Events } = require("./utils/Constants");
 const glob = promisify(require('glob'));
 
 /**
@@ -15,8 +16,8 @@ module.exports = class GEvents {
      * @param {DiscordClient} client 
      * @param {GEventsOptions} options 
     */
-    constructor(client, options = {}) {
-        if (typeof client !== 'object') return console.log(new Color("&d[GCommands EVENTS] &cNo discord.js client provided!",{json:false}).getText());
+    constructor(GCommandsClient, options = {}) {
+        if (typeof GCommandsClient.client !== 'object') return console.log(new Color("&d[GCommands EVENTS] &cNo discord.js client provided!",{json:false}).getText());
         if (!Object.keys(options).length) return console.log(new Color("&d[GCommands EVENTS] &cNo default options provided!",{json:false}).getText());
         if(!options.eventDir) return console.log(new Color("&d[GCommands EVENTS] &cNo default options provided! (eventDir)",{json:false}).getText());
 
@@ -28,7 +29,8 @@ module.exports = class GEvents {
 
         this.eventDir = options.eventDir;
 
-        this.client = client;
+        this.GCommandsClient = GCommandsClient;
+        this.client = GCommandsClient.client;
         this.client.events = new Collection();
 
         this.__loadEventFiles();
@@ -56,7 +58,7 @@ module.exports = class GEvents {
                             File = require("../"+this.eventDir+"/"+name);
                             console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
-                            this.client.emit("gDebug", new Color("&d[GCommands EVENTS Debug] "+e).getText())
+                            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands EVENTS Debug] "+e).getText())
                             console.log(new Color("&d[GCommands EVENTS] &cCan't load " + name).getText());
                         }
                     }

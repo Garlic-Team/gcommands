@@ -2,11 +2,13 @@ const { promisify } = require('util');
 const path = require('path');
 const glob = promisify(require('glob'));
 const Color = require("./utils/color/Color");
-const GEvents = require("./GEvents");
-const Events = require('./utils/Events');
+const EventLoader = require('./utils/EventLoader');
 const cmdUtils = require('./utils/cmdUtils');
 const Updater = require('./utils/updater');
 const GCommandsDispatcher = require("./GCommandsDispatcher")
+const GCommandsBase = require("./GCommandsBase")
+const { Events } = require("./utils/Constants")
+const GEvents = require("./GEvents")
 const { Collection, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
@@ -15,14 +17,15 @@ const fs = require("fs");
  * The GCommands class
  * @class GCommands
  */
-module.exports = class GCommands {
-
+ module.exports = class GCommands extends GCommandsBase {
     /**
      * Creates new GCommands instance
      * @param {DiscordClient} client 
      * @param {GCommandsOptions} options 
      */
     constructor(client, options = {}) {
+        super(client, options)
+
         if (typeof client !== 'object') return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
         if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
         if(!options.cmdDir) return console.log(new Color("&d[GCommands] &cNo default options provided! (cmdDir)",{json:false}).getText());
@@ -30,6 +33,7 @@ module.exports = class GCommands {
 
         if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
 
+        this.GCommandsClient = this;
         this.client = client;
 
         /**
@@ -55,7 +59,7 @@ module.exports = class GCommands {
         this.client.language = options.language
 
         if(this.eventDir) {
-            new GEvents(this.client, {
+            new GEvents(this.GCommandsClient, {
                 eventDir: this.eventDir
             })
         }
@@ -97,9 +101,9 @@ module.exports = class GCommands {
         this.__loadCommands();
         this.__dbLoad();
 
-        Events.loadMoreEvents(this.client)
-        Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix, this.unkownCommandMessage)
-        Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault, this.unkownCommandMessage)
+        EventLoader.loadMoreEvents(this.client)
+        EventLoader.normalCommands(this.GCommandsClient, this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix, this.unkownCommandMessage)
+        EventLoader.slashCommands(this.GCommandsClient, this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault, this.unkownCommandMessage)
 
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 
@@ -165,7 +169,7 @@ module.exports = class GCommands {
                             File = require("../"+this.cmdDir+"/"+name);
                             console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
-                            this.client.emit("gDebug", new Color("&d[GCommands Debug] "+e).getText())
+                            this.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
                             console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
                         }
                     }
@@ -184,11 +188,11 @@ module.exports = class GCommands {
      * @private
      */
     async __createCommands() {
-        this.client.emit("gDebug", new Color("&d[GCommands] &3Creating slash commands...").getText())
+        this.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash commands...").getText())
         let keys = Array.from(this.client.commands.keys());
 
         keys.forEach(async (cmdname) => {
-            this.client.emit("gDebug", new Color("&d[GCommands] &3Creating slash command (&e"+cmdname+"&3)").getText())
+            this.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash command (&e"+cmdname+"&3)").getText());
             var options = [];
             var subCommandGroup = {};
             var subCommand = [];
@@ -345,7 +349,7 @@ module.exports = class GCommands {
                             }, 20000)
                         } else {
                             try {
-                                this.client.emit("gDebug", new Color([
+                                this.emit(Events.DEBUG, new Color([
                                     "&a----------------------",
                                     "  &d[GCommands Debug] &3",
                                     "&aCode: &b" + error.response.data.code,
@@ -356,7 +360,7 @@ module.exports = class GCommands {
                                     "&a----------------------"
                                 ]).getText())
                             } catch(e) {
-                                this.client.emit("gDebug", new Color([
+                                this.emit(Events.DEBUG, new Color([
                                     "&a----------------------",
                                     "  &d[GCommands Debug] &3",
                                     "&aCode: &b" + error.response.data.code,
@@ -430,7 +434,7 @@ module.exports = class GCommands {
                 }
             })
         } catch(e) {
-            this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Can't remove global commands!").getText())
+            this.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3Can't remove global commands!").getText())
         }
 
         this.__deleteAllGuildCmds()
@@ -480,7 +484,7 @@ module.exports = class GCommands {
                 this.__createCommands();
             }
         } catch(e) {
-            this.client.emit("gDebug", new Color("&d[GCommands Debug] &3Can't remove guild commands!").getText())
+            this.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3Can't remove guild commands!").getText())
 
             if((this.client.slash) || (this.client.slash == "both")) {
                 this.__createCommands();

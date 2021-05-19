@@ -1,5 +1,6 @@
-const {Collection,MessageEmbed,APIMessage} = require("discord.js")
+const {Collection,MessageEmbed,APIMessage} = require("discord.js");
 const Color = require("./color/Color");
+const {Events} = require("./Constants")
 
 module.exports = {
 
@@ -24,7 +25,8 @@ module.exports = {
      * Internal method to normalCommands
      * @private
     */
-    normalCommands: async function (client, slash, commands, aliases, cooldowns, cooldownDefault, prefix, unkownCommandMessage) {
+    normalCommands: async function (GCommandsClient, client, slash, commands, aliases, cooldowns, cooldownDefault, prefix, unkownCommandMessage) {
+        this.GCommandsClient = GCommandsClient;
         this.prefix = prefix
         this.client = client;
         this.slash = slash;
@@ -179,10 +181,10 @@ module.exports = {
                     }
 
                     commandos.run(this.client, undefined, message, args)
-                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
                     if(!this.unkownCommandMessage) return;
-                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
                     }
@@ -333,10 +335,10 @@ module.exports = {
                     }
 
                     commandos.run(this.client, undefined, message, args)
-                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
                     if(!this.unkownCommandMessage) return;
-                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
                     }
@@ -349,7 +351,8 @@ module.exports = {
      * Internal method to slashCommands
      * @private
     */
-    slashCommands: async function (client, slash, commands, cooldowns, cooldownDefault, unkownCommandMessage) {
+    slashCommands: async function (GCommandsClient, client, slash, commands, cooldowns, cooldownDefault, unkownCommandMessage) {
+        this.GCommandsClient = GCommandsClient;
         this.client = client;
         this.slash = slash;
         this.commands = commands;
@@ -607,13 +610,13 @@ module.exports = {
                           },
                         })
                     } catch(e) {
-                        this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
+                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                         commandos.run(this.client, interaction);
                     }
-                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
                     if(!this.unkownCommandMessage) return;
-                    this.client.emit("gDebug", new Color("&d[GCommands Debug] &3" + e).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {

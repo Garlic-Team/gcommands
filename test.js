@@ -22,6 +22,7 @@ client.on("ready", () => {
             url: "mongodb+srv://" //mongourl
         }
     })
+    GCommandsClient.on('debug', (debug) => {console.log(debug)} );
 
     client.dispatcher.addInhibitor((cmd, slash, message) => {
         if(message && message.author.id == "126454") {
@@ -42,6 +43,4 @@ client.on("ready", () => {
     })
 })
 
-client.on("gDebug", (debug) => {console.log(debug)})
-
-client.login("NzQ1NTk5NjQ4MTEwMjE1MjYw.Xz0HyA.1GDM8et0erhlZi6Vb0S3G1Jq_1g")
+client.login("token")
