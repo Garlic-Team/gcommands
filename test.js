@@ -23,7 +23,7 @@ client.on("ready", () => {
         }
     })
 
-    client.user.addInhibitor((cmd, slash, message) => {
+    client.dispatcher.addInhibitor((cmd, slash, message) => {
         if(message && message.author.id == "126454") {
             message.channel.send("blacklisted")
             return false;

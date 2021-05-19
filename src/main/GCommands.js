@@ -5,6 +5,7 @@ const Color = require("../color/Color");
 const GEvents = require("./GEvents");
 const Events = require('./Events');
 const cmdDeleter = require('../utils/cmdDeleter');
+const GCommandsDispatcher = require("./GCommandsDispatcher")
 const { Collection, Structures, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
@@ -29,7 +30,6 @@ module.exports = class GCommands {
         if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
 
         this.client = client;
-        this.client.inhibitors = new Set();
 
         /**
          * GCommands options
@@ -99,6 +99,8 @@ module.exports = class GCommands {
         Events.loadMoreEvents(this.client)
         Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix, this.unkownCommandMessage)
         Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault, this.unkownCommandMessage)
+
+        this.client.dispatcher = new GCommandsDispatcher(this.client);
     }
 
     /**
@@ -485,4 +487,3 @@ module.exports = class GCommands {
 }
 
 Structures.extend("Message", require("../structures/MessageStructure"))
-Structures.extend("User", require("../structures/ClientUser"))

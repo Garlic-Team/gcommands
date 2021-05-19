@@ -1,12 +1,13 @@
-const { User, Structures } = require('discord.js');
-const Color = require('../color/Color');
-
 /**
- * The ClientUser structure
- * @class ClientUser
- * @private
+ * The GCommansDispatcher class
+ * @class GCommandsDispatcher
  */
-module.exports = ClientUser => class extends Structures.get("User") {
+module.exports = class GCommandsDispatcher {
+    constructor(client) {
+        this.client = client;
+        this.inhibitors = new Set();
+    }
+
     async setGuildPrefix(prefix, guildId) {
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
@@ -58,8 +59,8 @@ module.exports = ClientUser => class extends Structures.get("User") {
 
     async addInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
-		if(this.client.inhibitors.has(inhibitor)) return false;
-		this.client.inhibitors.add(inhibitor);
+		if(this.inhibitors.has(inhibitor)) return false;
+		this.inhibitors.add(inhibitor);
 		return true;
 	}
 
