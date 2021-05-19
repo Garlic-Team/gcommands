@@ -485,5 +485,3 @@ module.exports = class GCommands {
         }
     }
 }
-
-Structures.extend("Message", require("../structures/MessageStructure"))

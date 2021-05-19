@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
-const client = new Discord.Client();
 const { GCommands } = require("./src/index");
+const client = new Discord.Client();
 
 const axios = require("axios")
 
@@ -44,4 +44,4 @@ client.on("ready", () => {
 
 client.on("gDebug", (debug) => {console.log(debug)})
 
-client.login("token")
+client.login("NzQ1NTk5NjQ4MTEwMjE1MjYw.Xz0HyA.sC2p9MQTxr_dkfnz4ehwhHMNQBM")

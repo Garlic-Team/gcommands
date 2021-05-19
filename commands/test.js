@@ -69,12 +69,12 @@ module.exports = {
 	//requiredRole: "ROLE ID",
 	//slash: false,
 	run: async(client, slash, message, args) => {
-		console.log(args)
+		console.log(await message.guild.commandPrefix())
 		if(message) {
 			if(args[0]) {
 				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
 			} else {
-				return message.channel.send("Need args")
+				return message.inlineReply("Need args")
 			}
 			return;
 		}

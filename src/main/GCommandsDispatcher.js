@@ -5,7 +5,7 @@
 module.exports = class GCommandsDispatcher {
     constructor(client) {
         this.client = client;
-        this.inhibitors = new Set();
+        this.client.inhibitors = new Set();
     }
 
     async setGuildPrefix(prefix, guildId) {
@@ -59,13 +59,13 @@ module.exports = class GCommandsDispatcher {
 
     async addInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
-		if(this.inhibitors.has(inhibitor)) return false;
-		this.inhibitors.add(inhibitor);
+		if(this.client.inhibitors.has(inhibitor)) return false;
+		this.client.inhibitors.add(inhibitor);
 		return true;
 	}
 
     async removeInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
-		return this.inhibitors.delete(inhibitor);
+		return this.client.inhibitors.delete(inhibitor);
 	}
 }
