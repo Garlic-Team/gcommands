@@ -4,6 +4,7 @@ module.exports = {
     GCommandsDispatcher: require("./GCommandsDispatcher"),
     GCommandsGuild: require("./extentions/guild"),
     GCommandsMessage: require("./extentions/message"),
+    GUpdater: require("./utils/updater"),
     Color: require("./utils/color/Color"),
     Buttons: require("./utils/Buttons"),
     SlashCommand: {
@@ -14,5 +15,6 @@ module.exports = {
         CHANNEL: 7,
         ROLE: 8,
         MENTIONABLE: 9
-    }
+    },
+    version: "3.1.1-beta"
 }
