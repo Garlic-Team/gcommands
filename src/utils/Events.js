@@ -42,7 +42,7 @@ module.exports = {
                 var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.prefix
 
                 if(this.client.database.working) {
-                    var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
+                    var guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
                     prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
                 }
 
@@ -196,7 +196,7 @@ module.exports = {
                 var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.prefix
 
                 if(this.client.database.working) {
-                    var guildSettings = await this.client.user.getGuildPrefix(message.guild.id)
+                    var guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
                     prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
                 }
 

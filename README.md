@@ -14,6 +14,8 @@ DEV build
 npm install github:Garlic-Team/GCommands#dev
 ```
 
+If you updating from 2.x to 3.x check https://gcommands.js.org/guide/additional/fromv2tov3.html
+
 ### Support
  - https://gcommands.js.org
  - https://discord.gg/AjKJSBbGm2
