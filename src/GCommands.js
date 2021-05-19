@@ -100,9 +100,10 @@ module.exports = class GCommands {
         Events.loadMoreEvents(this.client)
         Events.normalCommands(this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix, this.unkownCommandMessage)
         Events.slashCommands(this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault, this.unkownCommandMessage)
-        Updater.__updater();
 
         this.client.dispatcher = new GCommandsDispatcher(this.client);
+
+        Updater.__updater();
     }
 
     /**
