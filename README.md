@@ -45,7 +45,8 @@ const GCommandsClient = new GCommands(client, {
     }
 })
 
-GCommandsClient.on('debug', (debug) => {console.log(debug)} );
+GCommandsClient.on('debug', (debug) => {console.log(debug)});
+})
 
 client.login("token")
 ```
