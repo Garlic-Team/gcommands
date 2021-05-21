@@ -2,8 +2,20 @@ const {Collection,MessageEmbed,APIMessage} = require("discord.js");
 const Color = require("./color/Color");
 const {Events} = require("./Constants")
 
-module.exports = class GCommandsEventLoader {
+/**
+ * The GCommandsEventLoader class
+*/
+class GCommandsEventLoader {
+
+    /**
+     * Creates new GCommandsEventLoader instance
+     * @param {GCommandsClient} GCommandsClient
+     */
     constructor(GCommandsClient) {
+        /**
+         * GCommandsEventLoader options
+         * @property {Object} GCommandsClient
+        */
         this.GCommandsClient = GCommandsClient;
         this.client = GCommandsClient.client;
 
@@ -16,6 +28,7 @@ module.exports = class GCommandsEventLoader {
 
     /**
      * Internal method to messageEvent
+     * @returns {void}
      * @private
     */
     async messageEvent() {
@@ -332,6 +345,7 @@ module.exports = class GCommandsEventLoader {
 
     /**
      * Internal method to slashEvent
+     * @returns {void}
      * @private
     */
     async slashEvent() {
@@ -607,6 +621,11 @@ module.exports = class GCommandsEventLoader {
         }
     }
 
+    /**
+     * Internal method to loadMoreEvents
+     * @returns {void}
+     * @private
+    */
     async loadMoreEvents() {
         require("../moreEvents/channel")(this.client)
         require("../moreEvents/guild")(this.client)
@@ -616,6 +635,10 @@ module.exports = class GCommandsEventLoader {
         require("../moreEvents/voiceupdate")(this.client)
     }
 
+    /**
+     * Internal method to createAPIMessage
+     * @returns {object}
+    */
     async createAPIMessage(interaction, content) {
         const apiMessage = await APIMessage.create(this.client.channels.resolve(interaction.channel_id), content)
         .resolveData()
@@ -624,6 +647,10 @@ module.exports = class GCommandsEventLoader {
         return { ...apiMessage.data, files: apiMessage.files };
     }
 
+    /**
+     * Internal method to getSlashArgs
+     * @returns {object}
+    */
     async getSlashArgs(options) {
         var args = {};
         for (var o of options) {
@@ -636,6 +663,10 @@ module.exports = class GCommandsEventLoader {
         return args;
     }
 
+    /**
+     * Internal method to inhivit
+     * @returns {object}
+    */
     async inhibit(cmd, slash, message) {
 		for(const inhibitor of this.client.inhibitors) {
 			let inhibit = inhibitor(cmd, slash, message);
@@ -644,3 +675,5 @@ module.exports = class GCommandsEventLoader {
 		return null;
     }
 }
+
+module.exports = GCommandsEventLoader;

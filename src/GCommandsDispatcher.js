@@ -1,13 +1,21 @@
 /**
  * The GCommansDispatcher class
- * @class GCommandsDispatcher
  */
-module.exports = class GCommandsDispatcher {
+class GCommandsDispatcher {
     constructor(client) {
+
+        /**
+         * GCommandsDispatcher options
+         * @property {Object} client
+        */
         this.client = client;
         this.client.inhibitors = new Set();
     }
 
+    /**
+     * Internal method to setGuildPrefix
+     * @returns {boolean}
+    */
     async setGuildPrefix(prefix, guildId) {
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
@@ -20,11 +28,12 @@ module.exports = class GCommandsDispatcher {
                 prefix: prefix
               })
 
-              return;
+              return true;
             }
 
             settings.prefix = prefix
             await settings.save()
+            return true;
         } else if(this.client.database.type == "sqlite") {
             this.client.database.sqlite.set(`guildPrefix_${guildId}`,prefix)
             return true;
@@ -37,6 +46,10 @@ module.exports = class GCommandsDispatcher {
         }
     }
 
+    /**
+     * Internal method to getGuildPrefix
+     * @returns {Stirng}
+    */
     async getGuildPrefix(guildId) {
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
@@ -57,6 +70,10 @@ module.exports = class GCommandsDispatcher {
         }
     }
 
+    /**
+     * Internal method to addInhibitor
+     * @returns {boolean}
+    */
     async addInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
 		if(this.client.inhibitors.has(inhibitor)) return false;
@@ -64,8 +81,14 @@ module.exports = class GCommandsDispatcher {
 		return true;
 	}
 
+    /**
+     * Internal method to removeInhibitor
+     * @returns {Set}
+    */
     async removeInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
 		return this.client.inhibitors.delete(inhibitor);
 	}
 }
+
+module.exports = GCommandsDispatcher;

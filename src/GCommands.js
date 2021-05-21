@@ -13,15 +13,12 @@ const { Collection, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
 
-/**
- * The GCommands class
- * @class GCommands
- */
- module.exports = class GCommands extends GCommandsBase {
+/* GCommands Class */
+class GCommands extends GCommandsBase {
     /**
-     * Creates new GCommands instance
-     * @param {DiscordClient} client 
-     * @param {GCommandsOptions} options 
+     * The GCommands class
+     * @param {Object} client - Discord.js Client
+     * @param {Object} options - Options (cmdDir, eventDir etc)
      */
     constructor(client, options = {}) {
         super(client, options)
@@ -32,31 +29,35 @@ const fs = require("fs");
         if(!options.language) return console.log(new Color("&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak))",{json:false}).getText());
 
         if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
-
         this.GCommandsClient = this;
         this.client = client;
 
         /**
-         * GCommands options
-         * @param {GCommandsOptions} cmdDir
-         * @param {GCommandsOptions} eventDir
-         * @param {GCommandsOptions} database
-         * @param {GCommandsOptions} ownEvents
-         * @param {GCommandsOptions} prefix
-         * @param {GCommandsOptions} slash
-         * @param {GCommandsOptions} cooldownMessage
-         * @param {GCommandsOptions} cooldownDefault
-         * @param {GCommandsOptions} errorMessage
-         * @type {GCommandsOptions}
+         * CmdDir
+         * @property {String} cmdDir
         */
         this.cmdDir = options.cmdDir;
+
+        /**
+         * EventDir
+         * @property {String} eventDir
+         */
         this.eventDir = options.eventDir;
         this.client.discordjsversion = version
-        this.GCommandsClient.unkownCommandMessage = options.unkownCommandMessage ? options.unkownCommandMessage : true
 
-        if(!options.ownLanguageFile) this.client.languageFile = require("./utils/message.json")
-        else this.client.languageFile = options.ownLanguageFile
-        this.client.language = options.language
+        /**
+         * unkownCommandMessage
+         * @property {String} unkownCommandMessage
+         */
+        this.unkownCommandMessage = options.unkownCommandMessage ? options.unkownCommandMessage : true;
+
+        /**
+         * ownLanguageFile
+         * @property {Object} ownLanguageFile
+         */
+        if(!options.ownLanguageFile) this.languageFile = require("./utils/message.json");
+        else this.languageFile = options.ownLanguageFile;
+        this.language = options.language;
 
         if(this.eventDir) {
             new GEvents(this.GCommandsClient, {
@@ -64,8 +65,23 @@ const fs = require("fs");
             })
         }
 
+        /**
+         * database
+         * @property {Object} database
+         */
+         this.database = {
+            type:  undefined,
+            url: undefined,
+            host: undefined,
+            username: undefined,
+            password: undefined,
+            databaseName: undefined,
+            port: undefined,
+            working: false
+        };
+        
         if(options.database) {
-            this.client.database = {
+            this.database = {
                 type: options.database.type ? options.database.type : undefined,
                 url: options.database.url ? options.database.url : undefined,
                 host: options.database.host ? options.database.host : undefined,
@@ -75,37 +91,44 @@ const fs = require("fs");
                 port: options.database.port ? options.database.port : undefined,
                 working: false
             };
-        } else {
-            this.client.database = {
-                type:  undefined,
-                url: undefined,
-                host: undefined,
-                username: undefined,
-                password: undefined,
-                databaseName: undefined,
-                port: undefined,
-                working: false
-            };
         }
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
         this.client.aliases = new Collection();
 
-        this.client.prefix = options.slash.prefix ? options.slash.prefix : undefined;
-        this.client.slash = options.slash.slash ? options.slash.slash : false;
-        this.client.cooldownDefault = options.defaultCooldown ? options.defaultCooldown : 0;
+        /**
+         * Prefix
+         * @property {String} prefix
+         */
+        this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
+
+        /**
+         * Slash
+         * @property {String} slash
+         */
+        this.slash = options.slash.slash ? options.slash.slash : false;
+
+        /**
+         * cooldownDefault
+         * @property {Number} cooldownDefault
+         */
+        this.cooldownDefault = options.defaultCooldown ? options.defaultCooldown : 0;
+
+        this.GCommandsClient.unkownCommandMessage = this.unkownCommandMessage;
+        this.client.language = this.language;
+        this.client.languageFile = this.languageFile;
+        this.client.database = this.database
+        this.client.prefix = this.prefix;
+        this.client.slash = this.slash;
+        this.client.cooldownDefault = this.cooldownDefault;
+
 
         process.setMaxListeners(50);
         this.__loadCommands();
         this.__dbLoad();
 
         new EventLoader(this.GCommandsClient)
-
-/*        EventLoader.loadMoreEvents(this.client)
-        EventLoader.normalCommands(this.GCommandsClient, this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix, this.unkownCommandMessage)
-        EventLoader.slashCommands(this.GCommandsClient, this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault, this.unkownCommandMessage)
-*/
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 
         Updater.__updater();
@@ -113,6 +136,7 @@ const fs = require("fs");
 
     /**
      * Internal method to dbLoad
+     * @returns {boolean}
      * @private
      */
     async __dbLoad() {
@@ -122,12 +146,12 @@ const fs = require("fs");
                 .then((connection) => {
                     console.log(new Color("&d[GCommands] &aMongodb loaded!",{json:false}).getText());
                     this.client.database.working = true;
-                    return;
+                    return true;
                 })
                 .catch((e) => {
                     console.log(new Color("&d[GCommands] &cMongodb url is not valid.",{json:false}).getText());
                     this.client.database.working = false;
-                    return;
+                    return false;
                 })
         }
         else if(this.client.database.type == "sqlite") {
@@ -150,6 +174,7 @@ const fs = require("fs");
 
     /**
      * Internal method to loadCommands
+     * @returns {void}
      * @private
      */
     async __loadCommands() {
@@ -186,6 +211,7 @@ const fs = require("fs");
 
     /**
      * Internal method to createCommands
+     * @returns {void}
      * @private
      */
     async __createCommands() {
@@ -380,6 +406,7 @@ const fs = require("fs");
 
     /**
      * Internal method to tryAgain
+     * @returns {void}
      * @private
     */
     async __tryAgain(cmd, config) {
@@ -401,6 +428,7 @@ const fs = require("fs");
 
     /**
      * Internal method to deleteAllGlobalCmds
+     * @returns {void}
      * @private
     */
      async __deleteAllGlobalCmds() {
@@ -443,6 +471,7 @@ const fs = require("fs");
 
     /**
      * Internal method to deleteAllGuildCmds
+     * @returns {void}
      * @private
     */
     async __deleteAllGuildCmds() {
@@ -493,3 +522,5 @@ const fs = require("fs");
         }
     }
 }
+
+module.exports = GCommands;

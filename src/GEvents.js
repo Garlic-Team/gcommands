@@ -7,9 +7,8 @@ const glob = promisify(require('glob'));
 
 /**
  * The GEvents class
- * @class GEvents
  */
-module.exports = class GEvents {
+class GEvents {
 
     /**
      * Creates new GEvents instance
@@ -24,7 +23,7 @@ module.exports = class GEvents {
         /**
          * GEventsOptions options
          * @type {GEventsOptions}
-         * @param {GEventsOptions} eventDir
+         * @property {String} eventDir
         */
 
         this.eventDir = options.eventDir;
@@ -38,6 +37,7 @@ module.exports = class GEvents {
 
     /**
      * Internal method to loadEventsFiles
+     * @returns {void}
      * @private
     */
     async __loadEventFiles() {
@@ -72,6 +72,7 @@ module.exports = class GEvents {
 
     /**
      * Internal method to loadEvents
+     * @returns {void}
      * @private
     */
     async __loadEvents() {
@@ -84,3 +85,5 @@ module.exports = class GEvents {
         })
     }
 }
+
+module.exports = GEvents;

@@ -2,15 +2,20 @@ const Color = require("./color/Color");
 
 /**
  * The Buttons class
- * @class Buttons
  */
-module.exports = class Buttons {
+class Buttons {
 
     /**
      * Creates new Buttons instance
      * @param {ButtonsOptions} options 
     */
     constructor(options = {}) {
+
+        /**
+         * Buttons options
+         * @type {GEventsOptions}
+         * @property {Object} buttons
+        */
         if (!options.buttons) {
             options.buttons = [];
         }
@@ -73,3 +78,5 @@ module.exports = class Buttons {
         return buttons;
   }
 }
+
+module.exports = Buttons;

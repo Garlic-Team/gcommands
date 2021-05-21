@@ -1,7 +1,12 @@
 const EventEmitter = require("events");
 
-module.exports = class GCommandsBase extends EventEmitter {
+/**
+ * The GCommandsBase class
+*/
+class GCommandsBase extends EventEmitter {
     constructor() {
         super()
     }
 }
+
+module.exports = GCommandsBase;

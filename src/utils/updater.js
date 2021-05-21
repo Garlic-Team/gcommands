@@ -2,6 +2,11 @@ const axios = require("axios")
 const { writeFileSync, readFileSync } = require("fs")
 
 module.exports = {
+    /**
+     * Internal method to update
+     * @returns {void}
+     * @private
+    */
     __updater: async function() {
         var { Color } = require("../index")
         var version = require("../index").version

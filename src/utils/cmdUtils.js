@@ -20,7 +20,6 @@ module.exports = {
     /**
      * Internal method to getAllCmds
      * @returns {object}
-     * @private
     */
     __getAllCommands: async function(client, guildId = undefined) {
         const app = client.api.applications(client.user.id)
