@@ -1,5 +1,4 @@
-const { MessageEmbed } = require("discord.js");
-const { SlashCommand } = require("gcommands")
+//const { SlashCommand } = require("gcommands")
 
 module.exports = {
 	name: "test",
@@ -9,7 +8,7 @@ module.exports = {
 	/*expectedArgs: [
 		{
 			name: "list",
-			type: SlashCommand.STRING,
+			type: 3,//SlashCommand.STRING,
 			description: "helllo",
 			required: true,
 			choices: [
@@ -25,44 +24,74 @@ module.exports = {
 		},
 		{
 			name: "user",
-			type: SlashCommand.USER,
+			type: 6,//SlashCommand.USER,
 			description: "select user",
 			required: false
 		}
 	],*/
-
-	subCommandGroup: "group",
-	subCommand: [
-		{
-			name: "button",
-			description: "button idk",
-			options: [
-				{
-					name: "enable",
-					type: SlashCommand.USER,
-					description: "enable",
-					required: true
-				}
-			]
-		}
-	],
-	//subCommand: ["button;<enable:6:imgood> <test>","pog;<disable> <button>"],
+	/*expectedArgs: [
+        {
+            name: "user",
+            description: "Get or edit permissions for a user",
+            type: 2, // 2 is type SUB_COMMAND_GROUP
+            options: [
+                {
+                    name: "get",
+                    description: "Get permissions for a user",
+                    type: 1, // 1 is type SUB_COMMAND
+                    options: [
+                        {
+                            name: "user",
+                        	description: "The user to get",
+                            type: 6,
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    name: "edit",
+                    description: "Edit permissions for a user",
+                    type: 1
+                }
+            ]
+        },
+        {
+            name: "role",
+            description: "Get or edit permissions for a role",
+            type: 2,
+            options: [
+                {
+                    name: "get",
+                    description: "Get permissions for a role",
+                    type: 1
+                },
+                {
+                    name: "edit",
+                    description: "Edit permissions for a role",
+                    type: 1
+                }
+            ]
+        }
+	],*/
 
 	minArgs: 1,
 	cooldown: 3,
-	guildOnly: "id", //["id","id2"]
-	userOnly: "id",
-	requiredPermission: "ADMINISTRATOR",
-	requiredPermissionMessage: "You need have ADMINISTRATOR perms.",
-	requiredRole: "ROLE ID",
-	requiredRoleMessage: "You doesn't have role!",
+	guildOnly: "747526604116459691", //["id","id2"]
+	//userOnly: "id", //["id","id2"]
+	//channelOnly: "id", //["id","id2"]
+	userRequiredPermissions: ["ADMINISTRATOR","MANAGE_GUILD"],
+	clientRequiredPermissions: ["ADMINISTRATOR"],
+	usage: "usage lol",
+	//requiredRole: "ROLE ID",
 	//slash: false,
 	run: async(client, slash, message, args) => {
+		console.log(args)
 		if(message) {
+			console.log(await message.guild.commandPrefix())
 			if(args[0]) {
 				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
 			} else {
-				return message.channel.send("Need args")
+				return message.inlineReply("Need args")
 			}
 			return;
 		}
@@ -79,4 +108,3 @@ module.exports = {
 		*/
 	}
 };
-
