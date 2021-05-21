@@ -14,9 +14,7 @@ client.on("ready", () => {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 
         },
-        cooldown: {
-            default: 3
-        },
+        defauultCooldown: 3,
         database: {
             type: "mongodb", //sqlite/mongodb
             url: "mongodb+srv://" //mongourl

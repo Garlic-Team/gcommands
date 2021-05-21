@@ -52,7 +52,7 @@ const fs = require("fs");
         this.cmdDir = options.cmdDir;
         this.eventDir = options.eventDir;
         this.client.discordjsversion = version
-        this.unkownCommandMessage = options.unkownCommandMessage ? options.unkownCommandMessage : true
+        this.GCommandsClient.unkownCommandMessage = options.unkownCommandMessage ? options.unkownCommandMessage : true
 
         if(!options.ownLanguageFile) this.client.languageFile = require("./utils/message.json")
         else this.client.languageFile = options.ownLanguageFile
@@ -91,7 +91,6 @@ const fs = require("fs");
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
         this.client.aliases = new Collection();
-        this.client.cooldowns = new Collection();
 
         this.client.prefix = options.slash.prefix ? options.slash.prefix : undefined;
         this.client.slash = options.slash.slash ? options.slash.slash : false;
@@ -101,10 +100,12 @@ const fs = require("fs");
         this.__loadCommands();
         this.__dbLoad();
 
-        EventLoader.loadMoreEvents(this.client)
+        new EventLoader(this.GCommandsClient)
+
+/*        EventLoader.loadMoreEvents(this.client)
         EventLoader.normalCommands(this.GCommandsClient, this.client, this.client.slash, this.client.commands, this.client.aliases, this.client.cooldowns, this.client.cooldownDefault, this.client.prefix, this.unkownCommandMessage)
         EventLoader.slashCommands(this.GCommandsClient, this.client, this.client.slash, this.client.commands, this.client.cooldowns, this.client.cooldownDefault, this.unkownCommandMessage)
-
+*/
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 
         Updater.__updater();

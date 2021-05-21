@@ -2,6 +2,7 @@ module.exports = {
     GCommandsBase: require("./GCommandsBase"),
     GCommands: require("./GCommands.js"),
     GEvents: require("./GEvents"),
+    GCommandsEventLoader: require("./utils/EventLoader"),
     GCommandsDispatcher: require("./GCommandsDispatcher"),
     GCommandsGuild: require("./extentions/guild"),
     GCommandsMessage: require("./extentions/message"),
@@ -19,5 +20,5 @@ module.exports = {
         ROLE: 8,
         MENTIONABLE: 9
     },
-    version: "3.1.1-beta"
+    version: require("../package.json").version
 }

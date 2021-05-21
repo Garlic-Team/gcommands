@@ -2,46 +2,29 @@ const {Collection,MessageEmbed,APIMessage} = require("discord.js");
 const Color = require("./color/Color");
 const {Events} = require("./Constants")
 
-module.exports = {
+module.exports = class GCommandsEventLoader {
+    constructor(GCommandsClient) {
+        this.GCommandsClient = GCommandsClient;
+        this.client = GCommandsClient.client;
+
+        this.client.cooldowns = new Collection();
+
+        this.messageEvent()
+        this.slashEvent()
+        this.loadMoreEvents()
+    }
 
     /**
-     * Command
-     * @name ExampleCommand
-     * @param {DiscordClient} client
-     * @param {Object} slash
-     * @param {Object} message
-     * @param {Array} args
-     * @example
-     * module.exports = {
-     *  name: "hi",
-     *  aliases: ["hello"],
-     *  description: "goo",
-     *  run: async(client, slash, message, args) => {
-     *      // code ... 
-     *  }
-    */
-
-    /**
-     * Internal method to normalCommands
+     * Internal method to messageEvent
      * @private
     */
-    normalCommands: async function (GCommandsClient, client, slash, commands, aliases, cooldowns, cooldownDefault, prefix, unkownCommandMessage) {
-        this.GCommandsClient = GCommandsClient;
-        this.prefix = prefix
-        this.client = client;
-        this.slash = slash;
-        this.commands = commands;
-        this.aliases = aliases;
-        this.cooldowns = cooldowns;
-        this.cooldownDefault = cooldownDefault;
-        this.unkownCommandMessage = unkownCommandMessage
-
-        if((this.slash == false) || (this.slash == "both")) {
+    async messageEvent() {
+        if((this.client.slash == false) || (this.client.slash == "both")) {
             this.client.on('message', async(message) => {
                 if (message.author.bot) return;
                 if (!message.guild) return;
                 var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
-                var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.prefix
+                var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
 
                 if(this.client.database.working) {
                     var guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
@@ -56,19 +39,19 @@ module.exports = {
                 if (cmd.length === 0) return;
         
                 try {
-                    var commandos = this.commands.get(cmd);
-                    if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
+                    var commandos = this.client.commands.get(cmd);
+                    if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
 
                     var inhibit = await this.inhibit(commandos, undefined, message)
                     if(inhibit == false) return;
 
-                    if (!this.cooldowns.has(commandos.name)) {
-                        this.cooldowns.set(commandos.name, new Collection());
+                    if (!this.client.cooldowns.has(commandos.name)) {
+                        this.client.cooldowns.set(commandos.name, new Collection());
                     }
                     
                     const now = Date.now();
-                    const timestamps = this.cooldowns.get(commandos.name);
-                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
+                    const timestamps = this.client.cooldowns.get(commandos.name);
+                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
                     
                     if (timestamps.has(message.author.id)) {
                         if (timestamps.has(message.author.id)) {
@@ -183,7 +166,7 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    if(!this.unkownCommandMessage) return;
+                    if(!this.GCommandsClient.unkownCommandMessage) return;
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
@@ -195,7 +178,7 @@ module.exports = {
                 if (message.author.bot) return;
                 if (!message.guild) return;
                 var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
-                var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.prefix
+                var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
 
                 if(this.client.database.working) {
                     var guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
@@ -210,19 +193,19 @@ module.exports = {
                 if (cmd.length === 0) return;
         
                 try {
-                    var commandos = this.commands.get(cmd);
-                    if(!commandos) commandos = this.commands.get(this.aliases.get(cmd));
+                    var commandos = this.client.commands.get(cmd);
+                    if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
 
                     var inhibit = await this.inhibit(commandos, undefined, message)
                     if(inhibit == false) return;
 
-                    if (!this.cooldowns.has(commandos.name)) {
-                        this.cooldowns.set(commandos.name, new Collection());
+                    if (!this.client.cooldowns.has(commandos.name)) {
+                        this.client.cooldowns.set(commandos.name, new Collection());
                     }
                     
                     const now = Date.now();
-                    const timestamps = this.cooldowns.get(commandos.name);
-                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
+                    const timestamps = this.client.cooldowns.get(commandos.name);
+                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
                     
                     if (timestamps.has(message.author.id)) {
                         if (timestamps.has(message.author.id)) {
@@ -337,7 +320,7 @@ module.exports = {
                     commandos.run(this.client, undefined, message, args)
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    if(!this.unkownCommandMessage) return;
+                    if(!this.GCommandsClient.unkownCommandMessage) return;
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
@@ -345,35 +328,27 @@ module.exports = {
                 }
             })
         }
-    },
+    }
 
     /**
-     * Internal method to slashCommands
+     * Internal method to slashEvent
      * @private
     */
-    slashCommands: async function (GCommandsClient, client, slash, commands, cooldowns, cooldownDefault, unkownCommandMessage) {
-        this.GCommandsClient = GCommandsClient;
-        this.client = client;
-        this.slash = slash;
-        this.commands = commands;
-        this.cooldowns = cooldowns;
-        this.cooldownDefault = cooldownDefault;
-        this.unkownCommandMessage = unkownCommandMessage;
-
-        if((this.slash) || (this.slash == "both")) {
+    async slashEvent() {
+        if((this.client.slash) || (this.client.slash == "both")) {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
                 try {
-                    var commandos = this.commands.get(interaction.data.name);
-                    if (!this.cooldowns.has(commandos.name)) {
-                        this.cooldowns.set(commandos.name, new Collection());
+                    var commandos = this.client.commands.get(interaction.data.name);
+                    if (!this.client.cooldowns.has(commandos.name)) {
+                        this.client.cooldowns.set(commandos.name, new Collection());
                     }
 
                     var inhibit = await this.inhibit(commandos, interaction, undefined)
                     if(inhibit == false) return;
 
                     const now = Date.now();
-                    const timestamps = this.cooldowns.get(commandos.name);
-                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.cooldownDefault) * 1000;
+                    const timestamps = this.client.cooldowns.get(commandos.name);
+                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
                     
                     if (timestamps.has(interaction.member.user.id)) {
                         if (timestamps.has(interaction.member.user.id)) {
@@ -581,11 +556,11 @@ module.exports = {
                         if (typeof result === 'object') {
                             if(typeof result == "object" && !result.content) {
                                 const embed = new MessageEmbed(result)
-                                data = await this.createAPIMessage(this.client, interaction, embed)
+                                data = await this.createAPIMessage(interaction, embed)
                             }
                             else if(typeof result.content == "object" ) {
                                 const embed = new MessageEmbed(result.content)
-                                data = await this.createAPIMessage(this.client, interaction, embed)
+                                data = await this.createAPIMessage(interaction, embed)
                             } else {
                                 data = {
                                     content: result.content
@@ -630,28 +605,26 @@ module.exports = {
                 }
             })
         }
-    },
+    }
 
-    loadMoreEvents: async function(client) {
-        this.client = client;
-
+    async loadMoreEvents() {
         require("../moreEvents/channel")(this.client)
         require("../moreEvents/guild")(this.client)
         require("../moreEvents/guildmember")(this.client)
         require("../moreEvents/role")(this.client)
         require("../moreEvents/user")(this.client)
         require("../moreEvents/voiceupdate")(this.client)
-    },
+    }
 
-    createAPIMessage: async function(client, interaction, content) {
-        const apiMessage = await APIMessage.create(client.channels.resolve(interaction.channel_id), content)
+    async createAPIMessage(interaction, content) {
+        const apiMessage = await APIMessage.create(this.client.channels.resolve(interaction.channel_id), content)
         .resolveData()
         .resolveFiles();
         
         return { ...apiMessage.data, files: apiMessage.files };
-    },
+    }
 
-    getSlashArgs: function(options) {
+    async getSlashArgs(options) {
         var args = {};
         for (var o of options) {
           if (o.type == 1) args[o.name] = this.getSlashArgs(o.options || []);
@@ -661,13 +634,13 @@ module.exports = {
           }
         }
         return args;
-    },
+    }
 
-    inhibit: async function(cmd, slash, message) {
+    async inhibit(cmd, slash, message) {
 		for(const inhibitor of this.client.inhibitors) {
 			let inhibit = inhibitor(cmd, slash, message);
 			return inhibit;
 		}
 		return null;
     }
-};
+}
