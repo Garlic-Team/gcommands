@@ -224,7 +224,7 @@ class GCommands extends GCommandsBase {
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
-            if(cmd.slash != undefined && (cmd.slash == false)) return;
+            if(cmd.slash != undefined && (cmd.slash == false || cmd.slash == 'false')) return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
             if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
