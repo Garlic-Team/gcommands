@@ -562,7 +562,7 @@ class GCommandsEventLoader {
                          *      allowedMentions: { parse: [], repliedUser: true }
                          *  }
                          */
-                        var result = await commandos.run(this.client, interaction, undefined, this.getSlashArgs(interaction.data.options || []));
+                        var result = await commandos.run(this.client, interaction, undefined, await this.getSlashArgs(interaction.data.options || []));
                         var data = {
                             content: result
                         }

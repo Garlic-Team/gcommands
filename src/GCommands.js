@@ -224,7 +224,7 @@ class GCommands extends GCommandsBase {
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
-            if(cmd.slash != undefined && (cmd.slash == false)) return;
+            if(cmd.slash != undefined && (cmd.slash == false || cmd.slash == "false")) return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
             if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
@@ -446,7 +446,7 @@ class GCommands extends GCommandsBase {
             keys.forEach(cmdname => {
                 nowCMDS.push(cmdname)
 
-                if(this.client.commands.get(cmdname).slash == false) {
+                if(this.client.commands.get(cmdname).slash == false || this.client.commands.get(cmdname).slash == "false") {
                     allcmds.forEach(cmd => {
                         if(cmd.name == cmdname) {
                             cmdUtils.__deleteCmd(this.client, cmd.id)
@@ -491,7 +491,7 @@ class GCommands extends GCommandsBase {
                 keys.forEach(cmdname => {
                     nowCMDS.push(cmdname)
 
-                    if(this.client.commands.get(cmdname).slash == false) {
+                    if(this.client.commands.get(cmdname).slash == false || this.client.commands.get(cmdname).slash == "false") {
                         allcmds.forEach(cmd => {
                             if(fo.name == cmdname) {
                                 cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)
