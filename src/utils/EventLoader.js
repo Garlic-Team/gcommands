@@ -169,9 +169,9 @@ class GCommandsEventLoader {
                         }
                     }
 
-                    if(commandos.requiredRole) {
-                        if(!message.member._roles.includes(commandos.requiredRole)) {
-                            message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.requiredRole))
+                    if(commandos.userRequiredRole) {
+                        if(!message.member._roles.includes(commandos.userRequiredRole)) {
+                            message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.userRequiredRole))
                             return;
                         }
                     }
@@ -533,14 +533,14 @@ class GCommandsEventLoader {
                         }
                     }
 
-                    if(commandos.requiredRole) {
-                        if(!interaction.member.roles.includes(commandos.requiredRole)) {
+                    if(commandos.userRequiredRole) {
+                        if(!interaction.member.roles.includes(commandos.userRequiredRole)) {
                             this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.requiredRole)
+                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.userRequiredRole)
                                     }
                                 }
                             }); 
