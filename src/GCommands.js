@@ -178,21 +178,21 @@ class GCommands extends GCommandsBase {
      * @private
      */
     async __loadCommands() {
-		return glob(`./${this.cmdDir}/**/*.js`).then(commands => {
+		return glob(`./${this.cmdDir}/**/*.js`).then(async(commands) => {
 			for (const commandFile of commands) {
 				const { name } = path.parse(commandFile);
                 var File;
 
                 try {
-                    File = require("../../../"+this.cmdDir+"/"+name)
+                    File = await require("../../../"+this.cmdDir+"/"+name)
                     console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                 } catch(e) {
                     try {
-                        File = require("../../../"+commandFile.split("./")[1])
+                        File = await require("../../../"+commandFile.split("./")[1])
                         console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                     } catch(e) {
                         try {
-                            File = require("../"+this.cmdDir+"/"+name);
+                            File = await require("../"+this.cmdDir+"/"+name);
                             console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
                             this.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());

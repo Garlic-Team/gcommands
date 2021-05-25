@@ -41,21 +41,21 @@ class GEvents {
      * @private
     */
     async __loadEventFiles() {
-        return glob(`./${this.eventDir}/**/*.js`).then(events => {
+        return glob(`./${this.eventDir}/**/*.js`).then(async(events) => {
             for (const eventFile of events) {
 				const { name } = path.parse(eventFile);
                 var File;
 
                 try {
-                    File = require("../../../"+this.eventDir+"/"+name)
+                    File = await require("../../../"+this.eventDir+"/"+name)
                     console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                 } catch(e) {
                     try {
-                        File = require("../../../"+eventFile.split("./")[1])
+                        File = await require("../../../"+eventFile.split("./")[1])
                         console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                     } catch(e) {
                         try {
-                            File = require("../"+this.eventDir+"/"+name);
+                            File = await require("../"+this.eventDir+"/"+name);
                             console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
                         } catch(e) {
                             this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands EVENTS Debug] "+e).getText())
