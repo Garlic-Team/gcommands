@@ -176,13 +176,28 @@ class GCommandsEventLoader {
                         }
                     }
 
-                    commandos.run(this.client, undefined, message, args)
+                    const client = this.client, member = message.member, guild = message.guild, channel = message.channel
+                    var msg = "";
+                    commandos.run({
+                        client, member, message,
+                        respond: async(content) => {
+                            msg = await message.channel.send(content)
+                        },
+                        edit: async(content) => {
+                            msg.edit(content)
+                        }
+                    }, args)
+
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    if(!this.GCommandsClient.unkownCommandMessage) return;
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
-                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
+                    try {
+                        commandos.run(this.client, undefined, message, args)
+                    } catch(e) {
+                        if(!this.GCommandsClient.unkownCommandMessage) return;
+                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                        if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
+                            message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
+                        }
                     }
                 }
             })
@@ -562,46 +577,85 @@ class GCommandsEventLoader {
                          *      allowedMentions: { parse: [], repliedUser: true }
                          *  }
                          */
-                        var result = await commandos.run(this.client, interaction, undefined, await this.getSlashArgs(interaction.data.options || []));
-                        var data = {
-                            content: result
-                        }
 
-                        if (typeof result === 'object') {
-                            if(typeof result == "object" && !result.content) {
-                                const embed = new MessageEmbed(result)
-                                data = await this.createAPIMessage(interaction, embed)
+                        const client = this.client, member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id), message = undefined;
+                        commandos.run({
+                            client, interaction, member, message,
+                            guild: member.guild, 
+                            channel: member.guild.channels.cache.get(interaction.channel_id),
+                            respond: async(result) => {
+                                var data = {
+                                    content: result
+                                }
+
+                                if (typeof result === 'object') {
+                                    if(typeof result == "object" && !result.content) {
+                                        const embed = new MessageEmbed(result)
+                                        data = await this.createAPIMessage(interaction, embed)
+                                    }
+                                    else if(typeof result.content == "object" ) {
+                                        const embed = new MessageEmbed(result.content)
+                                        data = await this.createAPIMessage(interaction, embed)
+                                    } else data = { content: result.content }
+                                }
+
+                                if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
+                                if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+
+                                return this.client.api.interactions(interaction.id, interaction.token).callback.post({ data: { type: 4, data }, })
+                            },
+                            edit: async(content) => {
+                                if (typeof content === 'object') {
+                                    return console.log(new Color("&d[GCommands] &eEdit doesn't support embed!"))
+                                }
+
+                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content }})
                             }
-                            else if(typeof result.content == "object" ) {
-                                const embed = new MessageEmbed(result.content)
-                                data = await this.createAPIMessage(interaction, embed)
-                            } else {
-                                data = {
-                                    content: result.content
+                        }, await this.getSlashArgs(interaction.data.options || []))
+                    } catch(e) {
+                        try {
+                            var result = await commandos.run(this.client, interaction, undefined, await this.getSlashArgs(interaction.data.options || []));
+                            var data = {
+                                content: result
+                            }
+    
+                            if (typeof result === 'object') {
+                                if(typeof result == "object" && !result.content) {
+                                    const embed = new MessageEmbed(result)
+                                    data = await this.createAPIMessage(interaction, embed)
+                                }
+                                else if(typeof result.content == "object" ) {
+                                    const embed = new MessageEmbed(result.content)
+                                    data = await this.createAPIMessage(interaction, embed)
+                                } else {
+                                    data = {
+                                        content: result.content
+                                    }
                                 }
                             }
+    
+                            if(typeof result == "object" && result.allowedMentions) {
+                                data.allowedMentions = result.allowedMentions
+                            } else {
+                                data.allowedMentions = { parse: [], repliedUser: true }
+                            }
+    
+                            if(typeof result == "object" && result.ephemeral) {
+                                data.flags = 64
+                            }
+    
+                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                              data: {
+                                type: 4,
+                                data
+                              },
+                            })
+                        } catch(e) {
+                            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                            commandos.run(this.client, interaction);
                         }
-
-                        if(typeof result == "object" && result.allowedMentions) {
-                            data.allowedMentions = result.allowedMentions
-                        } else {
-                            data.allowedMentions = { parse: [], repliedUser: true }
-                        }
-
-                        if(typeof result == "object" && result.ephemeral) {
-                            data.flags = 64
-                        }
-
-                        this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                          data: {
-                            type: 4,
-                            data
-                          },
-                        })
-                    } catch(e) {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
-                        commandos.run(this.client, interaction);
                     }
+                    
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
                     if(!this.unkownCommandMessage) return;

@@ -4,7 +4,7 @@ module.exports = {
 	name: "test",
 	aliases: ["ccc"],
 	description: "Test",
-	//expectedArgs: '<enable:6:description> <test>',
+	expectedArgs: '<enable:6:description> <test>',
 	/*expectedArgs: [
 		{
 			name: "list",
@@ -79,28 +79,39 @@ module.exports = {
 	guildOnly: "747526604116459691", //["id","id2"]
 	//userOnly: "id", //["id","id2"]
 	//channelOnly: "id", //["id","id2"]
-	userRequiredPermissions: ["ADMINISTRATOR","MANAGE_GUILD"],
-	clientRequiredPermissions: ["ADMINISTRATOR"],
-	usage: "usage lol",
+	//userRequiredPermissions: ["ADMINISTRATOR","MANAGE_GUILD"],
+	//clientRequiredPermissions: ["ADMINISTRATOR"],
+	//usage: "usage lol",
 	//requiredRole: "ROLE ID",
 	//slash: false,
-	run: async(client, slash, message, args) => {
-		console.log(args)
+	run: async({client, message, respond, edit}, args) => {
+	//run: async(client, slash, message, args) => {
+		console.log(args, message)
 		if(message) {
-			console.log(await message.guild.commandPrefix())
-			if(args[0]) {
+			console.log(await message.guild.getCommandPrefix())
+
+			respond("hi")
+
+			setTimeout(() => {
+				edit("hello")
+			}, 1000)
+			/*if(args[0]) {
 				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
 			} else {
 				return message.inlineReply("Need args")
-			}
+			}*/
 			return;
 		}
 
-		return {
+		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			ephemeral: true,
 			allowedMentions: { parse: [], repliedUser: true }
-		}
+		})
+
+		setTimeout(() => {
+			edit("hi")
+		}, 3000)
 
 		/*
 						CAN USE
