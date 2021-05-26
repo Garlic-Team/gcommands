@@ -45,4 +45,4 @@ client.on("clickButton", (button) => {
     console.log(button)
 })
 
-client.login("token")
+client.login("NzQ1NTk5NjQ4MTEwMjE1MjYw.Xz0HyA.eaeKsBe5boD6yYEJRL-jsSiSbVc")

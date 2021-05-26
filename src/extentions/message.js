@@ -1,7 +1,7 @@
-const { APIMessage, Structures, Message } = require('discord.js');
+const { APIMessage, Structures } = require('discord.js');
 const Color = require("../utils/color/Color")
 
-module.exports = Structures.extend("Message", message => {
+module.exports = Structures.extend("Message", Message => {
     /**
      * The MessageStructure structure
      * @class
