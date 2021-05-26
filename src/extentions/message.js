@@ -1,4 +1,5 @@
 const { APIMessage, Structures, Message } = require('discord.js');
+const Color = require("../utils/color/Color")
 
 module.exports = Structures.extend("Message", message => {
     /**
@@ -17,27 +18,22 @@ module.exports = Structures.extend("Message", message => {
          * @returns {Promise}
         */
         async buttons(content, options) {
-            if (!options.buttons) {
-                options.buttons = [];
+            if (!options.components) {
+                options.components = [];
             }
 
             if(!options.allowedMentions) {
-                options.allowedMentions = { parse: ["users", "roles", "everyone"] };
+                options.allowedMentions = { parse: [] };
             }
 
-            if (!Array.isArray(options.buttons)) {
+            if (!Array.isArray(options.components)) {
                 return console.log(new Color("&d[GCommands] &cThe buttons must be array.",{json:false}).getText());
             }
 
             var buttons = [];
-            var styles = ['blupurple', 'grey', 'green', 'red', 'url'];
 
-            options.buttons.forEach((x, i) => {
-                if (!x.style) x.style = 'blupurple';
-
-                if (!styles.includes(x.style)) {
-                    return console.log(new Color(`&d[GCommands] &c#${i} button has invalid style, recived ${x.style}`,{json:false}).getText());
-                }
+            options.components.forEach((x, i) => {
+                if (!x.style) x.style = 2;
 
                 if (!x.label) {
                     return console.log(new Color(`&d[GCommands] &c#${i} don't has label!`,{json:false}).getText());
@@ -45,42 +41,30 @@ module.exports = Structures.extend("Message", message => {
 
                 if (typeof (x.label) !== 'string') x.label = String(x.label);
 
-                if (x.style === 'url') {
+                if (x.style === 5) {
                     if (!x.url) {
                         return console.log(new Color(`&d[GCommands] &cIf the button style is "url", you must provide url`,{json:false}).getText());
                     }
                 } else {
-                    if (!x.id) {
+                    if (!x.custom_id) {
                         return console.log(new Color(`&d[GCommands] &cIf the button style is not "url", you must provide custom id`,{json:false}).getText());
                     }
                 }
 
                 var style;
 
-                if (x.style === 'blupurple') {
-                    style = 1;
-                } else if (x.style === 'grey') {
-                    style = 2;
-                } else if (x.style === 'green') {
-                    style = 3;
-                } else if (x.style === 'red') {
-                    style = 4;
-                } else if (x.style === 'url') {
-                    style = 5;
-                }
-
                 var data = {
-                    type: 2,
-                    style: style,
+                    type: x.type,
+                    style: x.style,
                     label: x.label,
-                    custom_id: x.id || null,
+                    custom_id: x.custom_id || null,
                     url: x.url || null
                 }
 
                 buttons.push(data);
             })
 
-            options.buttons === null;
+            options.components === null;
 
             this.client.ws.on('INTERACTION_CREATE', async (data) => {
                 let typeStyles = {
@@ -115,10 +99,7 @@ module.exports = Structures.extend("Message", message => {
                 })
             });
 
-            this.client.api.channels[this.channel.id].messages.post({
-                headers: {
-                "Content-Type": 'applications/json'
-                },
+            return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
@@ -131,7 +112,8 @@ module.exports = Structures.extend("Message", message => {
                     options,
                     embed: options.embed || null
                 }
-            });
+            })
+            .then(d => this.client.actions.MessageCreate.handle(d).message);
         }
 
         /**
@@ -172,27 +154,22 @@ module.exports = Structures.extend("Message", message => {
          * @returns {Promise}
         */
         async buttonsWithReply(content, options) {
-            if (!options.buttons) {
-                options.buttons = [];
+            if (!options.components) {
+                options.components = [];
             }
 
             if(!options.allowedMentions) {
-                options.allowedMentions = { parse: ["users", "roles", "everyone"] };
+                options.allowedMentions = { parse: [] };
             }
 
-            if (!Array.isArray(options.buttons)) {
+            if (!Array.isArray(options.components)) {
                 return console.log(new Color("&d[GCommands] &cThe buttons must be array.",{json:false}).getText());
             }
 
             var buttons = [];
-            var styles = ['blupurple', 'grey', 'green', 'red', 'url'];
 
-            options.buttons.forEach((x, i) => {
-                if (!x.style) x.style = 'blupurple';
-
-                if (!styles.includes(x.style)) {
-                    return console.log(new Color(`&d[GCommands] &c#${i} button has invalid style, recived ${x.style}`,{json:false}).getText());
-                }
+            options.components.forEach((x, i) => {
+                if (!x.style) x.style = 2;
 
                 if (!x.label) {
                     return console.log(new Color(`&d[GCommands] &c#${i} don't has label!`,{json:false}).getText());
@@ -200,42 +177,30 @@ module.exports = Structures.extend("Message", message => {
 
                 if (typeof (x.label) !== 'string') x.label = String(x.label);
 
-                if (x.style === 'url') {
+                if (x.style === 5) {
                     if (!x.url) {
                         return console.log(new Color(`&d[GCommands] &cIf the button style is "url", you must provide url`,{json:false}).getText());
                     }
                 } else {
-                    if (!x.id) {
+                    if (!x.custom_id) {
                         return console.log(new Color(`&d[GCommands] &cIf the button style is not "url", you must provide custom id`,{json:false}).getText());
                     }
                 }
 
                 var style;
 
-                if (x.style === 'blupurple') {
-                    style = 1;
-                } else if (x.style === 'grey') {
-                    style = 2;
-                } else if (x.style === 'green') {
-                    style = 3;
-                } else if (x.style === 'red') {
-                    style = 4;
-                } else if (x.style === 'url') {
-                    style = 5;
-                }
-
                 var data = {
-                    type: 2,
-                    style: style,
+                    type: x.type,
+                    style: x.style,
                     label: x.label,
-                    custom_id: x.id || null,
+                    custom_id: x.custom_id || null,
                     url: x.url || null
                 }
 
                 buttons.push(data);
             })
 
-            options.buttons === null;
+            options.components === null;
 
             this.client.ws.on('INTERACTION_CREATE', async (data) => {
                 let typeStyles = {
@@ -270,10 +235,7 @@ module.exports = Structures.extend("Message", message => {
                 })
             });
 
-            this.client.api.channels[this.channel.id].messages.post({
-                headers: {
-                "Content-Type": 'applications/json'
-                },
+            return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
@@ -289,7 +251,8 @@ module.exports = Structures.extend("Message", message => {
                     options,
                     embed: options.embed || null
                 }
-            });
+            })
+            .then(d => this.client.actions.MessageCreate.handle(d).message);
         }
     }
 

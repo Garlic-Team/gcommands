@@ -41,4 +41,8 @@ client.on("ready", () => {
     })
 })
 
+client.on("clickButton", (button) => {
+    console.log(button)
+})
+
 client.login("token")

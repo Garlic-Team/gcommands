@@ -8,7 +8,7 @@ module.exports = {
     GCommandsMessage: require("./extentions/message"),
     GUpdater: require("./utils/updater"),
     Color: require("./utils/color/Color"),
-    Buttons: require("./utils/Buttons"),
+    MessageButton: require("./utils/MessageButton"),
     SlashCommand: {
         SUB_COMMAND: 1,
         SUB_COMMAND_GROUP: 2,
@@ -19,6 +19,13 @@ module.exports = {
         CHANNEL: 7,
         ROLE: 8,
         MENTIONABLE: 9
+    },
+    ButtonTypes: {
+        blurple: "blurple",
+        gray: "gray",
+        green: "green",
+        red: "red",
+        url: "url"
     },
     version: require("../package.json").version
 }

@@ -1,4 +1,5 @@
 //const { SlashCommand } = require("gcommands")
+const MessageButton = require("../src/utils/MessageButton")
 
 module.exports = {
 	name: "test",
@@ -86,11 +87,17 @@ module.exports = {
 	//slash: false,
 	run: async({client, message, respond, edit}, args) => {
 	//run: async(client, slash, message, args) => {
-		console.log(args, message)
+		const button = new MessageButton().setStyle("gray").setLabel("test").setID("custom_id").toJSON()
+		const button1 = new MessageButton().setStyle("gray").setLabel("po").setID("custom_id").toJSON()
+
 		if(message) {
 			console.log(await message.guild.getCommandPrefix())
 
-			respond("hi")
+			respond("hi", {
+				components: [
+					button, button1
+				]
+			})
 
 			setTimeout(() => {
 				edit("hello")
@@ -106,7 +113,8 @@ module.exports = {
 		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			ephemeral: true,
-			allowedMentions: { parse: [], repliedUser: true }
+			allowedMentions: { parse: [], repliedUser: true },
+			components: [button,button1]
 		})
 
 		setTimeout(() => {

@@ -177,11 +177,15 @@ class GCommandsEventLoader {
                     }
 
                     const client = this.client, member = message.member, guild = message.guild, channel = message.channel
+                    const MessageButton = require("./MessageButton")
+                    const button1 = new MessageButton().setStyle("gray").setLabel("po").setID("custom_id").toJSON();
                     var msg = "";
                     commandos.run({
                         client, message, member, guild, channel,
-                        respond: async(content) => {
-                            msg = await message.inlineReply(content)
+                        respond: async(content, buttons = undefined) => {
+                            if(buttons) {
+                                msg = await message.buttonsWithReply(content, buttons)
+                            } else msg = await message.inlineReply(content)
                         },
                         edit: async(content) => {
                             msg.edit(content)
@@ -616,6 +620,7 @@ class GCommandsEventLoader {
 
                                 if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
                                 if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+                                if(typeof result == "object" && result.components) { data.components = [{type: 1, components: result.components}] }
 
                                 return this.client.api.interactions(interaction.id, interaction.token).callback.post({ data: { type: 4, data }, })
                             },
