@@ -125,6 +125,7 @@ class GCommands extends GCommandsBase {
 
 
         process.setMaxListeners(50);
+        process.on('uncaughtException', (error) => { console.log(new Color("&d[GCommands Errors] &eHandled: &a" + error).getText()) });
         this.__loadCommands();
         this.__dbLoad();
 
