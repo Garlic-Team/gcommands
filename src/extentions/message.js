@@ -1,16 +1,21 @@
 const { APIMessage, Structures, Message } = require('discord.js');
 
-/**
- * The MessageStructure structure
- * @class MessageStructure
- * @private
- */
 module.exports = Structures.extend("Message", message => {
+    /**
+     * The MessageStructure structure
+     * @class
+    */
     class GCommandsMessage extends Message {
         constructor(...args) {
             super(...args)
         }
 
+        /**
+         * Method to make buttons
+         * @param {String} content
+         * @param {Object} options
+         * @returns {Promise}
+        */
         async buttons(content, options) {
             if (!options.buttons) {
                 options.buttons = [];
@@ -129,6 +134,12 @@ module.exports = Structures.extend("Message", message => {
             });
         }
 
+        /**
+         * Method to inlineReply
+         * @param {String} content
+         * @param {Object} options
+         * @returns {Promise}
+        */
         async inlineReply(content, options) {
             const mentionRepliedUser = typeof ((options || content || {}).allowedMentions || {}).repliedUser === "undefined" ? true : ((options || content).allowedMentions).repliedUser;
             delete ((options || content || {}).allowedMentions || {}).repliedUser;
@@ -154,6 +165,12 @@ module.exports = Structures.extend("Message", message => {
                 .then(d => this.client.actions.MessageCreate.handle(d).message);
         }
 
+        /**
+         * Method to buttonsWithReply
+         * @param {String} content
+         * @param {Object} options
+         * @returns {Promise}
+        */
         async buttonsWithReply(content, options) {
             if (!options.buttons) {
                 options.buttons = [];
