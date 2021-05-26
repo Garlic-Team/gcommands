@@ -177,8 +177,6 @@ class GCommandsEventLoader {
                     }
 
                     const client = this.client, member = message.member, guild = message.guild, channel = message.channel
-                    const MessageButton = require("./MessageButton")
-                    const button1 = new MessageButton().setStyle("gray").setLabel("po").setID("custom_id").toJSON();
                     var msg = "";
                     commandos.run({
                         client, message, member, guild, channel,
@@ -187,8 +185,10 @@ class GCommandsEventLoader {
                                 msg = await message.buttonsWithReply(options.content, options)
                             } else msg = await message.inlineReply(options)
                         },
-                        edit: async(content) => {
-                            msg.edit(content)
+                        edit: async(options = undefined) => {
+                            if(typeof options == "object") {
+                                msg = await message.buttonsEdit(msg.id, options.content, options)
+                            } else msg.edit(options)
                         }
                     }, args)
 

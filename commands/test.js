@@ -87,19 +87,23 @@ module.exports = {
 	//slash: false,
 	run: async({client, message, respond, edit}, args) => {
 	//run: async(client, slash, message, args) => {
-		const button = new MessageButton().setStyle("gray").setLabel("test").setID("custom_id").toJSON()
-		const button1 = new MessageButton().setStyle("gray").setLabel("po").setID("custom_id").toJSON()
+        const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").toJSON()
+		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled(true).toJSON()
+        const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
 
 		if(message) {
 			console.log(await message.guild.getCommandPrefix())
 
 			respond({
 				content: "hi",
-				components: [button, button1]
+				components: [button, buttonURL]
 			})
 
 			setTimeout(() => {
-				edit("hello")
+				edit({
+					content: "hello",
+					components: [buttont]
+				})
 			}, 1000)
 			/*if(args[0]) {
 				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
@@ -113,7 +117,7 @@ module.exports = {
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			ephemeral: true,
 			allowedMentions: { parse: [], repliedUser: true },
-			components: [button,button1]
+			components: [button,buttonURL]
 		})
 
 		setTimeout(() => {

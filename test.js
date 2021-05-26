@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const { GCommands } = require("./src/index");
+const MessageButton = require("./src/utils/MessageButton")
 const client = new Discord.Client();
 
 const axios = require("axios")
@@ -42,7 +43,11 @@ client.on("ready", () => {
 })
 
 client.on("clickButton", (button) => {
+    const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled(true).toJSON()
     console.log(button)
+    button.message.buttonsEdit(button.message.id, "bruh", {
+        components: [buttonEdit]
+    })
 })
 
-client.login("NzQ1NTk5NjQ4MTEwMjE1MjYw.Xz0HyA.eaeKsBe5boD6yYEJRL-jsSiSbVc")
+client.login("token")
