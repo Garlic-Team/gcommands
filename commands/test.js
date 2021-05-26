@@ -93,10 +93,9 @@ module.exports = {
 		if(message) {
 			console.log(await message.guild.getCommandPrefix())
 
-			respond("hi", {
-				components: [
-					button, button1
-				]
+			respond({
+				content: "hi",
+				components: [button, button1]
 			})
 
 			setTimeout(() => {

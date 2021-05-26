@@ -182,10 +182,10 @@ class GCommandsEventLoader {
                     var msg = "";
                     commandos.run({
                         client, message, member, guild, channel,
-                        respond: async(content, buttons = undefined) => {
-                            if(buttons) {
-                                msg = await message.buttonsWithReply(content, buttons)
-                            } else msg = await message.inlineReply(content)
+                        respond: async(options = undefined) => {
+                            if(typeof options == "object") {
+                                msg = await message.buttonsWithReply(options.content, options)
+                            } else msg = await message.inlineReply(options)
                         },
                         edit: async(content) => {
                             msg.edit(content)
