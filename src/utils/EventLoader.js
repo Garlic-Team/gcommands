@@ -181,7 +181,7 @@ class GCommandsEventLoader {
                     commandos.run({
                         client, message, member, guild, channel,
                         respond: async(content) => {
-                            msg = await message.channel.send(content)
+                            msg = await message.inlineReply(content)
                         },
                         edit: async(content) => {
                             msg.edit(content)
@@ -350,7 +350,7 @@ class GCommandsEventLoader {
                     commandos.run({
                         client, message, member, guild, channel,
                         respond: async(content) => {
-                            msg = await message.channel.send(content)
+                            msg = await message.inlineReply(content)
                         },
                         edit: async(content) => {
                             msg.edit(content)
