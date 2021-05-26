@@ -25,6 +25,8 @@ class MessageButton {
         this.style = 'style' in data ? this.resolveStyle(resolveString(data.style)) : null;
         this.label = 'label' in data ? resolveString(data.label) : null;
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
+        this.emojiName = null;
+        this.emojiId = null;
 
         if (this.style === 5) {
             this.url = 'url' in data ? resolveString(data.url) : null;
@@ -54,6 +56,16 @@ class MessageButton {
     setLabel(label) {
         label = resolveString(label);
         this.label = label;
+        return this;
+    }
+
+    /**
+     * Method to setEmoji
+     * @param {String} style 
+    */
+     setEmoji(options) {
+        this.emojiName = options.name
+        this.emojiId = options.id
         return this;
     }
 
@@ -91,7 +103,11 @@ class MessageButton {
             label: this.label,
             disabled: this.disabled,
             url: this.url,
-            custom_id: this.custom_id
+            custom_id: this.custom_id,
+            emoji: {
+                name: this.emojiName,
+                id: this.emojiId
+            }
         }
     }
 

@@ -52,14 +52,30 @@ module.exports = Structures.extend("Message", Message => {
                 }
 
                 var style;
+                var data = {};
 
-                var data = {
-                    type: x.type,
-                    style: x.style,
-                    label: x.label,
-                    custom_id: x.custom_id || null,
-                    url: x.url || null,
-                    disabled: x.disabled || false
+                if(x.emoji.name) {
+                    data = {
+                        type: x.type,
+                        style: x.style,
+                        label: x.label,
+                        custom_id: x.custom_id || null,
+                        url: x.url || null,
+                        disabled: x.disabled || false,
+                        emoji: {
+                            name: x.emoji.name,
+                            id: x.emoji.id
+                        }
+                    }
+                } else {
+                    data = {
+                        type: x.type,
+                        style: x.style,
+                        label: x.label,
+                        custom_id: x.custom_id || null,
+                        url: x.url || null,
+                        disabled: x.disabled || false
+                    }
                 }
 
                 buttons.push(data);
@@ -159,14 +175,30 @@ module.exports = Structures.extend("Message", Message => {
                 }
 
                 var style;
+                var data = {};
 
-                var data = {
-                    type: x.type,
-                    style: x.style,
-                    label: x.label,
-                    custom_id: x.custom_id || null,
-                    url: x.url || null,
-                    disabled: x.disabled || false
+                if(x.emoji.name) {
+                    data = {
+                        type: x.type,
+                        style: x.style,
+                        label: x.label,
+                        custom_id: x.custom_id || null,
+                        url: x.url || null,
+                        disabled: x.disabled || false,
+                        emoji: {
+                            name: x.emoji.name,
+                            id: x.emoji.id
+                        }
+                    }
+                } else {
+                    data = {
+                        type: x.type,
+                        style: x.style,
+                        label: x.label,
+                        custom_id: x.custom_id || null,
+                        url: x.url || null,
+                        disabled: x.disabled || false
+                    }
                 }
 
                 buttons.push(data);
@@ -295,14 +327,30 @@ module.exports = Structures.extend("Message", Message => {
                 }
 
                 var style;
+                var data = {};
 
-                var data = {
-                    type: x.type,
-                    style: x.style,
-                    label: x.label,
-                    custom_id: x.custom_id || null,
-                    url: x.url || null,
-                    disabled: x.disabled || false
+                if(x.emoji.name) {
+                    data = {
+                        type: x.type,
+                        style: x.style,
+                        label: x.label,
+                        custom_id: x.custom_id || null,
+                        url: x.url || null,
+                        disabled: x.disabled || false,
+                        emoji: {
+                            name: x.emoji.name,
+                            id: x.emoji.id
+                        }
+                    }
+                } else {
+                    data = {
+                        type: x.type,
+                        style: x.style,
+                        label: x.label,
+                        custom_id: x.custom_id || null,
+                        url: x.url || null,
+                        disabled: x.disabled || false,
+                    }
                 }
 
                 buttons.push(data);

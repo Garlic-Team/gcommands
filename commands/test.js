@@ -87,7 +87,7 @@ module.exports = {
 	//slash: false,
 	run: async({client, message, respond, edit}, args) => {
 	//run: async(client, slash, message, args) => {
-        const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").toJSON()
+        const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji({name:":happy:",id:"772038612635877376"}).toJSON()
 		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled(true).toJSON()
         const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
 
