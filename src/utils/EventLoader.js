@@ -179,7 +179,7 @@ class GCommandsEventLoader {
                     const client = this.client, member = message.member, guild = message.guild, channel = message.channel
                     var msg = "";
                     commandos.run({
-                        client, member, message,
+                        client, message, member, guild, channel,
                         respond: async(content) => {
                             msg = await message.channel.send(content)
                         },
@@ -345,13 +345,28 @@ class GCommandsEventLoader {
                         }
                     }
 
-                    commandos.run(this.client, undefined, message, args)
+                    const client = this.client, member = message.member, guild = message.guild, channel = message.channel
+                    var msg = "";
+                    commandos.run({
+                        client, message, member, guild, channel,
+                        respond: async(content) => {
+                            msg = await message.channel.send(content)
+                        },
+                        edit: async(content) => {
+                            msg.edit(content)
+                        }
+                    }, args)
+
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
-                    if(!this.GCommandsClient.unkownCommandMessage) return;
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
-                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
+                    try {
+                        commandos.run(this.client, undefined, message, args)
+                    } catch(e) {
+                        if(!this.GCommandsClient.unkownCommandMessage) return;
+                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                        if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
+                            message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
+                        }
                     }
                 }
             })
@@ -578,9 +593,9 @@ class GCommandsEventLoader {
                          *  }
                          */
 
-                        const client = this.client, member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id), message = undefined;
+                        const client = this.client, member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id);
                         commandos.run({
-                            client, interaction, member, message,
+                            client, interaction, member,
                             guild: member.guild, 
                             channel: member.guild.channels.cache.get(interaction.channel_id),
                             respond: async(result) => {
