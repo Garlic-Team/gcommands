@@ -49,7 +49,7 @@ class GCommands extends GCommandsBase {
          * unkownCommandMessage
          * @property {String} unkownCommandMessage
          */
-        this.unkownCommandMessage = options.unkownCommandMessage ? options.unkownCommandMessage : true;
+        this.unkownCommandMessage = options.unkownCommandMessage;
 
         /**
          * ownLanguageFile

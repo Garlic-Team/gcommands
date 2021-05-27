@@ -17,6 +17,7 @@ class GCommandsEventLoader {
          * @property {Object} GCommandsClient
         */
         this.GCommandsClient = GCommandsClient;
+
         this.client = GCommandsClient.client;
 
         this.client.cooldowns = new Collection();

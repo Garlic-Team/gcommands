@@ -10,7 +10,7 @@ client.on("ready", () => {
         cmdDir: "commands",
         eventDir: "events", //when you want event handler
         language: "czech", //english, spanish, portuguese, russian, german, czech, slovak,
-        unkownCommandMessage: true, //send unkown command message true/false
+        unkownCommandMessage: false, //send unkown command message true/false
         slash: {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' 
