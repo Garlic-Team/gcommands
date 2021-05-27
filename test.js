@@ -43,11 +43,10 @@ client.on("ready", () => {
 })
 
 client.on("clickButton", (button) => {
-    const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled(true).toJSON()
-    console.log(button)
-    button.message.buttonsEdit(button.message.id, "bruh", {
-        components: [buttonEdit]
-    })
+    const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
+
+    button.defer();
+    button.edit("hai", buttonEdit)
 })
 
 client.login("token")

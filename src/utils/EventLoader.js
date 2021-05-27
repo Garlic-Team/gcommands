@@ -187,7 +187,7 @@ class GCommandsEventLoader {
                         },
                         edit: async(options = undefined) => {
                             if(typeof options == "object") {
-                                msg = await message.buttonsEdit(msg.id, options.content, options)
+                                msg = await message.buttonsEdit(options.content, options)
                             } else msg.edit(options)
                         }
                     }, args)
@@ -353,11 +353,15 @@ class GCommandsEventLoader {
                     var msg = "";
                     commandos.run({
                         client, message, member, guild, channel,
-                        respond: async(content) => {
-                            msg = await message.inlineReply(content)
+                        respond: async(options = undefined) => {
+                            if(typeof options == "object") {
+                                msg = await message.buttonsWithReply(options.content, options)
+                            } else msg = await message.inlineReply(options)
                         },
-                        edit: async(content) => {
-                            msg.edit(content)
+                        edit: async(options = undefined) => {
+                            if(typeof options == "object") {
+                                msg = await message.buttonsEdit(options.content, options)
+                            } else msg.edit(options)
                         }
                     }, args)
 
@@ -624,12 +628,15 @@ class GCommandsEventLoader {
 
                                 return this.client.api.interactions(interaction.id, interaction.token).callback.post({ data: { type: 4, data }, })
                             },
-                            edit: async(content) => {
-                                if (typeof content === 'object') {
-                                    return console.log(new Color("&d[GCommands] &eEdit doesn't support embed!"))
+                            edit: async(result) => {
+                                if (typeof result == "object") {
+                                    return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
+                                        content: result.content,
+                                        components: [{type: 1, components: result.components}]
+                                    }})
                                 }
 
-                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content }})
+                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
                             }
                         }, await this.getSlashArgs(interaction.data.options || []))
                     } catch(e) {
@@ -707,6 +714,7 @@ class GCommandsEventLoader {
         require("../moreEvents/role")(this.client)
         require("../moreEvents/user")(this.client)
         require("../moreEvents/voiceupdate")(this.client)
+        require("../moreEvents/interactions")(this.client)
     }
 
     /**

@@ -1,5 +1,6 @@
 /* From discord-buttons edited */
 const { resolveString } = require('discord.js').Util;
+const Color = require("./color/Color")
 const styles = {
     'blurple': 1,
     'gray': 2,
@@ -9,12 +10,12 @@ const styles = {
 };
 
 /**
- * The Buttons class
+ * The MessageButton class
  */
 class MessageButton {
 
     /**
-     * Creates new Buttons instance
+     * Creates new MessageButton instance
      * @param {Object} data 
     */
     constructor(data = {}) {
@@ -25,8 +26,7 @@ class MessageButton {
         this.style = 'style' in data ? this.resolveStyle(resolveString(data.style)) : null;
         this.label = 'label' in data ? resolveString(data.label) : null;
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
-        this.emojiName = null;
-        this.emojiId = null;
+        this.emoji = 'emoji' in data ? resolveString(data.emoji) : null;
 
         if (this.style === 5) {
             this.url = 'url' in data ? resolveString(data.url) : null;
@@ -61,11 +61,16 @@ class MessageButton {
 
     /**
      * Method to setEmoji
-     * @param {String} style 
+     * @param {String} emoji 
     */
-     setEmoji(options) {
-        this.emojiName = options.name
-        this.emojiId = options.id
+     setEmoji(emoji) {
+         if(typeof emoji != "object") return console.log(new Color("&d[GCommands] &cThe emoji must be object.").getText());
+         if(!emoji.id || !emoji.name || emoji.animated) return console.log(new Color("&d[GCommands] &cPlease provide emoji id, emoji name").getText())
+        this.emoji = {
+            id: emoji.id ? emoji.id : null,
+            name: emoji.name ? emoji.name : null,
+            animated: emoji.animated ? emoji.animated : false
+        };
         return this;
     }
 
@@ -104,32 +109,29 @@ class MessageButton {
             disabled: this.disabled,
             url: this.url,
             custom_id: this.custom_id,
-            emoji: {
-                name: this.emojiName,
-                id: this.emojiId
-            }
+            emoji: this.emoji
         }
     }
 
     resolveStyle(style) {
 
-        if (!style || style === undefined || style === null) return console.log(new Color("&d[GCommands] &cAn invalid button styles was provided"))
+        if (!style || style === undefined || style === null) return console.log(new Color("&d[GCommands] &cAn invalid button styles was provided").getText())
     
-        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color("&d[GCommands] &cAn invalid button styles was provided"))
+        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color("&d[GCommands] &cAn invalid button styles was provided").getText())
     
         return styles[style] || style;
     }
     
     resolveButton(data) {
     
-        if (!data.style) return console.log(new Color("&d[GCommands] &cPlease provide button style"))
+        if (!data.style) return console.log(new Color("&d[GCommands] &cPlease provide button style").getText())
     
-        if (!data.label) return console.log(new Color("&d[GCommands] &cPlease provide button label"))
+        if (!data.label) return console.log(new Color("&d[GCommands] &cPlease provide button label").getText())
     
         if (data.style === 5) {
-            if (!data.url) return console.log(new Color("&d[GCommands] &cYou provided url style, you must provide an URL"))
+            if (!data.url) return console.log(new Color("&d[GCommands] &cYou provided url style, you must provide an URL").getText())
         } else {
-            if (!data.custom_id) return console.log(new Color("&d[GCommands] &cPlease provide button id"))
+            if (!data.custom_id) return console.log(new Color("&d[GCommands] &cPlease provide button id").getText())
         }
     
         return {

@@ -87,8 +87,8 @@ module.exports = {
 	//slash: false,
 	run: async({client, message, respond, edit}, args) => {
 	//run: async(client, slash, message, args) => {
-        const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji({name:":happy:",id:"772038612635877376"}).toJSON()
-		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled(true).toJSON()
+        const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji({name:"gw",id:"786947228534439946"}).toJSON()
+		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
         const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
 
 		if(message) {
@@ -120,9 +120,12 @@ module.exports = {
 			components: [button,buttonURL]
 		})
 
-		setTimeout(() => {
-			edit("hi")
-		}, 3000)
+		/*setTimeout(() => {
+			edit({
+				content: "hi",
+				components: [buttont]
+			})
+		}, 3000)*/
 
 		/*
 						CAN USE

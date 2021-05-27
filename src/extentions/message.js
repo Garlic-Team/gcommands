@@ -54,7 +54,7 @@ module.exports = Structures.extend("Message", Message => {
                 var style;
                 var data = {};
 
-                if(x.emoji.name) {
+                if(x.emoji) {
                     data = {
                         type: x.type,
                         style: x.style,
@@ -62,10 +62,7 @@ module.exports = Structures.extend("Message", Message => {
                         custom_id: x.custom_id || null,
                         url: x.url || null,
                         disabled: x.disabled || false,
-                        emoji: {
-                            name: x.emoji.name,
-                            id: x.emoji.id
-                        }
+                        emoji: x.emoji
                     }
                 } else {
                     data = {
@@ -82,39 +79,6 @@ module.exports = Structures.extend("Message", Message => {
             })
 
             options.components === null;
-
-            this.client.ws.on('INTERACTION_CREATE', async (data) => {
-                let typeStyles = {
-                    1: 'blupurple',
-                    2: 'grey',
-                    3: 'green',
-                    4: 'red',
-                    5: 'url'
-                };
-
-                await this.client.channels.cache.get(data.channel_id).messages.fetch();
-
-                var message;
-                try {
-                    message = await this.client.channels.cache.get(data.channel_id).messages.cache.get(data.message.id);
-                } catch(e) {
-                    message = await this.client.channels.cache.get(data.channel_id)
-                }
-
-                var clicker = await this.client.guilds.cache.get(data.guild_id).members.cache.get(data.member.user.id);
-
-                this.client.emit('clickButton', {
-                    version: data.version,
-                    type: data.type,
-                    style: typeStyles[data.type],
-                    token: data.token,
-                    id: data.data.custom_id,
-                    discordId: data.id,
-                    applicationId: data.application_id,
-                    clicker: clicker,
-                    message
-                })
-            });
 
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
@@ -139,7 +103,7 @@ module.exports = Structures.extend("Message", Message => {
          * @param {Object} options
          * @returns {Promise}
         */
-         async buttonsEdit(msgID, content, options) {
+         async buttonsEdit(content, options) {
             if (!options.components) {
                 options.components = [];
             }
@@ -177,7 +141,7 @@ module.exports = Structures.extend("Message", Message => {
                 var style;
                 var data = {};
 
-                if(x.emoji.name) {
+                if(x.emoji) {
                     data = {
                         type: x.type,
                         style: x.style,
@@ -185,10 +149,7 @@ module.exports = Structures.extend("Message", Message => {
                         custom_id: x.custom_id || null,
                         url: x.url || null,
                         disabled: x.disabled || false,
-                        emoji: {
-                            name: x.emoji.name,
-                            id: x.emoji.id
-                        }
+                        emoji: x.emoji
                     }
                 } else {
                     data = {
@@ -206,39 +167,7 @@ module.exports = Structures.extend("Message", Message => {
 
             options.components === null;
 
-            this.client.ws.on('INTERACTION_CREATE', async (data) => {
-                let typeStyles = {
-                    1: 'blupurple',
-                    2: 'grey',
-                    3: 'green',
-                    4: 'red',
-                    5: 'url'
-                };
-
-                await this.client.channels.cache.get(data.channel_id).messages.fetch();
-
-                try {
-                    message = await this.client.channels.cache.get(data.channel_id).messages.cache.get(data.message.id);
-                } catch(e) {
-                    message = await this.client.channels.cache.get(data.channel_id)
-                }
-
-                var clicker = await this.client.guilds.cache.get(data.guild_id).members.cache.get(data.member.user.id);
-
-                this.client.emit('clickButton', {
-                    version: data.version,
-                    type: data.type,
-                    style: typeStyles[data.type],
-                    token: data.token,
-                    id: data.data.custom_id,
-                    discordId: data.id,
-                    applicationId: data.application_id,
-                    clicker: clicker,
-                    message
-                })
-            });
-
-            return this.client.api.channels[this.channel.id].messages[msgID].patch({
+            return this.client.api.channels[this.channel.id].messages[this.id].patch({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
@@ -329,7 +258,7 @@ module.exports = Structures.extend("Message", Message => {
                 var style;
                 var data = {};
 
-                if(x.emoji.name) {
+                if(x.emoji) {
                     data = {
                         type: x.type,
                         style: x.style,
@@ -337,10 +266,7 @@ module.exports = Structures.extend("Message", Message => {
                         custom_id: x.custom_id || null,
                         url: x.url || null,
                         disabled: x.disabled || false,
-                        emoji: {
-                            name: x.emoji.name,
-                            id: x.emoji.id
-                        }
+                        emoji: x.emoji
                     }
                 } else {
                     data = {
@@ -357,39 +283,6 @@ module.exports = Structures.extend("Message", Message => {
             })
 
             options.components === null;
-
-            this.client.ws.on('INTERACTION_CREATE', async (data) => {
-                let typeStyles = {
-                    1: 'blupurple',
-                    2: 'grey',
-                    3: 'green',
-                    4: 'red',
-                    5: 'url'
-                };
-
-                await this.client.channels.cache.get(data.channel_id).messages.fetch();
-
-                var message;
-                try {
-                    message = await this.client.channels.cache.get(data.channel_id).messages.cache.get(data.message.id);
-                } catch(e) {
-                    message = await this.client.channels.cache.get(data.channel_id)
-                }
-
-                var clicker = await this.client.guilds.cache.get(data.guild_id).members.cache.get(data.member.user.id);
-
-                this.client.emit('clickButton', {
-                    version: data.version,
-                    type: data.type,
-                    style: typeStyles[data.type],
-                    token: data.token,
-                    id: data.data.custom_id,
-                    discordId: data.id,
-                    applicationId: data.application_id,
-                    clicker: clicker,
-                    message
-                })
-            });
 
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
