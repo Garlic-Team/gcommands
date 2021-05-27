@@ -128,9 +128,9 @@ module.exports = Structures.extend("Message", Message => {
             if(!options.allowedMentions) {
                 options.allowedMentions = { parse: [] };
             }
-
+            console.log(content, options)
             var finalData = [];
-            if(!Array.isArray(options.components)) options = [[options.components]]
+            if(!Array.isArray(options.components)) options.components = [[options.components]]
             options.components.forEach(option => {
                 finalData.push({
                     type: 1,
