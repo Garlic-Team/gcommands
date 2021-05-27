@@ -78,8 +78,8 @@ class MessageButton {
      * Method to setDisabled
      * @param {String} boolean 
     */
-    setDisabled(boolean) {
-        this.disabled = Boolean(boolean || true);
+    setDisabled(boolean = true) {
+        this.disabled = boolean;
         return this;
     }
 
