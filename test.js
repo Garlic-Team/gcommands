@@ -43,10 +43,10 @@ client.on("ready", () => {
 })
 
 client.on("clickButton", (button) => {
-    const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
+    const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled()
 
     button.defer(); // stop interaction failed
-    button.edit("a", buttonEdit)
+    button.edit("a", [[buttonEdit], [buttonEdit]])
     //button.edit("hai", [[buttonEdit, buttonEdit], [buttonEdit, buttonEdit]])
 })
 

@@ -36,7 +36,7 @@ class MessageButton {
 
         this.type = 2;
 
-        return this;
+        return this.toJSON();
     }
 
     /**

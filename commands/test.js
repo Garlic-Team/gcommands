@@ -120,12 +120,12 @@ module.exports = {
 			components: [[button],[buttonURL]]
 		})
 
-		setTimeout(() => {
+		/*setTimeout(() => {
 			edit({
 				content: "hi",
 				components: buttont
 			})
-		}, 3000)
+		}, 3000)*/
 
 		/*
 						CAN USE
