@@ -23,6 +23,7 @@ module.exports = {
     ButtonTypes: {
         blurple: "blurple",
         gray: "gray",
+        grey: "gray",
         green: "green",
         red: "red",
         url: "url"

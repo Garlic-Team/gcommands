@@ -4,6 +4,7 @@ const Color = require("./color/Color")
 const styles = {
     'blurple': 1,
     'gray': 2,
+    'grey': 2,
     'green': 3,
     'red': 4,
     'url': 5
