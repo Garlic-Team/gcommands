@@ -96,13 +96,13 @@ module.exports = {
 
 			respond({
 				content: "hi",
-				components: [button, buttonURL]
+				components: [[button], [buttonURL]]
 			})
 
 			setTimeout(() => {
 				edit({
 					content: "hello",
-					components: [buttont]
+					components: buttont
 				})
 			}, 1000)
 			/*if(args[0]) {
@@ -117,15 +117,15 @@ module.exports = {
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			ephemeral: true,
 			allowedMentions: { parse: [], repliedUser: true },
-			components: [button,buttonURL]
+			components: [[button],[buttonURL]]
 		})
 
-		/*setTimeout(() => {
+		setTimeout(() => {
 			edit({
 				content: "hi",
-				components: [buttont]
+				components: buttont
 			})
-		}, 3000)*/
+		}, 3000)
 
 		/*
 						CAN USE

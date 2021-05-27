@@ -187,7 +187,7 @@ class GCommandsEventLoader {
                         },
                         edit: async(options = undefined) => {
                             if(typeof options == "object") {
-                                msg = await message.buttonsEdit(options.content, options)
+                                msg = await message.buttonsEdit(msg.id, options.content, options)
                             } else msg.edit(options)
                         }
                     }, args)
@@ -624,15 +624,35 @@ class GCommandsEventLoader {
 
                                 if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
                                 if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-                                if(typeof result == "object" && result.components) { data.components = [{type: 1, components: result.components}] }
+                                if(typeof result == "object" && result.components) {
+                                    var finalData = [];
+                                    if(!Array.isArray(result.components)) result.components = [[result.components]]
+                                    result.components.forEach(option => {
+                                        finalData.push({
+                                            type: 1,
+                                            components: option
+                                        })
+                                    })
+
+                                    data.components = finalData
+                                }
 
                                 return this.client.api.interactions(interaction.id, interaction.token).callback.post({ data: { type: 4, data }, })
                             },
                             edit: async(result) => {
                                 if (typeof result == "object") {
+                                    var finalData = [];
+                                    if(!Array.isArray(result.components)) result.components = [[result.components]]
+                                    result.components.forEach(option => {
+                                        finalData.push({
+                                            type: 1,
+                                            components: option
+                                        })
+                                    })
+
                                     return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
                                         content: result.content,
-                                        components: [{type: 1, components: result.components}]
+                                        components: finalData
                                     }})
                                 }
 

@@ -83,10 +83,18 @@ class ButtonEvent {
     */
     async edit(content, options = null) {
         if(options) {
-            if(!Array.isArray(options)) options = [options]
+            var finalData = [];
+            if(!Array.isArray(options)) options = [[options]]
+            options.forEach(option => {
+                finalData.push({
+                    type: 1,
+                    components: option
+                })
+            })
+
             return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
                 content: content,
-                components: [{type: 1, components: options}]
+                components: finalData
             }})
         } else {
             return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {

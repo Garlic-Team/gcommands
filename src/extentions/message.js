@@ -26,70 +26,20 @@ module.exports = Structures.extend("Message", Message => {
                 options.allowedMentions = { parse: [] };
             }
 
-            if (!Array.isArray(options.components)) {
-                return console.log(new Color("&d[GCommands] &cThe buttons must be array.",{json:false}).getText());
-            }
-
-            var buttons = [];
-
-            options.components.forEach((x, i) => {
-                if (!x.style) x.style = 2;
-
-                if (!x.label) {
-                    return console.log(new Color(`&d[GCommands] &c#${i} don't has label!`,{json:false}).getText());
-                }
-
-                if (typeof (x.label) !== 'string') x.label = String(x.label);
-
-                if (x.style === 5) {
-                    if (!x.url) {
-                        return console.log(new Color(`&d[GCommands] &cIf the button style is "url", you must provide url`,{json:false}).getText());
-                    }
-                } else {
-                    if (!x.custom_id) {
-                        return console.log(new Color(`&d[GCommands] &cIf the button style is not "url", you must provide custom id`,{json:false}).getText());
-                    }
-                }
-
-                var style;
-                var data = {};
-
-                if(x.emoji) {
-                    data = {
-                        type: x.type,
-                        style: x.style,
-                        label: x.label,
-                        custom_id: x.custom_id || null,
-                        url: x.url || null,
-                        disabled: x.disabled || false,
-                        emoji: x.emoji
-                    }
-                } else {
-                    data = {
-                        type: x.type,
-                        style: x.style,
-                        label: x.label,
-                        custom_id: x.custom_id || null,
-                        url: x.url || null,
-                        disabled: x.disabled || false
-                    }
-                }
-
-                buttons.push(data);
+            var finalData = [];
+            if(!Array.isArray(options.components)) options = [[options.components]]
+            options.components.forEach(option => {
+                finalData.push({
+                    type: 1,
+                    components: option
+                })
             })
-
-            options.components === null;
 
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
-                    components: [
-                        {
-                            type: 1,
-                            components: buttons
-                        }
-                    ],
+                    components: finalData,
                     options,
                     embed: options.embed || null
                 }
@@ -103,7 +53,7 @@ module.exports = Structures.extend("Message", Message => {
          * @param {Object} options
          * @returns {Promise}
         */
-         async buttonsEdit(content, options) {
+         async buttonsEdit(msgID, content, options) {
             if (!options.components) {
                 options.components = [];
             }
@@ -112,71 +62,20 @@ module.exports = Structures.extend("Message", Message => {
                 options.allowedMentions = { parse: [] };
             }
 
-            if (!Array.isArray(options.components)) {
-                return console.log(new Color("&d[GCommands] &cThe buttons must be array.",{json:false}).getText());
-            }
-
-            var buttons = [];
-            var message;
-
-            options.components.forEach((x, i) => {
-                if (!x.style) x.style = 2;
-
-                if (!x.label) {
-                    return console.log(new Color(`&d[GCommands] &c#${i} don't has label!`,{json:false}).getText());
-                }
-
-                if (typeof (x.label) !== 'string') x.label = String(x.label);
-
-                if (x.style === 5) {
-                    if (!x.url) {
-                        return console.log(new Color(`&d[GCommands] &cIf the button style is "url", you must provide url`,{json:false}).getText());
-                    }
-                } else {
-                    if (!x.custom_id) {
-                        return console.log(new Color(`&d[GCommands] &cIf the button style is not "url", you must provide custom id`,{json:false}).getText());
-                    }
-                }
-
-                var style;
-                var data = {};
-
-                if(x.emoji) {
-                    data = {
-                        type: x.type,
-                        style: x.style,
-                        label: x.label,
-                        custom_id: x.custom_id || null,
-                        url: x.url || null,
-                        disabled: x.disabled || false,
-                        emoji: x.emoji
-                    }
-                } else {
-                    data = {
-                        type: x.type,
-                        style: x.style,
-                        label: x.label,
-                        custom_id: x.custom_id || null,
-                        url: x.url || null,
-                        disabled: x.disabled || false
-                    }
-                }
-
-                buttons.push(data);
+            var finalData = [];
+            if(!Array.isArray(options.components)) options.components = [[options.components]]
+            options.components.forEach(option => {
+                finalData.push({
+                    type: 1,
+                    components: option
+                })
             })
 
-            options.components === null;
-
-            return this.client.api.channels[this.channel.id].messages[this.id].patch({
+            return this.client.api.channels[this.channel.id].messages[msgID].patch({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
-                    components: [
-                        {
-                            type: 1,
-                            components: buttons
-                        }
-                    ],
+                    components: finalData,
                     options,
                     embed: options.embed || null
                 }
@@ -230,70 +129,20 @@ module.exports = Structures.extend("Message", Message => {
                 options.allowedMentions = { parse: [] };
             }
 
-            if (!Array.isArray(options.components)) {
-                return console.log(new Color("&d[GCommands] &cThe buttons must be array.",{json:false}).getText());
-            }
-
-            var buttons = [];
-
-            options.components.forEach((x, i) => {
-                if (!x.style) x.style = 2;
-
-                if (!x.label) {
-                    return console.log(new Color(`&d[GCommands] &c#${i} don't has label!`,{json:false}).getText());
-                }
-
-                if (typeof (x.label) !== 'string') x.label = String(x.label);
-
-                if (x.style === 5) {
-                    if (!x.url) {
-                        return console.log(new Color(`&d[GCommands] &cIf the button style is "url", you must provide url`,{json:false}).getText());
-                    }
-                } else {
-                    if (!x.custom_id) {
-                        return console.log(new Color(`&d[GCommands] &cIf the button style is not "url", you must provide custom id`,{json:false}).getText());
-                    }
-                }
-
-                var style;
-                var data = {};
-
-                if(x.emoji) {
-                    data = {
-                        type: x.type,
-                        style: x.style,
-                        label: x.label,
-                        custom_id: x.custom_id || null,
-                        url: x.url || null,
-                        disabled: x.disabled || false,
-                        emoji: x.emoji
-                    }
-                } else {
-                    data = {
-                        type: x.type,
-                        style: x.style,
-                        label: x.label,
-                        custom_id: x.custom_id || null,
-                        url: x.url || null,
-                        disabled: x.disabled || false,
-                    }
-                }
-
-                buttons.push(data);
+            var finalData = [];
+            if(!Array.isArray(options.components)) options = [[options.components]]
+            options.components.forEach(option => {
+                finalData.push({
+                    type: 1,
+                    components: option
+                })
             })
-
-            options.components === null;
 
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
-                    components: [
-                        {
-                            type: 1,
-                            components: buttons
-                        }
-                    ],
+                    components: finalData,
                     message_reference: {
                         message_id: this.channel.lastMessageID
                     },

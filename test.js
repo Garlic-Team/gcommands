@@ -45,8 +45,9 @@ client.on("ready", () => {
 client.on("clickButton", (button) => {
     const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
 
-    button.defer();
-    button.edit("hai", buttonEdit)
+    button.defer(); // stop interaction failed
+    button.edit("a", buttonEdit)
+    //button.edit("hai", [[buttonEdit, buttonEdit], [buttonEdit, buttonEdit]])
 })
 
 client.login("token")

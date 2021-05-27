@@ -61,7 +61,7 @@ class MessageButton {
 
     /**
      * Method to setEmoji
-     * @param {String} emoji 
+     * @param {Object} emoji  
     */
      setEmoji(emoji) {
          if(typeof emoji != "object") return console.log(new Color("&d[GCommands] &cThe emoji must be object.").getText());
