@@ -681,47 +681,7 @@ class GCommandsEventLoader {
                             }
                         }, await this.getSlashArgs(interaction.data.options || []))
                     } catch(e) {
-                        try {
-                            var result = await commandos.run(this.client, interaction, undefined, await this.getSlashArgs(interaction.data.options || []));
-                            var data = {
-                                content: result
-                            }
-    
-                            if (typeof result === 'object') {
-                                if(typeof result == "object" && !result.content) {
-                                    const embed = new MessageEmbed(result)
-                                    data = await this.createAPIMessage(interaction, embed)
-                                }
-                                else if(typeof result.content == "object" ) {
-                                    const embed = new MessageEmbed(result.content)
-                                    data = await this.createAPIMessage(interaction, embed)
-                                } else {
-                                    data = {
-                                        content: result.content
-                                    }
-                                }
-                            }
-    
-                            if(typeof result == "object" && result.allowedMentions) {
-                                data.allowedMentions = result.allowedMentions
-                            } else {
-                                data.allowedMentions = { parse: [], repliedUser: true }
-                            }
-    
-                            if(typeof result == "object" && result.ephemeral) {
-                                data.flags = 64
-                            }
-    
-                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                              data: {
-                                type: 5,
-                                data
-                              },
-                            })
-                        } catch(e) {
-                            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
-                            commandos.run(this.client, interaction);
-                        }
+                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     }
                     
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())

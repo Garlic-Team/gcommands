@@ -118,7 +118,7 @@ module.exports = {
 		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
-			thinking: false
+			thinking: true
 		})
 
 		setTimeout(() => {
@@ -126,7 +126,7 @@ module.exports = {
 				content: new MessageEmbed().setTitle("hello"),
 				components: buttont
 			})
-		}, 1000)
+		}, 5000)
 
 		/*
 						CAN USE

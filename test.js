@@ -54,4 +54,4 @@ client.on("clickButton", (button) => {
     //button.edit("hai", [[buttonEdit, buttonEdit], [buttonEdit, buttonEdit]])
 })
 
-client.login("token")
+client.login("NzQ1NTk5NjQ4MTEwMjE1MjYw.Xz0HyA.CrPW_gNp7AsGdee0oQEkWsYdjhQ")
