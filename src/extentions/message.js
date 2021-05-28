@@ -18,6 +18,12 @@ module.exports = Structures.extend("Message", Message => {
          * @returns {Promise}
         */
         async buttons(content, options) {
+            var embed = null;
+            if(typeof content == "object") {
+                embed = content;
+                content = "\u200B"
+            }
+
             if (!options.components) {
                 options.components = [];
             }
@@ -41,7 +47,7 @@ module.exports = Structures.extend("Message", Message => {
                     content: content,
                     components: finalData,
                     options,
-                    embed: options.embed || null
+                    embed: embed || null
                 }
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
@@ -54,6 +60,12 @@ module.exports = Structures.extend("Message", Message => {
          * @returns {Promise}
         */
          async buttonsEdit(msgID, content, options) {
+            var embed = null;
+            if(typeof content == "object") {
+                embed = content;
+                content = "\u200B"
+            }
+
             if (!options.components) {
                 options.components = [];
             }
@@ -77,7 +89,7 @@ module.exports = Structures.extend("Message", Message => {
                     content: content,
                     components: finalData,
                     options,
-                    embed: options.embed || null
+                    embed: embed || null
                 }
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
@@ -121,6 +133,12 @@ module.exports = Structures.extend("Message", Message => {
          * @returns {Promise}
         */
         async buttonsWithReply(content, options) {
+            var embed = null;
+            if(typeof content == "object") {
+                embed = content;
+                content = "\u200B"
+            }
+
             if (!options.components) {
                 options.components = [];
             }
@@ -147,7 +165,7 @@ module.exports = Structures.extend("Message", Message => {
                         message_id: this.channel.lastMessageID
                     },
                     options,
-                    embed: options.embed || null
+                    embed: embed || null
                 }
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);

@@ -1,5 +1,5 @@
 //const { SlashCommand } = require("gcommands")
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, DiscordAPIError, Message } = require("discord.js");
 const MessageButton = require("../src/utils/MessageButton")
 
 module.exports = {
@@ -97,7 +97,7 @@ module.exports = {
 			console.log(await message.guild.getCommandPrefix())
 
 			respond({
-				content: "hi",
+				content: new MessageEmbed().setTitle("a"),
 				components: [[button], [buttonURL]]
 			})
 
@@ -118,15 +118,15 @@ module.exports = {
 		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
-			thinking: true
+			thinking: false
 		})
 
-		setTimeout(() => {
+		/*setTimeout(() => {
 			edit({
 				content: new MessageEmbed().setTitle("hello"),
 				components: buttont
 			})
-		}, 5000)
+		}, 5000)*/
 
 		/*
 						CAN USE
