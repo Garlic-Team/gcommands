@@ -95,7 +95,7 @@ class ButtonEvent {
                         components: option
                     })
                 })
-            } else result.components = []
+            } else finalData = []
 
             if(typeof result.content == "object") {
                 result.embeds = [result.content]
