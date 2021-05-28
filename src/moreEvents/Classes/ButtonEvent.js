@@ -123,7 +123,8 @@ class ButtonEvent {
 
             return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
                 content: result.content,
-                components: finalData
+                components: finalData,
+                embeds: result.embeds || []
             }})
         } else {
             await this.client.api.interactions(this.discordID, this.token).callback.post({
