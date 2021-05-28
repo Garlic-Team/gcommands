@@ -118,7 +118,6 @@ module.exports = {
 		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
-			components: [[button],[buttonURL]],
 			thinking: false
 		})
 

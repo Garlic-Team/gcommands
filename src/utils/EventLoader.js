@@ -653,14 +653,17 @@ class GCommandsEventLoader {
                                 if (typeof result == "object") {
                                     var finalData = [];
                                     result.embeds = [];
-                                    if(!Array.isArray(result.components)) result.components = [[result.components]]
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                                    result.components.forEach(option => {
-                                        finalData.push({
-                                            type: 1,
-                                            components: option
+
+                                    if(result.components) {
+                                        if(!Array.isArray(result.components)) result.components = [[result.components]]
+                                        result.components.forEach(option => {
+                                            finalData.push({
+                                                type: 1,
+                                                components: option
+                                            })
                                         })
-                                    })
+                                    } else finalData = []
 
                                     if(typeof result.content == "object") {
                                         result.embeds = [result.content]

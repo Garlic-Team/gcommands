@@ -48,7 +48,7 @@ client.on("clickButton", (button) => {
     button.edit({
         content: new Discord.MessageEmbed().setTitle("hello"),
         components: buttonEdit,
-        edited: true
+        edited: false
     })
     //button.edit("a")
     //button.edit("hai", [[buttonEdit, buttonEdit], [buttonEdit, buttonEdit]])
