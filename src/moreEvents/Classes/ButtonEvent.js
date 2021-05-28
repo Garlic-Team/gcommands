@@ -43,6 +43,23 @@ class ButtonEvent {
     }
 
     /**
+     * Method to defer
+     * @param {Boolean} ephemeral 
+    */
+     async defer(ephemeral) {
+        if (this.deferred || this.replied) return console.log(new Color('&d[GCommands] &cThis button already has a reply').getText());
+        await this.client.api.interactions(this.discordID, this.token).callback.post({
+            data: {
+                type: 6,
+                data: {
+                    flags: ephemeral ? 1 << 6 : null,
+                },
+            },
+        });
+        this.deferred = true;
+    }
+
+    /**
      * Method to think
      * @param {Boolean} ephemeral 
     */

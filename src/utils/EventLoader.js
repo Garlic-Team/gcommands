@@ -647,7 +647,7 @@ class GCommandsEventLoader {
                                         type: result.thinking ? 5 : 4,
                                         data
                                     }, 
-                                }).then(d => this.client.actions.MessageCreate.handle(d).message);
+                                })
                             },
                             edit: async(result) => {
                                 if (typeof result == "object") {
@@ -674,10 +674,10 @@ class GCommandsEventLoader {
                                         content: result.content,
                                         components: finalData,
                                         embeds: result.embeds
-                                    }}).then(d => this.client.actions.MessageCreate.handle(d).message);
+                                    }})
                                 }
 
-                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }}).then(d => this.client.actions.MessageCreate.handle(d).message);
+                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
                             }
                         }, await this.getSlashArgs(interaction.data.options || []))
                     } catch(e) {
