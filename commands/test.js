@@ -1,4 +1,5 @@
 //const { SlashCommand } = require("gcommands")
+const { MessageEmbed } = require("discord.js");
 const MessageButton = require("../src/utils/MessageButton")
 
 module.exports = {
@@ -87,6 +88,7 @@ module.exports = {
 	//slash: false,
 	run: async({client, message, respond, edit}, args) => {
 	//run: async(client, slash, message, args) => {
+		console.log(args)
         const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji({name:"gw",id:"786947228534439946"}).toJSON()
 		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
         const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
@@ -115,17 +117,17 @@ module.exports = {
 
 		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
-			ephemeral: true,
 			allowedMentions: { parse: [], repliedUser: true },
-			components: [[button],[buttonURL]]
+			components: [[button],[buttonURL]],
+			thinking: false
 		})
 
-		/*setTimeout(() => {
+		setTimeout(() => {
 			edit({
-				content: "hi",
+				content: new MessageEmbed().setTitle("hello"),
 				components: buttont
 			})
-		}, 3000)*/
+		}, 1000)
 
 		/*
 						CAN USE

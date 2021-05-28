@@ -45,8 +45,12 @@ client.on("ready", () => {
 client.on("clickButton", (button) => {
     const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled()
 
-    button.defer(); // stop interaction failed
-    button.edit("a", [[buttonEdit], [buttonEdit]])
+    button.edit({
+        content: new Discord.MessageEmbed().setTitle("hello"),
+        components: buttonEdit,
+        edited: true
+    })
+    //button.edit("a")
     //button.edit("hai", [[buttonEdit, buttonEdit], [buttonEdit, buttonEdit]])
 })
 

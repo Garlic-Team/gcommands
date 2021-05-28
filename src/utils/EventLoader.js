@@ -642,12 +642,19 @@ class GCommandsEventLoader {
                                     data.components = finalData
                                 }
 
-                                return this.client.api.interactions(interaction.id, interaction.token).callback.post({ data: { type: 4, data }, })
+                                return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                    data: {
+                                        type: result.thinking ? 5 : 4,
+                                        data
+                                    }, 
+                                })
                             },
                             edit: async(result) => {
                                 if (typeof result == "object") {
                                     var finalData = [];
+                                    result.embeds = [];
                                     if(!Array.isArray(result.components)) result.components = [[result.components]]
+                                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
                                     result.components.forEach(option => {
                                         finalData.push({
                                             type: 1,
@@ -655,9 +662,15 @@ class GCommandsEventLoader {
                                         })
                                     })
 
+                                    if(typeof result.content == "object") {
+                                        result.embeds = [result.content]
+                                        result.content = "\u200B"
+                                    }
+
                                     return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
                                         content: result.content,
-                                        components: finalData
+                                        components: finalData,
+                                        embeds: result.embeds
                                     }})
                                 }
 
@@ -698,7 +711,7 @@ class GCommandsEventLoader {
     
                             this.client.api.interactions(interaction.id, interaction.token).callback.post({
                               data: {
-                                type: 4,
+                                type: 5,
                                 data
                               },
                             })
@@ -715,7 +728,7 @@ class GCommandsEventLoader {
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
-                                type: 4,
+                                type: 5,
                                 data: {
                                     content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",interaction.data.name)
                                 }
@@ -759,14 +772,28 @@ class GCommandsEventLoader {
      * @returns {object}
     */
     async getSlashArgs(options) {
-        var args = {};
-        for (var o of options) {
-          if (o.type == 1) args[o.name] = this.getSlashArgs(o.options || []);
-          else if (o.type == 2) args[o.name] = this.getSlashArgs(o.options || []); 
-          else {
-              args[o.name] = o.value;
+        var args = [];
+  
+        var check = (option) => {
+          if (!option) return;
+          if (option.value) args.push(option.value);
+          else args.push(option.name);
+      
+          if (option.options) {
+            for (var o = 0; o < option.options.length; o++) {
+              check(option.options[o]);
+            }
           }
         }
+      
+        if (Array.isArray(options)) {
+          for (var o = 0; o < options.length; o++) {
+            check(options[o]);
+          }
+        } else {
+          check(options);
+        }
+      
         return args;
     }
 

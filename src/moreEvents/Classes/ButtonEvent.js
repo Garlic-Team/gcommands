@@ -43,23 +43,6 @@ class ButtonEvent {
     }
 
     /**
-     * Method to defer
-     * @param {Boolean} ephemeral 
-    */
-    async defer(ephemeral) {
-        if (this.deferred || this.replied) return console.log(new Color('&d[GCommands] &cThis button already has a reply').getText());
-        await this.client.api.interactions(this.discordID, this.token).callback.post({
-            data: {
-                type: 6,
-                data: {
-                    flags: ephemeral ? 1 << 6 : null,
-                },
-            },
-        });
-        this.deferred = true;
-    }
-
-    /**
      * Method to think
      * @param {Boolean} ephemeral 
     */
@@ -81,7 +64,7 @@ class ButtonEvent {
      * @param {String} content
      * @param {Object} options 
     */
-    async edit(content, options = null) {
+    /*async edit(content, options = null) {
         if(options) {
             var finalData = [];
             if(!Array.isArray(options)) options = [[options]]
@@ -99,6 +82,60 @@ class ButtonEvent {
         } else {
             return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
                 content: content
+            }})
+        }
+    }*/
+
+    async edit(result) {
+        if (typeof result == "object") {
+            var finalData = [];
+            result.embeds = [];
+            if(!Array.isArray(result.components)) result.components = [[result.components]]
+            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+            result.components.forEach(option => {
+                finalData.push({
+                    type: 1,
+                    components: option
+                })
+            })
+
+            if(typeof result.content == "object") {
+                result.embeds = [result.content]
+                result.content = "\u200B"
+            }
+
+            if(result.edited == false) {
+                return this.client.api.interactions(this.discordID, this.token).callback.post({
+                    data: {
+                        type: 7,
+                        data: {
+                            content: result.content,
+                            components: finalData,
+                            embeds: result.embeds
+                        },
+                    },
+                });
+            }
+
+            await this.client.api.interactions(this.discordID, this.token).callback.post({
+                data: {
+                    type: 6,
+                },
+            });
+
+            return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
+                content: result.content,
+                components: finalData
+            }})
+        } else {
+            await this.client.api.interactions(this.discordID, this.token).callback.post({
+                data: {
+                    type: 6,
+                },
+            });
+
+            return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
+                content: result,
             }})
         }
     }
