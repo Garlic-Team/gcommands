@@ -679,7 +679,7 @@ class GCommandsEventLoader {
 
                                 return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
                             }
-                        }, await this.getSlashArgs(interaction.data.options || []))
+                        }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgs2(interaction.data.options || []))
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     }
@@ -757,6 +757,18 @@ class GCommandsEventLoader {
           check(options);
         }
       
+        return args;
+    }
+
+    async getSlashArgs2(options) {
+        var args = {};
+        for (var o of options) {
+          if (o.type == 1) args[o.name] = this.getSlashArgs(o.options || []);
+          else if (o.type == 2) args[o.name] = this.getSlashArgs(o.options || []); 
+          else {
+              args[o.name] = o.value;
+          }
+        }
         return args;
     }
 
