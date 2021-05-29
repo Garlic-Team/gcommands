@@ -7,6 +7,7 @@ class ButtonCollector extends Collector {
     super(apiMessage.client, filter, options);
 
     this.message = apiMessage;
+
     this.users = new Collection();
 
     this.total = 0;

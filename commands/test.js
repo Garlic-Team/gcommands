@@ -124,12 +124,19 @@ module.exports = {
 		})
 
 
-		setTimeout(async() => {
+		/*setTimeout(async() => {
 			edit({
 				content: new MessageEmbed().setTitle("hello"),
 				components: buttont
 			})
-		}, 1000)
+		}, 1000)*/
+
+		const filter = (button) => button.clicker.user.id === member.id;
+		const collector = client.dispatcher.createButtonCollector(filter, { max: 1, time: 60000, errors: ['time'] });
+		
+		collector.on('collect', async(b) => {
+		});
+		collector.on('end', collected => console.log(`Collected ${collected.size} items`));
 
 		/*
 						CAN USE

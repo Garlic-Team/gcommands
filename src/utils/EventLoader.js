@@ -766,7 +766,6 @@ class GCommandsEventLoader {
                                     guild: member.guild,
                                     channel: member.guild.channels.cache.get(interaction.channel_id),
                                     author: this.client.user,
-
                                 }
 
                                 return apiMessage

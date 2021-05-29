@@ -38,6 +38,8 @@ class ButtonEvent {
             this.clicker.user = this.client.users.resolve(data.user.id);
         }
 
+        this.message = data.message;
+
         this.replied = false;
         this.deferred = false;
     }
