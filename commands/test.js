@@ -124,12 +124,12 @@ module.exports = {
 		})
 
 
-		/*setTimeout(() => {
+		setTimeout(async() => {
 			edit({
 				content: new MessageEmbed().setTitle("hello"),
 				components: buttont
 			})
-		}, 5000)*/
+		}, 1000)
 
 		/*
 						CAN USE

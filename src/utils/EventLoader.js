@@ -792,11 +792,13 @@ class GCommandsEventLoader {
                                         result.content = "\u200B"
                                     }
 
-                                    return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
+                                    let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
                                         content: result.content,
                                         components: finalData,
                                         embeds: result.embeds
-                                    }})
+                                    }}))
+                                    
+                                    return apiMessage;
                                 }
 
                                 return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
