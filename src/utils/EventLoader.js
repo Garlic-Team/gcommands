@@ -202,14 +202,18 @@ class GCommandsEventLoader {
                     commandos.run({
                         client, message, member, guild, channel,
                         respond: async(options = undefined) => {
+                            if(options.inlineReply == undefined) options.inlineReply = true;
                             if(typeof options == "object" && options.content) {
-                                msg = await message.buttonsWithReply(options.content, options)
+                                if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
+                                else  msg = await message.buttons(options.content, options)
                                 return msg;
                             } else if(typeof options == "object" && !options.content) {
-                                msg = await message.inlineReply(options)
+                                if(options.inlineReply) msg = await message.inlineReply(options)
+                                else msg = await message.channel.send(options)
                                 return msg;
                             } else {
-                                msg = await message.inlineReply(options);
+                                if(options.inlineReply) msg = await message.inlineReply(options);
+                                else msg = await message.channel.send(options)
                                 return msg;
                             }
                         },

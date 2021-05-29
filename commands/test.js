@@ -97,7 +97,7 @@ module.exports = {
 		if(message) {
 			console.log(await message.guild.getCommandPrefix())
 
-			respond({
+			let msg = await respond({
 				content: new MessageEmbed().setTitle("a"),
 				components: [[button], [buttonURL]]
 			})
