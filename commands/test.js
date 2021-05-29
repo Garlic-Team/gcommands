@@ -122,7 +122,6 @@ module.exports = {
 			thinking: false,
 			components: [[button, buttont], [buttonURL]]
 		})
-		console.log(msg)
 
 		/*setTimeout(async() => {
 			edit({
@@ -131,12 +130,12 @@ module.exports = {
 			})
 		}, 1000)*/
 
-		const filter = (button) => button.clicker.user.id === member.id;
+		/*const filter = (button) => button.clicker.user.id === member.id;
 		const collector = client.dispatcher.createButtonCollector(filter, { max: 1, time: 60000, errors: ['time'] });
 		
 		collector.on('collect', async(b) => {
 		});
-		collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+		collector.on('end', collected => console.log(`Collected ${collected.size} items`));*/
 
 		/*
 						CAN USE

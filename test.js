@@ -35,12 +35,24 @@ client.on("ready", () => {
 client.on("clickButton", (button) => {
     //button.defer();
     const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled()
+    console.log("a")
+    button.reply.send({
+        content: "a",
+        compoentns: buttonEdit
+    })
 
-    button.edit({
+    setTimeout(() => {
+        button.reply.edit({
+            content: "ab",
+            compoentns: buttonEdit
+        })
+    }, 2000)
+
+    /*button.edit({
         content: new Discord.MessageEmbed().setTitle("hello"),
         components: buttonEdit,
         edited: false
-    });
+    });*/
     //button.edit("a");
     //button.edit("hai", [[buttonEdit, buttonEdit], [buttonEdit, buttonEdit]])
 })

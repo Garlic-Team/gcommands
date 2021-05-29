@@ -396,30 +396,48 @@ class GCommandsEventLoader {
                         }
                     }
 
-                    if(commandos.requiredRole) {
-                        if(!message.member._roles.includes(commandos.requiredRole)) {
-                            message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.requiredRole))
+                    if(commandos.userRequiredRole) {
+                        if(!message.member._roles.includes(commandos.userRequiredRole)) {
+                            message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.userRequiredRole))
                             return;
                         }
                     }
+
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
 
                     const client = this.client
                     var msg = "";
                     commandos.run({
                         client, message, member, guild, channel,
                         respond: async(options = undefined) => {
-                            if(typeof options == "object") {
-                                msg = await message.buttonsWithReply(options.content, options)
-                            } else msg = await message.inlineReply(options)
+                            if(options.inlineReply == undefined) options.inlineReply = true;
+                            if(typeof options == "object" && options.content) {
+                                if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
+                                else  msg = await message.buttons(options.content, options)
+                                return msg;
+                            } else if(typeof options == "object" && !options.content) {
+                                if(options.inlineReply) msg = await message.inlineReply(options)
+                                else msg = await message.channel.send(options)
+                                return msg;
+                            } else {
+                                if(options.inlineReply) msg = await message.inlineReply(options);
+                                else msg = await message.channel.send(options)
+                                return msg;
+                            }
                         },
                         edit: async(options = undefined) => {
-                            if(typeof options == "object") {
-                                msg = await message.buttonsEdit(options.content, options)
-                            } else msg.edit(options)
+                            if(typeof options == "object" && options.content) {
+                                msg = await message.buttonsEdit(msg.id, options.content, options)
+                                return msg;
+                            } else if(typeof options == "object" && !options.content) {
+                                msg = await msg.edit(options)
+                                return msg;
+                            } else {
+                                msg = msg.edit(options)
+                                return msg;
+                            }
                         }
                     }, args)
-
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
                     try {
                         commandos.run(this.client, undefined, message, args)

@@ -1,5 +1,6 @@
 /* From discord-buttons edited */
-const {APIMessage, Client} = require("discord.js")
+const { default: axios } = require("axios");
+const {APIMessage, Client, MessageEmbed} = require("discord.js")
 const Color = require("../../utils/color/Color")
 
 /**
@@ -80,7 +81,6 @@ class ButtonEvent {
 
     /**
      * Method to edit
-     * @param {String} content
      * @param {Object} options 
     */
     async edit(result) {
@@ -139,6 +139,118 @@ class ButtonEvent {
                 content: result,
             }})
         }
+    }
+
+    get reply() {
+        /**
+         * Method to replySend
+         * @param {Object} options 
+        */
+        let _send = async(result) => {
+            var data = {
+                content: result
+            }
+
+            let msgId = Date.now();
+
+            if (typeof result === 'object') {
+                if(typeof result == "object" && !result.content) {
+                    const embed = new MessageEmbed(result)
+                    data = await this.createAPIMessage(this, embed)
+                }
+                else if(typeof result.content == "object" ) {
+                    const embed = new MessageEmbed(result.content)
+                    data = await this.createAPIMessage(this, embed)
+                } else data = { content: result.content }
+            }
+
+            if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
+            if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+            if(typeof result == "object" && result.components) {
+                var finalData = [];
+                if(!Array.isArray(result.components)) result.components = [[result.components]];
+                result.components.forEach(option => {
+                    option.msgId = msgId;
+                    option.client = this.client;
+                    finalData.push({
+                        type: 1,
+                        components: option
+                    });
+                });
+
+                data.components = finalData;
+            }
+
+            let apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
+                data: {
+                    type: result.thinking ? 5 : 4,
+                    data
+                }, 
+            })).toJSON();
+
+            let apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.token}/messages/@original`)).data;
+            apiMessage = apiMessageMsg;
+
+            let message = {
+                msgId: msgId,
+                client: this.client,
+                guild: this.clicker.member.guild,
+                channel: this.channel,
+                author: this.client.user,
+            }
+
+            return apiMessage
+        }
+
+        /**
+         * Method to replyEdit
+         * @param {Object} options 
+        */
+         let _edit = async(result) => {
+            if (typeof result == "object") {
+                var finalData = [];
+                result.embeds = [];
+                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+
+                if(result.components) {
+                    if(!Array.isArray(result.components)) result.components = [[result.components]]
+                    result.components.forEach(option => {
+                        finalData.push({
+                            type: 1,
+                            components: option
+                        })
+                    })
+                } else finalData = []
+
+                if(typeof result.content == "object") {
+                    result.embeds = [result.content]
+                    result.content = "\u200B"
+                }
+
+                let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
+                    content: result.content,
+                    components: finalData,
+                    embeds: result.embeds
+                }}))
+                
+                return apiMessage;
+            }
+
+            return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: { content: result }})
+        }
+
+        return {
+            send: _send,
+            edit: _edit
+        }
+    }
+
+    async createAPIMessage(interaction, content) {
+        const apiMessage = await APIMessage.create(this.client.channels.resolve(interaction.channel_id), content)
+        .resolveData()
+        .resolveFiles();
+        
+        return { ...apiMessage.data, files: apiMessage.files };
     }
 }
 
