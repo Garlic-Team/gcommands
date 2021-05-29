@@ -195,6 +195,8 @@ class GCommandsEventLoader {
                         }
                     }
 
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
+
                     const client = this.client
                     var msg = "";
                     commandos.run({
@@ -202,20 +204,28 @@ class GCommandsEventLoader {
                         respond: async(options = undefined) => {
                             if(typeof options == "object" && options.content) {
                                 msg = await message.buttonsWithReply(options.content, options)
+                                return msg;
                             } else if(typeof options == "object" && !options.content) {
                                 msg = await message.inlineReply(options)
-                            } else msg = await message.inlineReply(options)
+                                return msg;
+                            } else {
+                                msg = await message.inlineReply(options);
+                                return msg;
+                            }
                         },
                         edit: async(options = undefined) => {
                             if(typeof options == "object" && options.content) {
-                                message.buttonsEdit(msg.id, options.content, options)
+                                msg = await message.buttonsEdit(msg.id, options.content, options)
+                                return msg;
                             } else if(typeof options == "object" && !options.content) {
-                                msg.edit(options)
-                            } else msg.edit(options)
+                                msg = await msg.edit(options)
+                                return msg;
+                            } else {
+                                msg = msg.edit(options)
+                                return msg;
+                            }
                         }
                     }, args)
-
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
                 } catch(e) {
                     try {
                         commandos.run(this.client, undefined, message, args)
