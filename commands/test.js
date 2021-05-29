@@ -122,12 +122,6 @@ module.exports = {
 			components: [[button], [buttonURL]]
 		})
 
-		
-		const filter = (button) => button.clicker.user.id === member.id;
-		const collector = await client.dispatcher.awaitButtons(filter, { max: 1, time: 60000, errors: ['time'] });
-
-		console.log(`${member.user.tag} clicked the pog button!`);
-
 
 		/*setTimeout(() => {
 			edit({
