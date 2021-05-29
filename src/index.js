@@ -8,7 +8,8 @@ module.exports = {
     GCommandsMessage: require("./extentions/message"),
     GUpdater: require("./utils/updater"),
     Color: require("./utils/color/Color"),
-    MessageButton: require("./utils/MessageButton"),
+    MessageButton: require("./utils/buttons/MessageButton"),
+    ButtonCollector: require("./utils/buttons/ButtonCollector"),
     SlashCommand: {
         SUB_COMMAND: 1,
         SUB_COMMAND_GROUP: 2,

@@ -1,3 +1,6 @@
+const { Collector } = require('discord.js');
+const ButtonCollector = require('./utils/buttons/ButtonCollector');
+
 /**
  * The GCommansDispatcher class
  */
@@ -72,9 +75,10 @@ class GCommandsDispatcher {
 
     /**
      * Internal method to addInhibitor
+     * @param {Function} inhibitor
      * @returns {boolean}
     */
-    async addInhibitor(inhibitor) {
+    addInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
 		if(this.client.inhibitors.has(inhibitor)) return false;
 		this.client.inhibitors.add(inhibitor);
@@ -85,10 +89,39 @@ class GCommandsDispatcher {
      * Internal method to removeInhibitor
      * @returns {Set}
     */
-    async removeInhibitor(inhibitor) {
+    removeInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
 		return this.client.inhibitors.delete(inhibitor);
 	}
+
+    /**
+     * Internal method to createButtonCollector
+     * @param {Function} filter 
+     * @param {Object} options
+     * @returns {Collector}
+    */
+    createButtonCollector(filter, options = {}) {
+        return new ButtonCollector(this, filter, options);
+    }
+
+    /**
+     * Internal method to createButtonCollector
+     * @param {Function} filter 
+     * @param {Object} options
+     * @returns {Collector}
+    */
+    awaitButtons(filter, options = {}) {
+        return new Promise((resolve, reject) => {
+            const collector = this.createButtonCollector(filter, options);
+            collector.once('end', (buttons, reason) => {
+                if (options.errors && options.errors.includes(reason)) {
+                    reject(buttons);
+                } else {
+                    resolve(buttons);
+                }
+            });
+        })
+    }
 }
 
 module.exports = GCommandsDispatcher;

@@ -723,6 +723,8 @@ class GCommandsEventLoader {
                                     content: result
                                 }
 
+                                let msgId = Date.now();
+
                                 if (typeof result === 'object') {
                                     if(typeof result == "object" && !result.content) {
                                         const embed = new MessageEmbed(result)
@@ -738,23 +740,36 @@ class GCommandsEventLoader {
                                 if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
                                 if(typeof result == "object" && result.components) {
                                     var finalData = [];
-                                    if(!Array.isArray(result.components)) result.components = [[result.components]]
+                                    if(!Array.isArray(result.components)) result.components = [[result.components]];
                                     result.components.forEach(option => {
+                                        option.msgId = msgId;
+                                        option.client = this.client;
                                         finalData.push({
                                             type: 1,
                                             components: option
-                                        })
-                                    })
+                                        });
+                                    });
 
-                                    data.components = finalData
+                                    data.components = finalData;
                                 }
 
-                                return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
                                         type: result.thinking ? 5 : 4,
                                         data
                                     }, 
-                                })
+                                })).toJSON();
+
+                                let message = {
+                                    msgId: msgId,
+                                    client: this.client,
+                                    guild: member.guild,
+                                    channel: member.guild.channels.cache.get(interaction.channel_id),
+                                    author: this.client.user,
+
+                                }
+
+                                return apiMessage
                             },
                             edit: async(result) => {
                                 if (typeof result == "object") {

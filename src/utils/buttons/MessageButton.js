@@ -1,6 +1,6 @@
 /* From discord-buttons edited */
 const { resolveString } = require('discord.js').Util;
-const Color = require("./color/Color")
+const Color = require("../color/Color")
 const styles = {
     'blurple': 1,
     'gray': 2,
@@ -79,7 +79,7 @@ class MessageButton {
      * @param {String} boolean 
     */
     setDisabled(boolean = true) {
-        this.disabled = boolean;
+        this.disabled = Boolean(boolean);
         return this;
     }
 

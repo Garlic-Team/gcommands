@@ -1,6 +1,6 @@
 //const { SlashCommand } = require("gcommands")
 const { MessageEmbed, DiscordAPIError, Message } = require("discord.js");
-const MessageButton = require("../src/utils/MessageButton")
+const MessageButton = require("../src/utils/buttons/MessageButton")
 
 module.exports = {
 	name: "test",
@@ -86,7 +86,7 @@ module.exports = {
 	//usage: "usage lol",
 	//requiredRole: "ROLE ID",
 	//slash: false,
-	run: async({client, message, respond, edit}, args) => {
+	run: async({client, message, respond, edit, member}, args) => {
 	//run: async(client, slash, message, args) => {
 		console.log(args)
         const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji({name:"gw",id:"786947228534439946"}).toJSON()
@@ -118,8 +118,16 @@ module.exports = {
 		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
-			thinking: false
+			thinking: false,
+			components: [[button], [buttonURL]]
 		})
+
+		
+		const filter = (button) => button.clicker.user.id === member.id;
+		const collector = await client.dispatcher.awaitButtons(filter, { max: 1, time: 60000, errors: ['time'] });
+
+		console.log(`${member.user.tag} clicked the pog button!`);
+
 
 		/*setTimeout(() => {
 			edit({
