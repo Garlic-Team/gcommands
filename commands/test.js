@@ -1,5 +1,6 @@
 //const { SlashCommand } = require("gcommands")
 const { MessageEmbed, DiscordAPIError, Message } = require("discord.js");
+const { MessageActionRow } = require("../src");
 const MessageButton = require("../src/utils/buttons/MessageButton")
 
 module.exports = {
@@ -90,7 +91,7 @@ module.exports = {
 	//run: async(client, slash, message, args) => {
 		console.log(args)
         const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji({name:"gw",id:"786947228534439946"}).toJSON()
-		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
+		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().setEmoji("💔").toJSON()
         const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
 
 		if(message) {
@@ -119,7 +120,7 @@ module.exports = {
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
 			thinking: false,
-			components: [[button], [buttonURL]]
+			components: [[button, buttont], [buttonURL]]
 		})
 
 

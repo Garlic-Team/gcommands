@@ -1,15 +1,22 @@
 module.exports = {
+    // Root classes
     GCommandsBase: require("./GCommandsBase"),
     GCommands: require("./GCommands.js"),
     GEvents: require("./GEvents"),
+
+    // Loaders, dispatcher
     GCommandsEventLoader: require("./utils/EventLoader"),
     GCommandsDispatcher: require("./GCommandsDispatcher"),
+    GUpdater: require("./utils/updater"),
+
+    // Structures
     GCommandsGuild: require("./extentions/guild"),
     GCommandsMessage: require("./extentions/message"),
-    GUpdater: require("./utils/updater"),
-    Color: require("./utils/color/Color"),
     MessageButton: require("./utils/buttons/MessageButton"),
     ButtonCollector: require("./utils/buttons/ButtonCollector"),
+
+    // Other
+    Color: require("./utils/color/Color"),
     SlashCommand: {
         SUB_COMMAND: 1,
         SUB_COMMAND_GROUP: 2,
