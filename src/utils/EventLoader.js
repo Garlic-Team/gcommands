@@ -56,7 +56,7 @@ class GCommandsEventLoader {
                     var commandos = this.client.commands.get(cmd);
                     if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
 
-                    var member = message.author, guild = message.guild, channel = message.channel
+                    var member = message.member, guild = message.guild, channel = message.channel
                     var inhibit = await this.inhibit(commandos, {
                         message, member, guild, channel,
                         respond: async(options = undefined) => {
@@ -250,7 +250,7 @@ class GCommandsEventLoader {
                     var commandos = this.client.commands.get(cmd);
                     if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
 
-                    var member = message.author, guild = message.guild, channel = message.channel
+                    var member = message.member, guild = message.guild, channel = message.channel
                     var inhibit = await this.inhibit(commandos, {
                         message, member, guild, channel,
                         respond: async(options = undefined) => {
