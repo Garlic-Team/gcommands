@@ -205,6 +205,7 @@ class GCommands extends GCommandsBase {
                         this.client.commands.set(file.name, file);
                         console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                     } catch(e) {
+                        console.log(e)
                         this.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
                         console.log(new Color("&d[GCommands] &cCan't load " + fileName).getText());
                     }
