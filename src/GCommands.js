@@ -179,7 +179,7 @@ class GCommands extends GCommandsBase {
      * @private
      */
     async __loadCommands() {
-        if(!this.cmdDir.startsWith(".")) this.cmdDir = `./${this.cmdDir}/`
+        if(!this.cmdDir.startsWith(".")) this.cmdDir = `/${this.cmdDir}/`
         fs.readdirSync(this.cmdDir).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
