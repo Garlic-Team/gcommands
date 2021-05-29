@@ -179,35 +179,40 @@ class GCommands extends GCommandsBase {
      * @private
      */
     async __loadCommands() {
-		return glob(`./${this.cmdDir}/**/*.js`).then(async(commands) => {
-			for (const commandFile of commands) {
-				const { name } = path.parse(commandFile);
-                var File;
-
+        if(!this.cmdDir.startsWith(".")) this.cmdDir = `./${this.cmdDir}/`
+        fs.readdirSync(this.cmdDir).forEach(async(dir) => {
+            var file;
+            var fileName = dir.split(".").reverse()[1]
+            var fileType = dir.split(".").reverse()[0]
+            if(fileType == "js" || fileType == "ts") {
                 try {
-                    File = await require("../../../"+this.cmdDir+"/"+name)
-                    console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                    file = await require(`.${this.cmdDir}${dir}`)
+
+                    if (file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
+                    this.client.commands.set(file.name, file);
+                    console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
-                    try {
-                        File = await require("../../../"+commandFile.split("./")[1])
-                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
-                    } catch(e) {
-                        try {
-                            File = await require("../"+this.cmdDir+"/"+name);
-                            console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
-                        } catch(e) {
-                            this.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
-                            console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
-                        }
-                    }
+                    this.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
+                    console.log(new Color("&d[GCommands] &cCan't load " + fileName).getText());
                 }
+            } else {
+                fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(file) => {
+                    fileName = file.split(".").reverse()[1];
+                    try {
+                        file = await require(`.${this.cmdDir}${dir}/${file}`)
+    
+                        if (file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
+                        this.client.commands.set(file.name, file);
+                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
+                    } catch(e) {
+                        this.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
+                        console.log(new Color("&d[GCommands] &cCan't load " + "a").getText());
+                    }
+                })
+            }
+        })
 
-                if (File.aliases && Array.isArray(File.aliases)) File.aliases.forEach(alias => this.client.aliases.set(alias, File.name));
-				this.client.commands.set(File.name, File);
-			};
-
-            this.__deleteAllGlobalCmds();
-		});
+        this.__deleteAllGlobalCmds();
     }
 
     /**

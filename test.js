@@ -7,7 +7,7 @@ const axios = require("axios")
 
 client.on("ready", () => {
     const GCommandsClient = new GCommands(client, {
-        cmdDir: "commands",
+        cmdDir: "./commands/",
         eventDir: "events", //when you want event handler
         language: "czech", //english, spanish, portuguese, russian, german, czech, slovak,
         unkownCommandMessage: false, //send unkown command message true/false
@@ -33,15 +33,15 @@ client.on("ready", () => {
 })
 
 client.on("clickButton", (button) => {
-    //button.defer()
+    //button.defer();
     const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled()
 
     button.edit({
         content: new Discord.MessageEmbed().setTitle("hello"),
         components: buttonEdit,
         edited: false
-    })
-    //button.edit("a")
+    });
+    //button.edit("a");
     //button.edit("hai", [[buttonEdit, buttonEdit], [buttonEdit, buttonEdit]])
 })
 
