@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const {Collection,MessageEmbed,APIMessage} = require("discord.js");
 const Color = require("./color/Color");
 const {Events} = require("./Constants")
@@ -759,6 +760,9 @@ class GCommandsEventLoader {
                                         data
                                     }, 
                                 })).toJSON();
+
+                                let apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
+                                apiMessage = apiMessageMsg;
 
                                 let message = {
                                     msgId: msgId,

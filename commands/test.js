@@ -87,9 +87,9 @@ module.exports = {
 	//usage: "usage lol",
 	//requiredRole: "ROLE ID",
 	//slash: false,
-	run: async({client, message, respond, edit, member}, args) => {
+	run: async({client, message, respond, edit, member, interaction}, args) => {
 	//run: async(client, slash, message, args) => {
-		console.log(args)
+
         const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji({name:"gw",id:"786947228534439946"}).toJSON()
 		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().setEmoji("💔").toJSON()
         const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
@@ -116,13 +116,13 @@ module.exports = {
 			return;
 		}
 
-		respond({
+		let msg = await respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
 			thinking: false,
 			components: [[button, buttont], [buttonURL]]
 		})
-
+		console.log(msg)
 
 		/*setTimeout(async() => {
 			edit({
