@@ -56,7 +56,24 @@ class GCommandsEventLoader {
                     var commandos = this.client.commands.get(cmd);
                     if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
 
-                    var inhibit = await this.inhibit(commandos, undefined, message)
+                    var member = message.author, guild = message.guild, channel = message.channel
+                    var inhibit = await this.inhibit(commandos, {
+                        message, member, guild, channel,
+                        respond: async(options = undefined) => {
+                            if(typeof options == "object" && options.content) {
+                                msg = await message.buttonsWithReply(options.content, options)
+                            } else if(typeof options == "object" && !options.content) {
+                                msg = await message.inlineReply(options)
+                            } else msg = await message.inlineReply(options)
+                        },
+                        edit: async(options = undefined) => {
+                            if(typeof options == "object" && options.content) {
+                                message.buttonsEdit(msg.id, options.content, options)
+                            } else if(typeof options == "object" && !options.content) {
+                                msg.edit(options)
+                            } else msg.edit(options)
+                        }
+                    })
                     if(inhibit == false) return;
 
                     if (!this.client.cooldowns.has(commandos.name)) {
@@ -177,7 +194,7 @@ class GCommandsEventLoader {
                         }
                     }
 
-                    const client = this.client, member = message.member, guild = message.guild, channel = message.channel
+                    const client = this.client
                     var msg = "";
                     commandos.run({
                         client, message, member, guild, channel,
@@ -233,7 +250,24 @@ class GCommandsEventLoader {
                     var commandos = this.client.commands.get(cmd);
                     if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
 
-                    var inhibit = await this.inhibit(commandos, undefined, message)
+                    var member = message.author, guild = message.guild, channel = message.channel
+                    var inhibit = await this.inhibit(commandos, {
+                        message, member, guild, channel,
+                        respond: async(options = undefined) => {
+                            if(typeof options == "object" && options.content) {
+                                msg = await message.buttonsWithReply(options.content, options)
+                            } else if(typeof options == "object" && !options.content) {
+                                msg = await message.inlineReply(options)
+                            } else msg = await message.inlineReply(options)
+                        },
+                        edit: async(options = undefined) => {
+                            if(typeof options == "object" && options.content) {
+                                message.buttonsEdit(msg.id, options.content, options)
+                            } else if(typeof options == "object" && !options.content) {
+                                msg.edit(options)
+                            } else msg.edit(options)
+                        }
+                    })
                     if(inhibit == false) return;
 
                     if (!this.client.cooldowns.has(commandos.name)) {
@@ -354,7 +388,7 @@ class GCommandsEventLoader {
                         }
                     }
 
-                    const client = this.client, member = message.member, guild = message.guild, channel = message.channel
+                    const client = this.client
                     var msg = "";
                     commandos.run({
                         client, message, member, guild, channel,
@@ -400,7 +434,80 @@ class GCommandsEventLoader {
                         this.client.cooldowns.set(commandos.name, new Collection());
                     }
 
-                    var inhibit = await this.inhibit(commandos, interaction, undefined)
+                    var member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id);
+                    var inhibit = await this.inhibit(commandos, {
+                        interaction, member,
+                        guild: member.guild, 
+                        channel: member.guild.channels.cache.get(interaction.channel_id),
+                        respond: async(result) => {
+                            var data = {
+                                content: result
+                            }
+
+                            if (typeof result === 'object') {
+                                if(typeof result == "object" && !result.content) {
+                                    const embed = new MessageEmbed(result)
+                                    data = await this.createAPIMessage(interaction, embed)
+                                }
+                                else if(typeof result.content == "object" ) {
+                                    const embed = new MessageEmbed(result.content)
+                                    data = await this.createAPIMessage(interaction, embed)
+                                } else data = { content: result.content }
+                            }
+
+                            if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
+                            if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+                            if(typeof result == "object" && result.components) {
+                                var finalData = [];
+                                if(!Array.isArray(result.components)) result.components = [[result.components]]
+                                result.components.forEach(option => {
+                                    finalData.push({
+                                        type: 1,
+                                        components: option
+                                    })
+                                })
+
+                                data.components = finalData
+                            }
+
+                            return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                data: {
+                                    type: result.thinking ? 5 : 4,
+                                    data
+                                }, 
+                            })
+                        },
+                        edit: async(result) => {
+                            if (typeof result == "object") {
+                                var finalData = [];
+                                result.embeds = [];
+                                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+
+                                if(result.components) {
+                                    if(!Array.isArray(result.components)) result.components = [[result.components]]
+                                    result.components.forEach(option => {
+                                        finalData.push({
+                                            type: 1,
+                                            components: option
+                                        })
+                                    })
+                                } else finalData = []
+
+                                if(typeof result.content == "object") {
+                                    result.embeds = [result.content]
+                                    result.content = "\u200B"
+                                }
+
+                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
+                                    content: result.content,
+                                    components: finalData,
+                                    embeds: result.embeds
+                                }})
+                            }
+
+                            return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
+                        }
+                    })
                     if(inhibit == false) return;
 
                     const now = Date.now();
@@ -606,7 +713,7 @@ class GCommandsEventLoader {
                          *  }
                          */
 
-                        const client = this.client, member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id);
+                        const client = this.client
                         commandos.run({
                             client, interaction, member,
                             guild: member.guild, 
@@ -776,9 +883,9 @@ class GCommandsEventLoader {
      * Internal method to inhivit
      * @returns {object}
     */
-    async inhibit(cmd, slash, message) {
+    async inhibit(cmd, data) {
 		for(const inhibitor of this.client.inhibitors) {
-			let inhibit = inhibitor(cmd, slash, message);
+			let inhibit = inhibitor(cmd, data);
 			return inhibit;
 		}
 		return null;

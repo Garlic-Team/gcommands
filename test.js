@@ -23,22 +23,12 @@ client.on("ready", () => {
     })
     GCommandsClient.on('debug', (debug) => {console.log(debug)} );
 
-    client.dispatcher.addInhibitor((cmd, slash, message) => {
-        if(message && message.author.id == "126454") {
-            message.channel.send("blacklisted")
+
+    client.dispatcher.addInhibitor((cmd, {message, member, guild, channel, respond, edit}) => {
+        if(member.id == "126454") {
+            respond("blacklisted")
             return false;
         }
-
-        if(slash && slash.member.user.id == "126454")
-            client.api.interactions(slash.id, slash.token).callback.post({
-                data: {
-                    type: 4,
-                    data: {
-                        flags: 64,
-                        content: "blacklisted"
-                    }
-                }
-            });
     })
 })
 
