@@ -1,6 +1,5 @@
 const { promisify } = require('util');
 const path = require('path');
-const glob = promisify(require('glob'));
 const Color = require("./utils/color/Color");
 const EventLoader = require('./utils/EventLoader');
 const cmdUtils = require('./utils/cmdUtils');
@@ -179,14 +178,13 @@ class GCommands extends GCommandsBase {
      * @private
      */
     async __loadCommands() {
-        if(!this.cmdDir.startsWith(".")) this.cmdDir = `./${this.cmdDir}/`
-        fs.readdirSync(this.cmdDir).forEach(async(dir) => {
+        fs.readdirSync(`${__dirname}/../../../${this.cmdDir}`).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
             var fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
-                    file = await require(`.${this.cmdDir}${dir}`)
+                    file = await require(`../../../${this.cmdDir}${dir}`);
 
                     if (file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                     this.client.commands.set(file.name, file);
@@ -199,7 +197,7 @@ class GCommands extends GCommandsBase {
                 fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(file) => {
                     fileName = file.split(".").reverse()[1];
                     try {
-                        file = await require(`.${this.cmdDir}${dir}/${file}`)
+                        file = await require(`../../../${this.cmdDir}${dir}/${file}`);
     
                         if (file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                         this.client.commands.set(file.name, file);

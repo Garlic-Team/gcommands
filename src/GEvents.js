@@ -3,7 +3,7 @@ const Color = require("./utils/color/Color");
 const { promisify } = require('util');
 const path = require('path');
 const { Events } = require("./utils/Constants");
-const glob = promisify(require('glob'));
+const fs = require('fs');
 
 /**
  * The GEvents class
@@ -41,33 +41,38 @@ class GEvents {
      * @private
     */
     async __loadEventFiles() {
-        return glob(`./${this.eventDir}/**/*.js`).then(async(events) => {
-            for (const eventFile of events) {
-				const { name } = path.parse(eventFile);
-                var File;
-
+        fs.readdirSync(`${__dirname}/../../../${this.eventDir}`).forEach(async(dir) => {
+            var file;
+            var fileName = dir.split(".").reverse()[1]
+            var fileType = dir.split(".").reverse()[0]
+            if(fileType == "js" || fileType == "ts") {
                 try {
-                    File = await require("../../../"+this.eventDir+"/"+name)
-                    console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
-                } catch(e) {
-                    try {
-                        File = await require("../../../"+eventFile.split("./")[1])
-                        console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
-                    } catch(e) {
-                        try {
-                            File = await require("../"+this.eventDir+"/"+name);
-                            console.log(new Color("&d[GCommands EVENTS] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
-                        } catch(e) {
-                            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands EVENTS Debug] "+e).getText())
-                            console.log(new Color("&d[GCommands EVENTS] &cCan't load " + name).getText());
-                        }
-                    }
-                }
+                    file = await require(`../../../${this.eventDir}${dir}`);
 
-				this.client.events.set(File.name, File);
+                    this.client.events.set(file.name, file);
+                    console.log(new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
+                } catch(e) {
+                    this.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
+                    console.log(new Color("&d[GEvents] &cCan't load " + fileName).getText());
+                }
+            } else {
+                fs.readdirSync(`${this.eventDir}${dir}`).forEach(async(file) => {
+                    fileName = file.split(".").reverse()[1];
+                    try {
+                        file = await require(`../../../${this.eventDir}${dir}/${file}`);
+    
+                        this.client.events.set(file.name, file);
+                        console.log(new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
+                    } catch(e) {
+                        console.log(e)
+                        this.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
+                        console.log(new Color("&d[GEvents] &cCan't load " + fileName).getText());
+                    }
+                })
             }
-            this.__loadEvents()
         })
+
+        this.__loadEvents()
     }
 
     /**
