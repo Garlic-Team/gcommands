@@ -413,7 +413,7 @@ class GCommandsEventLoader {
                         
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
-                                client.api.interactions(interaction.id, interaction.token).callback.post({
+                                this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
                                         type: 4,
                                         data: {
@@ -691,7 +691,7 @@ class GCommandsEventLoader {
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
-                                type: 5,
+                                type: 4,
                                 data: {
                                     content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",interaction.data.name)
                                 }
