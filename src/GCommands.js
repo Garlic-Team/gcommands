@@ -178,7 +178,7 @@ class GCommands extends GCommandsBase {
      * @private
      */
     async __loadCommands() {
-        fs.readdirSync(`${__dirname}/../${this.cmdDir}`).forEach(async(dir) => {
+        fs.readdirSync(`${__dirname}/../../../${this.cmdDir}`).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
             var fileType = dir.split(".").reverse()[0]
