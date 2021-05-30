@@ -41,7 +41,7 @@ module.exports = {
         }
     },
 
-    checkDjsVersion: async function(needVer) {
+    checkDjsVersion: function(needVer) {
         var ver = parseInt(version.split("")[0] + version.split("")[1]);
         if(ver == parseInt(needVer)) {
             return true;

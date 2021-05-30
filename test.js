@@ -3,8 +3,6 @@ const { GCommands } = require("./src/index");
 const MessageButton = require("./src/utils/buttons/MessageButton")
 const client = new Discord.Client();
 
-require("./src/utils/updater").checkDjsVersion()
-
 const axios = require("axios")
 
 client.on("ready", () => {
