@@ -124,7 +124,7 @@ class GCommands extends GCommandsBase {
 
 
         process.setMaxListeners(50);
-        process.on('uncaughtException', (error) => { console.log(new Color("&d[GCommands Errors] &eHandled: &a" + error).getText()) });
+        process.on('uncaughtException', (error) => { console.log(new Color("&d[GCommands Errors] &eHandled: &a" + error + ` ${error.response ? error.response.data.message : ""} ${error.response ? error.response.data.code : ""}`).getText());});
         this.__loadCommands();
         this.__dbLoad();
 
@@ -203,7 +203,6 @@ class GCommands extends GCommandsBase {
                         this.client.commands.set(file.name, file);
                         console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                     } catch(e) {
-                        console.log(e)
                         this.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
                         console.log(new Color("&d[GCommands] &cCan't load " + fileName).getText());
                     }

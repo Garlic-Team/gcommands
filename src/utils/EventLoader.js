@@ -417,16 +417,19 @@ class GCommandsEventLoader {
                             if(typeof options == "object" && options.content) {
                                 if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
                                 else  msg = await message.buttons(options.content, options)
-                                return msg;
                             } else if(typeof options == "object" && !options.content) {
                                 if(options.inlineReply) msg = await message.inlineReply(options)
                                 else msg = await message.channel.send(options)
-                                return msg;
                             } else {
                                 if(options.inlineReply) msg = await message.inlineReply(options);
                                 else msg = await message.channel.send(options)
-                                return msg;
                             }
+
+                            msg = msg.toJSON()
+                            msg.client = this.client;
+                            msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
+                            msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+                            return msg;
                         },
                         edit: async(options = undefined) => {
                             if(typeof options == "object" && options.content) {

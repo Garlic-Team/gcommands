@@ -124,7 +124,7 @@ module.exports = {
 			return;
 		}
 
-		respond({
+		var msg = await respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
 			thinking: false,
@@ -135,17 +135,16 @@ module.exports = {
 
 		}, 1000)*/
 
-		let msg = await edit({
+		/*let msg = await edit({
 			content: new MessageEmbed().setTitle("hello"),
 			components: button
-		})
+		})*/
 
-		const filter = (button) => button.clicker.user.id === member.id;
-		const collector = msg.createButtonCollector(filter, { max: 1, time: 60000, errors: ['time'] });
-		
-		collector.on('collect', async(b) => {
-		});
-		collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+		const filter = (respond) => respond.clicker.user.id === member.user.id;
+		const collector = await msg.createButtonCollector(filter, { max: 1, time: 10000, errors: ['time'] });
+		collector.on("collect", async(b) => {
+			console.log(b)
+		})
 
 		/*
 						CAN USE
