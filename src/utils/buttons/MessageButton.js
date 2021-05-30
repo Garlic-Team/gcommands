@@ -7,7 +7,12 @@ const styles = {
     'grey': 2,
     'green': 3,
     'red': 4,
-    'url': 5
+    'url': 5,
+    'primary': 1,
+    'secondary': 2,
+    'success': 3,
+    'danger': 4,
+    'link': 5
 };
 
 /**
@@ -44,7 +49,7 @@ class MessageButton {
      * @param {String} style 
     */
     setStyle(style) {
-        style = this.resolveStyle(resolveString(style));
+        style = this.resolveStyle(resolveString(style.toLocaleLowerCase()));
         this.style = style;
         return this;
     }
