@@ -156,11 +156,11 @@ class ButtonEvent {
             if (typeof result === 'object') {
                 if(typeof result == "object" && !result.content) {
                     const embed = new MessageEmbed(result)
-                    data = await this.createAPIMessage(this, embed)
+                    data = await this.createAPIMessage(this.channel, embed)
                 }
                 else if(typeof result.content == "object" ) {
                     const embed = new MessageEmbed(result.content)
-                    data = await this.createAPIMessage(this, embed)
+                    data = await this.createAPIMessage(this.channel, embed)
                 } else data = { content: result.content }
             }
 
@@ -245,8 +245,8 @@ class ButtonEvent {
         }
     }
 
-    async createAPIMessage(interaction, content) {
-        const apiMessage = await APIMessage.create(this.client.channels.resolve(interaction.channel_id), content)
+    async createAPIMessage(channel, content) {
+        const apiMessage = await APIMessage.create(this.channel, content)
         .resolveData()
         .resolveFiles();
         
