@@ -87,7 +87,6 @@ class ButtonEvent {
         if (typeof result == "object") {
             var finalData = [];
             result.embeds = [];
-            result.components = [];
             if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
             if(!Array.isArray(result.components)) result.components = [result.components];
@@ -119,7 +118,7 @@ class ButtonEvent {
 
             return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
                 content: result.content,
-                components: result.components,
+                components: result.components || [],
                 embeds: result.embeds || []
             }})
         } else {
