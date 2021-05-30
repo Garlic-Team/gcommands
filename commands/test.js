@@ -138,22 +138,16 @@ module.exports = {
 			components: [testing, testing2]
 		})
 
-		setTimeout(async() => {
+		/*setTimeout(async() => {
 			edit({
 				content: "hi",
 				components: testing
 			})
-		}, 1000)
+		}, 1000)*/
 
 		/*let msg = await edit({
 			content: new MessageEmbed().setTitle("hello"),
 			components: button
-		})*/
-
-		/*const filter = (respond) => respond.clicker.user.id === member.user.id;
-		const collector = await msg.createButtonCollector(filter, { max: 1, time: 10000, errors: ['time'] });
-		collector.on("collect", async(b) => {
-			console.log(b)
 		})*/
 
 		/*

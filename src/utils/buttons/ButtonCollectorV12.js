@@ -37,8 +37,9 @@ class ButtonCollectorV12 extends Collector {
   }
 
   collect(button) {
+    if(this.message.unstable) return ButtonCollectorV12.key(button)
     if (button.message.id !== this.message.id) return null;
-    return ButtonCollector.key(button);
+    return ButtonCollectorV12.key(button);
   }
 
   dispose() {
