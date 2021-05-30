@@ -232,7 +232,7 @@ class GCommandsEventLoader {
                                 return msg;
                             }
                         }
-                    }, args)
+                    }, args, args)
                 } catch(e) {
                     try {
                         commandos.run(this.client, undefined, message, args)
@@ -443,7 +443,7 @@ class GCommandsEventLoader {
                                 return msg;
                             }
                         }
-                    }, args)
+                    }, args, args)
                 } catch(e) {
                     try {
                         commandos.run(this.client, undefined, message, args)
