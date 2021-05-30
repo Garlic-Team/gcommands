@@ -585,7 +585,7 @@ class GCommandsEventLoader {
                                     }, 
                                 })).toJSON();
 
-                                let apiMessage = undefined;
+                                let apiMessageMsg = undefined;
                                 try {
                                     apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
                                 } catch(e) {
