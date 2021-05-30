@@ -19,7 +19,7 @@ yarn install gcommands
 npm install github:Garlic-Team/GCommands#dev #dev build
 ```
 
-If you updating from 2.x to 3.x check https://gcommands.js.org/guide/additional/fromv2tov3.html
+If you're updating from 3.x to 4.x, check https://gcommands.js.org/guide/additional/fromv3tov4.html
 
 ### 📜 | Setup
 ```js
@@ -47,8 +47,8 @@ client.login("token")
 ```
 
 ### ✍ | Examples
-You can find everything in the guide https://gcommands.js.org
-When you have a problem or question just connect to our [discord server](https://discord.gg/AjKJSBbGm2).
+You can find everything in the [guide](https://gcommands.js.org).<br>
+Join our [discord server](https://discord.gg/AjKJSBbGm2), if you need help or have any questions.
 
 ### 👥 | Contact
 <a href="https://discord.gg/AjKJSBbGm2"><img src="https://discord.com/api/guilds/833628077556367411/widget.png?style=banner1"></a>

@@ -87,17 +87,11 @@ class ButtonEvent {
         if (typeof result == "object") {
             var finalData = [];
             result.embeds = [];
+            result.components = [];
             if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
-            if(result.components) {
-                if(!Array.isArray(result.components)) result.components = [[result.components]]
-                result.components.forEach(option => {
-                    finalData.push({
-                        type: 1,
-                        components: option
-                    })
-                })
-            } else finalData = []
+            if(!Array.isArray(result.components)) result.components = [result.components];
+            result.components = result.components;
 
             if(typeof result.content == "object") {
                 result.embeds = [result.content]
@@ -110,7 +104,7 @@ class ButtonEvent {
                         type: 7,
                         data: {
                             content: result.content,
-                            components: finalData,
+                            components: result.components,
                             embeds: result.embeds
                         },
                     },
@@ -125,7 +119,7 @@ class ButtonEvent {
 
             return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
                 content: result.content,
-                components: finalData,
+                components: result.components,
                 embeds: result.embeds || []
             }})
         } else {
@@ -167,18 +161,8 @@ class ButtonEvent {
             if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
             if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
             if(typeof result == "object" && result.components) {
-                var finalData = [];
-                if(!Array.isArray(result.components)) result.components = [[result.components]];
-                result.components.forEach(option => {
-                    option.msgId = msgId;
-                    option.client = this.client;
-                    finalData.push({
-                        type: 1,
-                        components: option
-                    });
-                });
-
-                data.components = finalData;
+                if(!Array.isArray(result.components)) result.components = [result.components];
+                result.components = result.components;
             }
 
             let apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
@@ -214,15 +198,8 @@ class ButtonEvent {
                 result.embeds = [];
                 if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
-                if(result.components) {
-                    if(!Array.isArray(result.components)) result.components = [[result.components]]
-                    result.components.forEach(option => {
-                        finalData.push({
-                            type: 1,
-                            components: option
-                        })
-                    })
-                } else finalData = []
+                if(!Array.isArray(result.components)) result.components = [result.components];
+                result.components = result.components;
 
                 if(typeof result.content == "object") {
                     result.embeds = [result.content]
@@ -231,7 +208,7 @@ class ButtonEvent {
 
                 let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
                     content: result.content,
-                    components: finalData,
+                    components: result.components,
                     embeds: result.embeds
                 }}))
                 

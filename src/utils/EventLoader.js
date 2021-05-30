@@ -776,16 +776,9 @@ class GCommandsEventLoader {
                                 if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
                                 if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
                                 if(typeof result == "object" && result.components) {
-                                    var finalData = [];
-                                    if(!Array.isArray(result.components)) result.components = [[result.components]];
-                                    result.components.forEach(option => {
-                                        finalData.push({
-                                            type: 1,
-                                            components: option
-                                        });
-                                    });
+                                    if(!Array.isArray(result.components)) result.components = [result.components];
 
-                                    data.components = finalData;
+                                    data.components = result.components;
                                 }
 
                                 let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -807,17 +800,14 @@ class GCommandsEventLoader {
                                 if (typeof result == "object") {
                                     var finalData = [];
                                     result.embeds = [];
+                                    result.components = [];
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
                                     if(result.components) {
-                                        if(!Array.isArray(result.components)) result.components = [[result.components]]
-                                        result.components.forEach(option => {
-                                            finalData.push({
-                                                type: 1,
-                                                components: option
-                                            })
-                                        })
-                                    } else finalData = []
+                                        if(!Array.isArray(result.components)) result.components = [result.components];
+
+                                        result.components = result.components;
+                                    }
 
                                     if(typeof result.content == "object") {
                                         result.embeds = [result.content]
@@ -826,7 +816,7 @@ class GCommandsEventLoader {
 
                                     let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
                                         content: result.content,
-                                        components: finalData,
+                                        components: result.components,
                                         embeds: result.embeds
                                     }}))
                                     apiMessage.client = this.client;

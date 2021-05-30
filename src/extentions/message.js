@@ -32,20 +32,14 @@ module.exports = Structures.extend("Message", Message => {
                 options.allowedMentions = { parse: [] };
             }
 
-            var finalData = [];
-            if(!Array.isArray(options.components)) options = [[options.components]]
-            options.components.forEach(option => {
-                finalData.push({
-                    type: 1,
-                    components: option
-                })
-            })
+            if(!Array.isArray(options.components)) options.components = [options.components];
+            options.components = options.components;
 
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
-                    components: finalData,
+                    components: options.components,
                     options,
                     embed: embed || null
                 }
@@ -74,20 +68,14 @@ module.exports = Structures.extend("Message", Message => {
                 options.allowedMentions = { parse: [] };
             }
 
-            var finalData = [];
-            if(!Array.isArray(options.components)) options.components = [[options.components]]
-            options.components.forEach(option => {
-                finalData.push({
-                    type: 1,
-                    components: option
-                })
-            })
+            if(!Array.isArray(options.components)) options.components = [options.components];
+            options.components = options.components;
 
             return this.client.api.channels[this.channel.id].messages[msgID].patch({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
-                    components: finalData,
+                    components: options.components,
                     options,
                     embed: embed || null
                 }
@@ -147,20 +135,14 @@ module.exports = Structures.extend("Message", Message => {
                 options.allowedMentions = { parse: [] };
             }
 
-            var finalData = [];
-            if(!Array.isArray(options.components)) options.components = [[options.components]]
-            options.components.forEach(option => {
-                finalData.push({
-                    type: 1,
-                    components: option
-                })
-            })
+            if(!Array.isArray(options.components)) options.components = [options.components];
+            options.components = options.components;
 
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
                     content: content,
-                    components: finalData,
+                    components: options.components,
                     message_reference: {
                         message_id: this.channel.lastMessageID
                     },

@@ -13,6 +13,7 @@ module.exports = {
     GCommandsGuild: require("./extentions/guild"),
     GCommandsMessage: require("./extentions/message"),
     MessageButton: require("./utils/buttons/MessageButton"),
+    MessageActionRow: require("./utils/buttons/MessageActionRow"),
     ButtonCollector: require("./utils/buttons/ButtonCollector"),
 
     // Other

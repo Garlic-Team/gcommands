@@ -8,7 +8,7 @@ const axios = require("axios")
 client.on("ready", () => {
     const GCommandsClient = new GCommands(client, {
         cmdDir: "commands/", //the folder your index file is located at + commands directory
-        //eventDir: "events/", //the folder your index file is located at + events directory
+        eventDir: "events/", //the folder your index file is located at + events directory
         language: "czech", //english, spanish, portuguese, russian, german, czech, slovak,
         unkownCommandMessage: false, //send unkown command message true/false
         slash: {

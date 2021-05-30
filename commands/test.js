@@ -94,12 +94,19 @@ module.exports = {
 		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().setEmoji("💔").toJSON()
         const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
 
+		const testing = new MessageActionRow()
+			.addComponent(button)
+			.addComponent(buttont)
+
+		const testing2 = new MessageActionRow()
+			.addComponent(buttonURL)
+
 		if(message) {
 			console.log(await message.guild.getCommandPrefix())
 
 			let msg = await respond({
 				content: new MessageEmbed().setTitle("a"),
-				components: [[button], [buttonURL]]
+				components: [testing, testing2]
 			})
 
 
@@ -128,7 +135,7 @@ module.exports = {
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
 			thinking: false,
-			components: [[button, buttont], [buttonURL]]
+			components: [testing, testing2]
 		})
 
 		/*setTimeout(async() => {
@@ -140,11 +147,11 @@ module.exports = {
 			components: button
 		})*/
 
-		const filter = (respond) => respond.clicker.user.id === member.user.id;
+		/*const filter = (respond) => respond.clicker.user.id === member.user.id;
 		const collector = await msg.createButtonCollector(filter, { max: 1, time: 10000, errors: ['time'] });
 		collector.on("collect", async(b) => {
 			console.log(b)
-		})
+		})*/
 
 		/*
 						CAN USE
