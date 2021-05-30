@@ -131,16 +131,19 @@ module.exports = {
 			return;
 		}
 
-		var msg = await respond({
+		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
 			thinking: false,
 			components: [testing, testing2]
 		})
 
-		/*setTimeout(async() => {
-
-		}, 1000)*/
+		setTimeout(async() => {
+			edit({
+				content: "hi",
+				components: testing
+			})
+		}, 1000)
 
 		/*let msg = await edit({
 			content: new MessageEmbed().setTitle("hello"),

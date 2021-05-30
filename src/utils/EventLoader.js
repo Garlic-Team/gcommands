@@ -36,426 +36,223 @@ class GCommandsEventLoader {
     async messageEvent() {
         if((this.client.slash == false) || (this.client.slash == "both")) {
             this.client.on('message', async(message) => {
-                if (message.author.bot) return;
-                if (!message.guild) return;
-                var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
-                var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
-
-                if(this.client.database.working) {
-                    var guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
-                    prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
-                }
-
-                if (!message.content.startsWith(prefix)) return;
-            
-                const args = message.content.slice(prefix.length).trim().split(/ +/g);
-                const cmd = args.shift().toLowerCase();
-                
-                if (cmd.length === 0) return;
-        
-                try {
-                    var commandos = this.client.commands.get(cmd);
-                    if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
-
-                    var member = message.member, guild = message.guild, channel = message.channel
-                    var inhibit = await this.inhibit(commandos, {
-                        message, member, guild, channel,
-                        respond: async(options = undefined) => {
-                            if(typeof options == "object" && options.content) {
-                                msg = await message.buttonsWithReply(options.content, options)
-                            } else if(typeof options == "object" && !options.content) {
-                                msg = await message.inlineReply(options)
-                            } else msg = await message.inlineReply(options)
-                        },
-                        edit: async(options = undefined) => {
-                            if(typeof options == "object" && options.content) {
-                                message.buttonsEdit(msg.id, options.content, options)
-                            } else if(typeof options == "object" && !options.content) {
-                                msg.edit(options)
-                            } else msg.edit(options)
-                        }
-                    })
-                    if(inhibit == false) return;
-
-                    if (!this.client.cooldowns.has(commandos.name)) {
-                        this.client.cooldowns.set(commandos.name, new Collection());
-                    }
-                    
-                    const now = Date.now();
-                    const timestamps = this.client.cooldowns.get(commandos.name);
-                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
-                    
-                    if (timestamps.has(message.author.id)) {
-                        if (timestamps.has(message.author.id)) {
-                            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-                        
-                            if (now < expirationTime) {
-                                const timeLeft = (expirationTime - now) / 1000;
-
-                                return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name))
-                            }
-                        }
-                    }
-
-                    timestamps.set(message.author.id, now);
-                    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-
-                    if(commandos.guildOnly) {
-                        if(message.guild.id != commandos.guildOnly) {
-                            return;
-                        }
-                    } 
-
-                    if(commandos.userOnly) {
-                        if(typeof commandos.userOnly == "object") {
-                            var users = commandos.userOnly.some(v => message.author.id == v)
-                            if(!users) {
-                                return
-                            }
-                        } else {
-                            if(message.author.id != commandos.userOnly) {
-                                return;
-                            }
-                        }
-                    }
-
-                    if(commandos.channelOnly) {
-                        if(typeof commandos.channelOnly == "object") {
-                            var users = commandos.channelOnly.some(v => message.channel.id == v)
-                            if(!users) {
-                                return
-                            }
-                        } else {
-                            if(message.channel.id != commandos.channelOnly) {
-                                return;
-                            }
-                        }
-                    }
-
-                    if(commandos.userRequiredPermissions) {
-                        if(typeof commandos.userRequiredPermissions == "object") {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                    return;
-                                }
-                            } else {
-                                if(!message.member.permission.has(commandos.userRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                    return;
-                                }
-                            } 
-                        } else {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions))
-                                    return;
-                                }
-                            } else {
-                                if(!message.member.permission.has(commandos.userRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions))
-                                    return;
-                                }
-                            } 
-                        }
-                    }
-
-                    if(commandos.clientRequiredPermissions) {
-                        if(typeof commandos.clientRequiredPermissions == "object") {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!message.guild.me.hasPermission(commandos.clientRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                    return;
-                                }
-                            } else {
-                                if(!message.guild.me.has(commandos.clientRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                    return;
-                                }
-                            } 
-                        } else {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!message.guild.me.hasPermission(commandos.clientRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions))
-                                    return;
-                                }
-                            } else {
-                                if(!message.guild.me.has(commandos.clientRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions))
-                                    return;
-                                }
-                            } 
-                        }
-                    }
-
-                    if(commandos.userRequiredRole) {
-                        if(!message.member._roles.includes(commandos.userRequiredRole)) {
-                            message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.userRequiredRole))
-                            return;
-                        }
-                    }
-
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
-
-                    const client = this.client
-                    var msg = "";
-                    commandos.run({
-                        client, message, member, guild, channel,
-                        respond: async(options = undefined) => {
-                            if(options.inlineReply == undefined) options.inlineReply = true;
-                            if(typeof options == "object" && options.content) {
-                                if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
-                                else  msg = await message.buttons(options.content, options)
-                            } else if(typeof options == "object" && !options.content) {
-                                if(options.inlineReply) msg = await message.inlineReply(options)
-                                else msg = await message.channel.send(options)
-                            } else {
-                                if(options.inlineReply) msg = await message.inlineReply(options);
-                                else msg = await message.channel.send(options)
-                            }
-
-                            msg = msg.toJSON()
-                            msg.client = this.client;
-                            msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
-                            msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
-                            return msg;
-                        },
-                        edit: async(options = undefined) => {
-                            if(typeof options == "object" && options.content) {
-                                msg = await message.buttonsEdit(msg.id, options.content, options)
-                                return msg;
-                            } else if(typeof options == "object" && !options.content) {
-                                msg = await msg.edit(options)
-                                return msg;
-                            } else {
-                                msg = msg.edit(options)
-                                return msg;
-                            }
-                        }
-                    }, args, args)
-                } catch(e) {
-                    try {
-                        commandos.run(this.client, undefined, message, args)
-                    } catch(e) {
-                        if(!this.GCommandsClient.unkownCommandMessage) return;
-                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
-                        if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                            message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
-                        }
-                    }
-                }
+                messageEventUse(undefined, message)
             })
 
             this.client.on('messageUpdate', async(oldMessage, message) => {
-                if (message.author.bot) return;
-                if (!message.guild) return;
-                var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
-                var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
-
-                if(this.client.database.working) {
-                    var guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
-                    prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
-                }
-
-                if (!message.content.startsWith(prefix)) return;
-            
-                const args = message.content.slice(prefix.length).trim().split(/ +/g);
-                const cmd = args.shift().toLowerCase();
-                
-                if (cmd.length === 0) return;
-        
-                try {
-                    var commandos = this.client.commands.get(cmd);
-                    if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
-
-                    var member = message.member, guild = message.guild, channel = message.channel
-                    var inhibit = await this.inhibit(commandos, {
-                        message, member, guild, channel,
-                        respond: async(options = undefined) => {
-                            if(typeof options == "object" && options.content) {
-                                msg = await message.buttonsWithReply(options.content, options)
-                            } else if(typeof options == "object" && !options.content) {
-                                msg = await message.inlineReply(options)
-                            } else msg = await message.inlineReply(options)
-                        },
-                        edit: async(options = undefined) => {
-                            if(typeof options == "object" && options.content) {
-                                message.buttonsEdit(msg.id, options.content, options)
-                            } else if(typeof options == "object" && !options.content) {
-                                msg.edit(options)
-                            } else msg.edit(options)
-                        }
-                    })
-                    if(inhibit == false) return;
-
-                    if (!this.client.cooldowns.has(commandos.name)) {
-                        this.client.cooldowns.set(commandos.name, new Collection());
-                    }
-                    
-                    const now = Date.now();
-                    const timestamps = this.client.cooldowns.get(commandos.name);
-                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
-                    
-                    if (timestamps.has(message.author.id)) {
-                        if (timestamps.has(message.author.id)) {
-                            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-                        
-                            if (now < expirationTime) {
-                                const timeLeft = (expirationTime - now) / 1000;
-
-                                return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name))
-                            }
-                        }
-                    }
-
-                    timestamps.set(message.author.id, now);
-                    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-
-                    if(commandos.guildOnly) {
-                        if(message.guild.id != commandos.guildOnly) {
-                            return;
-                        }
-                    } 
-
-                    if(commandos.userOnly) {
-                        if(typeof commandos.userOnly == "object") {
-                            var users = commandos.userOnly.some(v => message.author.id == v)
-                            if(!users) {
-                                return
-                            }
-                        } else {
-                            if(message.author.id != commandos.userOnly) {
-                                return;
-                            }
-                        }
-                    }
-
-                    if(commandos.channelOnly) {
-                        if(typeof commandos.channelOnly == "object") {
-                            var users = commandos.channelOnly.some(v => message.channel.id == v)
-                            if(!users) {
-                                return
-                            }
-                        } else {
-                            if(message.channel.id != commandos.channelOnly) {
-                                return;
-                            }
-                        }
-                    }
-
-                    if(commandos.userRequiredPermissions) {
-                        if(typeof commandos.userRequiredPermissions == "object") {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                    return;
-                                }
-                            } else {
-                                if(!message.member.permission.has(commandos.userRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                    return;
-                                }
-                            } 
-                        } else {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions))
-                                    return;
-                                }
-                            } else {
-                                if(!message.member.permission.has(commandos.userRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions))
-                                    return;
-                                }
-                            } 
-                        }
-                    }
-
-                    if(commandos.clientRequiredPermissions) {
-                        if(typeof commandos.clientRequiredPermissions == "object") {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!message.guild.me.hasPermission(commandos.clientRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                    return;
-                                }
-                            } else {
-                                if(!message.guild.me.has(commandos.clientRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                    return;
-                                }
-                            } 
-                        } else {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!message.guild.me.hasPermission(commandos.clientRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions))
-                                    return;
-                                }
-                            } else {
-                                if(!message.guild.me.has(commandos.clientRequiredPermissions)) {
-                                    message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions))
-                                    return;
-                                }
-                            } 
-                        }
-                    }
-
-                    if(commandos.userRequiredRole) {
-                        if(!message.member._roles.includes(commandos.userRequiredRole)) {
-                            message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.userRequiredRole))
-                            return;
-                        }
-                    }
-
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
-
-                    const client = this.client
-                    var msg = "";
-                    commandos.run({
-                        client, message, member, guild, channel,
-                        respond: async(options = undefined) => {
-                            if(options.inlineReply == undefined) options.inlineReply = true;
-                            if(typeof options == "object" && options.content) {
-                                if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
-                                else  msg = await message.buttons(options.content, options)
-                            } else if(typeof options == "object" && !options.content) {
-                                if(options.inlineReply) msg = await message.inlineReply(options)
-                                else msg = await message.channel.send(options)
-                            } else {
-                                if(options.inlineReply) msg = await message.inlineReply(options);
-                                else msg = await message.channel.send(options)
-                            }
-
-                            msg = msg.toJSON()
-                            msg.client = this.client;
-                            msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
-                            msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
-                            return msg;
-                        },
-                        edit: async(options = undefined) => {
-                            if(typeof options == "object" && options.content) {
-                                msg = await message.buttonsEdit(msg.id, options.content, options)
-                                return msg;
-                            } else if(typeof options == "object" && !options.content) {
-                                msg = await msg.edit(options)
-                                return msg;
-                            } else {
-                                msg = msg.edit(options)
-                                return msg;
-                            }
-                        }
-                    }, args, args)
-                } catch(e) {
-                    try {
-                        commandos.run(this.client, undefined, message, args)
-                    } catch(e) {
-                        if(!this.GCommandsClient.unkownCommandMessage) return;
-                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
-                        if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                            message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
-                        }
-                    }
-                }
+                messageEventUse(oldMessage, message)
             })
+        }
+
+        var messageEventUse = async(oldMesage, message) => {
+            if (message.author.bot) return;
+            if (!message.guild) return;
+            var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
+            var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
+
+            if(this.client.database.working) {
+                var guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
+                prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
+            }
+
+            if (!message.content.startsWith(prefix)) return;
+        
+            const args = message.content.slice(prefix.length).trim().split(/ +/g);
+            const cmd = args.shift().toLowerCase();
+            
+            if (cmd.length === 0) return;
+    
+            try {
+                var commandos = this.client.commands.get(cmd);
+                if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
+
+                var member = message.member, guild = message.guild, channel = message.channel
+                var inhibit = await this.inhibit(commandos, {
+                    message, member, guild, channel,
+                    respond: async(options = undefined) => {
+                        if(typeof options == "object" && options.content) {
+                            msg = await message.buttonsWithReply(options.content, options)
+                        } else if(typeof options == "object" && !options.content) {
+                            msg = await message.inlineReply(options)
+                        } else msg = await message.inlineReply(options)
+                    },
+                    edit: async(options = undefined) => {
+                        if(typeof options == "object" && options.content) {
+                            message.buttonsEdit(msg.id, options.content, options)
+                        } else if(typeof options == "object" && !options.content) {
+                            msg.edit(options)
+                        } else msg.edit(options)
+                    }
+                })
+                if(inhibit == false) return;
+
+                if (!this.client.cooldowns.has(commandos.name)) {
+                    this.client.cooldowns.set(commandos.name, new Collection());
+                }
+                
+                const now = Date.now();
+                const timestamps = this.client.cooldowns.get(commandos.name);
+                const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
+                
+                if (timestamps.has(message.author.id)) {
+                    if (timestamps.has(message.author.id)) {
+                        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+                    
+                        if (now < expirationTime) {
+                            const timeLeft = (expirationTime - now) / 1000;
+
+                            return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name))
+                        }
+                    }
+                }
+
+                timestamps.set(message.author.id, now);
+                setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+
+                if(commandos.guildOnly) {
+                    if(message.guild.id != commandos.guildOnly) {
+                        return;
+                    }
+                } 
+
+                if(commandos.userOnly) {
+                    if(typeof commandos.userOnly == "object") {
+                        var users = commandos.userOnly.some(v => message.author.id == v)
+                        if(!users) {
+                            return
+                        }
+                    } else {
+                        if(message.author.id != commandos.userOnly) {
+                            return;
+                        }
+                    }
+                }
+
+                if(commandos.channelOnly) {
+                    if(typeof commandos.channelOnly == "object") {
+                        var users = commandos.channelOnly.some(v => message.channel.id == v)
+                        if(!users) {
+                            return
+                        }
+                    } else {
+                        if(message.channel.id != commandos.channelOnly) {
+                            return;
+                        }
+                    }
+                }
+
+                if(commandos.userRequiredPermissions) {
+                    if(typeof commandos.userRequiredPermissions == "object") {
+                        if(this.client.discordjsversion.includes("12.")) {
+                            if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
+                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                                return;
+                            }
+                        } else {
+                            if(!message.member.permission.has(commandos.userRequiredPermissions)) {
+                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                                return;
+                            }
+                        } 
+                    } else {
+                        if(this.client.discordjsversion.includes("12.")) {
+                            if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
+                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions))
+                                return;
+                            }
+                        } else {
+                            if(!message.member.permission.has(commandos.userRequiredPermissions)) {
+                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions))
+                                return;
+                            }
+                        } 
+                    }
+                }
+
+                if(commandos.clientRequiredPermissions) {
+                    if(typeof commandos.clientRequiredPermissions == "object") {
+                        if(this.client.discordjsversion.includes("12.")) {
+                            if(!message.guild.me.hasPermission(commandos.clientRequiredPermissions)) {
+                                message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                                return;
+                            }
+                        } else {
+                            if(!message.guild.me.has(commandos.clientRequiredPermissions)) {
+                                message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                                return;
+                            }
+                        } 
+                    } else {
+                        if(this.client.discordjsversion.includes("12.")) {
+                            if(!message.guild.me.hasPermission(commandos.clientRequiredPermissions)) {
+                                message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions))
+                                return;
+                            }
+                        } else {
+                            if(!message.guild.me.has(commandos.clientRequiredPermissions)) {
+                                message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions))
+                                return;
+                            }
+                        } 
+                    }
+                }
+
+                if(commandos.userRequiredRole) {
+                    if(!message.member._roles.includes(commandos.userRequiredRole)) {
+                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}",commandos.userRequiredRole))
+                        return;
+                    }
+                }
+
+                this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
+
+                const client = this.client
+                var msg = "";
+                commandos.run({
+                    client, message, member, guild, channel,
+                    respond: async(options = undefined) => {
+                        if(options.inlineReply == undefined) options.inlineReply = true;
+                        if(typeof options == "object" && options.content) {
+                            if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
+                            else  msg = await message.buttons(options.content, options)
+                        } else if(typeof options == "object" && !options.content) {
+                            if(options.inlineReply) msg = await message.inlineReply(options)
+                            else msg = await message.channel.send(options)
+                        } else {
+                            if(options.inlineReply) msg = await message.inlineReply(options);
+                            else msg = await message.channel.send(options)
+                        }
+
+                        msg = msg.toJSON()
+                        msg.client = this.client;
+                        msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
+                        msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+                        return msg;
+                    },
+                    edit: async(options = undefined) => {
+                        if(typeof options == "object" && options.content) {
+                            msg = await message.buttonsEdit(msg.id, options.content, options)
+                            return msg;
+                        } else if(typeof options == "object" && !options.content) {
+                            msg = await msg.edit(options)
+                            return msg;
+                        } else {
+                            msg = msg.edit(options)
+                            return msg;
+                        }
+                    }
+                }, args, args)
+            } catch(e) {
+                try {
+                    commandos.run(this.client, undefined, message, args)
+                } catch(e) {
+                    if(!this.GCommandsClient.unkownCommandMessage) return;
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
+                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
+                    }
+                }
+            }
         }
     }
 
@@ -798,16 +595,14 @@ class GCommandsEventLoader {
                             },
                             edit: async(result) => {
                                 if (typeof result == "object") {
-                                    var finalData = [];
                                     result.embeds = [];
-                                    result.components = [];
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
                                     if(result.components) {
                                         if(!Array.isArray(result.components)) result.components = [result.components];
 
                                         result.components = result.components;
-                                    }
+                                    } else result.components = [];
 
                                     if(typeof result.content == "object") {
                                         result.embeds = [result.content]
