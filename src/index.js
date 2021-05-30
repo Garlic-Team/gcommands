@@ -14,7 +14,9 @@ module.exports = {
     GCommandsMessage: require("./extentions/message"),
     MessageButton: require("./utils/buttons/MessageButton"),
     MessageActionRow: require("./utils/buttons/MessageActionRow"),
-    ButtonCollector: require("./utils/buttons/ButtonCollector"),
+    
+    ButtonCollectorV12: require("./utils/buttons/ButtonCollectorV12"),
+    ButtonCollectorV13: require("./utils/buttons/ButtonCollectorV13"),
 
     // Other
     Color: require("./utils/color/Color"),

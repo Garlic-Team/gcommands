@@ -1,5 +1,6 @@
 const axios = require("axios")
 const { writeFileSync, readFileSync } = require("fs")
+const { version } = require('discord.js');
 
 module.exports = {
     /**
@@ -37,6 +38,15 @@ module.exports = {
                 }
                 readline.close();
             })
+        }
+    },
+
+    checkDjsVersion: async function(needVer) {
+        var ver = parseInt(version.split("")[0] + version.split("")[1]);
+        if(ver == parseInt(needVer)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

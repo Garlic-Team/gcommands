@@ -1,5 +1,7 @@
 const { Collector } = require('discord.js');
-const ButtonCollector = require('./utils/buttons/ButtonCollector');
+const ButtonCollectorV12 = require('./utils/buttons/ButtonCollectorV12');
+const ButtonCollectorV13 = require('./utils/buttons/ButtonCollectorV13');
+const { checkDjsVersion } = require('./utils/updater');
 
 /**
  * The GCommansDispatcher class
@@ -101,7 +103,8 @@ class GCommandsDispatcher {
      * @returns {Collector}
     */
     createButtonCollector(msg, filter, options = {}) {
-        return new ButtonCollector(msg, filter, options);
+        if(checkDjsVersion("13")) return new ButtonCollectorV13(msg, filter, options);
+        else return new ButtonCollectorV12(msg, filter, options);
     }
 
     /**
