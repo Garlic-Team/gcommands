@@ -585,7 +585,15 @@ class GCommandsEventLoader {
                                     }, 
                                 })).toJSON();
 
-                                let apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
+                                let apiMessage = undefined;
+                                try {
+                                    apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
+                                } catch(e) {
+                                    apiMessage = {
+                                        id: undefined
+                                    }
+                                }
+
                                 apiMessage = apiMessageMsg;
                                 apiMessage.client = this.client;
                                 apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(apiMessage, filter, options)}
