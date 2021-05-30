@@ -206,16 +206,19 @@ class GCommandsEventLoader {
                             if(typeof options == "object" && options.content) {
                                 if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
                                 else  msg = await message.buttons(options.content, options)
-                                return msg;
                             } else if(typeof options == "object" && !options.content) {
                                 if(options.inlineReply) msg = await message.inlineReply(options)
                                 else msg = await message.channel.send(options)
-                                return msg;
                             } else {
                                 if(options.inlineReply) msg = await message.inlineReply(options);
                                 else msg = await message.channel.send(options)
-                                return msg;
                             }
+
+                            msg = msg.toJSON()
+                            msg.client = this.client;
+                            msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
+                            msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+                            return msg;
                         },
                         edit: async(options = undefined) => {
                             if(typeof options == "object" && options.content) {
@@ -756,8 +759,6 @@ class GCommandsEventLoader {
                                     content: result
                                 }
 
-                                let msgId = Date.now();
-
                                 if (typeof result === 'object') {
                                     if(typeof result == "object" && !result.content) {
                                         const embed = new MessageEmbed(result)
@@ -775,8 +776,6 @@ class GCommandsEventLoader {
                                     var finalData = [];
                                     if(!Array.isArray(result.components)) result.components = [[result.components]];
                                     result.components.forEach(option => {
-                                        option.msgId = msgId;
-                                        option.client = this.client;
                                         finalData.push({
                                             type: 1,
                                             components: option
@@ -795,14 +794,9 @@ class GCommandsEventLoader {
 
                                 let apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
                                 apiMessage = apiMessageMsg;
-
-                                let message = {
-                                    msgId: msgId,
-                                    client: this.client,
-                                    guild: member.guild,
-                                    channel: member.guild.channels.cache.get(interaction.channel_id),
-                                    author: this.client.user,
-                                }
+                                apiMessage.client = this.client;
+                                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(apiMessage, filter, options)}
+                                apiMessage.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(apiMessage, filter, options)}
 
                                 return apiMessage
                             },
@@ -832,7 +826,10 @@ class GCommandsEventLoader {
                                         components: finalData,
                                         embeds: result.embeds
                                     }}))
-                                    
+                                    apiMessage.client = this.client;
+                                    apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(apiMessage, filter, options)}
+                                    apiMessage.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(apiMessage, filter, options)}
+
                                     return apiMessage;
                                 }
 

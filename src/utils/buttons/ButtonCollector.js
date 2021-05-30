@@ -3,10 +3,9 @@ const Collection = require('discord.js').Collection;
 const { Events } = require('discord.js').Constants;
 
 class ButtonCollector extends Collector {
-  constructor(apiMessage, filter, options = {}) {
-    super(apiMessage.client, filter, options);
-
-    this.message = apiMessage;
+  constructor(message, filter, options = {}) {
+    super(message.client, filter, options);
+    this.message = message;
 
     this.users = new Collection();
 
@@ -38,7 +37,7 @@ class ButtonCollector extends Collector {
   }
 
   collect(button) {
-    if (button.msgId !== this.message.msgId) return null;
+    if (button.message.id !== this.message.id) return null;
     return ButtonCollector.key(button);
   }
 

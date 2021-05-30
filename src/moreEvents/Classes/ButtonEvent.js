@@ -200,6 +200,8 @@ class ButtonEvent {
             }
 
             return apiMessage
+
+            this.replied = true;
         }
 
         /**

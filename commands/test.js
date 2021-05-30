@@ -90,7 +90,7 @@ module.exports = {
 	run: async({client, message, respond, edit, member, interaction}, args) => {
 	//run: async(client, slash, message, args) => {
 
-        const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji({name:"gw",id:"786947228534439946"}).toJSON()
+        const button = new MessageButton().setStyle("red").setLabel("pog").setID("redbutton").setEmoji("<a:PepeHehe:780344679647936562>").toJSON()
 		const buttont = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().setEmoji("💔").toJSON()
         const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
 
@@ -102,12 +102,20 @@ module.exports = {
 				components: [[button], [buttonURL]]
 			})
 
-			setTimeout(() => {
+
+			const filter = (button) => button.clicker.user.id === member.id;
+			const collector = msg.createButtonCollector(filter, { max: 1, time: 60000, errors: ['time'] });
+			
+			collector.on('collect', async(b) => {
+			});
+			collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+
+			/*setTimeout(() => {
 				edit({
 					content: "hello",
 					components: buttont
 				})
-			}, 1000)
+			}, 1000)*/
 			/*if(args[0]) {
 				return message.channel.send("My ping is `" + Math.round(client.ws.ping) + "ms`")
 			} else {
@@ -116,7 +124,7 @@ module.exports = {
 			return;
 		}
 
-		let msg = await respond({
+		respond({
 			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
 			allowedMentions: { parse: [], repliedUser: true },
 			thinking: false,
@@ -124,18 +132,20 @@ module.exports = {
 		})
 
 		/*setTimeout(async() => {
-			edit({
-				content: new MessageEmbed().setTitle("hello"),
-				components: buttont
-			})
+
 		}, 1000)*/
 
-		/*const filter = (button) => button.clicker.user.id === member.id;
-		const collector = client.dispatcher.createButtonCollector(filter, { max: 1, time: 60000, errors: ['time'] });
+		let msg = await edit({
+			content: new MessageEmbed().setTitle("hello"),
+			components: button
+		})
+
+		const filter = (button) => button.clicker.user.id === member.id;
+		const collector = msg.createButtonCollector(filter, { max: 1, time: 60000, errors: ['time'] });
 		
 		collector.on('collect', async(b) => {
 		});
-		collector.on('end', collected => console.log(`Collected ${collected.size} items`));*/
+		collector.on('end', collected => console.log(`Collected ${collected.size} items`));
 
 		/*
 						CAN USE

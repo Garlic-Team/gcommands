@@ -100,8 +100,8 @@ class GCommandsDispatcher {
      * @param {Object} options
      * @returns {Collector}
     */
-    createButtonCollector(filter, options = {}) {
-        return new ButtonCollector(this, filter, options);
+    createButtonCollector(msg, filter, options = {}) {
+        return new ButtonCollector(msg, filter, options);
     }
 
     /**
@@ -110,9 +110,9 @@ class GCommandsDispatcher {
      * @param {Object} options
      * @returns {Collector}
     */
-    awaitButtons(filter, options = {}) {
+    awaitButtons(msg, filter, options = {}) {
         return new Promise((resolve, reject) => {
-            const collector = this.createButtonCollector(filter, options);
+            const collector = this.createButtonCollector(msg, filter, options);
             collector.once('end', (buttons, reason) => {
                 if (options.errors && options.errors.includes(reason)) {
                     reject(buttons);

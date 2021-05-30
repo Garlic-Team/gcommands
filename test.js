@@ -35,7 +35,7 @@ client.on("ready", () => {
 client.on("clickButton", (button) => {
     //button.defer();
     const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled()
-    console.log("a")
+
     button.reply.send({
         content: new Discord.MessageEmbed().setTitle("a"),
         compoentns: buttonEdit
