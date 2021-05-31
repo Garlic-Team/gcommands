@@ -182,7 +182,7 @@ class GCommands extends GCommandsBase {
                 try {
                     file = await require(`../../../../${this.cmdDir}${dir}`);
 
-                    if (file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
+                    if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                     this.client.commands.set(file.name, file);
                     console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
