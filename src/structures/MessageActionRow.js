@@ -1,4 +1,4 @@
-const Color = require("../color/Color")
+const Color = require("../index")
 
 /**
  * The MessageActionRow class
@@ -25,7 +25,7 @@ class MessageActionRow {
      * @param {MessageButton} button  
     */
     addComponent(component) {
-        if(typeof component != "object") return console.log("&d[GCommands] &cNeed provide MessageButton!")
+        if(typeof component != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
         this.components.push(component)
         return this;
     }

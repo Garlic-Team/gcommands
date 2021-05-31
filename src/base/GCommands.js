@@ -1,18 +1,14 @@
 const { promisify } = require('util');
 const path = require('path');
-const Color = require("./utils/color/Color");
-const EventLoader = require('./utils/EventLoader');
-const cmdUtils = require('./utils/cmdUtils');
-const Updater = require('./utils/updater');
-const GCommandsDispatcher = require("./GCommandsDispatcher")
-const GCommandsBase = require("./GCommandsBase")
-const { Events } = require("./utils/Constants")
-const GEvents = require("./GEvents")
+const cmdUtils = require('../util/cmdUtils'), Color = require("../structures/Color"), GCommandsBase = require("./GCommandsBase"), GCommandsDispatcher = require("./GCommandsDispatcher"), GEvents = require("./GEvents"), GEventLoader = require("../managers/EventLoad"), Events = require("../util/Constants"), GUpdater = require("../util/updater");
+
 const { Collection, version } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
 
-/* GCommands Class */
+/**
+ * The main GCommands class
+ */
 class GCommands extends GCommandsBase {
     /**
      * The GCommands class
@@ -54,7 +50,7 @@ class GCommands extends GCommandsBase {
          * ownLanguageFile
          * @property {Object} ownLanguageFile
          */
-        if(!options.ownLanguageFile) this.languageFile = require("./utils/message.json");
+        if(!options.ownLanguageFile) this.languageFile = require("../util/message.json");
         else this.languageFile = options.ownLanguageFile;
         this.language = options.language;
 
@@ -128,10 +124,10 @@ class GCommands extends GCommandsBase {
         this.__loadCommands();
         this.__dbLoad();
 
-        new EventLoader(this.GCommandsClient)
+        new GEventLoader(this.GCommandsClient)
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 
-        Updater.__updater();
+        GUpdater.__updater();
     }
 
     /**
@@ -178,13 +174,13 @@ class GCommands extends GCommandsBase {
      * @private
      */
     async __loadCommands() {
-        fs.readdirSync(`${__dirname}/../../../${this.cmdDir}`).forEach(async(dir) => {
+        fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
             var fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
-                    file = await require(`../../../${this.cmdDir}${dir}`);
+                    file = await require(`../../../../${this.cmdDir}${dir}`);
 
                     if (file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                     this.client.commands.set(file.name, file);
@@ -197,7 +193,7 @@ class GCommands extends GCommandsBase {
                 fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(file) => {
                     fileName = file.split(".").reverse()[1];
                     try {
-                        file = await require(`../../../${this.cmdDir}${dir}/${file}`);
+                        file = await require(`../../../../${this.cmdDir}${dir}/${file}`);
     
                         if (file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                         this.client.commands.set(file.name, file);
@@ -228,7 +224,7 @@ class GCommands extends GCommandsBase {
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
-            if(cmd.slash != undefined && (cmd.slash == false || cmd.slash == "false")) return;
+            if(cmd.slash == false || cmd.slash == "false") return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
             if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());

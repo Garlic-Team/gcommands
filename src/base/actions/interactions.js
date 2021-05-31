@@ -1,4 +1,4 @@
-const ButtonEvent = require("./Classes/ButtonEvent")
+const ButtonEvent = require("../../structures/ButtonEvent")
  
 module.exports = (client) => {
     client.ws.on('INTERACTION_CREATE', data => {

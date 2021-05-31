@@ -1,7 +1,7 @@
 /* From discord-buttons edited */
 const { default: axios } = require("axios");
 const {APIMessage, Client, MessageEmbed} = require("discord.js")
-const Color = require("../../utils/color/Color")
+const Color = require("../index")
 
 /**
  * The ButtonEvent class

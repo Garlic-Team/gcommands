@@ -1,5 +1,4 @@
 const { APIMessage, Structures } = require('discord.js');
-const Color = require("../utils/color/Color")
 
 module.exports = Structures.extend("Message", Message => {
     /**

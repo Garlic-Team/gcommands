@@ -2,7 +2,7 @@ const { Collector } = require("discord.js");
 const Collection = require('discord.js').Collection;
 const { Events } = require('discord.js').Constants;
 
-class ButtonCollectorV13 extends Collector {
+class ButtonCollector extends Collector {
   constructor(message, filter, options = {}) {
     super(message.client, filter, options);
     this.message = message;
@@ -82,4 +82,4 @@ class ButtonCollectorV13 extends Collector {
   }
 }
 
-module.exports = ButtonCollectorV13;
+module.exports = ButtonCollector;

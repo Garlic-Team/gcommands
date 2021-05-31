@@ -1,7 +1,5 @@
 const { Collector } = require('discord.js');
-const ButtonCollectorV12 = require('./utils/buttons/ButtonCollectorV12');
-const ButtonCollectorV13 = require('./utils/buttons/ButtonCollectorV13');
-const { checkDjsVersion } = require('./utils/updater');
+const ButtonCollectorV12 = require('../index'), ButtonCollectorV13 = require('../index'), checkDjsVersion = require('../util/updater');
 
 /**
  * The GCommansDispatcher class

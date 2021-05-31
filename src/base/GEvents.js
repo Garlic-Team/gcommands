@@ -1,8 +1,6 @@
 const { Collection } = require("discord.js");
-const Color = require("./utils/color/Color");
-const { promisify } = require('util');
+const Color = require("../index"), Events = require("../util/Constants");
 const path = require('path');
-const { Events } = require("./utils/Constants");
 const fs = require('fs');
 
 /**

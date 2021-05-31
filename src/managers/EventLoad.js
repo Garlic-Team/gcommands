@@ -1,12 +1,11 @@
 const { default: axios } = require("axios");
 const {Collection,MessageEmbed,APIMessage} = require("discord.js");
-const Color = require("./color/Color");
-const {Events} = require("./Constants")
+const Color = require("../structures/Color"), Events = require("../util/Constants");
 
 /**
  * The GCommandsEventLoader class
 */
-class GCommandsEventLoader {
+class GEventLoader {
 
     /**
      * Creates new GCommandsEventLoader instance
@@ -65,6 +64,7 @@ class GCommandsEventLoader {
             try {
                 var commandos = this.client.commands.get(cmd);
                 if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
+                if(commandos.slash == true || commandos.slash == "true") return;
 
                 var member = message.member, guild = message.guild, channel = message.channel
                 var inhibit = await this.inhibit(commandos, {
@@ -266,6 +266,7 @@ class GCommandsEventLoader {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
                 try {
                     var commandos = this.client.commands.get(interaction.data.name);
+                    if(commandos.slash == false || commandos.slash == "false") return;
                     if (!this.client.cooldowns.has(commandos.name)) {
                         this.client.cooldowns.set(commandos.name, new Collection());
                     }
@@ -661,13 +662,13 @@ class GCommandsEventLoader {
      * @private
     */
     async loadMoreEvents() {
-        require("../moreEvents/channel")(this.client)
-        require("../moreEvents/guild")(this.client)
-        require("../moreEvents/guildmember")(this.client)
-        require("../moreEvents/role")(this.client)
-        require("../moreEvents/user")(this.client)
-        require("../moreEvents/voiceupdate")(this.client)
-        require("../moreEvents/interactions")(this.client)
+        require("../base/actions/channel")(this.client)
+        require("../base/actions/guild")(this.client)
+        require("../base/actions//guildmember")(this.client)
+        require("../base/actions/role")(this.client)
+        require("../base/actions/user")(this.client)
+        require("../base/actions/voiceupdate")(this.client)
+        require("../base/actions/interactions")(this.client)
     }
 
     /**
@@ -737,4 +738,4 @@ class GCommandsEventLoader {
     }
 }
 
-module.exports = GCommandsEventLoader;
+module.exports = GEventLoader;

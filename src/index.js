@@ -1,25 +1,26 @@
+'use strict';
+
 module.exports = {
     // Root classes
-    GCommandsBase: require("./GCommandsBase"),
-    GCommands: require("./GCommands.js"),
-    GEvents: require("./GEvents"),
+    GCommandsBase: require("./base/GCommandsBase"),
+    GCommands: require("./base/GCommands.js"),
+    GEvents: require("./base/GEvents"),
+    GCommandsDispatcher: require("./base/GCommandsDispatcher"),
 
-    // Loaders, dispatcher
-    GCommandsEventLoader: require("./utils/EventLoader"),
-    GCommandsDispatcher: require("./GCommandsDispatcher"),
-    GUpdater: require("./utils/updater"),
+    // Loaders
+    GEventLoader: require("./managers/EventLoad"),
 
     // Structures
-    GCommandsGuild: require("./extentions/guild"),
-    GCommandsMessage: require("./extentions/message"),
-    MessageButton: require("./utils/buttons/MessageButton"),
-    MessageActionRow: require("./utils/buttons/MessageActionRow"),
+    GCommandsGuild: require("./structures/guild"),
+    GCommandsMessage: require("./structures/message"),
+    MessageButton: require("./structures/MessageButton"),
+    MessageActionRow: require("./structures/MessageActionRow"),
     
-    ButtonCollectorV12: require("./utils/buttons/ButtonCollectorV12"),
-    ButtonCollectorV13: require("./utils/buttons/ButtonCollectorV13"),
+    ButtonCollectorV12: require("./structures/v13/ButtonCollector"),
+    ButtonCollectorV13: require("./structures/v12/ButtonCollector"),
 
     // Other
-    Color: require("./utils/color/Color"),
+    Color: require("./structures/Color"),
     SlashCommand: {
         SUB_COMMAND: 1,
         SUB_COMMAND_GROUP: 2,
@@ -39,5 +40,6 @@ module.exports = {
         red: "red",
         url: "url"
     },
+
     version: require("../package.json").version
 }

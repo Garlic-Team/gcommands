@@ -1,6 +1,6 @@
 /* From discord-buttons edited */
 const { resolveString } = require('discord.js').Util;
-const Color = require("../color/Color")
+const Color = require("../index")
 const styles = {
     'blurple': 1,
     'gray': 2,
