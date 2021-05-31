@@ -8,7 +8,8 @@ module.exports = {
     GCommandsDispatcher: require("./base/GCommandsDispatcher"),
 
     // Loaders
-    GEventLoader: require("./managers/EventLoad"),
+    GEventLoader: require("./managers/GEventLoader"),
+    GCommandLoader: require("./managers/GCommandLoader"),
 
     // Structures
     GCommandsGuild: require("./structures/guild"),

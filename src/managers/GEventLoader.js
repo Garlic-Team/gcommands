@@ -664,7 +664,7 @@ class GEventLoader {
     async loadMoreEvents() {
         require("../base/actions/channel")(this.client)
         require("../base/actions/guild")(this.client)
-        require("../base/actions//guildmember")(this.client)
+        require("../base/actions/guildmember")(this.client)
         require("../base/actions/role")(this.client)
         require("../base/actions/user")(this.client)
         require("../base/actions/voiceupdate")(this.client)
