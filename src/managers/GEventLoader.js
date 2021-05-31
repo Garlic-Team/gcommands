@@ -597,9 +597,9 @@ class GEventLoader {
 
                                 apiMessage = apiMessageMsg;
                                 apiMessage.client = this.client;
-                                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                                apiMessage.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].delete()};
+                                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(cthis.lient.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
 
                                 return apiMessage
                             },
@@ -625,9 +625,9 @@ class GEventLoader {
                                         embeds: result.embeds
                                     }}))
                                     apiMessage.client = this.client;
-                                    apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                                    apiMessage.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                    apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].delete()};
+                                    apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                                    apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                                    apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
 
                                     return apiMessage;
                                 }

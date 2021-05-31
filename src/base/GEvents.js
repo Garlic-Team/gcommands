@@ -50,7 +50,7 @@ class GEvents {
                     this.client.events.set(file.name, file);
                     console.log(new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
-                    this.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
                     console.log(new Color("&d[GEvents] &cCan't load " + fileName).getText());
                 }
             } else {
@@ -63,7 +63,7 @@ class GEvents {
                         console.log(new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                     } catch(e) {
                         console.log(e)
-                        this.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
+                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
                         console.log(new Color("&d[GEvents] &cCan't load " + fileName).getText());
                     }
                 })
