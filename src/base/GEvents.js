@@ -39,13 +39,13 @@ class GEvents {
      * @private
     */
     async __loadEventFiles() {
-        fs.readdirSync(`${__dirname}/../../../${this.eventDir}`).forEach(async(dir) => {
+        fs.readdirSync(`${__dirname}/../../../../${this.eventDir}`).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
             var fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
-                    file = await require(`../../../${this.eventDir}${dir}`);
+                    file = await require(`../../../../${this.eventDir}${dir}`);
 
                     this.client.events.set(file.name, file);
                     console.log(new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
@@ -57,7 +57,7 @@ class GEvents {
                 fs.readdirSync(`${this.eventDir}${dir}`).forEach(async(file) => {
                     fileName = file.split(".").reverse()[1];
                     try {
-                        file = await require(`../../../${this.eventDir}${dir}/${file}`);
+                        file = await require(`../../../../${this.eventDir}${dir}/${file}`);
     
                         this.client.events.set(file.name, file);
                         console.log(new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
