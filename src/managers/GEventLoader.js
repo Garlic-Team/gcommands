@@ -599,7 +599,7 @@ class GEventLoader {
                                 apiMessage.client = this.client;
                                 apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(apiMessage, filter, options)};
                                 apiMessage.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(client.user.id, interaction.token).messages["original"].delete()};
+                                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
 
                                 return apiMessage
                             },
@@ -627,7 +627,7 @@ class GEventLoader {
                                     apiMessage.client = this.client;
                                     apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(apiMessage, filter, options)};
                                     apiMessage.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                    apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(client.user.id, interaction.token).messages["original"].delete()};
+                                    apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(client.user.id, interaction.token).messages[apiMessage.id].delete()};
 
                                     return apiMessage;
                                 }
