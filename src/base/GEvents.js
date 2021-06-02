@@ -39,7 +39,7 @@ class GEvents {
      * @private
     */
     async __loadEventFiles() {
-        fs.readdirSync(`${__dirname}/../../../../${this.eventDir}`).forEach(async(dir) => {
+        await fs.readdirSync(`${__dirname}/../../../../${this.eventDir}`).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
             var fileType = dir.split(".").reverse()[0]
@@ -71,7 +71,7 @@ class GEvents {
             }
         })
 
-        this.__loadEvents()
+        await this.__loadEvents()
     }
 
     /**
