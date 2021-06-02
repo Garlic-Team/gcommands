@@ -34,17 +34,18 @@ class GCommandLoader {
                     console.log(new Color("&d[GCommands] &cCan't load " + fileName).getText());
                 }
             } else {
-                fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(file) => {
-                    fileName = file.split(".").reverse()[1];
+                fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(cmdFile) => {
+                    var file2;
+                    var fileName2 = cmdFile.split(".").reverse()[1]
                     try {
-                        file = await require(`../../../../${this.cmdDir}${dir}/${file}`);
+                        file2 = await require(`../../../../${this.cmdDir}${dir}/${cmdFile}`);
     
-                        if (file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
-                        this.client.commands.set(file.name, file);
-                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
+                        if (file2.aliases && Array.isArray(file2.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file2.name));
+                        this.client.commands.set(file2.name, file2);
+                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
-                        console.log(new Color("&d[GCommands] &cCan't load " + fileName).getText());
+                        console.log(new Color("&d[GCommands] &cCan't load " + fileName2).getText());
                     }
                 })
             }
