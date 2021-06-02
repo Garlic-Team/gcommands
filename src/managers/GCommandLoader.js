@@ -40,7 +40,7 @@ class GCommandLoader {
                     try {
                         file2 = await require(`../../../../${this.cmdDir}${dir}/${cmdFile}`);
     
-                        if (file2.aliases && Array.isArray(file2.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file2.name));
+                        if (file2.aliases && Array.isArray(file2.aliases)) file2.aliases.forEach(alias => this.client.aliases.set(alias, file2.name));
                         this.client.commands.set(file2.name, file2);
                         console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
                     } catch(e) {
