@@ -144,8 +144,6 @@ class ButtonEvent {
                 content: result
             }
 
-            let msgId = Date.now();
-
             if (typeof result === 'object') {
                 if(typeof result == "object" && !result.content) {
                     const embed = new MessageEmbed(result)
@@ -163,6 +161,10 @@ class ButtonEvent {
                 if(!Array.isArray(result.components)) result.components = [result.components];
                 result.components = result.components;
             }
+            if(typeof result == "object" && result.embeds) {
+                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
+                result.embeds = result.embeds;
+            }
 
             let apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
                 data: {
@@ -174,17 +176,8 @@ class ButtonEvent {
             let apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.token}/messages/@original`)).data;
             apiMessage = apiMessageMsg;
 
-            let message = {
-                msgId: msgId,
-                client: this.client,
-                guild: this.clicker.member.guild,
-                channel: this.channel,
-                author: this.client.user,
-            }
-
-            return apiMessage
-
             this.replied = true;
+            return apiMessage;
         }
 
         /**
@@ -194,8 +187,6 @@ class ButtonEvent {
          let _edit = async(result) => {
             if (typeof result == "object") {
                 var finalData = [];
-                result.embeds = [];
-                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
                 if(!Array.isArray(result.components)) result.components = [result.components];
                 result.components = result.components;
@@ -203,6 +194,10 @@ class ButtonEvent {
                 if(typeof result.content == "object") {
                     result.embeds = [result.content]
                     result.content = "\u200B"
+                }
+                if(typeof result == "object" && result.embeds) {
+                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
+                    result.embeds = result.embeds;
                 }
 
                 let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {

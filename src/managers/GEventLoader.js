@@ -70,18 +70,35 @@ class GEventLoader {
                 var inhibit = await this.inhibit(commandos, {
                     message, member, guild, channel,
                     respond: async(options = undefined) => {
+                        if(options.inlineReply == undefined) options.inlineReply = true;
                         if(typeof options == "object" && options.content) {
-                            msg = await message.buttonsWithReply(options.content, options)
+                            if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
+                            else  msg = await message.buttons(options.content, options)
                         } else if(typeof options == "object" && !options.content) {
-                            msg = await message.inlineReply(options)
-                        } else msg = await message.inlineReply(options)
+                            if(options.inlineReply) msg = await message.inlineReply(options)
+                            else msg = await message.channel.send(options)
+                        } else {
+                            if(options.inlineReply) msg = await message.inlineReply(options);
+                            else msg = await message.channel.send(options)
+                        }
+
+                        msg = msg.toJSON()
+                        msg.client = this.client;
+                        msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
+                        msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+                        return msg;
                     },
                     edit: async(options = undefined) => {
                         if(typeof options == "object" && options.content) {
-                            message.buttonsEdit(msg.id, options.content, options)
+                            msg = await message.buttonsEdit(msg.id, options.content, options)
+                            return msg;
                         } else if(typeof options == "object" && !options.content) {
-                            msg.edit(options)
-                        } else msg.edit(options)
+                            msg = await msg.edit(options)
+                            return msg;
+                        } else {
+                            msg = msg.edit(options)
+                            return msg;
+                        }
                     }
                 })
                 if(inhibit == false) return;
@@ -295,51 +312,69 @@ class GEventLoader {
                             if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
                             if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
                             if(typeof result == "object" && result.components) {
-                                var finalData = [];
-                                if(!Array.isArray(result.components)) result.components = [[result.components]]
-                                result.components.forEach(option => {
-                                    finalData.push({
-                                        type: 1,
-                                        components: option
-                                    })
-                                })
-
-                                data.components = finalData
+                                if(!Array.isArray(result.components)) result.components = [result.components];
+                                data.components = result.components;
+                            }
+                            if(typeof result == "object" && result.embeds) {
+                                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+                                data.embeds = result.embeds;
                             }
 
-                            return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                            let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: result.thinking ? 5 : 4,
                                     data
                                 }, 
-                            })
+                            })).toJSON();
+
+                            let apiMessageMsg = undefined;
+                            try {
+                                apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
+                            } catch(e) {
+                                apiMessage = {
+                                    id: undefined
+                                }
+                            }
+
+                            apiMessage = apiMessageMsg;
+                            apiMessage.client = this.client;
+                            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
+
+                            return apiMessage
                         },
                         edit: async(result) => {
                             if (typeof result == "object") {
-                                var finalData = [];
                                 result.embeds = [];
                                 if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
                                 if(result.components) {
-                                    if(!Array.isArray(result.components)) result.components = [[result.components]]
-                                    result.components.forEach(option => {
-                                        finalData.push({
-                                            type: 1,
-                                            components: option
-                                        })
-                                    })
-                                } else finalData = []
+                                    if(!Array.isArray(result.components)) result.components = [result.components];
+
+                                    result.components = result.components;
+                                } else result.components = [];
 
                                 if(typeof result.content == "object") {
                                     result.embeds = [result.content]
                                     result.content = "\u200B"
                                 }
+                                if(typeof result == "object" && result.embeds) {
+                                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
+                                    result.embeds = result.embeds;
+                                }
 
-                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
+                                let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
                                     content: result.content,
-                                    components: finalData,
+                                    components: result.components,
                                     embeds: result.embeds
-                                }})
+                                }}))
+                                apiMessage.client = this.client;
+                                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
+
+                                return apiMessage;
                             }
 
                             return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
@@ -575,12 +610,10 @@ class GEventLoader {
                                 if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
                                 if(typeof result == "object" && result.components) {
                                     if(!Array.isArray(result.components)) result.components = [result.components];
-
                                     data.components = result.components;
                                 }
                                 if(typeof result == "object" && result.embeds) {
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-
                                     data.embeds = result.embeds;
                                 }
 
@@ -624,8 +657,7 @@ class GEventLoader {
                                         result.content = "\u200B"
                                     }
                                     if(typeof result == "object" && result.embeds) {
-                                        if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-    
+                                        if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                                         result.embeds = result.embeds;
                                     }
 
