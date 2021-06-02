@@ -18,13 +18,13 @@ class GCommandLoader {
      * @private
      */
      async __loadCommands() {
-        fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`).forEach(async(dir) => {
+        fs.readdirSync(`${__dirname}/../../../${this.cmdDir}`).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
             var fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
-                    file = await require(`../../../../${this.cmdDir}${dir}`);
+                    file = await require(`../../../${this.cmdDir}${dir}`);
 
                     if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                     this.client.commands.set(file.name, file);

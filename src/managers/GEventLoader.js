@@ -44,6 +44,7 @@ class GEventLoader {
         }
 
         var messageEventUse = async(oldMesage, message) => {
+            if(this.client == undefined) return;
             if (message.author.bot) return;
             if (!message.guild) return;
             var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
@@ -281,6 +282,7 @@ class GEventLoader {
     async slashEvent() {
         if((this.client.slash) || (this.client.slash == "both")) {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
+                if(this.client == undefined) return;
                 try {
                     var commandos = this.client.commands.get(interaction.data.name);
                     if(commandos.slash == false || commandos.slash == "false") return;
