@@ -10,6 +10,7 @@ module.exports = {
     // Loaders
     GEventLoader: require("./managers/GEventLoader"),
     GCommandLoader: require("./managers/GCommandLoader"),
+    GDatabaseLoader: require("./managers/GDatabaseLoader"),
 
     // Structures
     GCommandsGuild: require("./structures/guild"),

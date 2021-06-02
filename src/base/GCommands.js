@@ -1,6 +1,4 @@
-const { promisify } = require('util');
-const path = require('path');
-const GCommandLoader = require("../managers/GCommandLoader"), cmdUtils = require('../util/cmdUtils'), Color = require("../structures/Color"), GCommandsBase = require("./GCommandsBase"), GCommandsDispatcher = require("./GCommandsDispatcher"), GEvents = require("./GEvents"), GEventLoader = require("../managers/GEventLoader"), Events = require("../util/Constants"), GUpdater = require("../util/updater");
+const GCommandLoader = require("../managers/GCommandLoader"), Color = require("../structures/Color"), GCommandsBase = require("./GCommandsBase"), GCommandsDispatcher = require("./GCommandsDispatcher"), GEvents = require("./GEvents"), GEventLoader = require("../managers/GEventLoader"), GDatabaseLoader = require("../managers/GDatabaseLoader"), Events = require("../util/Constants"), GUpdater = require("../util/updater");
 
 const { Collection, version } = require('discord.js');
 const axios = require("axios");
@@ -123,49 +121,12 @@ class GCommands extends GCommandsBase {
         process.on('uncaughtException', (error) => { console.log(new Color("&d[GCommands Errors] &eHandled: &a" + error + ` ${error.response ? error.response.data.message : ""} ${error.response ? error.response.data.code : ""}`).getText());});
         this.__dbLoad();
 
-        new GEventLoader(this.GCommandsClient)
-        new GCommandLoader(this.GCommandsClient)
+        new GEventLoader(this.GCommandsClient);
+        new GDatabaseLoader(this.GCommandsClient);
+        new GCommandLoader(this.GCommandsClient);
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 
         GUpdater.__updater();
-    }
-
-    /**
-     * Internal method to dbLoad
-     * @returns {boolean}
-     * @private
-     */
-    async __dbLoad() {
-        if(this.client.database.type == "mongodb") {
-            var mongoose = require("mongoose")
-            mongoose.connect(this.client.database.url, { useNewUrlParser: true, useUnifiedTopology: true })
-                .then((connection) => {
-                    console.log(new Color("&d[GCommands] &aMongodb loaded!",{json:false}).getText());
-                    this.client.database.working = true;
-                    return true;
-                })
-                .catch((e) => {
-                    console.log(new Color("&d[GCommands] &cMongodb url is not valid.",{json:false}).getText());
-                    this.client.database.working = false;
-                    return false;
-                })
-        }
-        else if(this.client.database.type == "sqlite") {
-            var sqliteDb = require("quick.db")
-            this.client.database.working = true;
-            this.client.database.sqlite = sqliteDb;
-        } else if(this.client.database.type == "mariadb") {
-            var mariaDb = require("quick-mariadb");
-            this.client.database.working = true;
-            this.client.database.mariadb = mariaDb;
-            this.client.database.mariadbOptions = {
-                host: this.client.database.host,
-                user: this.client.database.username,
-                password: this.client.database.password,
-                database: this.client.database.databaseName,
-                port: this.client.database.port
-            }
-        }
     }
 }
 
