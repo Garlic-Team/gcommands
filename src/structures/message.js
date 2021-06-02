@@ -34,6 +34,8 @@ module.exports = Structures.extend("Message", Message => {
             if(!Array.isArray(options.components)) options.components = [options.components];
             options.components = options.components;
 
+            if(options.embeds) embed = options.embeds
+
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
@@ -69,6 +71,8 @@ module.exports = Structures.extend("Message", Message => {
 
             if(!Array.isArray(options.components)) options.components = [options.components];
             options.components = options.components;
+
+            if(options.embeds) embed = options.embeds
 
             return this.client.api.channels[this.channel.id].messages[msgID].patch({
                 data: {
@@ -136,6 +140,8 @@ module.exports = Structures.extend("Message", Message => {
 
             if(!Array.isArray(options.components)) options.components = [options.components];
             options.components = options.components;
+
+            if(options.embeds) embed = options.embeds
 
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {

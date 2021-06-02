@@ -578,6 +578,11 @@ class GEventLoader {
 
                                     data.components = result.components;
                                 }
+                                if(typeof result == "object" && result.embeds) {
+                                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+
+                                    data.embeds = result.embeds;
+                                }
 
                                 let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
@@ -617,6 +622,11 @@ class GEventLoader {
                                     if(typeof result.content == "object") {
                                         result.embeds = [result.content]
                                         result.content = "\u200B"
+                                    }
+                                    if(typeof result == "object" && result.embeds) {
+                                        if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+    
+                                        result.embeds = result.embeds;
                                     }
 
                                     let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
