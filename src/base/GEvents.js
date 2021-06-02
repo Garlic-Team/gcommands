@@ -56,7 +56,7 @@ class GEvents {
             } else {
                 fs.readdirSync(`${this.eventDir}${dir}`).forEach(async(eventFile) => {
                     var file2;
-                    var fileName2 = file.split(".").reverse()[1];
+                    var fileName2 = eventFile.split(".").reverse()[1];
                     try {
                         file2 = await require(`../../../../${this.eventDir}${dir}/${eventFile}`);
     
