@@ -16,7 +16,7 @@ class GCommands extends GCommandsBase {
     constructor(client, options = {}) {
         super(client, options)
 
-        if (!client || client instanceof Client) return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
+        if (typeof client != "object") return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
         if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
         if(!options.cmdDir) return console.log(new Color("&d[GCommands] &cNo default options provided! (cmdDir)",{json:false}).getText());
         if(!options.language) return console.log(new Color("&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak))",{json:false}).getText());
