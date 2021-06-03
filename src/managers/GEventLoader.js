@@ -790,8 +790,8 @@ class GEventLoader {
     async getSlashArgs2(options) {
         var args = {};
         for (let o of options) {
-          if (o.type == 1) args[o.name] = this.getSlashArgs(o.options || []);
-          else if (o.type == 2) args[o.name] = this.getSlashArgs(o.options || []); 
+          if (o.type == 1) args[o.name] = this.getSlashArgs2(o.options || []);
+          else if (o.type == 2) args[o.name] = this.getSlashArgs2(o.options || []); 
           else {
               args[o.name] = o.value;
           }
