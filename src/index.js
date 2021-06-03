@@ -23,6 +23,7 @@ module.exports = {
 
     // Other
     Color: require("./structures/Color"),
+    Util: require("./util/util"),
     SlashCommand: {
         SUB_COMMAND: 1,
         SUB_COMMAND_GROUP: 2,
