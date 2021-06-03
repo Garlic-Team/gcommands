@@ -43,15 +43,15 @@ class GEventLoader {
             })
         }
 
-        var messageEventUse = async(oldMesage, message) => {
+        let messageEventUse = async(oldMesage, message) => {
             if(this.client == undefined) return;
             if (message.author.bot) return;
             if (!message.guild) return;
-            var mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
-            var prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
+            let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
+            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
 
             if(this.client.database.working) {
-                var guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
+                let guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
                 prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
             }
 
@@ -63,15 +63,15 @@ class GEventLoader {
             if (cmd.length === 0) return;
     
             try {
-                var commandos = this.client.commands.get(cmd);
+                let commandos = this.client.commands.get(cmd);
                 if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
                 if(commandos.slash == true || commandos.slash == "true") return;
 
-                var member = message.member, guild = message.guild, channel = message.channel
-                var inhibit = await this.inhibit(commandos, {
+                let member = message.member, guild = message.guild, channel = message.channel
+                let inhibit = await this.inhibit(commandos, {
                     message, member, guild, channel,
                     respond: async(options = undefined) => {
-                        var inlineReply = true;
+                        let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
 
                         if(typeof options == "object" && options.content) {
@@ -143,7 +143,7 @@ class GEventLoader {
 
                 if(commandos.userOnly) {
                     if(typeof commandos.userOnly == "object") {
-                        var users = commandos.userOnly.some(v => message.author.id == v)
+                        let users = commandos.userOnly.some(v => message.author.id == v)
                         if(!users) {
                             return
                         }
@@ -156,8 +156,8 @@ class GEventLoader {
 
                 if(commandos.channelOnly) {
                     if(typeof commandos.channelOnly == "object") {
-                        var users = commandos.channelOnly.some(v => message.channel.id == v)
-                        if(!users) {
+                        let channels = commandos.channelOnly.some(v => message.channel.id == v)
+                        if(!channels) {
                             return
                         }
                     } else {
@@ -237,7 +237,7 @@ class GEventLoader {
                 commandos.run({
                     client, message, member, guild, channel,
                     respond: async(options = undefined) => {
-                        var inlineReply = true;
+                        let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
 
                         if(typeof options == "object" && options.content) {
@@ -294,14 +294,14 @@ class GEventLoader {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
                 if(this.client == undefined) return;
                 try {
-                    var commandos = this.client.commands.get(interaction.data.name);
+                    let commandos = this.client.commands.get(interaction.data.name);
                     if(commandos.slash == false || commandos.slash == "false") return;
                     if (!this.client.cooldowns.has(commandos.name)) {
                         this.client.cooldowns.set(commandos.name, new Collection());
                     }
 
-                    var member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id);
-                    var inhibit = await this.inhibit(commandos, {
+                    let member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id);
+                    let inhibit = await this.inhibit(commandos, {
                         interaction, member,
                         guild: member.guild, 
                         channel: member.guild.channels.cache.get(interaction.channel_id),
@@ -394,16 +394,16 @@ class GEventLoader {
                     })
                     if(inhibit == false) return;
 
-                    const now = Date.now();
-                    const timestamps = this.client.cooldowns.get(commandos.name);
-                    const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
+                    let now = Date.now();
+                    let timestamps = this.client.cooldowns.get(commandos.name);
+                    let cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
                     
                     if (timestamps.has(interaction.member.user.id)) {
                         if (timestamps.has(interaction.member.user.id)) {
-                            const expirationTime = timestamps.get(interaction.member.user.id) + cooldownAmount;
+                            let expirationTime = timestamps.get(interaction.member.user.id) + cooldownAmount;
                         
                             if (now < expirationTime) {
-                                const timeLeft = (expirationTime - now) / 1000;
+                                let timeLeft = (expirationTime - now) / 1000;
                                 this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
                                         type: 4,
@@ -437,7 +437,7 @@ class GEventLoader {
 
                     if(commandos.userOnly) {
                         if(typeof commandos.userOnly == "object") {
-                            var users = commandos.userOnly.some(v => interaction.member.user.id == v)
+                            let users = commandos.userOnly.some(v => interaction.member.user.id == v)
                             if(!users) {
                                 return;
                             }
@@ -450,7 +450,7 @@ class GEventLoader {
 
                     if(commandos.channelOnly) {
                         if(typeof commandos.channelOnly == "object") {
-                            var users = commandos.channelOnly.some(v => interaction.channel_id == v)
+                            let users = commandos.channelOnly.some(v => interaction.channel_id == v)
                             if(!users) {
                                 return;
                             }
@@ -764,20 +764,20 @@ class GEventLoader {
     async getSlashArgs(options) {
         var args = [];
   
-        var check = (option) => {
+        let check = (option) => {
           if (!option) return;
           if (option.value) args.push(option.value);
           else args.push(option.name);
       
           if (option.options) {
-            for (var o = 0; o < option.options.length; o++) {
+            for (let o = 0; o < option.options.length; o++) {
               check(option.options[o]);
             }
           }
         }
       
         if (Array.isArray(options)) {
-          for (var o = 0; o < options.length; o++) {
+          for (let o = 0; o < options.length; o++) {
             check(options[o]);
           }
         } else {
@@ -789,7 +789,7 @@ class GEventLoader {
 
     async getSlashArgs2(options) {
         var args = {};
-        for (var o of options) {
+        for (let o of options) {
           if (o.type == 1) args[o.name] = this.getSlashArgs(o.options || []);
           else if (o.type == 2) args[o.name] = this.getSlashArgs(o.options || []); 
           else {
