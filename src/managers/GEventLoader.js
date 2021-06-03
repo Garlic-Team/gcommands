@@ -650,7 +650,7 @@ class GEventLoader {
                                     }, 
                                 })).toJSON();
 
-                                let apiMessageMsg = undefined;
+                                let apiMessageMsg = {};
                                 try {
                                     apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
                                 } catch(e) {
@@ -661,7 +661,7 @@ class GEventLoader {
 
                                 if(apiMessage) {
                                     apiMessage = apiMessageMsg;
-                                    apiMessage.client = this.client;
+                                    apiMessage.client = this.client ? this.client : client;
                                     apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
                                     apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
                                     apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
