@@ -671,7 +671,6 @@ class GEventLoader {
                             },
                             edit: async(result) => {
                                 if (typeof result == "object") {
-                                    result.embeds = [];
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
                                     if(result.components) {
@@ -692,7 +691,7 @@ class GEventLoader {
                                     let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
                                         content: result.content,
                                         components: result.components,
-                                        embeds: result.embeds
+                                        embeds: result.embeds || []
                                     }}))
 
                                     if(apiMessage) {
