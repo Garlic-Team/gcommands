@@ -71,15 +71,17 @@ class GEventLoader {
                 var inhibit = await this.inhibit(commandos, {
                     message, member, guild, channel,
                     respond: async(options = undefined) => {
-                        if(options.inlineReply == undefined) options.inlineReply = true;
+                        var inlineReply = true;
+                        if(options.inlineReply == false) inlineReply = false;
+
                         if(typeof options == "object" && options.content) {
-                            if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
+                            if(inlineReply) msg = await message.buttonsWithReply(options.content, options)
                             else  msg = await message.buttons(options.content, options)
                         } else if(typeof options == "object" && !options.content) {
-                            if(options.inlineReply) msg = await message.inlineReply(options)
+                            if(inlineReply) msg = await message.inlineReply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(options.inlineReply) msg = await message.inlineReply(options);
+                            if(inlineReply) msg = await message.inlineReply({content:options});
                             else msg = await message.channel.send(options)
                         }
 
@@ -119,13 +121,19 @@ class GEventLoader {
                         if (now < expirationTime) {
                             const timeLeft = (expirationTime - now) / 1000;
 
-                            return message.channel.send(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name))
+                            return message.inlineReply(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name))
                         }
                     }
                 }
 
                 timestamps.set(message.author.id, now);
                 setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+
+                if(commandos.nsfw) {
+                    if(!message.channel.nsfw) {
+                        return message.inlineReply(this.client.languageFile.NSFW[this.client.language])
+                    }
+                }
 
                 if(commandos.guildOnly) {
                     if(message.guild.id != commandos.guildOnly) {
@@ -229,15 +237,17 @@ class GEventLoader {
                 commandos.run({
                     client, message, member, guild, channel,
                     respond: async(options = undefined) => {
-                        if(options.inlineReply == undefined) options.inlineReply = true;
+                        var inlineReply = true;
+                        if(options.inlineReply == false) inlineReply = false;
+
                         if(typeof options == "object" && options.content) {
-                            if(options.inlineReply) msg = await message.buttonsWithReply(options.content, options)
+                            if(inlineReply) msg = await message.buttonsWithReply(options.content, options)
                             else  msg = await message.buttons(options.content, options)
                         } else if(typeof options == "object" && !options.content) {
-                            if(options.inlineReply) msg = await message.inlineReply(options)
+                            if(inlineReply) msg = await message.inlineReply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(options.inlineReply) msg = await message.inlineReply(options);
+                            if(inlineReply) msg = await message.inlineReply({content:options});
                             else msg = await message.channel.send(options)
                         }
 
@@ -410,6 +420,20 @@ class GEventLoader {
 
                     timestamps.set(interaction.member.user.id, now);
                     setTimeout(() => timestamps.delete(interaction.member.user.id), cooldownAmount);
+
+                    if(commandos.nsfw) {
+                        if(!member.guild.channels.cache.get(interaction.channel_id).nsfw) {
+                            return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                data: {
+                                    type: 4,
+                                    data: {
+                                        flags: 64,
+                                        content:  this.client.languageFile.NSFW[this.client.language]
+                                    }
+                                }
+                            });
+                        }
+                    }
 
                     if(commandos.userOnly) {
                         if(typeof commandos.userOnly == "object") {

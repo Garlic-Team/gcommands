@@ -48,5 +48,15 @@
         "czech": "Příkaz {COMMAND} nebyl nalezen!",
         "slovak": "Príkaz {COMMAND} nebol nájdený!",
         "turkish": "{COMMAND} adındaki komutu bulamadım!"
+    },
+    "NSFW": {
+        "english": "You can only use this command in nsfw channel.",
+        "spanish": "Sólo puede utilizar este comando en el canal nsfw.",
+        "portuguese": "Só se pode utilizar este comando no canal nsfw.",
+        "russian": "Вы можете использовать эту команду только в канале nsfw.",
+        "german": "Sie können diesen Befehl nur im nsfw-Kanal verwenden.",
+        "czech": "Tento příkaz můžete použít pouze v nsfw.",
+        "slovak": "Príkaz môžete využiť iba v nsfw room.",
+        "turkish": "Bu komutu sadece nsfw kanalında kullanabilirsiniz."
     }
 }
