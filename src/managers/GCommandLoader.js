@@ -18,7 +18,7 @@ class GCommandLoader {
      * @private
      */
      async __loadCommands() {
-        fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`).forEach(async(dir) => {
+        await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
             var fileType = dir.split(".").reverse()[0]
@@ -51,7 +51,7 @@ class GCommandLoader {
             }
         })
 
-        this.__deleteAllGlobalCmds();
+        await this.__deleteAllGlobalCmds();
     }
 
     /**
