@@ -81,6 +81,8 @@ class GEvents {
     */
     async __loadEvents() {
         this.client.events.forEach(event => {
+            if(event.name == "ready") return event.run(this.client);
+
             if (event.once) {
                 this.client.once(event.name, (...args) => event.run(this.client, ...args));
             } else {
