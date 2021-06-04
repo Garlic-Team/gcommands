@@ -87,34 +87,8 @@ export class Color {
 
 }
 
-export class GCommands {
+export class GCommandLoader {
     constructor(...args: any[]);
-
-    static captureRejectionSymbol: any;
-
-    static captureRejections: boolean;
-
-    static defaultMaxListeners: number;
-
-    static errorMonitor: any;
-
-    static getEventListeners(emitterOrTarget: any, type: any): any;
-
-    static init(opts: any): void;
-
-    static kMaxEventTargetListeners: any;
-
-    static kMaxEventTargetListenersWarned: any;
-
-    static listenerCount(emitter: any, type: any): any;
-
-    static on(emitter: any, event: any, options: any): any;
-
-    static once(emitter: any, name: any, options: any): any;
-
-    static setMaxListeners(n: any, eventTargets: any): void;
-
-    static usingDomains: boolean;
 
 }
 
@@ -154,6 +128,11 @@ export class GCommandsMessage {
     buttonsWithReply(...args: any[]): void;
 
     inlineReply(...args: any[]): void;
+
+}
+
+export class GDatabaseLoader {
+    constructor(...args: any[]);
 
 }
 
@@ -241,6 +220,8 @@ export const SlashCommand: {
 };
 
 export const version: string;
+
+export function GCommands(...args: any[]): any;
 
 export function GCommandsBase(...args: any[]): void;
 
@@ -440,6 +421,32 @@ export namespace GCommands {
 
     }
 
+    const captureRejectionSymbol: any;
+
+    const captureRejections: boolean;
+
+    const defaultMaxListeners: number;
+
+    const errorMonitor: any;
+
+    const kMaxEventTargetListeners: any;
+
+    const kMaxEventTargetListenersWarned: any;
+
+    const usingDomains: boolean;
+
+    function getEventListeners(emitterOrTarget: any, type: any): any;
+
+    function init(opts: any): void;
+
+    function listenerCount(emitter: any, type: any): any;
+
+    function on(emitter: any, event: any, options: any): any;
+
+    function once(emitter: any, name: any, options: any): any;
+
+    function setMaxListeners(n: any, eventTargets: any): void;
+
 }
 
 export namespace GCommandsBase {
@@ -534,3 +541,6 @@ export namespace GCommandsBase {
 
 }
 
+export namespace Util {
+    function resolveString(...args: any[]): void;
+}
