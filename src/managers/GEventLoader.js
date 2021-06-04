@@ -169,60 +169,27 @@ class GEventLoader {
                     }
                 }
 
-                if(commandos.userRequiredPermissions) {
-                    if(typeof commandos.userRequiredPermissions == "object") {
-                        if(this.client.discordjsversion.includes("12.")) {
-                            if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
-                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                return;
-                            }
-                        } else {
-                            if(!message.member.permission.has(commandos.userRequiredPermissions)) {
-                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                return;
-                            }
-                        } 
-                    } else {
-                        if(this.client.discordjsversion.includes("12.")) {
-                            if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
-                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions))
-                                return;
-                            }
-                        } else {
-                            if(!message.member.permission.has(commandos.userRequiredPermissions)) {
-                                message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions))
-                                return;
-                            }
-                        } 
+                if(commandos.clientRequiredPermissions) {
+                    if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions]
+                    if(message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
+                        message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                        return;
                     }
                 }
 
-                if(commandos.clientRequiredPermissions) {
-                    if(typeof commandos.clientRequiredPermissions == "object") {
-                        if(this.client.discordjsversion.includes("12.")) {
-                            if(!message.guild.me.hasPermission(commandos.clientRequiredPermissions)) {
-                                message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                return;
-                            }
-                        } else {
-                            if(!message.guild.me.has(commandos.clientRequiredPermissions)) {
-                                message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
-                                return;
-                            }
-                        } 
+                if(commandos.userRequiredPermissions) {
+                    if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions]
+                    if(this.client.discordjsversion.includes("12.")) {
+                        if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
+                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                            return;
+                        }
                     } else {
-                        if(this.client.discordjsversion.includes("12.")) {
-                            if(!message.guild.me.hasPermission(commandos.clientRequiredPermissions)) {
-                                message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions))
-                                return;
-                            }
-                        } else {
-                            if(!message.guild.me.has(commandos.clientRequiredPermissions)) {
-                                message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions))
-                                return;
-                            }
-                        } 
-                    }
+                        if(!message.member.permission.has(commandos.userRequiredPermissions)) {
+                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                            return;
+                        }
+                    } 
                 }
 
                 if(commandos.userRequiredRole) {
@@ -463,123 +430,50 @@ class GEventLoader {
                         }
                     }
 
-                    if(commandos.userRequiredPermissions) {
-                        if(typeof commandos.userRequiredPermissions == "object") {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.userRequiredPermissions)) {
-                                    this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                        data: {
-                                            type: 4,
-                                            data: {
-                                                flags: 64,
-                                                content:  this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
-                                            }
-                                        }
-                                    });
-                                    return;
+                    if(commandos.clientRequiredPermissions) {
+                        if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions]
+                        if(member.guild.channels.cache.get(interaction.channel_id).permissionsFor(member.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
+                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                data: {
+                                    type: 4,
+                                    data: {
+                                        flags: 64,
+                                        content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
+                                    }
                                 }
-                            } else {
-                                if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permission.has(commandos.userRequiredPermissions)) {
-                                    this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                        data: {
-                                            type: 4,
-                                            data: {
-                                                flags: 64,
-                                                content: this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
-                                            }
-                                        }
-                                    });
-                                    return;
-                                } 
-                            }
-                        } else {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.userRequiredPermissions)) {
-                                    this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                        data: {
-                                            type: 4,
-                                            data: {
-                                                flags: 64,
-                                                content:  this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions)
-                                            }
-                                        }
-                                    });
-                                    return;
-                                }
-                            } else {
-                                if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permission.has(commandos.userRequiredPermissions)) {
-                                    this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                        data: {
-                                            type: 4,
-                                            data: {
-                                                flags: 64,
-                                                content: this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions)
-                                            }
-                                        }
-                                    });
-                                    return;
-                                } 
-                            }
+                            });
+                            return;
                         }
                     }
 
-                    if(commandos.clientRequiredPermissions) {
-                        if(typeof commandos.clientRequiredPermissions == "object") {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!this.client.guilds.cache.get(interaction.guild_id).me.hasPermission(commandos.clientRequiredPermissions)) {
-                                    this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                    if(commandos.userRequiredPermissions) {
+                        if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions]
+                        if(this.client.discordjsversion.includes("12.")) {
+                            if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).hasPermission(commandos.userRequiredPermissions)) {
+                                this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                    data: {
+                                        type: 4,
                                         data: {
-                                            type: 4,
-                                            data: {
-                                                flags: 64,
-                                                content:  this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
-                                            }
+                                            flags: 64,
+                                            content:  this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
                                         }
-                                    });
-                                    return;
-                                }
-                            } else {
-                                if(!this.client.guilds.cache.get(interaction.guild_id).me.permission.has(commandos.clientRequiredPermissions)) {
-                                    this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                        data: {
-                                            type: 4,
-                                            data: {
-                                                flags: 64,
-                                                content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
-                                            }
-                                        }
-                                    });
-                                    return;
-                                } 
+                                    }
+                                });
+                                return;
                             }
                         } else {
-                            if(this.client.discordjsversion.includes("12.")) {
-                                if(!this.client.guilds.cache.get(interaction.guild_id).me.hasPermission(commandos.clientRequiredPermissions)) {
-                                    this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                            if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permission.has(commandos.userRequiredPermissions)) {
+                                this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                    data: {
+                                        type: 4,
                                         data: {
-                                            type: 4,
-                                            data: {
-                                                flags: 64,
-                                                content:  this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions)
-                                            }
+                                            flags: 64,
+                                            content: this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
                                         }
-                                    });
-                                    return;
-                                }
-                            } else {
-                                if(!this.client.guilds.cache.get(interaction.guild_id).me.permission.has(commandos.clientRequiredPermissions)) {
-                                    this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                        data: {
-                                            type: 4,
-                                            data: {
-                                                flags: 64,
-                                                content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions)
-                                            }
-                                        }
-                                    });
-                                    return;
-                                } 
-                            }
+                                    }
+                                });
+                                return;
+                            } 
                         }
                     }
 
