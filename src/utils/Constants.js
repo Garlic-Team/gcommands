@@ -1,3 +1,0 @@
-exports.Events = {
-    DEBUG: "debug"
-}

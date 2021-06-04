@@ -1,175 +1,15 @@
-const { promisify } = require('util');
-const path = require('path');
-const glob = promisify(require('glob'));
-const Color = require("./utils/color/Color");
-const EventLoader = require('./utils/EventLoader');
-const cmdUtils = require('./utils/cmdUtils');
-const Updater = require('./utils/updater');
-const GCommandsDispatcher = require("./GCommandsDispatcher")
-const GCommandsBase = require("./GCommandsBase")
-const { Events } = require("./utils/Constants")
-const GEvents = require("./GEvents")
-const { Collection, version } = require('discord.js');
+const cmdUtils = require('../util/cmdUtils'), Color = require("../structures/Color"), Events = require("../util/Constants")
 const axios = require("axios");
 const fs = require("fs");
 
-/* GCommands Class */
-class GCommands extends GCommandsBase {
-    /**
-     * The GCommands class
-     * @param {Object} client - Discord.js Client
-     * @param {Object} options - Options (cmdDir, eventDir etc)
-     */
-    constructor(client, options = {}) {
-        super(client, options)
+class GCommandLoader {
+    constructor(GCommandsClient) {
+        this.GCommandsClient = GCommandsClient;
+        this.client = this.GCommandsClient.client;
 
-        if (typeof client !== 'object') return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
-        if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
-        if(!options.cmdDir) return console.log(new Color("&d[GCommands] &cNo default options provided! (cmdDir)",{json:false}).getText());
-        if(!options.language) return console.log(new Color("&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak))",{json:false}).getText());
+        this.cmdDir = this.GCommandsClient.cmdDir;
 
-        if(!client) console.log(new Color("&d[GCommands] &cNo discord.js client provided!"));
-        this.GCommandsClient = this;
-        this.client = client;
-
-        /**
-         * CmdDir
-         * @property {String} cmdDir
-        */
-        this.cmdDir = options.cmdDir;
-
-        /**
-         * EventDir
-         * @property {String} eventDir
-         */
-        this.eventDir = options.eventDir;
-        this.client.discordjsversion = version
-
-        /**
-         * unkownCommandMessage
-         * @property {String} unkownCommandMessage
-         */
-        this.unkownCommandMessage = options.unkownCommandMessage ? options.unkownCommandMessage : true;
-
-        /**
-         * ownLanguageFile
-         * @property {Object} ownLanguageFile
-         */
-        if(!options.ownLanguageFile) this.languageFile = require("./utils/message.json");
-        else this.languageFile = options.ownLanguageFile;
-        this.language = options.language;
-
-        if(this.eventDir) {
-            new GEvents(this.GCommandsClient, {
-                eventDir: this.eventDir
-            })
-        }
-
-        /**
-         * database
-         * @property {Object} database
-         */
-         this.database = {
-            type:  undefined,
-            url: undefined,
-            host: undefined,
-            username: undefined,
-            password: undefined,
-            databaseName: undefined,
-            port: undefined,
-            working: false
-        };
-        
-        if(options.database) {
-            this.database = {
-                type: options.database.type ? options.database.type : undefined,
-                url: options.database.url ? options.database.url : undefined,
-                host: options.database.host ? options.database.host : undefined,
-                username: options.database.username ? options.database.username : undefined,
-                password: options.database.password ? options.database.password : undefined,
-                databaseName: options.database.databaseName ? options.database.databaseName : undefined,
-                port: options.database.port ? options.database.port : undefined,
-                working: false
-            };
-        }
-
-        this.client.categories = fs.readdirSync("./" + this.cmdDir );
-        this.client.commands = new Collection();
-        this.client.aliases = new Collection();
-
-        /**
-         * Prefix
-         * @property {String} prefix
-         */
-        this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
-
-        /**
-         * Slash
-         * @property {String} slash
-         */
-        this.slash = options.slash.slash ? options.slash.slash : false;
-
-        /**
-         * cooldownDefault
-         * @property {Number} cooldownDefault
-         */
-        this.cooldownDefault = options.defaultCooldown ? options.defaultCooldown : 0;
-
-        this.GCommandsClient.unkownCommandMessage = this.unkownCommandMessage;
-        this.client.language = this.language;
-        this.client.languageFile = this.languageFile;
-        this.client.database = this.database
-        this.client.prefix = this.prefix;
-        this.client.slash = this.slash;
-        this.client.cooldownDefault = this.cooldownDefault;
-
-
-        process.setMaxListeners(50);
-        this.__loadCommands();
-        this.__dbLoad();
-
-        new EventLoader(this.GCommandsClient)
-        this.client.dispatcher = new GCommandsDispatcher(this.client);
-
-        Updater.__updater();
-    }
-
-    /**
-     * Internal method to dbLoad
-     * @returns {boolean}
-     * @private
-     */
-    async __dbLoad() {
-        if(this.client.database.type == "mongodb") {
-            var mongoose = require("mongoose")
-            mongoose.connect(this.client.database.url, { useNewUrlParser: true, useUnifiedTopology: true })
-                .then((connection) => {
-                    console.log(new Color("&d[GCommands] &aMongodb loaded!",{json:false}).getText());
-                    this.client.database.working = true;
-                    return true;
-                })
-                .catch((e) => {
-                    console.log(new Color("&d[GCommands] &cMongodb url is not valid.",{json:false}).getText());
-                    this.client.database.working = false;
-                    return false;
-                })
-        }
-        else if(this.client.database.type == "sqlite") {
-            var sqliteDb = require("quick.db")
-            this.client.database.working = true;
-            this.client.database.sqlite = sqliteDb;
-        } else if(this.client.database.type == "mariadb") {
-            var mariaDb = require("quick-mariadb");
-            this.client.database.working = true;
-            this.client.database.mariadb = mariaDb;
-            this.client.database.mariadbOptions = {
-                host: this.client.database.host,
-                user: this.client.database.username,
-                password: this.client.database.password,
-                database: this.client.database.databaseName,
-                port: this.client.database.port
-            }
-        }
+        this.__loadCommands()
     }
 
     /**
@@ -177,36 +17,41 @@ class GCommands extends GCommandsBase {
      * @returns {void}
      * @private
      */
-    async __loadCommands() {
-		return glob(`./${this.cmdDir}/**/*.js`).then(commands => {
-			for (const commandFile of commands) {
-				const { name } = path.parse(commandFile);
-                var File;
-
+     async __loadCommands() {
+        await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`).forEach(async(dir) => {
+            var file;
+            var fileName = dir.split(".").reverse()[1]
+            var fileType = dir.split(".").reverse()[0]
+            if(fileType == "js" || fileType == "ts") {
                 try {
-                    File = require("../../../"+this.cmdDir+"/"+name)
-                    console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
+                    file = await require(`../../../../${this.cmdDir}${dir}`);
+
+                    if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
+                    this.client.commands.set(file.name, file);
+                    console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
-                    try {
-                        File = require("../../../"+commandFile.split("./")[1])
-                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
-                    } catch(e) {
-                        try {
-                            File = require("../"+this.cmdDir+"/"+name);
-                            console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + name, {json:false}).getText());
-                        } catch(e) {
-                            this.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
-                            console.log(new Color("&d[GCommands] &cCan't load " + name).getText());
-                        }
-                    }
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
+                    console.log(new Color("&d[GCommands] &cCan't load " + fileName).getText());
                 }
+            } else {
+                fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(cmdFile) => {
+                    var file2;
+                    var fileName2 = cmdFile.split(".").reverse()[1]
+                    try {
+                        file2 = await require(`../../../../${this.cmdDir}${dir}/${cmdFile}`);
+    
+                        if (file2.aliases && Array.isArray(file2.aliases)) file2.aliases.forEach(alias => this.client.aliases.set(alias, file2.name));
+                        this.client.commands.set(file2.name, file2);
+                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
+                    } catch(e) {
+                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
+                        console.log(new Color("&d[GCommands] &cCan't load " + fileName2).getText());
+                    }
+                })
+            }
+        })
 
-                if (File.aliases && Array.isArray(File.aliases)) File.aliases.forEach(alias => this.client.aliases.set(alias, File.name));
-				this.client.commands.set(File.name, File);
-			};
-
-            this.__deleteAllGlobalCmds();
-		});
+        await this.__deleteAllGlobalCmds();
     }
 
     /**
@@ -215,16 +60,16 @@ class GCommands extends GCommandsBase {
      * @private
      */
     async __createCommands() {
-        this.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash commands...").getText())
+        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash commands...").getText())
         let keys = Array.from(this.client.commands.keys());
 
         keys.forEach(async (cmdname) => {
-            this.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash command (&e"+cmdname+"&3)").getText());
+            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash command (&e"+cmdname+"&3)").getText());
             var options = [];
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.commands.get(cmdname)
-            if(cmd.slash != undefined && (cmd.slash == false || cmd.slash == "false")) return;
+            if(cmd.slash == false || cmd.slash == "false") return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
             if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
@@ -376,7 +221,7 @@ class GCommands extends GCommandsBase {
                             }, 20000)
                         } else {
                             try {
-                                this.emit(Events.DEBUG, new Color([
+                                this.GCommandsClient.emit(Events.DEBUG, new Color([
                                     "&a----------------------",
                                     "  &d[GCommands Debug] &3",
                                     "&aCode: &b" + error.response.data.code,
@@ -387,7 +232,7 @@ class GCommands extends GCommandsBase {
                                     "&a----------------------"
                                 ]).getText())
                             } catch(e) {
-                                this.emit(Events.DEBUG, new Color([
+                                this.GCommandsClient.emit(Events.DEBUG, new Color([
                                     "&a----------------------",
                                     "  &d[GCommands Debug] &3",
                                     "&aCode: &b" + error.response.data.code,
@@ -463,7 +308,7 @@ class GCommands extends GCommandsBase {
                 }
             })
         } catch(e) {
-            this.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3Can't remove global commands!").getText())
+            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3Can't remove global commands!").getText())
         }
 
         this.__deleteAllGuildCmds()
@@ -514,7 +359,7 @@ class GCommands extends GCommandsBase {
                 this.__createCommands();
             }
         } catch(e) {
-            this.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3Can't remove guild commands!").getText())
+            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3Can't remove guild commands!").getText())
 
             if((this.client.slash) || (this.client.slash == "both")) {
                 this.__createCommands();
@@ -523,4 +368,4 @@ class GCommands extends GCommandsBase {
     }
 }
 
-module.exports = GCommands;
+module.exports = GCommandLoader;

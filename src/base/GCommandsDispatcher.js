@@ -1,3 +1,7 @@
+const { Collector } = require('discord.js');
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector')
+const updater = require("../util/updater")
+
 /**
  * The GCommansDispatcher class
  */
@@ -19,7 +23,7 @@ class GCommandsDispatcher {
     async setGuildPrefix(prefix, guildId) {
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
-            var guildSettings = require('./utils/models/guild')
+            var guildSettings = require('../util/models/guild')
 
             const settings = await guildSettings.findOne({ id: guildId})
             if(!settings) {
@@ -53,7 +57,7 @@ class GCommandsDispatcher {
     async getGuildPrefix(guildId) {
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
-            var guildSettings = require('./utils/models/guild')
+            var guildSettings = require('../util/models/guild')
 
             const settings = await guildSettings.findOne({ id: guildId})
             if(!settings) {
@@ -72,9 +76,10 @@ class GCommandsDispatcher {
 
     /**
      * Internal method to addInhibitor
+     * @param {Function} inhibitor
      * @returns {boolean}
     */
-    async addInhibitor(inhibitor) {
+    addInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
 		if(this.client.inhibitors.has(inhibitor)) return false;
 		this.client.inhibitors.add(inhibitor);
@@ -85,10 +90,40 @@ class GCommandsDispatcher {
      * Internal method to removeInhibitor
      * @returns {Set}
     */
-    async removeInhibitor(inhibitor) {
+    removeInhibitor(inhibitor) {
 		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
 		return this.client.inhibitors.delete(inhibitor);
 	}
+
+    /**
+     * Internal method to createButtonCollector
+     * @param {Function} filter 
+     * @param {Object} options
+     * @returns {Collector}
+    */
+    createButtonCollector(msg, filter, options = {}) {
+        if(updater.checkDjsVersion("13")) return new ButtonCollectorV13(msg, filter, options);
+        else return new ButtonCollectorV12(msg, filter, options);
+    }
+
+    /**
+     * Internal method to createButtonCollector
+     * @param {Function} filter 
+     * @param {Object} options
+     * @returns {Collector}
+    */
+    awaitButtons(msg, filter, options = {}) {
+        return new Promise((resolve, reject) => {
+            const collector = this.createButtonCollector(msg, filter, options);
+            collector.once('end', (buttons, reason) => {
+                if (options.errors && options.errors.includes(reason)) {
+                    reject(buttons);
+                } else {
+                    resolve(buttons);
+                }
+            });
+        })
+    }
 }
 
 module.exports = GCommandsDispatcher;

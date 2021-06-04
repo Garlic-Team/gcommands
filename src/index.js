@@ -1,14 +1,29 @@
+'use strict';
+
 module.exports = {
-    GCommandsBase: require("./GCommandsBase"),
-    GCommands: require("./GCommands.js"),
-    GEvents: require("./GEvents"),
-    GCommandsEventLoader: require("./utils/EventLoader"),
-    GCommandsDispatcher: require("./GCommandsDispatcher"),
-    GCommandsGuild: require("./extentions/guild"),
-    GCommandsMessage: require("./extentions/message"),
-    GUpdater: require("./utils/updater"),
-    Color: require("./utils/color/Color"),
-    Buttons: require("./utils/Buttons"),
+    // Root classes
+    GCommandsBase: require("./base/GCommandsBase"),
+    GCommands: require("./base/GCommands.js"),
+    GEvents: require("./base/GEvents"),
+    GCommandsDispatcher: require("./base/GCommandsDispatcher"),
+
+    // Loaders
+    GEventLoader: require("./managers/GEventLoader"),
+    GCommandLoader: require("./managers/GCommandLoader"),
+    GDatabaseLoader: require("./managers/GDatabaseLoader"),
+
+    // Structures
+    GCommandsGuild: require("./structures/guild"),
+    GCommandsMessage: require("./structures/message"),
+    MessageButton: require("./structures/MessageButton"),
+    MessageActionRow: require("./structures/MessageActionRow"),
+    
+    ButtonCollectorV12: require("./structures/v13/ButtonCollector"),
+    ButtonCollectorV13: require("./structures/v12/ButtonCollector"),
+
+    // Other
+    Color: require("./structures/Color"),
+    Util: require("./util/util"),
     SlashCommand: {
         SUB_COMMAND: 1,
         SUB_COMMAND_GROUP: 2,
@@ -20,5 +35,14 @@ module.exports = {
         ROLE: 8,
         MENTIONABLE: 9
     },
+    ButtonTypes: {
+        blurple: "blurple",
+        gray: "gray",
+        grey: "gray",
+        green: "green",
+        red: "red",
+        url: "url"
+    },
+
     version: require("../package.json").version
 }
