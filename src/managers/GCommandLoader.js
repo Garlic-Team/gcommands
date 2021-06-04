@@ -24,7 +24,7 @@ class GCommandLoader {
             var fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
-                    file = await require(`../../../${this.cmdDir}${dir}`);
+                    file = await require(`../../../../${this.cmdDir}${dir}`);
 
                     if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                     this.client.commands.set(file.name, file);
