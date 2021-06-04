@@ -35,16 +35,18 @@ class GEventLoader {
     async messageEvent() {
         if((this.client.slash == false) || (this.client.slash == "both")) {
             this.client.on('message', async(message) => {
-                messageEventUse(undefined, message)
+                messageEventUse(message)
             })
 
-            this.client.on('messageUpdate', async(oldMessage, message) => {
-                messageEventUse(oldMessage, message)
+            this.client.on('messageUpdate', async(oldMessage, newMessage) => {
+                messageEventUse(newMessage)
             })
         }
 
-        let messageEventUse = async(oldMesage, message) => {
+        let messageEventUse = async(message) => {
             if(this.client == undefined) return;
+            if(!message) return;
+
             if (message.author.bot) return;
             if (!message.guild) return;
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
