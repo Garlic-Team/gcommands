@@ -240,14 +240,10 @@ class GEventLoader {
                     }
                 }, args, args)
             } catch(e) {
-                try {
-                    commandos.run(this.client, undefined, message, args)
-                } catch(e) {
-                    if(!this.GCommandsClient.unkownCommandMessage) return;
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
-                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                        message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
-                    }
+                this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                if(!this.GCommandsClient.unkownCommandMessage) return;
+                if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
+                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
                 }
             }
         }
@@ -609,8 +605,8 @@ class GEventLoader {
                     
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
-                    if(!this.unkownCommandMessage) return;
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                    if(!this.unkownCommandMessage) return;
                     if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
