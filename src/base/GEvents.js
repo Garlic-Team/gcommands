@@ -1,5 +1,5 @@
 const { Collection } = require("discord.js");
-const Color = require("../structures/Color"), Events = require("../util/Constants");
+const Color = require("../structures/Color"), { Events } = require("../util/Constants");
 const path = require('path');
 const fs = require('fs');
 

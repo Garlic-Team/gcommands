@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
 const {Collection,MessageEmbed,APIMessage} = require("discord.js");
-const Color = require("../structures/Color"), Events = require("../util/Constants");
+const Color = require("../structures/Color"), { Events } = require("../util/Constants");
 
 /**
  * The GCommandsEventLoader class

@@ -1,4 +1,4 @@
-const cmdUtils = require('../util/cmdUtils'), Color = require("../structures/Color"), Events = require("../util/Constants")
+const cmdUtils = require('../util/cmdUtils'), Color = require("../structures/Color"), { Events } = require("../util/Constants")
 const axios = require("axios");
 const fs = require("fs");
 
