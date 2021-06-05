@@ -36,6 +36,18 @@ module.exports = Structures.extend("Message", Message => {
 
             if(options.embeds) embed = options.embeds
 
+            let finalFiles = [];
+            if(options.attachments) {
+                if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
+                options.attachments.forEach(file => {
+                    finalFiles.push({
+                        attachment: file.attachment,
+                        name: file.name,
+                        file: file.attachment
+                    })
+                })
+            }
+
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
@@ -43,7 +55,8 @@ module.exports = Structures.extend("Message", Message => {
                     components: options.components,
                     options,
                     embed: embed || null
-                }
+                },
+                files: finalFiles
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
         }
@@ -74,6 +87,18 @@ module.exports = Structures.extend("Message", Message => {
 
             if(options.embeds) embed = options.embeds
 
+            let finalFiles = [];
+            if(options.attachments) {
+                if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
+                options.attachments.forEach(file => {
+                    finalFiles.push({
+                        attachment: file.attachment,
+                        name: file.name,
+                        file: file.attachment
+                    })
+                })
+            }
+
             return this.client.api.channels[this.channel.id].messages[msgID].patch({
                 data: {
                     allowed_mentions: options.allowedMentions,
@@ -81,7 +106,8 @@ module.exports = Structures.extend("Message", Message => {
                     components: options.components,
                     options,
                     embed: embed || null
-                }
+                },
+                files: finalFiles
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
         }
@@ -143,6 +169,18 @@ module.exports = Structures.extend("Message", Message => {
 
             if(options.embeds) embed = options.embeds
 
+            let finalFiles = [];
+            if(options.attachments) {
+                if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
+                options.attachments.forEach(file => {
+                    finalFiles.push({
+                        attachment: file.attachment,
+                        name: file.name,
+                        file: file.attachment
+                    })
+                })
+            }
+
             return this.client.api.channels[this.channel.id].messages.post({
                 data: {
                     allowed_mentions: options.allowedMentions,
@@ -153,7 +191,8 @@ module.exports = Structures.extend("Message", Message => {
                     },
                     options,
                     embed: embed || null
-                }
+                },
+                files: finalFiles
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
         }

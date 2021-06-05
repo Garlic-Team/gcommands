@@ -297,11 +297,24 @@ class GEventLoader {
                                 data.embeds = result.embeds;
                             }
 
+                            let finalFiles = [];
+                            if(typeof result == "object" && result.attachments) {
+                                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                                result.attachments.forEach(file => {
+                                    finalFiles.push({
+                                        attachment: file.attachment,
+                                        name: file.name,
+                                        file: file.attachment
+                                    })
+                                })
+                            }
+
                             let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: result.thinking ? 5 : 4,
                                     data
-                                }, 
+                                },
+                                files: finalFiles
                             })).toJSON();
 
                             let apiMessageMsg = undefined;
@@ -340,12 +353,27 @@ class GEventLoader {
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                                     result.embeds = result.embeds;
                                 }
+                                let finalFiles = [];
+                                if(typeof result == "object" && result.attachments) {
+                                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                                    result.attachments.forEach(file => {
+                                        finalFiles.push({
+                                            attachment: file.attachment,
+                                            name: file.name,
+                                            file: file.attachment
+                                        })
+                                    })
+                                }
 
-                                let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
-                                    content: result.content,
-                                    components: result.components,
-                                    embeds: result.embeds
-                                }}))
+                                let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({
+                                    data: {
+                                        content: result.content,
+                                        components: result.components,
+                                        embeds: result.embeds
+                                    },
+                                    files: finalFiles   
+                                }))
+
                                 apiMessage.client = this.client;
                                 apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
                                 apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
@@ -534,12 +562,24 @@ class GEventLoader {
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
                                     data.embeds = result.embeds;
                                 }
-
+                                let finalFiles = [];
+                                if(typeof result == "object" && result.attachments) {
+                                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                                    result.attachments.forEach(file => {
+                                        finalFiles.push({
+                                            attachment: file.attachment,
+                                            name: file.name,
+                                            file: file.attachment
+                                        })
+                                    })
+                                }
+    
                                 let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
                                         type: result.thinking ? 5 : 4,
                                         data
-                                    }, 
+                                    },
+                                    files: finalFiles
                                 })).toJSON();
 
                                 let apiMessageMsg = {};
@@ -579,12 +619,26 @@ class GEventLoader {
                                         if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                                         result.embeds = result.embeds;
                                     }
-
-                                    let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: {
-                                        content: result.content,
-                                        components: result.components,
-                                        embeds: result.embeds || []
-                                    }}))
+                                    let finalFiles = [];
+                                    if(typeof result == "object" && result.attachments) {
+                                        if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                                        result.attachments.forEach(file => {
+                                            finalFiles.push({
+                                                attachment: file.attachment,
+                                                name: file.name,
+                                                file: file.attachment
+                                            })
+                                        })
+                                    }
+    
+                                    let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({
+                                        data: {
+                                            content: result.content,
+                                            components: result.components,
+                                            embeds: result.embeds
+                                        },
+                                        files: finalFiles   
+                                    }))
 
                                     if(apiMessage) {
                                         apiMessage.client = this.client;
