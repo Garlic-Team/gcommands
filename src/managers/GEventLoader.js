@@ -354,6 +354,7 @@ class GEventLoader {
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                                     result.embeds = result.embeds;
                                 } else result.embeds = [];
+
                                 let finalFiles = [];
                                 if(typeof result == "object" && result.attachments) {
                                     if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
@@ -563,6 +564,7 @@ class GEventLoader {
                                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
                                     data.embeds = result.embeds;
                                 }
+
                                 let finalFiles = [];
                                 if(typeof result == "object" && result.attachments) {
                                     if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
@@ -630,7 +632,7 @@ class GEventLoader {
                                         })
                                     }
                                     
-                                    let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({
+                                    let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
                                         data: {
                                             content: result.content,
                                             components: result.components,

@@ -127,7 +127,7 @@ class ButtonEvent {
                 },
             });
 
-            return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({
+            return this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
                 data: {
                     content: result.content,
                     components: result.components || [],
@@ -237,7 +237,7 @@ class ButtonEvent {
                     })
                 }
 
-                let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({
+                let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
                     data: {
                         content: result.content,
                         components: result.components,
