@@ -631,7 +631,8 @@ class GEventLoader {
                                             })
                                         })
                                     }
-    
+                                    
+                                    console.log(result.embeds)
                                     let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({
                                         data: {
                                             content: result.content,
