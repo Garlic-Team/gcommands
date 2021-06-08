@@ -30,7 +30,7 @@ class GCommandLoader {
                     this.client.commands.set(file.name, file);
                     console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &e("+fileName+") &3"+e).getText());
                     console.log(new Color("&d[GCommands] &cCan't load " + fileName).getText());
                 }
             } else {
@@ -44,7 +44,7 @@ class GCommandLoader {
                         this.client.commands.set(file2.name, file2);
                         console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
                     } catch(e) {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] "+e).getText());
+                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &e("+fileName2+") &3"+e).getText());
                         console.log(new Color("&d[GCommands] &cCan't load " + fileName2).getText());
                     }
                 })
