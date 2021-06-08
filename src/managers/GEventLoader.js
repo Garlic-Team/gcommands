@@ -46,9 +46,9 @@ class GEventLoader {
 
         let messageEventUse = async(message) => {
             if(!message) return;
-
-            if (message.author.bot) return;
+            if (!message.author || message.author.bot) return;
             if (!message.guild) return;
+            
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
             let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
 
@@ -632,6 +632,7 @@ class GEventLoader {
                                         })
                                     }
                                     
+                                    console.log(result.messageId)
                                     let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
                                         data: {
                                             content: result.content,
