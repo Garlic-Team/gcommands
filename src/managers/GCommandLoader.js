@@ -179,20 +179,20 @@ class GCommandLoader {
                 if(cmd.guildOnly) url = `https://discord.com/api/v8/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
                 var cmdd = {
-                    name: cmd.name,
+                    name: cmd.name.toLowerCase(),
                     description: cmd.description,
                     options: options || []
                 }
 
                 if(cmd.subCommandGroup && cmd.subCommand) {
                      cmdd = {
-                        name: cmd.name,
+                        name: cmd.name.toLowerCase(),
                         description: cmd.description,
                         options: subCommandGroup || []
                     };
                 } else {
                     cmdd = {
-                        name: cmd.name,
+                        name: cmd.name.toLowerCase(),
                         description: cmd.description,
                         options: options || []
                     };
