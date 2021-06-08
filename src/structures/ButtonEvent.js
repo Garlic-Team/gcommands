@@ -87,7 +87,6 @@ class ButtonEvent {
         if (typeof result == "object") {
             var finalData = [];
             result.embeds = [];
-            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
             if(!Array.isArray(result.components)) result.components = [result.components];
             result.components = result.components;

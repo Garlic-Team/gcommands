@@ -604,8 +604,6 @@ class GEventLoader {
                             },
                             edit: async(result) => {
                                 if (typeof result == "object") {
-                                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-
                                     if(result.components) {
                                         if(!Array.isArray(result.components)) result.components = [result.components];
 
