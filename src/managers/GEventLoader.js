@@ -201,10 +201,10 @@ class GEventLoader {
 
                 this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
 
-                const client = this.client
+                const client = this.client, bot = this.client
                 var msg = "";
                 commandos.run({
-                    client, message, member, guild, channel,
+                    client, bot, message, member, guild, channel,
                     respond: async(options = undefined) => {
                         let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
@@ -532,9 +532,9 @@ class GEventLoader {
                          *  }
                          */
 
-                        const client = this.client
+                        const client = this.client, bot = this.client
                         commandos.run({
-                            client, interaction, member,
+                            client, bot, interaction, member,
                             guild: member.guild, 
                             channel: member.guild.channels.cache.get(interaction.channel_id),
                             respond: async(result) => {
@@ -630,7 +630,6 @@ class GEventLoader {
                                         })
                                     }
                                     
-                                    console.log(result.embeds)
                                     let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({
                                         data: {
                                             content: result.content,
