@@ -225,7 +225,7 @@ class ButtonEvent {
                 if(typeof result == "object" && result.embeds) {
                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                     result.embeds = result.embeds;
-                }
+                } else result.embeds = []
                 let finalFiles = [];
                 if(typeof result == "object" && result.attachments) {
                     if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
