@@ -33,6 +33,7 @@ class GEventLoader {
      * @private
     */
     async messageEvent() {
+        if(this.client == undefined) return;
         if((this.client.slash == false) || (this.client.slash == "both")) {
             this.client.on('message', async(message) => {
                 messageEventUse(message)
@@ -44,7 +45,6 @@ class GEventLoader {
         }
 
         let messageEventUse = async(message) => {
-            if(this.client == undefined) return;
             if(!message) return;
 
             if (message.author.bot) return;
@@ -255,6 +255,7 @@ class GEventLoader {
      * @private
     */
     async slashEvent() {
+        if(this.client == undefined) return;
         if((this.client.slash) || (this.client.slash == "both")) {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
                 if(this.client == undefined) return;
