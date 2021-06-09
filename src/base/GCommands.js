@@ -1,5 +1,4 @@
-const GCommandLoader = require("../managers/GCommandLoader"), Color = require("../structures/Color"), GCommandsBase = require("./GCommandsBase"), GCommandsDispatcher = require("./GCommandsDispatcher"), GEvents = require("./GEvents"), GEventLoader = require("../managers/GEventLoader"), GDatabaseLoader = require("../managers/GDatabaseLoader"), Events = require("../util/Constants"), GUpdater = require("../util/updater");
-
+const GCommandLoader = require("../managers/GCommandLoader"), Color = require("../structures/Color"), GCommandsBase = require("./GCommandsBase"), GCommandsDispatcher = require("./GCommandsDispatcher"), GEvents = require("./GEvents"), GEventLoader = require("../managers/GEventLoader"), GDatabaseLoader = require("../managers/GDatabaseLoader"), { Events } = require("../util/Constants"), GUpdater = require("../util/updater");
 const { Collection, version, Client } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
@@ -117,7 +116,10 @@ class GCommands extends GCommandsBase {
 
 
         process.setMaxListeners(50);
-        process.on('uncaughtException', (error) => { console.log(new Color("&d[GCommands Errors] &eHandled: &a" + error + ` ${error.response ? error.response.data.message : ""} ${error.response ? error.response.data.code : ""}`).getText());});
+        process.on('uncaughtException', (error) => {
+            console.log(new Color("&d[GCommands Errors] &eHandled: &a" + error + ` ${error.response ? error.response.data.message : ""} ${error.response ? error.response.data.code : ""} | use debug for full error`).getText());
+            setTimeout(() => {this.emit(Events.DEBUG, error)}, 1000)
+        });
         
         setTimeout(() => {
             new GDatabaseLoader(this.GCommandsClient);

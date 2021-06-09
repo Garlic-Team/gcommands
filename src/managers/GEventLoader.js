@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
 const {Collection,MessageEmbed,APIMessage} = require("discord.js");
-const Color = require("../structures/Color"), { Events } = require("../util/Constants");
+const Color = require("../structures/Color"), { Events } = require("../util/Constants"), { createAPIMessage } = require("../util/util");
 
 /**
  * The GCommandsEventLoader class
@@ -279,11 +279,11 @@ class GEventLoader {
                             if (typeof result === 'object') {
                                 if(typeof result == "object" && !result.content) {
                                     const embed = new MessageEmbed(result)
-                                    data = await this.createAPIMessage(interaction, embed)
+                                    data = await createAPIMessage(interaction, embed)
                                 }
                                 else if(typeof result.content == "object" ) {
                                     const embed = new MessageEmbed(result.content)
-                                    data = await this.createAPIMessage(interaction, embed)
+                                    data = await createAPIMessage(interaction, embed)
                                 } else data = { content: result.content }
                             }
 
@@ -546,11 +546,11 @@ class GEventLoader {
                                 if (typeof result === 'object') {
                                     if(typeof result == "object" && !result.content) {
                                         const embed = new MessageEmbed(result)
-                                        data = await this.createAPIMessage(interaction, embed)
+                                        data = await createAPIMessage(interaction, embed)
                                     }
                                     else if(typeof result.content == "object" ) {
                                         const embed = new MessageEmbed(result.content)
-                                        data = await this.createAPIMessage(interaction, embed)
+                                        data = await createAPIMessage(interaction, embed)
                                     } else data = { content: result.content }
                                 }
 
@@ -691,18 +691,6 @@ class GEventLoader {
         require("../base/actions/user")(this.client)
         require("../base/actions/voiceupdate")(this.client)
         require("../base/actions/interactions")(this.client)
-    }
-
-    /**
-     * Internal method to createAPIMessage
-     * @returns {object}
-    */
-    async createAPIMessage(interaction, content) {
-        const apiMessage = await APIMessage.create(this.client.channels.resolve(interaction.channel_id), content)
-        .resolveData()
-        .resolveFiles();
-        
-        return { ...apiMessage.data, files: apiMessage.files };
     }
 
     /**

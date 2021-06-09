@@ -1,5 +1,5 @@
-const { Structures } = require("discord.js");
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector')
+const { Structures, MessageEmbed } = require("discord.js");
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), { createAPIMessage } = require("../util/util")
 const updater = require("../util/updater")
 
 module.exports = Structures.extend("DMChannel", DMChannel => {
@@ -16,11 +16,11 @@ module.exports = Structures.extend("DMChannel", DMChannel => {
             if (typeof result === 'object') {
                 if(typeof result == "object" && !result.content) {
                     const embed = new MessageEmbed(result)
-                    data = await this.createAPIMessage(interaction, embed)
+                    data = await createAPIMessage(interaction, embed)
                 }
                 else if(typeof result.content == "object" ) {
                     const embed = new MessageEmbed(result.content)
-                    data = await this.createAPIMessage(interaction, embed)
+                    data = await createAPIMessage(interaction, embed)
                 } else data = { content: result.content }
             }
 

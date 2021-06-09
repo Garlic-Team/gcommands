@@ -113,6 +113,64 @@ module.exports = Structures.extend("Message", Message => {
         }
 
         /**
+         * Method to edit message
+         * @param {Object} options 
+        */
+        async edit(result) {
+            console.log(this.id)
+            if (typeof result == "object") {
+                var finalData = [];
+                result.embeds = [];
+
+                if(!Array.isArray(result.components)) result.components = [result.components];
+                result.components = result.components;
+
+                if(typeof result.content == "object") {
+                    result.embeds = [result.content]
+                    result.content = "\u200B"
+                }
+
+                if(result.edited == false) {
+                    return this.client.api.channels(this.channel.id).messages[this.id].patch({
+                        data: {
+                            type: 7,
+                            data: {
+                                content: result.content,
+                                components: result.components,
+                                embeds: result.embeds
+                            },
+                        },
+                    }).then(d => this.client.actions.MessageCreate.handle(d).message);
+                }
+
+                let finalFiles = [];
+                if(typeof result == "object" && result.attachments) {
+                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                    result.attachments.forEach(file => {
+                        finalFiles.push({
+                            attachment: file.attachment,
+                            name: file.name,
+                            file: file.attachment
+                        })
+                    })
+                }
+
+                return this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
+                    data: {
+                        content: result.content,
+                        components: result.components || [],
+                        embeds: result.embeds || []
+                    },
+                    files: finalFiles
+                })
+            } else {
+                return this.client.api.channels(this.channel.id).messages[this.id].patch({ data: {
+                    content: result,
+                }})
+            }
+        }
+
+        /**
          * Method to inlineReply
          * @param {String} content
          * @param {Object} options
