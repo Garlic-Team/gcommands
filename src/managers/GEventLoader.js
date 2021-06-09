@@ -1,6 +1,7 @@
 const { default: axios } = require("axios");
 const {Collection,MessageEmbed,APIMessage} = require("discord.js");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants"), { createAPIMessage } = require("../util/util");
+const ms = require("ms")
 
 /**
  * The GCommandsEventLoader class
@@ -114,16 +115,16 @@ class GEventLoader {
                 
                 const now = Date.now();
                 const timestamps = this.client.cooldowns.get(commandos.name);
-                const cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
+                const cooldownAmount = ms(commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault);
                 
                 if (timestamps.has(message.author.id)) {
                     if (timestamps.has(message.author.id)) {
                         const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
                     
                         if (now < expirationTime) {
-                            const timeLeft = (expirationTime - now) / 1000;
+                            const timeLeft = ms(expirationTime - now);
 
-                            return message.inlineReply(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name))
+                            return message.inlineReply(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft).replace(/{CMDNAME}/g, commandos.name))
                         }
                     }
                 }
@@ -391,20 +392,20 @@ class GEventLoader {
 
                     let now = Date.now();
                     let timestamps = this.client.cooldowns.get(commandos.name);
-                    let cooldownAmount = (commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault) * 1000;
+                    let cooldownAmount = ms(commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault);
                     
                     if (timestamps.has(interaction.member.user.id)) {
                         if (timestamps.has(interaction.member.user.id)) {
                             let expirationTime = timestamps.get(interaction.member.user.id) + cooldownAmount;
                         
                             if (now < expirationTime) {
-                                let timeLeft = (expirationTime - now) / 1000;
+                                let timeLeft = ms(expirationTime - now);
                                 this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft.toFixed(1)).replace(/{CMDNAME}/g, commandos.name)
+                                            content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft).replace(/{CMDNAME}/g, commandos.name)
                                         }
                                     }
                                 });
