@@ -1,6 +1,6 @@
 const { Collector } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector')
-const updater = require("../util/updater")
+const updater = require("../util/updater");
 
 /**
  * The GCommansDispatcher class
@@ -22,6 +22,8 @@ class GCommandsDispatcher {
     */
     async setGuildPrefix(prefix, guildId) {
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
+        this.client.guilds.cache.get(guildId).prefix = prefix;
+
         if(this.client.database.type = "mongodb") {
             var guildSettings = require('../util/models/guild')
 
@@ -54,7 +56,9 @@ class GCommandsDispatcher {
      * Internal method to getGuildPrefix
      * @returns {Stirng}
     */
-    async getGuildPrefix(guildId) {
+    async getGuildPrefix(guildId, cache = true) {
+        if(cache) return this.client.guilds.cache.get(guildId).prefix;
+
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
         if(this.client.database.type = "mongodb") {
             var guildSettings = require('../util/models/guild')

@@ -122,10 +122,10 @@ class GCommands extends GCommandsBase {
         });
         
         setTimeout(() => {
+            this.client.dispatcher = new GCommandsDispatcher(this.client);
             new GDatabaseLoader(this.GCommandsClient);
             new GEventLoader(this.GCommandsClient);
             new GCommandLoader(this.GCommandsClient);
-            this.client.dispatcher = new GCommandsDispatcher(this.client);
         }, 1000)
 
         GUpdater.__updater();

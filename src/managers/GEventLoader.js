@@ -54,7 +54,7 @@ class GEventLoader {
             let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
 
             if(this.client.database.working) {
-                let guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id)
+                let guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id);
                 prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
             }
 
