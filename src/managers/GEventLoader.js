@@ -109,6 +109,7 @@ class GEventLoader {
                 })
                 if(inhibit == false) return;
 
+                console.log(await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos.name))
                 if (!this.client.cooldowns.has(commandos.name)) {
                     this.client.cooldowns.set(commandos.name, new Collection());
                 }

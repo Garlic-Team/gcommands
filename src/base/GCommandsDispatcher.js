@@ -57,9 +57,9 @@ class GCommandsDispatcher {
      * @returns {Stirng}
     */
     async getGuildPrefix(guildId, cache = true) {
-        if(cache) return this.client.guilds.cache.get(guildId).prefix;
-
         if(!this.client.database || !this.client.database.working) return this.client.prefix;
+        if(cache) return this.client.guilds.cache.get(guildId).prefix ? this.client.guilds.cache.get(guildId).prefix : this.client.prefix;
+
         if(this.client.database.type = "mongodb") {
             var guildSettings = require('../util/models/guild')
 
@@ -74,6 +74,31 @@ class GCommandsDispatcher {
             return settings ? settings : this.client.prefix;
         } else if(this.client.database.type == "mariadb") {
             var settings = this.client.database.mariadb.get(this.client.database.mariadbOptions, guildId, `guildPrefix`)
+            return settings ? settings : this.client.prefix;
+        }
+    }
+
+    /**
+     * Internal method to getCooldown
+     * @returns {Stirng}
+    */
+     async getCooldown(guildId, userId, cmdName) {
+        if(!this.client.database || !this.client.database.working) return 0;
+
+        if(this.client.database.type = "mongodb") {
+            var user = require('../util/models/user')
+
+            const settings = await user.findOne({ id: userId, guild: guildId })
+            if(!settings) {
+              return 0
+            }
+
+            return settings.cooldown
+        } else if(this.client.database.type == "sqlite") {
+            var settings = this.client.database.sqlite.get(`guild_${guildId}_${userId}`)
+            return settings ? settings : this.client.prefix;
+        } else if(this.client.database.type == "mariadb") {
+            var settings = this.client.database.mariadb.get(this.client.database.mariadbOptions, guildId + "##" + userId, `guildCooldown`)
             return settings ? settings : this.client.prefix;
         }
     }
