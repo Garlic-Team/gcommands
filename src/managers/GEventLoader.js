@@ -54,7 +54,7 @@ class GEventLoader {
             let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
 
             if(this.client.database.working) {
-                let guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id);
+                let guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id) || this.client.prefix;
                 prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
             }
 
@@ -109,7 +109,6 @@ class GEventLoader {
                 })
                 if(inhibit == false) return;
 
-                console.log(await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos.name))
                 if (!this.client.cooldowns.has(commandos.name)) {
                     this.client.cooldowns.set(commandos.name, new Collection());
                 }
@@ -194,8 +193,21 @@ class GEventLoader {
                     } 
                 }
 
+                if(commandos.userRequiredRoles) {
+                    if(!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles]
+
+                    let roles = commandos.userRequiredRoles.some(v => message.member._roles.includes(v))
+                    if(!roles) {
+                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${message.guild.roles.cache.get(commandos.userRequiredRole).name}\``))
+                        return;
+                    }
+                }
+
                 if(commandos.userRequiredRole) {
-                    if(!message.member._roles.includes(commandos.userRequiredRole)) {
+                    if(!Array.isArray(commandos.userRequiredRole)) commandos.userRequiredRole = [commandos.userRequiredRole]
+
+                    let roles = commandos.userRequiredRole.some(v => message.member._roles.includes(v))
+                    if(!roles) {
                         message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${message.guild.roles.cache.get(commandos.userRequiredRole).name}\``))
                         return;
                     }
@@ -505,8 +517,29 @@ class GEventLoader {
                         }
                     }
 
+                    if(commandos.userRequiredRoles) {
+                        if(!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles]
+    
+                        let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v))
+                        if(!roles) {
+                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                                data: {
+                                    type: 4,
+                                    data: {
+                                        flags: 64,
+                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${member.guild.roles.cache.get(commandos.userRequiredRole).name}\``),
+                                    }
+                                }
+                            }); 
+                            return;
+                        }
+                    }
+    
                     if(commandos.userRequiredRole) {
-                        if(!interaction.member.roles.includes(commandos.userRequiredRole)) {
+                        if(!Array.isArray(commandos.userRequiredRole)) commandos.userRequiredRole = [commandos.userRequiredRole]
+    
+                        let roles = commandos.userRequiredRole.some(v => interaction.member.roles.includes(v))
+                        if(!roles) {
                             this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
