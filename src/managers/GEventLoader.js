@@ -99,10 +99,10 @@ class GEventLoader {
                             msg = await message.buttonsEdit(msg.id, options.content, options)
                             return msg;
                         } else if(typeof options == "object" && !options.content) {
-                            msg = await msg.edit(options)
+                            msg = await message.buttonsEdit(msg.id, options, [])
                             return msg;
                         } else {
-                            msg = msg.edit(options)
+                            msg = await message.buttonsEdit(msg.id, options, [])
                             return msg;
                         }
                     }
@@ -245,10 +245,10 @@ class GEventLoader {
                             msg = await message.buttonsEdit(msg.id, options.content, options)
                             return msg;
                         } else if(typeof options == "object" && !options.content) {
-                            msg = await msg.edit(options)
+                            msg = await message.buttonsEdit(msg.id, options, [])
                             return msg;
                         } else {
-                            msg = msg.edit(options)
+                            msg = message.buttonsEdit(msg.id, options, [])
                             return msg;
                         }
                     }
@@ -667,7 +667,6 @@ class GEventLoader {
                                         })
                                     }
                                     
-                                    console.log(result.messageId)
                                     let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
                                         data: {
                                             content: result.content,
