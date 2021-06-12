@@ -1,4 +1,4 @@
-const Color = require("../index")
+const Color = require("../structures/Color")
 
 /**
  * The MessageActionRow class
