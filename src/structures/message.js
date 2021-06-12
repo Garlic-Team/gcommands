@@ -117,7 +117,6 @@ module.exports = Structures.extend("Message", Message => {
          * @param {Object} options 
         */
         async edit(result) {
-            console.log(this.id)
             if (typeof result == "object") {
                 var finalData = [];
                 result.embeds = [];
