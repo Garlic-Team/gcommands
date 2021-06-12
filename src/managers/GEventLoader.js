@@ -293,11 +293,11 @@ class GEventLoader {
                             if (typeof result === 'object') {
                                 if(typeof result == "object" && !result.content) {
                                     const embed = new MessageEmbed(result)
-                                    data = await createAPIMessage(interaction, embed)
+                                    data = await createAPIMessage(this.client, interaction, embed)
                                 }
                                 else if(typeof result.content == "object" ) {
                                     const embed = new MessageEmbed(result.content)
-                                    data = await createAPIMessage(interaction, embed)
+                                    data = await createAPIMessage(this.client, interaction, embed)
                                 } else data = { content: result.content }
                             }
 
@@ -581,11 +581,11 @@ class GEventLoader {
                                 if (typeof result === 'object') {
                                     if(typeof result == "object" && !result.content) {
                                         const embed = new MessageEmbed(result)
-                                        data = await createAPIMessage(interaction, embed)
+                                        data = await createAPIMessage(this.client, interaction, embed)
                                     }
                                     else if(typeof result.content == "object" ) {
                                         const embed = new MessageEmbed(result.content)
-                                        data = await createAPIMessage(interaction, embed)
+                                        data = await createAPIMessage(this.client, interaction, embed)
                                     } else data = { content: result.content }
                                 }
 

@@ -11,8 +11,8 @@ module.exports = {
      * Internal method to createAPIMessage
      * @returns {object}
     */
-     async createAPIMessage(interaction, content) {
-        const apiMessage = await APIMessage.create(this.client.channels.resolve(interaction.channel_id), content)
+     async createAPIMessage(client, interaction, content) {
+        const apiMessage = await APIMessage.create(client.channels.resolve(interaction.channel_id), content)
         .resolveData()
         .resolveFiles();
         
