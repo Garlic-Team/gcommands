@@ -120,7 +120,7 @@ module.exports = Structures.extend("Message", Message => {
             if (typeof result == "object") {
                 var finalData = [];
 
-                if(!Array.isArray(result.components)) result.components = [result.components];
+                if(result.components && !Array.isArray(result.components)) result.components = [result.components];
 
                 if(typeof result.content == "object") {
                     result.embeds = [result.content]
