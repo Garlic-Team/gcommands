@@ -1,3 +1,5 @@
+const { APIMessage } = require("discord.js")
+
 module.exports = {
     resolveString(data) {
         if (typeof data === 'string') return data;
