@@ -20,25 +20,6 @@ module.exports = {
         } else if(version.includes("dev")) {
             console.log(new Color("&d[GCommands Updater] &cYou have &eDEV &cversion of GCommands &ehttps://gcommands.js.org&c and select dev version.").getText())
         }
-
-        if(stableVersion == "3.1.1") {
-            try {readFileSync("./updated.txt")}catch(e){writeFileSync('updated.txt', 'no', function (err) {});}
-            if(readFileSync("./updated.txt") == "yes") return;
-            const readline = require('readline').createInterface({
-                input: process.stdin,
-                output: process.stdout
-            });
-
-            readline.question(new Color('&d[GComamnds Updater] &cDid you adjust everything that was necessary? More on &ehttps://gcommands.js.org/guide/additional/fromv2tov3.html: &3').getText(), input => {
-                if(input == "yes") {
-                    writeFileSync('updated.txt', 'yes', function (err) {});
-                    console.log(new Color("&d[GCommands Updater] &eOkay :D").getText())
-                } else {
-                    console.log(new Color('&d[GComamnds Updater] &cCheck https://gcommands.js.org/guide/additional/fromv2tov3.html').getText())
-                }
-                readline.close();
-            })
-        }
     },
 
     checkDjsVersion: function(needVer) {

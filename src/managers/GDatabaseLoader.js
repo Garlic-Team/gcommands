@@ -44,6 +44,16 @@ class GDatabaseLoader {
                 port: this.client.database.port
             }
         }
+
+        this.__guildConfig()
+    }
+
+    async __guildConfig() {
+        for(let guild of this.client.guilds.cache) {
+            guild.prefix = this.client.dispatcher.getGuildPrefix(guild.id, false);
+        }
+
+        this.client.on("guildCreate", (guild) => {guild.prefix = this.client.dispatcher.getGuildPrefix(guild.id, false)})
     }
 }
 

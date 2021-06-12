@@ -87,7 +87,6 @@ class ButtonEvent {
         if (typeof result == "object") {
             var finalData = [];
             result.embeds = [];
-            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
 
             if(!Array.isArray(result.components)) result.components = [result.components];
             result.components = result.components;
@@ -110,17 +109,32 @@ class ButtonEvent {
                 });
             }
 
+            let finalFiles = [];
+            if(typeof result == "object" && result.attachments) {
+                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                result.attachments.forEach(file => {
+                    finalFiles.push({
+                        attachment: file.attachment,
+                        name: file.name,
+                        file: file.attachment
+                    })
+                })
+            }
+
             await this.client.api.interactions(this.discordID, this.token).callback.post({
                 data: {
                     type: 6,
                 },
             });
 
-            return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
-                content: result.content,
-                components: result.components || [],
-                embeds: result.embeds || []
-            }})
+            return this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
+                data: {
+                    content: result.content,
+                    components: result.components || [],
+                    embeds: result.embeds || []
+                },
+                files: finalFiles
+            })
         } else {
             await this.client.api.interactions(this.discordID, this.token).callback.post({
                 data: {
@@ -165,12 +179,24 @@ class ButtonEvent {
                 if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                 result.embeds = result.embeds;
             }
+            let finalFiles = [];
+            if(typeof result == "object" && result.attachments) {
+                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                result.attachments.forEach(file => {
+                    finalFiles.push({
+                        attachment: file.attachment,
+                        name: file.name,
+                        file: file.attachment
+                    })
+                })
+            }
 
             let apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
                 data: {
                     type: result.thinking ? 5 : 4,
                     data
-                }, 
+                },
+                files: finalFiles
             })).toJSON();
 
             let apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.token}/messages/@original`)).data;
@@ -198,13 +224,27 @@ class ButtonEvent {
                 if(typeof result == "object" && result.embeds) {
                     if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                     result.embeds = result.embeds;
+                } else result.embeds = []
+                let finalFiles = [];
+                if(typeof result == "object" && result.attachments) {
+                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                    result.attachments.forEach(file => {
+                        finalFiles.push({
+                            attachment: file.attachment,
+                            name: file.name,
+                            file: file.attachment
+                        })
+                    })
                 }
 
-                let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
-                    content: result.content,
-                    components: result.components,
-                    embeds: result.embeds
-                }}))
+                let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
+                    data: {
+                        content: result.content,
+                        components: result.components,
+                        embeds: result.embeds
+                    },
+                    files: finalFiles
+                }))
                 
                 return apiMessage;
             }

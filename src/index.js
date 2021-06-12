@@ -15,6 +15,9 @@ module.exports = {
     // Structures
     GCommandsGuild: require("./structures/guild"),
     GCommandsMessage: require("./structures/message"),
+    GNewsChannel: require("./structures/NewsChannel"),
+    GTextChannel: require("./structures/TextChannel"),
+    GDMChannel: require("./structures/DMChannel"),
     MessageButton: require("./structures/MessageButton"),
     MessageActionRow: require("./structures/MessageActionRow"),
     
