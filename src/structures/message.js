@@ -122,6 +122,7 @@ module.exports = Structures.extend("Message", Message => {
 
                 if(result.components && !Array.isArray(result.components)) result.components = [result.components];
 
+                if(typeof result == "object" && !result.content) result.embeds = [result]
                 if(typeof result.content == "object") {
                     result.embeds = [result.content]
                     result.content = "\u200B"
