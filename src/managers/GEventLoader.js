@@ -68,6 +68,7 @@ class GEventLoader {
             try {
                 let commandos = this.client.commands.get(cmd);
                 if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
+                if(!commandos) return;
                 if(commandos.slash == true || commandos.slash == "true") return;
 
                 let member = message.member, guild = message.guild, channel = message.channel
