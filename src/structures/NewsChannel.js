@@ -13,17 +13,13 @@ module.exports = Structures.extend("NewsChannel", NewsChannel => {
                 content: result
             }
 
-            if (typeof result === 'object') {
-                if(typeof result == "object" && !result.content) {
-                    const embed = new MessageEmbed(result)
-                    data = await createAPIMessage(interaction, embed)
-                }
-                else if(typeof result.content == "object" ) {
-                    const embed = new MessageEmbed(result.content)
-                    data = await createAPIMessage(interaction, embed)
-                } else data = { content: result.content }
+            let interaction = {
+                channel_id: this.id
             }
 
+            if(typeof result != "object") data.content = result;
+            if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
+            if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
             if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
             if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
             if(typeof result == "object" && result.components) {

@@ -68,6 +68,7 @@ class GEventLoader {
             try {
                 let commandos = this.client.commands.get(cmd);
                 if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
+                if(!commandos) return;
                 if(commandos.slash == true || commandos.slash == "true") return;
 
                 let member = message.member, guild = message.guild, channel = message.channel
@@ -99,10 +100,10 @@ class GEventLoader {
                             msg = await message.buttonsEdit(msg.id, options.content, options)
                             return msg;
                         } else if(typeof options == "object" && !options.content) {
-                            msg = await msg.edit(options)
+                            msg = await message.buttonsEdit(msg.id, options, [])
                             return msg;
                         } else {
-                            msg = msg.edit(options)
+                            msg = await message.buttonsEdit(msg.id, options, [])
                             return msg;
                         }
                     }
@@ -245,10 +246,10 @@ class GEventLoader {
                             msg = await message.buttonsEdit(msg.id, options.content, options)
                             return msg;
                         } else if(typeof options == "object" && !options.content) {
-                            msg = await msg.edit(options)
+                            msg = await message.buttonsEdit(msg.id, options, [])
                             return msg;
                         } else {
-                            msg = msg.edit(options)
+                            msg = message.buttonsEdit(msg.id, options, [])
                             return msg;
                         }
                     }
@@ -293,11 +294,11 @@ class GEventLoader {
                             if (typeof result === 'object') {
                                 if(typeof result == "object" && !result.content) {
                                     const embed = new MessageEmbed(result)
-                                    data = await createAPIMessage(interaction, embed)
+                                    data = await createAPIMessage(this.client, interaction, embed)
                                 }
                                 else if(typeof result.content == "object" ) {
                                     const embed = new MessageEmbed(result.content)
-                                    data = await createAPIMessage(interaction, embed)
+                                    data = await createAPIMessage(this.client, interaction, embed)
                                 } else data = { content: result.content }
                             }
 
@@ -581,11 +582,11 @@ class GEventLoader {
                                 if (typeof result === 'object') {
                                     if(typeof result == "object" && !result.content) {
                                         const embed = new MessageEmbed(result)
-                                        data = await createAPIMessage(interaction, embed)
+                                        data = await createAPIMessage(this.client, interaction, embed)
                                     }
                                     else if(typeof result.content == "object" ) {
                                         const embed = new MessageEmbed(result.content)
-                                        data = await createAPIMessage(interaction, embed)
+                                        data = await createAPIMessage(this.client, interaction, embed)
                                     } else data = { content: result.content }
                                 }
 
@@ -667,7 +668,6 @@ class GEventLoader {
                                         })
                                     }
                                     
-                                    console.log(result.messageId)
                                     let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
                                         data: {
                                             content: result.content,

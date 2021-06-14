@@ -7,7 +7,8 @@
         "german": "Du benötigst die Berechtigung {PERMISSION}, um diesen Befehl nutzen zu können.",
         "czech": "Chybí ti {PERMISSION} oprávnění k použití tohoto příkazu.",
         "slovak": "Chýba ti {PERMISSION} oprávnenie k použitiu tohoto príkazu.",
-        "turkish": "Bu komutu kullanabilmek için {PERMISSION} yetkisine sahip olmak zorundasın."
+        "turkish": "Bu komutu kullanabilmek için {PERMISSION} yetkisine sahip olmak zorundasın.",
+        "polish": "Musisz posiadać permisję {PERMISSION} aby użyć tej komendy."
     },
     "MISSING_CLIENT_PERMISSIONS": {
         "english": "The client must have {PERMISSION} permission to use this command.",
@@ -17,7 +18,8 @@
         "german": "Der Client benötigt die Berechtigung {PERMISSION}, um diesen Befehl verwenden zu können.",
         "czech": "Client musí mít {PERMISSION} oprávnění k použití tohoto příkazu.",
         "slovak": "Client musí mať {PERMISSION} oprávnenia k použitiu tohoto príkazu.",
-        "turkish": "Bu komutu kullanabilmek için Client'in {PERMISSION} yetkisine sahip olması gerekiyor."
+        "turkish": "Bu komutu kullanabilmek için Client'in {PERMISSION} yetkisine sahip olması gerekiyor.",
+        "polish": "Klient musi posiadać permisje {PERMISSION} aby użyć tej komendy."
     },
     "MISSING_ROLES": {
         "english": "You do not have the required roles to use this command! You need one of the following: {ROLES}",
@@ -27,7 +29,8 @@
         "german": "Sie haben nicht die erforderlichen Rollen, um diesen Befehl zu verwenden! Sie benötigen eine der folgenden Möglichkeiten: {ROLES}",
         "czech": "Nemáš potřebné role na použití tohoto příkazu! Potřebuješ jednu z: {ROLES}",
         "slovak": "Nemáš potrebné role na použitie tohito príkazu! Potrebuješ jednu z: {ROLES}",
-        "turkish": "Bu komutu kullanabilmek için gerekli rollerden birisine sahip değilsin! Şu rollerden birisine sahip olman gerekiyor: {ROLES}"
+        "turkish": "Bu komutu kullanabilmek için gerekli rollerden birisine sahip değilsin! Şu rollerden birisine sahip olman gerekiyor: {ROLES}",
+        "polish": "Nie posiadasz wymaganych ról aby użyć tej komendy! Potrzebujesz jednej z podanych: {ROLES}"
     },
     "COOLDOWN": {
         "english": "You must wait {COOLDOWN} before using that command again.",
@@ -37,7 +40,8 @@
         "german": "Du musst {COOLDOWN} warten, bevor du diesen Befehl erneut nutzen kannst.",
         "czech": "Počkej {COOLDOWN}, než použiješ příkaz znova.",
         "slovak": "Počkaj {COOLDOWN}, skôr ako použiješ príkaz znova.",
-        "turkish": "Bu komutu kullanabilmek için {COOLDOWN} beklemelisin."
+        "turkish": "Bu komutu kullanabilmek için {COOLDOWN} beklemelisin.",
+        "polish": "Musisz poczekać {COOLDOWN} sekund przed ponownym użyciem komendy."
     },
     "UNKNOWN_COMMAND": {
         "english": "Could not find command {COMMAND}!",
@@ -47,7 +51,8 @@
         "german": "Konnte den Befehl {COMMAND} nicht finden!",
         "czech": "Příkaz {COMMAND} nebyl nalezen!",
         "slovak": "Príkaz {COMMAND} nebol nájdený!",
-        "turkish": "{COMMAND} adındaki komutu bulamadım!"
+        "turkish": "{COMMAND} adındaki komutu bulamadım!",
+        "polish": "Nie mogę znaleźć komendy {COMMAND}!"
     },
     "NSFW": {
         "english": "You can only use this command in nsfw channel.",
@@ -57,6 +62,7 @@
         "german": "Sie können diesen Befehl nur im nsfw-Kanal verwenden.",
         "czech": "Tento příkaz můžete použít pouze v nsfw.",
         "slovak": "Príkaz môžete využiť iba v nsfw room.",
-        "turkish": "Bu komutu sadece nsfw kanalında kullanabilirsiniz."
+        "turkish": "Bu komutu sadece nsfw kanalında kullanabilirsiniz.",
+        "polish": "Tej komendy możesz użyć tylko na kanale NSFW."
     }
 }
