@@ -121,8 +121,8 @@ class GCommands extends GCommandsBase {
             setTimeout(() => {this.emit(Events.DEBUG, error)}, 1000)
         });
         
+        this.client.dispatcher = new GCommandsDispatcher(this.client);
         setTimeout(() => {
-            this.client.dispatcher = new GCommandsDispatcher(this.client);
             new GDatabaseLoader(this.GCommandsClient);
             new GEventLoader(this.GCommandsClient);
             new GCommandLoader(this.GCommandsClient);
