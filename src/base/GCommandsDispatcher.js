@@ -1,5 +1,5 @@
 const { Collector } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector')
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), Color = require("../structures/Color")
 const updater = require("../util/updater");
 
 /**
@@ -109,7 +109,7 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     addInhibitor(inhibitor) {
-		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
+		if(typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
 		if(this.client.inhibitors.has(inhibitor)) return false;
 		this.client.inhibitors.add(inhibitor);
 		return true;
@@ -120,7 +120,7 @@ class GCommandsDispatcher {
      * @returns {Set}
     */
     removeInhibitor(inhibitor) {
-		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
+		if(typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
 		return this.client.inhibitors.delete(inhibitor);
 	}
 
