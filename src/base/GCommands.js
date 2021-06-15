@@ -43,6 +43,12 @@ class GCommands extends GCommandsBase {
         this.unkownCommandMessage = options.unkownCommandMessage;
 
         /**
+         * AutoTyping
+         * @property {Boolean} autoTyping
+         */
+         this.autoTyping = options.autoTyping;
+
+        /**
          * ownLanguageFile
          * @property {Object} ownLanguageFile
          */
@@ -113,6 +119,7 @@ class GCommands extends GCommandsBase {
         this.client.prefix = this.prefix;
         this.client.slash = this.slash;
         this.client.cooldownDefault = this.cooldownDefault;
+        this.client.autoTyping = this.autoTyping;
 
 
         process.setMaxListeners(50);

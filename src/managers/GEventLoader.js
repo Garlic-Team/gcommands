@@ -1,7 +1,8 @@
 const { default: axios } = require("axios");
 const {Collection,MessageEmbed,APIMessage} = require("discord.js");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants"), { createAPIMessage } = require("../util/util");
-const ms = require("ms")
+const ms = require("ms");
+const channel = require("../base/actions/channel");
 
 /**
  * The GCommandsEventLoader class
@@ -75,6 +76,7 @@ class GEventLoader {
                 let inhibit = await this.inhibit(commandos, {
                     message, member, guild, channel,
                     respond: async(options = undefined) => {
+                        channel.startTyping(3);
                         let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
 
@@ -93,6 +95,8 @@ class GEventLoader {
                         msg.client = this.client;
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
                         msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+
+                        channel.stopTyping(true);
                         return msg;
                     },
                     edit: async(options = undefined) => {
@@ -221,6 +225,7 @@ class GEventLoader {
                 commandos.run({
                     client, bot, message, member, guild, channel,
                     respond: async(options = undefined) => {
+                        if(this.client.autoTyping) channel.startTyping(3);
                         let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
 
@@ -239,6 +244,8 @@ class GEventLoader {
                         msg.client = this.client;
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
                         msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+
+                        if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
                     edit: async(options = undefined) => {
@@ -461,13 +468,12 @@ class GEventLoader {
                          *  }
                          */
 
-                        const client = this.client, bot = this.client
+                        const client = this.client, bot = this.client, channel = member.guild.channels.cache.get(interaction.channel_id)
                         commandos.run({
-                            client, bot, interaction, member,
+                            client, bot, interaction, member, channel,
                             guild: member.guild, 
-                            channel: member.guild.channels.cache.get(interaction.channel_id),
                             respond: async(result) => {
-                                this.slashRespond(interaction, result)
+                                this.slashRespond(channel, interaction, result)
                             },
                             edit: async(result) => {
                                 this.slashEdit(interaction, result)
@@ -511,7 +517,9 @@ class GEventLoader {
         require("../base/actions/interactions")(this.client)
     }
 
-    async slashRespond(interaction, result) {
+    async slashRespond(channel, interaction, result) {
+        if(!result.ephemeral && this.client.autoTyping) channel.startTyping(3);
+
         var data = {
             content: result
         }
@@ -575,6 +583,7 @@ class GEventLoader {
             apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
         }
 
+        if(!result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
         return apiMessage
     }
 
@@ -625,7 +634,7 @@ class GEventLoader {
             return apiMessage;
         }
 
-        return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
+        return this.client.api.webhooks(this.client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
     }
 
     /**
