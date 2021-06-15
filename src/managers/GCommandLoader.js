@@ -209,7 +209,7 @@ class GCommandLoader {
                 }
 
                 axios(config).then((response) => {
-                    console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
+                    this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
                 })
                 .catch((error) => {
                     console.log(new Color("&d[GCommands] &cRequest failed! " + error + " &e("+cmd.name+")", {json:false}).getText());
@@ -256,7 +256,7 @@ class GCommandLoader {
     */
     async __tryAgain(cmd, config) {
         axios(config).then((response) => {
-            console.log(new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
+            this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
         })
         .catch((error) => {
             console.log(new Color("&d[GCommands] &cRequest failed! " + error + " &e("+cmd.name+")", {json:false}).getText());
