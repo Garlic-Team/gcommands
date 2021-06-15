@@ -1,7 +1,7 @@
 /* From discord-buttons edited */
 const { default: axios } = require("axios");
 const {APIMessage, Client, MessageEmbed} = require("discord.js")
-const Color = require("../structures/Color")
+const Color = require("../structures/Color"), { createAPIMessage } = require("../util/util");
 
 /**
  * The ButtonEvent class
@@ -91,6 +91,9 @@ class ButtonEvent {
             if(!Array.isArray(result.components)) result.components = [result.components];
             result.components = result.components;
 
+            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
+            result.embeds = result.embeds;
+
             if(typeof result.content == "object") {
                 result.embeds = [result.content]
                 result.content = "\u200B"
@@ -165,11 +168,11 @@ class ButtonEvent {
             if (typeof result === 'object') {
                 if(typeof result == "object" && !result.content) {
                     const embed = new MessageEmbed(result)
-                    data = await this.createAPIMessage(this.channel, embed)
+                    data = await createAPIMessage(this.client, this.channel, embed)
                 }
                 else if(typeof result.content == "object" ) {
                     const embed = new MessageEmbed(result.content)
-                    data = await this.createAPIMessage(this.channel, embed)
+                    data = await createAPIMessage(this.client, this.channel, embed)
                 } else data = { content: result.content }
             }
 
@@ -260,14 +263,6 @@ class ButtonEvent {
             send: _send,
             edit: _edit
         }
-    }
-
-    async createAPIMessage(channel, content) {
-        const apiMessage = await APIMessage.create(this.channel, content)
-        .resolveData()
-        .resolveFiles();
-        
-        return { ...apiMessage.data, files: apiMessage.files };
     }
 }
 

@@ -276,6 +276,7 @@ class GEventLoader {
                 if(this.client == undefined) return;
                 try {
                     let commandos = this.client.commands.get(interaction.data.name);
+                    if(!commandos) return;
                     if(commandos.slash == false || commandos.slash == "false") return;
                     if (!this.client.cooldowns.has(commandos.name)) {
                         this.client.cooldowns.set(commandos.name, new Collection());
@@ -287,119 +288,10 @@ class GEventLoader {
                         guild: member.guild, 
                         channel: member.guild.channels.cache.get(interaction.channel_id),
                         respond: async(result) => {
-                            var data = {
-                                content: result
-                            }
-
-                            if (typeof result === 'object') {
-                                if(typeof result == "object" && !result.content) {
-                                    const embed = new MessageEmbed(result)
-                                    data = await createAPIMessage(this.client, interaction, embed)
-                                }
-                                else if(typeof result.content == "object" ) {
-                                    const embed = new MessageEmbed(result.content)
-                                    data = await createAPIMessage(this.client, interaction, embed)
-                                } else data = { content: result.content }
-                            }
-
-                            if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-                            if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-                            if(typeof result == "object" && result.components) {
-                                if(!Array.isArray(result.components)) result.components = [result.components];
-                                data.components = result.components;
-                            }
-                            if(typeof result == "object" && result.embeds) {
-                                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                                data.embeds = result.embeds;
-                            }
-
-                            let finalFiles = [];
-                            if(typeof result == "object" && result.attachments) {
-                                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                                result.attachments.forEach(file => {
-                                    finalFiles.push({
-                                        attachment: file.attachment,
-                                        name: file.name,
-                                        file: file.attachment
-                                    })
-                                })
-                            }
-
-                            let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                data: {
-                                    type: result.thinking ? 5 : 4,
-                                    data
-                                },
-                                files: finalFiles
-                            })).toJSON();
-
-                            let apiMessageMsg = {};
-                            try {
-                                apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
-                            } catch(e) {
-                                apiMessage = {
-                                    id: undefined
-                                }
-                            }
-
-                            apiMessage = apiMessageMsg;
-                            apiMessage.client = this.client;
-                            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
-
-                            return apiMessage
+                            this.slashRespond(interaction, result)
                         },
                         edit: async(result) => {
-                            if (typeof result == "object") {
-                                result.embeds = [];
-                                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-
-                                if(result.components) {
-                                    if(!Array.isArray(result.components)) result.components = [result.components];
-
-                                    result.components = result.components;
-                                } else result.components = [];
-
-                                if(typeof result.content == "object") {
-                                    result.embeds = [result.content]
-                                    result.content = "\u200B"
-                                }
-                                if(typeof result == "object" && result.embeds) {
-                                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
-                                    result.embeds = result.embeds;
-                                } else result.embeds = [];
-
-                                let finalFiles = [];
-                                if(typeof result == "object" && result.attachments) {
-                                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                                    result.attachments.forEach(file => {
-                                        finalFiles.push({
-                                            attachment: file.attachment,
-                                            name: file.name,
-                                            file: file.attachment
-                                        })
-                                    })
-                                }
-
-                                let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({
-                                    data: {
-                                        content: result.content,
-                                        components: result.components,
-                                        embeds: result.embeds || []
-                                    },
-                                    files: finalFiles   
-                                }))
-
-                                apiMessage.client = this.client;
-                                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
-
-                                return apiMessage;
-                            }
-
-                            return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
+                            this.slashEdit(interaction, result)
                         }
                     })
                     if(inhibit == false) return;
@@ -575,119 +467,10 @@ class GEventLoader {
                             guild: member.guild, 
                             channel: member.guild.channels.cache.get(interaction.channel_id),
                             respond: async(result) => {
-                                var data = {
-                                    content: result
-                                }
-
-                                if (typeof result === 'object') {
-                                    if(typeof result == "object" && !result.content) {
-                                        const embed = new MessageEmbed(result)
-                                        data = await createAPIMessage(this.client, interaction, embed)
-                                    }
-                                    else if(typeof result.content == "object" ) {
-                                        const embed = new MessageEmbed(result.content)
-                                        data = await createAPIMessage(this.client, interaction, embed)
-                                    } else data = { content: result.content }
-                                }
-
-                                if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-                                if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-                                if(typeof result == "object" && result.components) {
-                                    if(!Array.isArray(result.components)) result.components = [result.components];
-                                    data.components = result.components;
-                                }
-                                if(typeof result == "object" && result.embeds) {
-                                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                                    data.embeds = result.embeds;
-                                }
-
-                                let finalFiles = [];
-                                if(typeof result == "object" && result.attachments) {
-                                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                                    result.attachments.forEach(file => {
-                                        finalFiles.push({
-                                            attachment: file.attachment,
-                                            name: file.name,
-                                            file: file.attachment
-                                        })
-                                    })
-                                }
-    
-                                let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                    data: {
-                                        type: result.thinking ? 5 : 4,
-                                        data
-                                    },
-                                    files: finalFiles
-                                })).toJSON();
-
-                                let apiMessageMsg = {};
-                                try {
-                                    apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
-                                } catch(e) {
-                                    apiMessage = {
-                                        id: undefined
-                                    }
-                                }
-
-                                if(apiMessage) {
-                                    apiMessage = apiMessageMsg;
-                                    apiMessage.client = this.client ? this.client : client;
-                                    apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                                    apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                    apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
-                                }
-
-                                return apiMessage
+                                this.slashRespond(interaction, result)
                             },
                             edit: async(result) => {
-                                if (typeof result == "object") {
-                                    if(result.components) {
-                                        if(!Array.isArray(result.components)) result.components = [result.components];
-
-                                        result.components = result.components;
-                                    } else result.components = [];
-
-                                    if(typeof result.content == "object") {
-                                        result.embeds = [result.content]
-                                        result.content = "\u200B"
-                                    }
-                                    if(typeof result == "object" && result.embeds) {
-                                        if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
-                                        result.embeds = result.embeds;
-                                    } else result.embeds = []
-                                    let finalFiles = [];
-                                    if(typeof result == "object" && result.attachments) {
-                                        if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                                        result.attachments.forEach(file => {
-                                            finalFiles.push({
-                                                attachment: file.attachment,
-                                                name: file.name,
-                                                file: file.attachment
-                                            })
-                                        })
-                                    }
-                                    
-                                    let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                                        data: {
-                                            content: result.content,
-                                            components: result.components,
-                                            embeds: result.embeds || []
-                                        },
-                                        files: finalFiles   
-                                    }))
-
-                                    if(apiMessage) {
-                                        apiMessage.client = this.client;
-                                        apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                                        apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                        apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
-                                    }
-
-                                    return apiMessage;
-                                }
-
-                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
+                                this.slashEdit(interaction, result)
                             }
                         }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgs2(interaction.data.options || []))
                     } catch(e) {
@@ -726,6 +509,123 @@ class GEventLoader {
         require("../base/actions/user")(this.client)
         require("../base/actions/voiceupdate")(this.client)
         require("../base/actions/interactions")(this.client)
+    }
+
+    async slashRespond(interaction, result) {
+        var data = {
+            content: result
+        }
+
+        if (typeof result === 'object') {
+            if(typeof result == "object" && !result.content) {
+                const embed = new MessageEmbed(result)
+                data = await createAPIMessage(this.client, interaction, embed)
+            }
+            else if(typeof result.content == "object" ) {
+                const embed = new MessageEmbed(result.content)
+                data = await createAPIMessage(this.client, interaction, embed)
+            } else data = { content: result.content }
+        }
+
+        if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
+        if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+        if(typeof result == "object" && result.components) {
+            if(!Array.isArray(result.components)) result.components = [result.components];
+            data.components = result.components;
+        }
+        if(typeof result == "object" && result.embeds) {
+            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+            data.embeds = result.embeds;
+        }
+
+        let finalFiles = [];
+        if(typeof result == "object" && result.attachments) {
+            if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+            result.attachments.forEach(file => {
+                finalFiles.push({
+                    attachment: file.attachment,
+                    name: file.name,
+                    file: file.attachment
+                })
+            })
+        }
+
+        let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: result.thinking ? 5 : 4,
+                data
+            },
+            files: finalFiles
+        })).toJSON();
+
+        let apiMessageMsg = {};
+        try {
+            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
+        } catch(e) {
+            apiMessage = {
+                id: undefined
+            }
+        }
+
+        if(apiMessage) {
+            apiMessage = apiMessageMsg;
+            apiMessage.client = this.client ? this.client : client;
+            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
+        }
+
+        return apiMessage
+    }
+
+    async slashEdit(interaction, result) {
+        if (typeof result == "object") {
+            if(result.components) {
+                if(!Array.isArray(result.components)) result.components = [result.components];
+
+                result.components = result.components;
+            } else result.components = [];
+
+            if(typeof result.content == "object") {
+                result.embeds = [result.content]
+                result.content = "\u200B"
+            }
+            if(typeof result == "object" && result.embeds) {
+                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
+                result.embeds = result.embeds;
+            } else result.embeds = []
+            let finalFiles = [];
+            if(typeof result == "object" && result.attachments) {
+                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                result.attachments.forEach(file => {
+                    finalFiles.push({
+                        attachment: file.attachment,
+                        name: file.name,
+                        file: file.attachment
+                    })
+                })
+            }
+            
+            let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
+                data: {
+                    content: result.content,
+                    components: result.components,
+                    embeds: result.embeds || []
+                },
+                files: finalFiles   
+            }))
+
+            if(apiMessage) {
+                apiMessage.client = this.client;
+                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
+            }
+
+            return apiMessage;
+        }
+
+        return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
     }
 
     /**
