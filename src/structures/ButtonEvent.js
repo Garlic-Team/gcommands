@@ -121,11 +121,13 @@ class ButtonEvent {
                 })
             }
 
-            await this.client.api.interactions(this.discordID, this.token).callback.post({
-                data: {
-                    type: 6,
-                },
-            });
+            if(result.autoDefer == undefined) {
+                await this.client.api.interactions(this.discordID, this.token).callback.post({
+                    data: {
+                        type: 6,
+                    },
+                });
+            }
 
             return this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
                 data: {
@@ -136,11 +138,13 @@ class ButtonEvent {
                 files: finalFiles
             })
         } else {
-            await this.client.api.interactions(this.discordID, this.token).callback.post({
-                data: {
-                    type: 6,
-                },
-            });
+            if(result.autoDefer == undefined) {
+                await this.client.api.interactions(this.discordID, this.token).callback.post({
+                    data: {
+                        type: 6,
+                    },
+                });
+            }
 
             return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: {
                 content: result,
