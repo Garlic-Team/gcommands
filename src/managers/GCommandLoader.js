@@ -321,10 +321,9 @@ class GCommandLoader {
     */
     async __deleteAllGuildCmds() {
         try {
-            this.client.guilds.forEach(async(guild) => {
+            this.client.guilds.cache.forEach(async(guild) => {
                 var allcmds = await cmdUtils.__getAllCommands(this.client, guild.id);
 
-                console.log(allcmds)
                 if(!this.client.slash) {
                     allcmds.forEach(cmd => {
                         cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)
