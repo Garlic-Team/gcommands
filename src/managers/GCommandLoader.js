@@ -18,13 +18,13 @@ class GCommandLoader {
      * @private
      */
      async __loadCommands() {
-        await fs.readdirSync(`${__dirname}/../../../${this.cmdDir}`).forEach(async(dir) => {
+        await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`).forEach(async(dir) => {
             var file;
             var fileName = dir.split(".").reverse()[1]
             var fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
-                    file = await require(`../../../${this.cmdDir}${dir}`);
+                    file = await require(`../../../../${this.cmdDir}${dir}`);
 
                     if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                     this.client.commands.set(file.name, file);
@@ -324,6 +324,7 @@ class GCommandLoader {
             this.client.guilds.forEach(async(guild) => {
                 var allcmds = await cmdUtils.__getAllCommands(this.client, guild.id);
 
+                console.log(allcmds)
                 if(!this.client.slash) {
                     allcmds.forEach(cmd => {
                         cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)
