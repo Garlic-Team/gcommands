@@ -48,7 +48,7 @@ class GEvents {
                     file = await require(`../../../../${this.eventDir}${dir}`);
 
                     this.client.events.set(file.name, file);
-                    console.log(new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
+                    this.GCommandsClient.emit(Events.LOG, new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
                     console.log(new Color("&d[GEvents] &cCan't load " + fileName).getText());
@@ -61,7 +61,7 @@ class GEvents {
                         file2 = await require(`../../../../${this.eventDir}${dir}/${eventFile}`);
     
                         this.client.events.set(file2.name, file2);
-                        console.log(new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
+                        this.GCommandsClient.emit(Events.LOG, new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
                         console.log(new Color("&d[GEvents] &cCan't load " + fileName2).getText());

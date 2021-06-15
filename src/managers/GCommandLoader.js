@@ -28,10 +28,10 @@ class GCommandLoader {
 
                     if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
                     this.client.commands.set(file.name, file);
-                    console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
+                    this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &e("+fileName+") &3"+e).getText());
-                    console.log(new Color("&d[GCommands] &cCan't load " + fileName).getText());
+                    this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &cCan't load " + fileName).getText());
                 }
             } else {
                 fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(cmdFile) => {
@@ -42,10 +42,10 @@ class GCommandLoader {
     
                         if (file2.aliases && Array.isArray(file2.aliases)) file2.aliases.forEach(alias => this.client.aliases.set(alias, file2.name));
                         this.client.commands.set(file2.name, file2);
-                        console.log(new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
+                        this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &e("+fileName2+") &3"+e).getText());
-                        console.log(new Color("&d[GCommands] &cCan't load " + fileName2).getText());
+                        this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &cCan't load " + fileName2).getText());
                     }
                 })
             }
