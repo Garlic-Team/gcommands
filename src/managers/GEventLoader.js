@@ -568,7 +568,7 @@ class GEventLoader {
 
         let apiMessageMsg = {};
         try {
-            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
+            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${interaction.token}/messages/@original`)).data;
         } catch(e) {
             apiMessage = {
                 id: undefined
@@ -615,7 +615,7 @@ class GEventLoader {
                 })
             }
             
-            let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
+            let apiMessage = (await this.client.api.webhooks(this.client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
                 data: {
                     content: result.content,
                     components: result.components,
