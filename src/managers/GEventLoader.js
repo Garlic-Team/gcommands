@@ -76,7 +76,7 @@ class GEventLoader {
                 let inhibit = await this.inhibit(commandos, {
                     message, member, guild, channel,
                     respond: async(options = undefined) => {
-                        channel.startTyping(3);
+                        if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
                         let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
 
@@ -96,7 +96,7 @@ class GEventLoader {
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
                         msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
 
-                        channel.stopTyping(true);
+                        if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
                     edit: async(options = undefined) => {
@@ -225,7 +225,7 @@ class GEventLoader {
                 commandos.run({
                     client, bot, message, member, guild, channel,
                     respond: async(options = undefined) => {
-                        if(this.client.autoTyping) channel.startTyping(3);
+                        if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
                         let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
 
@@ -518,7 +518,7 @@ class GEventLoader {
     }
 
     async slashRespond(channel, interaction, result) {
-        if(!result.ephemeral && this.client.autoTyping) channel.startTyping(3);
+        if(!result.ephemeral && this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
         var data = {
             content: result

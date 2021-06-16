@@ -1,7 +1,8 @@
-const GCommandLoader = require("../managers/GCommandLoader"), Color = require("../structures/Color"), GCommandsBase = require("./GCommandsBase"), GCommandsDispatcher = require("./GCommandsDispatcher"), GEvents = require("./GEvents"), GEventLoader = require("../managers/GEventLoader"), GDatabaseLoader = require("../managers/GDatabaseLoader"), { Events } = require("../util/Constants"), GUpdater = require("../util/updater");
+const GCommandLoader = require("../managers/GCommandLoader"), Color = require("../structures/Color"), GCommandsBase = require("./GCommandsBase"), GCommandsDispatcher = require("./GCommandsDispatcher"), GEvents = require("./GEvents"), GEventLoader = require("../managers/GEventLoader"), GDatabaseLoader = require("../managers/GDatabaseLoader"), { Events } = require("../util/Constants"), GUpdater = require("../util/updater"), {msToSeconds} = require("../util/util");
 const { Collection, version, Client } = require('discord.js');
 const axios = require("axios");
 const fs = require("fs");
+const ms = require("ms");
 
 /**
  * The main GCommands class
@@ -119,8 +120,7 @@ class GCommands extends GCommandsBase {
         this.client.prefix = this.prefix;
         this.client.slash = this.slash;
         this.client.cooldownDefault = this.cooldownDefault;
-        this.client.autoTyping = this.autoTyping;
-
+        this.client.autoTyping = this.autoTyping ? msToSeconds(ms(this.autoTyping)) : null;
 
         process.setMaxListeners(50);
         process.on('uncaughtException', (error) => {

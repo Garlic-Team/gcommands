@@ -18,4 +18,9 @@ module.exports = {
         
         return { ...apiMessage.data, files: apiMessage.files };
     },
+
+    msToSeconds(ms) {
+        let seconds = ms / 1000;
+        return seconds;
+    }
 }
