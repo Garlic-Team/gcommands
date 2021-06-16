@@ -22,8 +22,6 @@ class GEventLoader {
 
         this.client = GCommandsClient.client;
 
-        this.client.cooldowns = new Collection();
-
         this.messageEvent()
         this.slashEvent()
         this.loadMoreEvents()
@@ -54,8 +52,8 @@ class GEventLoader {
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
             let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
 
-            if(this.client.database.working) {
-                let guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id) || this.client.prefix;
+            if(this.client.database) {
+                let guildSettings = message.guild.prefix || this.client.prefix;
                 prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
             }
 
@@ -113,29 +111,9 @@ class GEventLoader {
                     }
                 })
                 if(inhibit == false) return;
-
-                if (!this.client.cooldowns.has(commandos.name)) {
-                    this.client.cooldowns.set(commandos.name, new Collection());
-                }
                 
-                const now = Date.now();
-                const timestamps = this.client.cooldowns.get(commandos.name);
-                const cooldownAmount = ms(commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault);
-                
-                if (timestamps.has(message.author.id)) {
-                    if (timestamps.has(message.author.id)) {
-                        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-                    
-                        if (now < expirationTime) {
-                            const timeLeft = ms(expirationTime - now);
-
-                            return message.inlineReply(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft).replace(/{CMDNAME}/g, commandos.name))
-                        }
-                    }
-                }
-
-                timestamps.set(message.author.id, now);
-                setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+                let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos)
+                if(cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
 
                 if(commandos.nsfw) {
                     if(!message.channel.nsfw) {
@@ -262,6 +240,7 @@ class GEventLoader {
                     }
                 }, args, args)
             } catch(e) {
+                console.log(e)
                 this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                 if(!this.GCommandsClient.unkownCommandMessage) return;
                 if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
@@ -303,32 +282,18 @@ class GEventLoader {
                     })
                     if(inhibit == false) return;
 
-                    let now = Date.now();
-                    let timestamps = this.client.cooldowns.get(commandos.name);
-                    let cooldownAmount = ms(commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault);
-                    
-                    if (timestamps.has(interaction.member.user.id)) {
-                        if (timestamps.has(interaction.member.user.id)) {
-                            let expirationTime = timestamps.get(interaction.member.user.id) + cooldownAmount;
-                        
-                            if (now < expirationTime) {
-                                let timeLeft = ms(expirationTime - now);
-                                this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                    data: {
-                                        type: 4,
-                                        data: {
-                                            flags: 64,
-                                            content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft).replace(/{CMDNAME}/g, commandos.name)
-                                        }
-                                    }
-                                });
-                                return;
+                    let cooldown = await this.client.dispatcher.getCooldown(member.guild.id, member.user.id, commandos)
+                    if(cooldown.cooldown) {
+                        return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                            data: {
+                                type: 4,
+                                data: {
+                                    flags: 64,
+                                    content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name)
+                                }
                             }
-                        }
+                        });
                     }
-
-                    timestamps.set(interaction.member.user.id, now);
-                    setTimeout(() => timestamps.delete(interaction.member.user.id), cooldownAmount);
 
                     if(commandos.nsfw) {
                         if(!member.guild.channels.cache.get(interaction.channel_id).nsfw) {

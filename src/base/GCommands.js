@@ -67,28 +67,10 @@ class GCommands extends GCommandsBase {
          * database
          * @property {Object} database
          */
-         this.database = {
-            type:  undefined,
-            url: undefined,
-            host: undefined,
-            username: undefined,
-            password: undefined,
-            databaseName: undefined,
-            port: undefined,
-            working: false
-        };
+         this.database = undefined;
         
         if(options.database) {
-            this.database = {
-                type: options.database.type ? options.database.type : undefined,
-                url: options.database.url ? options.database.url : undefined,
-                host: options.database.host ? options.database.host : undefined,
-                username: options.database.username ? options.database.username : undefined,
-                password: options.database.password ? options.database.password : undefined,
-                databaseName: options.database.databaseName ? options.database.databaseName : undefined,
-                port: options.database.port ? options.database.port : undefined,
-                working: false
-            };
+            this.database = options.database
         }
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
@@ -114,6 +96,7 @@ class GCommands extends GCommandsBase {
         this.cooldownDefault = options.defaultCooldown ? options.defaultCooldown : 0;
 
         this.GCommandsClient.unkownCommandMessage = this.unkownCommandMessage;
+        this.GCommandsClient.database = this.database;
         this.client.language = this.language;
         this.client.languageFile = this.languageFile;
         this.client.database = this.database
