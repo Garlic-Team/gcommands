@@ -21,11 +21,15 @@ module.exports = {
      * @returns {object}
     */
     __getAllCommands: async function(client, guildId = undefined) {
-        const app = client.api.applications(client.user.id)
-        if(guildId) {
-            app.guilds(guildId)
-        }
+        try {
+            const app = client.api.applications(client.user.id)
+            if(guildId) {
+                app.guilds(guildId)
+            }
 
-        return await app.commands.get()
+            return await app.commands.get()
+        } catch(e) {
+            return undefined;
+        }
     }
 }
