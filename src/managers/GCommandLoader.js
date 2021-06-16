@@ -323,6 +323,7 @@ class GCommandLoader {
         try {
             this.client.guilds.cache.forEach(async(guild) => {
                 var allcmds = await cmdUtils.__getAllCommands(this.client, guild.id);
+                if(!allcmds) return;
 
                 if(!this.client.slash) {
                     allcmds.forEach(cmd => {
