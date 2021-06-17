@@ -240,7 +240,6 @@ class GEventLoader {
                     }
                 }, args, args)
             } catch(e) {
-                console.log(e)
                 this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                 if(!this.GCommandsClient.unkownCommandMessage) return;
                 if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
@@ -274,10 +273,10 @@ class GEventLoader {
                         guild: member.guild, 
                         channel: member.guild.channels.cache.get(interaction.channel_id),
                         respond: async(result) => {
-                            this.slashRespond(interaction, result)
+                            return this.slashRespond(interaction, result)
                         },
                         edit: async(result) => {
-                            this.slashEdit(interaction, result)
+                            return this.slashEdit(interaction, result)
                         }
                     })
                     if(inhibit == false) return;
@@ -438,10 +437,10 @@ class GEventLoader {
                             client, bot, interaction, member, channel,
                             guild: member.guild, 
                             respond: async(result) => {
-                                this.slashRespond(channel, interaction, result)
+                                return this.slashRespond(channel, interaction, result)
                             },
                             edit: async(result) => {
-                                this.slashEdit(interaction, result)
+                                return this.slashEdit(interaction, result)
                             }
                         }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgs2(interaction.data.options || []))
                     } catch(e) {
