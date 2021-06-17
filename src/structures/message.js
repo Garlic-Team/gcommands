@@ -23,18 +23,19 @@ module.exports = Structures.extend("Message", Message => {
                 content = "\u200B"
             }
 
-            if (!options.components) {
-                options.components = [];
-            }
 
             if(!options.allowedMentions) {
                 options.allowedMentions = { parse: [] };
             }
 
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-
-            if(options.embeds) embed = options.embeds
+            if(options.components) {
+                if(!Array.isArray(options.components)) options.components = [options.components];
+                options.components = options.components;
+            }
+            if(options.embeds) {
+                if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
+                options.embeds = options.embeds;
+            }
 
             let finalFiles = [];
             if(options.attachments) {
@@ -74,18 +75,18 @@ module.exports = Structures.extend("Message", Message => {
                 content = "\u200B"
             }
 
-            if (!options.components) {
-                options.components = [];
-            }
-
             if(!options.allowedMentions) {
                 options.allowedMentions = { parse: [] };
             }
 
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-
-            if(options.embeds) embed = options.embeds
+            if(options.components) {
+                if(!Array.isArray(options.components)) options.components = [options.components];
+                options.components = options.components;
+            }
+            if(options.embeds) {
+                if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
+                options.embeds = options.embeds;
+            }
 
             let finalFiles = [];
             if(options.attachments) {
@@ -213,18 +214,18 @@ module.exports = Structures.extend("Message", Message => {
                 content = "\u200B"
             }
 
-            if (!options.components) {
-                options.components = [];
-            }
-
             if(!options.allowedMentions) {
                 options.allowedMentions = { parse: [] };
             }
 
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-
-            if(options.embeds) embed = options.embeds
+            if(options.components) {
+                if(!Array.isArray(options.components)) options.components = [options.components];
+                options.components = options.components;
+            }
+            if(options.embeds) {
+                if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
+                options.embeds = options.embeds;
+            }
 
             let finalFiles = [];
             if(options.attachments) {
