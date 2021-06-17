@@ -51,6 +51,7 @@ class GCommandsDispatcher {
      * @returns {Stirng}
     */
      async getCooldown(guildId, userId, command) {
+        if(!command.cooldown) return;
         let now = Date.now();
         let cooldown = command.cooldown ? ms(command.cooldown) : 0;
 
