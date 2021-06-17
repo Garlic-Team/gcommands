@@ -16,7 +16,8 @@ class GDatabaseLoader {
      */
     async __loadDB() {
         let dbType = this.GCommandsClient.database;
-        this.client.database = new Keyv(dbType)
+        if(!dbType) this.client.database = undefined;
+        else this.client.database = new Keyv(dbType)
 
         this.__guildConfig()
     }

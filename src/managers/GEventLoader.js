@@ -50,10 +50,29 @@ class GEventLoader {
             if (!message.guild) return;
             
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
-            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
+
+            let clientDefaultPrefix;
+            if(Array.isArray(this.client.prefix)) {
+                this.client.prefix.some(pf => {
+                    if(message.content.startsWith(pf)) {
+                        clientDefaultPrefix = pf;
+                    }
+                })
+            } else clientDefaultPrefix = this.client.prefix
+
+            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : clientDefaultPrefix
 
             if(this.client.database) {
-                let guildSettings = message.guild.prefix || this.client.prefix;
+                let guildDefaultPrefix;
+                if(Array.isArray(message.guild.prefix)) {
+                    message.guild.prefix.some(pf => {
+                        if(message.content.startsWith(pf)) {
+                            guildDefaultPrefix = pf;
+                        }
+                    })
+                } else guildDefaultPrefix = message.guild.prefix
+
+                let guildSettings = guildDefaultPrefix || clientDefaultPrefix;
                 prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
             }
 
