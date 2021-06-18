@@ -1,5 +1,4 @@
 const Color = require("../structures/Color")
-const Keyv = require('keyv');
 
 class GDatabaseLoader {
     constructor(GCommandsClient) {
@@ -17,7 +16,10 @@ class GDatabaseLoader {
     async __loadDB() {
         let dbType = this.GCommandsClient.database;
         if(!dbType) this.client.database = undefined;
-        else this.client.database = new Keyv(dbType)
+        else { 
+            const Keyv = require('keyv');
+            this.client.database = new Keyv(dbType)
+        }
 
         this.__guildConfig()
     }
