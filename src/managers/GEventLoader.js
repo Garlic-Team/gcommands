@@ -38,6 +38,7 @@ class GEventLoader {
             })
 
             this.client.on('messageUpdate', async(oldMessage, newMessage) => {
+                if(oldMessage.content == newMessage.content || oldMessage.embeds == newMessage.embeds) return;
                 messageEventUse(newMessage)
             })
         }

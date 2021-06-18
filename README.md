@@ -37,7 +37,7 @@ client.on("ready", () => {
             slash: "both",
             prefix: "."
         },
-        database: {/*read guide*/}
+        database: "read guide"
     })
 
     gc.on("debug", (debug)=>{console.log(debug)})
