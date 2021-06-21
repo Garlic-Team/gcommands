@@ -27,6 +27,23 @@ module.exports = Structures.extend('Guild', Guild => {
 			this.client.dispatcher.setGuildPrefix(prefix, this.id);
 			this.client.emit('commandPrefixChange', this, this._commandPrefix);
 		}
+
+        /**
+         * Method to getLanguage
+         * @returns {Promise}
+        */
+         async getLanguage(cache = true) {
+			return this.client.dispatcher.getGuildLanguage(this.id, cache);
+        }
+
+        /**
+         * Method to setLanguage
+         * @returns {Boolean}
+        */
+		async setLanguage(lang) {
+			this.client.dispatcher.setGuildLanguage(lang, this.id);
+			this.client.emit('commandPrefixChange', this, this._commandPrefix);
+		}
     }
 
     return GCommandsGuild;
