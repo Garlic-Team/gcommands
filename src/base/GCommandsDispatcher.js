@@ -53,7 +53,10 @@ class GCommandsDispatcher {
      async getCooldown(guildId, userId, command) {
         if(!command.cooldown) return { cooldown: false } ;
         let now = Date.now();
-        let cooldown = command.cooldown ? ms(command.cooldown) : 0;
+
+        let cooldown;
+        if(typeof command.cooldown == "object") cooldown = command.cooldown ? ms(command.cooldown.cooldown) : 0;
+        else cooldown = command.cooldown ? ms(command.cooldown) : 0;
 
         if(cooldown < 1800000 || !this.client.database) {
             if (!this.client.cooldowns.has(command.name)) {
@@ -68,6 +71,11 @@ class GCommandsDispatcher {
                     const expirationTime = timestamps.get(userId) + cooldownAmount;
                 
                     if (now < expirationTime) {
+                        if(typeof command.cooldown == "object" && command.cooldown.agressive) {
+                            this.client.cooldowns.set(command.name, new Collection());
+                            return { cooldown: true, wait: ms(cooldown) }
+                        }
+
                         const timeLeft = ms(expirationTime - now);
 
                         return { cooldown: true, wait: timeLeft }
@@ -95,6 +103,15 @@ class GCommandsDispatcher {
         }
 
         if(now < userInfo) {
+            if(typeof command.cooldown == "object" && command.cooldown.agressive) {
+                guildData.users[userId][command.name] = ms(command.cooldown) + now
+    
+                userInfo = guildData.users[userId][command.name]
+                this.client.database.set(`guild_${guildId}`, guildData)
+                
+                return { cooldown: true, wait: ms(cooldown) }
+            }
+
             return {cooldown: true, wait: ms(userInfo - now)}
         } else {
             guildData.users[userId] = guildData.users[userId] || {}
