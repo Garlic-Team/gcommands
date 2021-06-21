@@ -30,6 +30,11 @@ class GDatabaseLoader {
             guild.prefix = prefix;
         })
 
+        this.client.guilds.cache.forEach(async (guild) => {
+            let language = await this.client.dispatcher.getGuildLanguage(guild.id, false)
+            guild.language = language;
+        })
+
         this.client.on("guildCreate", (guild) => {guild.prefix = this.client.dispatcher.getGuildPrefix(guild.id, false)})
     }
 }

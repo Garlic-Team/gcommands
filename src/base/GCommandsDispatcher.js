@@ -23,7 +23,7 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     async setGuildPrefix(prefix, guildId) {
-        if(!this.client.database) return this.client.prefix;
+        if(!this.client.database) return false;
 
         let guildData = await this.client.database.get(`guild_${guildId}`) || {}
         guildData.prefix = prefix
@@ -31,12 +31,12 @@ class GCommandsDispatcher {
         this.client.database.set(`guild_${guildId}`, guildData)
         this.client.guilds.cache.get(guildId).prefix = guildData.prefix;
 
-        return prefix;
+        return true;
     }
 
     /**
      * Internal method to getGuildPrefix
-     * @returns {Stirng}
+     * @returns {String}
     */
     async getGuildPrefix(guildId, cache = true) {
         if(!this.client.database) return this.client.prefix;
@@ -48,7 +48,7 @@ class GCommandsDispatcher {
 
     /**
      * Internal method to getCooldown
-     * @returns {Stirng}
+     * @returns {String}
     */
      async getCooldown(guildId, userId, command) {
         if(!command.cooldown) return { cooldown: false } ;
@@ -121,6 +121,40 @@ class GCommandsDispatcher {
         }
 
         return { cooldown:false }
+    }
+
+    /**
+     * Internal method to setGuildLanguage
+     * @param {Snowflake} guildId
+     * @param {Snowflake} userId
+     * @param {Object} command
+     * @returns {boolean}
+    */
+    async setGuildLanguage(guildId, lang) {
+        if(!this.client.database) return false;
+
+        let guildData = await this.client.database.get(`guild_${guildId}`) || {}
+        guildData.language = lang
+
+        this.client.database.set(`guild_${guildId}`, guildData)
+        this.client.guilds.cache.get(guildId).language = guildData.language;
+
+        return true;
+    }
+
+    /**
+     * Internal method to getGuildLanguage
+     * @param {Snowflake} guildId
+     * @param {Snowflake} userId
+     * @param {Object} command
+     * @returns {boolean}
+    */
+     async getGuildLanguage(guildId, cache = true) {
+        if(!this.client.database) return this.client.language;
+        if(cache) return this.client.guilds.cache.get(guildId).language ? this.client.guilds.cache.get(guildId).language : this.client.language;
+
+        let guildData = await this.client.database.get(`guild_${guildId}`)
+        return guildData ? guildData.language : this.client.language
     }
 
     /**

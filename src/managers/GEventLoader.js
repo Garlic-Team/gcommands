@@ -129,13 +129,14 @@ class GEventLoader {
                     }
                 })
                 if(inhibit == false) return;
-                
+
+                let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
                 let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos)
-                if(cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
+                if(cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
 
                 if(commandos.nsfw) {
                     if(!message.channel.nsfw) {
-                        return message.inlineReply(this.client.languageFile.NSFW[this.client.language])
+                        return message.inlineReply(this.client.languageFile.NSFW[guildLanguage])
                     }
                 }
 
@@ -174,7 +175,7 @@ class GEventLoader {
                 if(commandos.clientRequiredPermissions) {
                     if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions]
                     if(message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                        message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
                         return;
                     }
                 }
@@ -183,12 +184,12 @@ class GEventLoader {
                     if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions]
                     if(this.client.discordjsversion.includes("12.")) {
                         if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
-                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
                             return;
                         }
                     } else {
                         if(!message.member.permission.has(commandos.userRequiredPermissions)) {
-                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
                             return;
                         }
                     } 
@@ -199,7 +200,7 @@ class GEventLoader {
 
                     let roles = commandos.userRequiredRoles.some(v => message.member._roles.includes(v))
                     if(!roles) {
-                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``))
+                        message.channel.send(this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``))
                         return;
                     }
                 }
@@ -209,7 +210,7 @@ class GEventLoader {
 
                     let roles = commandos.userRequiredRole.some(v => message.member._roles.includes(v))
                     if(!roles) {
-                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``))
+                        message.channel.send(this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``))
                         return;
                     }
                 }
@@ -232,7 +233,6 @@ class GEventLoader {
                             if(inlineReply) msg = await message.inlineReply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            console.log(message.guild)
                             if(inlineReply) msg = await message.inlineReply({content:options});
                             else msg = await message.channel.send(options)
                         }
@@ -262,7 +262,7 @@ class GEventLoader {
                 this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                 if(!this.GCommandsClient.unkownCommandMessage) return;
                 if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
+                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace("{COMMAND}",cmd));
                 }
             }
         }
@@ -286,11 +286,13 @@ class GEventLoader {
                         this.client.cooldowns.set(commandos.name, new Collection());
                     }
 
-                    let member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id);
+                    let guild = await this.client.guilds.cache.get(interaction.guild_id)
+                    let member = guild.members.cache.get(interaction.member.user.id);
+
                     let inhibit = await this.inhibit(commandos, {
                         interaction, member,
-                        guild: member.guild, 
-                        channel: member.guild.channels.cache.get(interaction.channel_id),
+                        guild: guild, 
+                        channel: guild.channels.cache.get(interaction.channel_id),
                         respond: async(result) => {
                             return this.slashRespond(interaction, result)
                         },
@@ -300,6 +302,7 @@ class GEventLoader {
                     })
                     if(inhibit == false) return;
 
+                    let guildLanguage = await this.client.dispatcher.getGuildLanguage(member.guild.id);
                     let cooldown = await this.client.dispatcher.getCooldown(member.guild.id, member.user.id, commandos)
                     if(cooldown.cooldown) {
                         return this.client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -307,7 +310,7 @@ class GEventLoader {
                                 type: 4,
                                 data: {
                                     flags: 64,
-                                    content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name)
+                                    content: this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name)
                                 }
                             }
                         });
@@ -320,7 +323,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content:  this.client.languageFile.NSFW[this.client.language]
+                                        content:  this.client.languageFile.NSFW[guildLanguage]
                                     }
                                 }
                             });
@@ -361,7 +364,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
+                                        content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
                                     }
                                 }
                             });
@@ -378,7 +381,7 @@ class GEventLoader {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content:  this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
+                                            content:  this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
                                         }
                                     }
                                 });
@@ -391,7 +394,7 @@ class GEventLoader {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
+                                            content: this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
                                         }
                                     }
                                 });
@@ -410,7 +413,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
+                                        content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
                                     }
                                 }
                             }); 
@@ -428,7 +431,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
+                                        content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
                                     }
                                 }
                             }); 
@@ -468,14 +471,15 @@ class GEventLoader {
                     
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
+                    console.log(e)
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     if(!this.unkownCommandMessage) return;
-                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
+                    if(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
                                 type: 4,
                                 data: {
-                                    content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",interaction.data.name)
+                                    content: this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace("{COMMAND}",interaction.data.name)
                                 }
                             }
                         });
