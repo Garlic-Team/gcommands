@@ -232,6 +232,7 @@ class GEventLoader {
                             if(inlineReply) msg = await message.inlineReply(options)
                             else msg = await message.channel.send(options)
                         } else {
+                            console.log(message.guild)
                             if(inlineReply) msg = await message.inlineReply({content:options});
                             else msg = await message.channel.send(options)
                         }
