@@ -199,7 +199,7 @@ class GEventLoader {
 
                     let roles = commandos.userRequiredRoles.some(v => message.member._roles.includes(v))
                     if(!roles) {
-                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${message.guild.roles.cache.get(commandos.userRequiredRole).name}\``))
+                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``))
                         return;
                     }
                 }
@@ -209,7 +209,7 @@ class GEventLoader {
 
                     let roles = commandos.userRequiredRole.some(v => message.member._roles.includes(v))
                     if(!roles) {
-                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${message.guild.roles.cache.get(commandos.userRequiredRole).name}\``))
+                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``))
                         return;
                     }
                 }
@@ -410,7 +410,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${member.guild.roles.cache.get(commandos.userRequiredRole).name}\``),
+                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
                                     }
                                 }
                             }); 
@@ -428,7 +428,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${member.guild.roles.cache.get(commandos.userRequiredRole).name}\``),
+                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
                                     }
                                 }
                             }); 
