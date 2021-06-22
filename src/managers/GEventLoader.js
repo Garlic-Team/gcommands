@@ -277,6 +277,8 @@ class GEventLoader {
         if(this.client == undefined) return;
         if((this.client.slash) || (this.client.slash == "both")) {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
+                if(interaction.type != 2) return;
+                
                 if(this.client == undefined) return;
                 try {
                     let commandos = this.client.commands.get(interaction.data.name);
