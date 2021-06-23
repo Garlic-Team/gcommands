@@ -339,7 +339,7 @@ class GCommandLoader {
 
                     if(this.client.commands.get(cmdname).slash == false || this.client.commands.get(cmdname).slash == "false") {
                         allcmds.forEach(cmd => {
-                            if(fo.name == cmdname) {
+                            if(cmd.name == cmdname) {
                                 cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)
                             }
                         })
