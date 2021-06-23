@@ -332,7 +332,6 @@ class GCommandLoader {
                 }
 
                 var nowCMDS = [];
-
                 var keys = Array.from(this.client.commands.keys());
                 keys.forEach(cmdname => {
                     nowCMDS.push(cmdname)
