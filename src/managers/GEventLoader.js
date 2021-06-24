@@ -296,7 +296,7 @@ class GEventLoader {
                         guild: guild, 
                         channel: guild.channels.cache.get(interaction.channel_id),
                         respond: async(result) => {
-                            return this.slashRespond(interaction, result)
+                            return this.slashRespond(guild.channels.cache.get(interaction.channel_id), interaction, result)
                         },
                         edit: async(result) => {
                             return this.slashEdit(interaction, result)
