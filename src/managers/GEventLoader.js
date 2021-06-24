@@ -188,7 +188,7 @@ class GEventLoader {
                             return;
                         }
                     } else {
-                        if(!message.member.permission.has(commandos.userRequiredPermissions)) {
+                        if(!message.member.permissions.has(commandos.userRequiredPermissions)) {
                             message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
                             return;
                         }
@@ -390,7 +390,7 @@ class GEventLoader {
                                 return;
                             }
                         } else {
-                            if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permission.has(commandos.userRequiredPermissions)) {
+                            if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) {
                                 this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
                                         type: 4,
