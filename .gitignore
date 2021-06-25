@@ -2,9 +2,6 @@
 node_modules/
 yarn.lock
 
-# Github
-.github/
-
 # Log files
 logs/
 *.log
