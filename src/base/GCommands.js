@@ -35,7 +35,7 @@ class GCommands extends GCommandsBase {
          * @property {String} eventDir
         */
         this.eventDir = options.eventDir;
-        this.client.discordjsversion = version
+        this.client.discordjsversion = version;
 
         /**
          * unkownCommandMessage
@@ -67,7 +67,7 @@ class GCommands extends GCommandsBase {
          * database
          * @property {Object} database
         */
-        this.database = options.database || undefined
+        this.database = options.database || undefined;
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
