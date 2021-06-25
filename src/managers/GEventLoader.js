@@ -1,7 +1,6 @@
 const { default: axios } = require("axios");
-const {Collection,MessageEmbed,APIMessage} = require("discord.js");
+const {Collection,MessageEmbed} = require("discord.js");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants"), { createAPIMessage } = require("../util/util");
-const ms = require("ms")
 
 /**
  * The GCommandsEventLoader class
@@ -21,8 +20,6 @@ class GEventLoader {
 
         this.client = GCommandsClient.client;
 
-        this.client.cooldowns = new Collection();
-
         this.messageEvent()
         this.slashEvent()
         this.loadMoreEvents()
@@ -41,6 +38,7 @@ class GEventLoader {
             })
 
             this.client.on('messageUpdate', async(oldMessage, newMessage) => {
+                if(oldMessage.content == newMessage.content || oldMessage.embeds == newMessage.embeds) return;
                 messageEventUse(newMessage)
             })
         }
@@ -51,10 +49,29 @@ class GEventLoader {
             if (!message.guild) return;
             
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
-            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : this.client.prefix
 
-            if(this.client.database.working) {
-                let guildSettings = await this.client.dispatcher.getGuildPrefix(message.guild.id) || this.client.prefix;
+            let clientDefaultPrefix;
+            if(Array.isArray(this.client.prefix)) {
+                this.client.prefix.some(pf => {
+                    if(message.content.startsWith(pf)) {
+                        clientDefaultPrefix = pf;
+                    }
+                })
+            } else clientDefaultPrefix = this.client.prefix
+
+            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : clientDefaultPrefix
+
+            if(this.client.database) {
+                let guildDefaultPrefix;
+                if(Array.isArray(message.guild.prefix)) {
+                    message.guild.prefix.some(pf => {
+                        if(message.content.startsWith(pf)) {
+                            guildDefaultPrefix = pf;
+                        }
+                    })
+                } else guildDefaultPrefix = message.guild.prefix
+
+                let guildSettings = guildDefaultPrefix || clientDefaultPrefix;
                 prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
             }
 
@@ -75,6 +92,7 @@ class GEventLoader {
                 let inhibit = await this.inhibit(commandos, {
                     message, member, guild, channel,
                     respond: async(options = undefined) => {
+                        if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
                         let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
 
@@ -93,6 +111,8 @@ class GEventLoader {
                         msg.client = this.client;
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
                         msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+
+                        if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
                     edit: async(options = undefined) => {
@@ -110,32 +130,13 @@ class GEventLoader {
                 })
                 if(inhibit == false) return;
 
-                if (!this.client.cooldowns.has(commandos.name)) {
-                    this.client.cooldowns.set(commandos.name, new Collection());
-                }
-                
-                const now = Date.now();
-                const timestamps = this.client.cooldowns.get(commandos.name);
-                const cooldownAmount = ms(commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault);
-                
-                if (timestamps.has(message.author.id)) {
-                    if (timestamps.has(message.author.id)) {
-                        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-                    
-                        if (now < expirationTime) {
-                            const timeLeft = ms(expirationTime - now);
-
-                            return message.inlineReply(this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft).replace(/{CMDNAME}/g, commandos.name))
-                        }
-                    }
-                }
-
-                timestamps.set(message.author.id, now);
-                setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+                let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
+                let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos)
+                if(cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
 
                 if(commandos.nsfw) {
                     if(!message.channel.nsfw) {
-                        return message.inlineReply(this.client.languageFile.NSFW[this.client.language])
+                        return message.inlineReply(this.client.languageFile.NSFW[guildLanguage])
                     }
                 }
 
@@ -174,7 +175,7 @@ class GEventLoader {
                 if(commandos.clientRequiredPermissions) {
                     if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions]
                     if(message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                        message.channel.send(this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
                         return;
                     }
                 }
@@ -183,12 +184,12 @@ class GEventLoader {
                     if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions]
                     if(this.client.discordjsversion.includes("12.")) {
                         if(!message.member.hasPermission(commandos.userRequiredPermissions)) {
-                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
                             return;
                         }
                     } else {
-                        if(!message.member.permission.has(commandos.userRequiredPermissions)) {
-                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
+                        if(!message.member.permissions.has(commandos.userRequiredPermissions)) {
+                            message.channel.send(this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")))
                             return;
                         }
                     } 
@@ -199,7 +200,7 @@ class GEventLoader {
 
                     let roles = commandos.userRequiredRoles.some(v => message.member._roles.includes(v))
                     if(!roles) {
-                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${message.guild.roles.cache.get(commandos.userRequiredRole).name}\``))
+                        message.channel.send(this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``))
                         return;
                     }
                 }
@@ -209,7 +210,7 @@ class GEventLoader {
 
                     let roles = commandos.userRequiredRole.some(v => message.member._roles.includes(v))
                     if(!roles) {
-                        message.channel.send(this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${message.guild.roles.cache.get(commandos.userRequiredRole).name}\``))
+                        message.channel.send(this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``))
                         return;
                     }
                 }
@@ -221,6 +222,7 @@ class GEventLoader {
                 commandos.run({
                     client, bot, message, member, guild, channel,
                     respond: async(options = undefined) => {
+                        if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
                         let inlineReply = true;
                         if(options.inlineReply == false) inlineReply = false;
 
@@ -239,6 +241,8 @@ class GEventLoader {
                         msg.client = this.client;
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
                         msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+
+                        if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
                     edit: async(options = undefined) => {
@@ -258,7 +262,7 @@ class GEventLoader {
                 this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                 if(!this.GCommandsClient.unkownCommandMessage) return;
                 if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",cmd));
+                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace("{COMMAND}",cmd));
                 }
             }
         }
@@ -273,163 +277,46 @@ class GEventLoader {
         if(this.client == undefined) return;
         if((this.client.slash) || (this.client.slash == "both")) {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
+                if(interaction.type != 2) return;
+                
                 if(this.client == undefined) return;
                 try {
                     let commandos = this.client.commands.get(interaction.data.name);
+                    if(!commandos) return;
                     if(commandos.slash == false || commandos.slash == "false") return;
                     if (!this.client.cooldowns.has(commandos.name)) {
                         this.client.cooldowns.set(commandos.name, new Collection());
                     }
 
-                    let member = this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id);
+                    let guild = await this.client.guilds.cache.get(interaction.guild_id)
+                    let member = guild.members.cache.get(interaction.member.user.id);
+
                     let inhibit = await this.inhibit(commandos, {
                         interaction, member,
-                        guild: member.guild, 
-                        channel: member.guild.channels.cache.get(interaction.channel_id),
+                        guild: guild, 
+                        channel: guild.channels.cache.get(interaction.channel_id),
                         respond: async(result) => {
-                            var data = {
-                                content: result
-                            }
-
-                            if (typeof result === 'object') {
-                                if(typeof result == "object" && !result.content) {
-                                    const embed = new MessageEmbed(result)
-                                    data = await createAPIMessage(this.client, interaction, embed)
-                                }
-                                else if(typeof result.content == "object" ) {
-                                    const embed = new MessageEmbed(result.content)
-                                    data = await createAPIMessage(this.client, interaction, embed)
-                                } else data = { content: result.content }
-                            }
-
-                            if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-                            if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-                            if(typeof result == "object" && result.components) {
-                                if(!Array.isArray(result.components)) result.components = [result.components];
-                                data.components = result.components;
-                            }
-                            if(typeof result == "object" && result.embeds) {
-                                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                                data.embeds = result.embeds;
-                            }
-
-                            let finalFiles = [];
-                            if(typeof result == "object" && result.attachments) {
-                                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                                result.attachments.forEach(file => {
-                                    finalFiles.push({
-                                        attachment: file.attachment,
-                                        name: file.name,
-                                        file: file.attachment
-                                    })
-                                })
-                            }
-
-                            let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                data: {
-                                    type: result.thinking ? 5 : 4,
-                                    data
-                                },
-                                files: finalFiles
-                            })).toJSON();
-
-                            let apiMessageMsg = undefined;
-                            try {
-                                apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
-                            } catch(e) {
-                                apiMessage = {
-                                    id: undefined
-                                }
-                            }
-
-                            apiMessage = apiMessageMsg;
-                            apiMessage.client = this.client;
-                            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
-
-                            return apiMessage
+                            return this.slashRespond(guild.channels.cache.get(interaction.channel_id), interaction, result)
                         },
                         edit: async(result) => {
-                            if (typeof result == "object") {
-                                result.embeds = [];
-                                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-
-                                if(result.components) {
-                                    if(!Array.isArray(result.components)) result.components = [result.components];
-
-                                    result.components = result.components;
-                                } else result.components = [];
-
-                                if(typeof result.content == "object") {
-                                    result.embeds = [result.content]
-                                    result.content = "\u200B"
-                                }
-                                if(typeof result == "object" && result.embeds) {
-                                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
-                                    result.embeds = result.embeds;
-                                } else result.embeds = [];
-
-                                let finalFiles = [];
-                                if(typeof result == "object" && result.attachments) {
-                                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                                    result.attachments.forEach(file => {
-                                        finalFiles.push({
-                                            attachment: file.attachment,
-                                            name: file.name,
-                                            file: file.attachment
-                                        })
-                                    })
-                                }
-
-                                let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({
-                                    data: {
-                                        content: result.content,
-                                        components: result.components,
-                                        embeds: result.embeds || []
-                                    },
-                                    files: finalFiles   
-                                }))
-
-                                apiMessage.client = this.client;
-                                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
-
-                                return apiMessage;
-                            }
-
-                            return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
+                            return this.slashEdit(interaction, result)
                         }
                     })
                     if(inhibit == false) return;
 
-                    let now = Date.now();
-                    let timestamps = this.client.cooldowns.get(commandos.name);
-                    let cooldownAmount = ms(commandos.cooldown ? commandos.cooldown : this.client.cooldownDefault);
-                    
-                    if (timestamps.has(interaction.member.user.id)) {
-                        if (timestamps.has(interaction.member.user.id)) {
-                            let expirationTime = timestamps.get(interaction.member.user.id) + cooldownAmount;
-                        
-                            if (now < expirationTime) {
-                                let timeLeft = ms(expirationTime - now);
-                                this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                    data: {
-                                        type: 4,
-                                        data: {
-                                            flags: 64,
-                                            content: this.client.languageFile.COOLDOWN[this.client.language].replace(/{COOLDOWN}/g, timeLeft).replace(/{CMDNAME}/g, commandos.name)
-                                        }
-                                    }
-                                });
-                                return;
+                    let guildLanguage = await this.client.dispatcher.getGuildLanguage(member.guild.id);
+                    let cooldown = await this.client.dispatcher.getCooldown(member.guild.id, member.user.id, commandos)
+                    if(cooldown.cooldown) {
+                        return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                            data: {
+                                type: 4,
+                                data: {
+                                    flags: 64,
+                                    content: this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name)
+                                }
                             }
-                        }
+                        });
                     }
-
-                    timestamps.set(interaction.member.user.id, now);
-                    setTimeout(() => timestamps.delete(interaction.member.user.id), cooldownAmount);
 
                     if(commandos.nsfw) {
                         if(!member.guild.channels.cache.get(interaction.channel_id).nsfw) {
@@ -438,7 +325,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content:  this.client.languageFile.NSFW[this.client.language]
+                                        content:  this.client.languageFile.NSFW[guildLanguage]
                                     }
                                 }
                             });
@@ -479,7 +366,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
+                                        content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
                                     }
                                 }
                             });
@@ -496,20 +383,20 @@ class GEventLoader {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content:  this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
+                                            content:  this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
                                         }
                                     }
                                 });
                                 return;
                             }
                         } else {
-                            if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permission.has(commandos.userRequiredPermissions)) {
+                            if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) {
                                 this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                     data: {
                                         type: 4,
                                         data: {
                                             flags: 64,
-                                            content: this.client.languageFile.MISSING_PERMISSIONS[this.client.language].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
+                                            content: this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
                                         }
                                     }
                                 });
@@ -528,7 +415,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${member.guild.roles.cache.get(commandos.userRequiredRole).name}\``),
+                                        content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
                                     }
                                 }
                             }); 
@@ -546,7 +433,7 @@ class GEventLoader {
                                     type: 4,
                                     data: {
                                         flags: 64,
-                                        content: this.client.languageFile.MISSING_ROLES[this.client.language].replace("{ROLES}", `\`${member.guild.roles.cache.get(commandos.userRequiredRole).name}\``),
+                                        content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
                                     }
                                 }
                             }); 
@@ -569,125 +456,15 @@ class GEventLoader {
                          *  }
                          */
 
-                        const client = this.client, bot = this.client
+                        const client = this.client, bot = this.client, channel = member.guild.channels.cache.get(interaction.channel_id)
                         commandos.run({
-                            client, bot, interaction, member,
+                            client, bot, interaction, member, channel,
                             guild: member.guild, 
-                            channel: member.guild.channels.cache.get(interaction.channel_id),
                             respond: async(result) => {
-                                var data = {
-                                    content: result
-                                }
-
-                                if (typeof result === 'object') {
-                                    if(typeof result == "object" && !result.content) {
-                                        const embed = new MessageEmbed(result)
-                                        data = await createAPIMessage(this.client, interaction, embed)
-                                    }
-                                    else if(typeof result.content == "object" ) {
-                                        const embed = new MessageEmbed(result.content)
-                                        data = await createAPIMessage(this.client, interaction, embed)
-                                    } else data = { content: result.content }
-                                }
-
-                                if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-                                if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-                                if(typeof result == "object" && result.components) {
-                                    if(!Array.isArray(result.components)) result.components = [result.components];
-                                    data.components = result.components;
-                                }
-                                if(typeof result == "object" && result.embeds) {
-                                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                                    data.embeds = result.embeds;
-                                }
-
-                                let finalFiles = [];
-                                if(typeof result == "object" && result.attachments) {
-                                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                                    result.attachments.forEach(file => {
-                                        finalFiles.push({
-                                            attachment: file.attachment,
-                                            name: file.name,
-                                            file: file.attachment
-                                        })
-                                    })
-                                }
-    
-                                let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                    data: {
-                                        type: result.thinking ? 5 : 4,
-                                        data
-                                    },
-                                    files: finalFiles
-                                })).toJSON();
-
-                                let apiMessageMsg = {};
-                                try {
-                                    apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${client.user.id}/${interaction.token}/messages/@original`)).data;
-                                } catch(e) {
-                                    apiMessage = {
-                                        id: undefined
-                                    }
-                                }
-
-                                if(apiMessage) {
-                                    apiMessage = apiMessageMsg;
-                                    apiMessage.client = this.client ? this.client : client;
-                                    apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                                    apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                    apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
-                                }
-
-                                return apiMessage
+                                return this.slashRespond(channel, interaction, result)
                             },
                             edit: async(result) => {
-                                if (typeof result == "object") {
-                                    if(result.components) {
-                                        if(!Array.isArray(result.components)) result.components = [result.components];
-
-                                        result.components = result.components;
-                                    } else result.components = [];
-
-                                    if(typeof result.content == "object") {
-                                        result.embeds = [result.content]
-                                        result.content = "\u200B"
-                                    }
-                                    if(typeof result == "object" && result.embeds) {
-                                        if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
-                                        result.embeds = result.embeds;
-                                    } else result.embeds = []
-                                    let finalFiles = [];
-                                    if(typeof result == "object" && result.attachments) {
-                                        if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                                        result.attachments.forEach(file => {
-                                            finalFiles.push({
-                                                attachment: file.attachment,
-                                                name: file.name,
-                                                file: file.attachment
-                                            })
-                                        })
-                                    }
-                                    
-                                    let apiMessage = (await this.client.api.webhooks(client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                                        data: {
-                                            content: result.content,
-                                            components: result.components,
-                                            embeds: result.embeds || []
-                                        },
-                                        files: finalFiles   
-                                    }))
-
-                                    if(apiMessage) {
-                                        apiMessage.client = this.client;
-                                        apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                                        apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                                        apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
-                                    }
-
-                                    return apiMessage;
-                                }
-
-                                return this.client.api.webhooks(client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
+                                return this.slashEdit(interaction, result)
                             }
                         }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgs2(interaction.data.options || []))
                     } catch(e) {
@@ -696,14 +473,15 @@ class GEventLoader {
                     
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
+                    console.log(e)
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     if(!this.unkownCommandMessage) return;
-                    if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
+                    if(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
                                 type: 4,
                                 data: {
-                                    content: this.client.languageFile.UNKNOWN_COMMAND[this.client.language].replace("{COMMAND}",interaction.data.name)
+                                    content: this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace("{COMMAND}",interaction.data.name)
                                 }
                             }
                         });
@@ -728,11 +506,131 @@ class GEventLoader {
         require("../base/actions/interactions")(this.client)
     }
 
+    async slashRespond(channel, interaction, result) {
+        if(!result.ephemeral && this.client.autoTyping) channel.startTyping(this.client.autoTyping);
+
+        var data = {
+            content: result
+        }
+
+        if (typeof result === 'object') {
+            if(typeof result == "object" && !result.content) {
+                const embed = new MessageEmbed(result)
+                data = await createAPIMessage(this.client, interaction, embed)
+            }
+            else if(typeof result.content == "object" ) {
+                const embed = new MessageEmbed(result.content)
+                data = await createAPIMessage(this.client, interaction, embed)
+            } else data = { content: result.content }
+        }
+
+        if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
+        if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+        if(typeof result == "object" && result.components) {
+            if(!Array.isArray(result.components)) result.components = [result.components];
+            data.components = result.components;
+        }
+        if(typeof result == "object" && result.embeds) {
+            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+            data.embeds = result.embeds;
+        }
+
+        let finalFiles = [];
+        if(typeof result == "object" && result.attachments) {
+            if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+            result.attachments.forEach(file => {
+                finalFiles.push({
+                    attachment: file.attachment,
+                    name: file.name,
+                    file: file.attachment
+                })
+            })
+        }
+
+        let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
+            data: {
+                type: result.thinking ? 5 : 4,
+                data
+            },
+            files: finalFiles
+        })).toJSON();
+
+        let apiMessageMsg = {};
+        try {
+            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${interaction.token}/messages/@original`)).data;
+        } catch(e) {
+            apiMessage = {
+                id: undefined
+            }
+        }
+
+        if(apiMessage) {
+            apiMessage = apiMessageMsg;
+            apiMessage.client = this.client ? this.client : client;
+            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
+        }
+
+        if(!result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
+        return apiMessage
+    }
+
+    async slashEdit(interaction, result) {
+        if (typeof result == "object") {
+            if(result.components) {
+                if(!Array.isArray(result.components)) result.components = [result.components];
+
+                result.components = result.components;
+            } else result.components = [];
+
+            if(typeof result.content == "object") {
+                result.embeds = [result.content]
+                result.content = "\u200B"
+            }
+            if(typeof result == "object" && result.embeds) {
+                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
+                result.embeds = result.embeds;
+            } else result.embeds = []
+            let finalFiles = [];
+            if(typeof result == "object" && result.attachments) {
+                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
+                result.attachments.forEach(file => {
+                    finalFiles.push({
+                        attachment: file.attachment,
+                        name: file.name,
+                        file: file.attachment
+                    })
+                })
+            }
+            
+            let apiMessage = (await this.client.api.webhooks(this.client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
+                data: {
+                    content: result.content,
+                    components: result.components,
+                    embeds: result.embeds || []
+                },
+                files: finalFiles   
+            }))
+
+            if(apiMessage) {
+                apiMessage.client = this.client;
+                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
+            }
+
+            return apiMessage;
+        }
+
+        return this.client.api.webhooks(this.client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
+    }
+
     /**
      * Internal method to getSlashArgs
      * @returns {object}
     */
-    async getSlashArgs(options) {
+    getSlashArgs(options) {
         var args = [];
   
         let check = (option) => {
@@ -758,7 +656,7 @@ class GEventLoader {
         return args;
     }
 
-    async getSlashArgs2(options) {
+    getSlashArgs2(options) {
         var args = {};
         for (let o of options) {
           if (o.type == 1) args[o.name] = this.getSlashArgs2(o.options || []);

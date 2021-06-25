@@ -1,4 +1,6 @@
 const { APIMessage, Structures } = require('discord.js');
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), { createAPIMessage } = require("../util/util")
+const updater = require("../util/updater")
 
 module.exports = Structures.extend("Message", Message => {
     /**
@@ -23,18 +25,19 @@ module.exports = Structures.extend("Message", Message => {
                 content = "\u200B"
             }
 
-            if (!options.components) {
-                options.components = [];
-            }
 
             if(!options.allowedMentions) {
                 options.allowedMentions = { parse: [] };
             }
 
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-
-            if(options.embeds) embed = options.embeds
+            if(options.components) {
+                if(!Array.isArray(options.components)) options.components = [options.components];
+                options.components = options.components;
+            }
+            if(options.embeds) {
+                if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
+                options.embeds = options.embeds;
+            }
 
             let finalFiles = [];
             if(options.attachments) {
@@ -74,18 +77,18 @@ module.exports = Structures.extend("Message", Message => {
                 content = "\u200B"
             }
 
-            if (!options.components) {
-                options.components = [];
-            }
-
             if(!options.allowedMentions) {
                 options.allowedMentions = { parse: [] };
             }
 
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-
-            if(options.embeds) embed = options.embeds
+            if(options.components) {
+                if(!Array.isArray(options.components)) options.components = [options.components];
+                options.components = options.components;
+            }
+            if(options.embeds) {
+                if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
+                options.embeds = options.embeds;
+            }
 
             let finalFiles = [];
             if(options.attachments) {
@@ -213,18 +216,18 @@ module.exports = Structures.extend("Message", Message => {
                 content = "\u200B"
             }
 
-            if (!options.components) {
-                options.components = [];
-            }
-
             if(!options.allowedMentions) {
                 options.allowedMentions = { parse: [] };
             }
 
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-
-            if(options.embeds) embed = options.embeds
+            if(options.components) {
+                if(!Array.isArray(options.components)) options.components = [options.components];
+                options.components = options.components;
+            }
+            if(options.embeds) {
+                if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
+                options.embeds = options.embeds;
+            }
 
             let finalFiles = [];
             if(options.attachments) {
@@ -252,6 +255,24 @@ module.exports = Structures.extend("Message", Message => {
                 files: finalFiles
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
+        }
+
+        createButtonCollector(filter, options = {}) {
+            if(updater.checkDjsVersion("13")) return new ButtonCollectorV13(this, filter, options);
+            else return new ButtonCollectorV12(this, filter, options);
+        }
+    
+        awaitButtons(filter, options = {}) {
+            return new Promise((resolve, reject) => {
+                const collector = this.createButtonCollector(this, filter, options);
+                collector.once('end', (buttons, reason) => {
+                    if (options.errors && options.errors.includes(reason)) {
+                        reject(buttons);
+                    } else {
+                        resolve(buttons);
+                    }
+                });
+            })
         }
     }
 

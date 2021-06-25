@@ -1,4 +1,4 @@
-const { APIMessage } = require("discord.js")
+const { APIMessage, MessageEmbed } = require("discord.js")
 
 module.exports = {
     resolveString(data) {
@@ -11,11 +11,16 @@ module.exports = {
      * Internal method to createAPIMessage
      * @returns {object}
     */
-     async createAPIMessage(client, interaction, content) {
+    async createAPIMessage(client, interaction, content) {
         const apiMessage = await APIMessage.create(client.channels.resolve(interaction.channel_id), content)
         .resolveData()
         .resolveFiles();
         
         return { ...apiMessage.data, files: apiMessage.files };
+    },
+
+    msToSeconds(ms) {
+        let seconds = ms / 1000;
+        return seconds;
     }
 }

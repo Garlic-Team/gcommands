@@ -5,5 +5,6 @@
 */
 
 exports.Events = {
-    DEBUG: "debug"
+    DEBUG: "debug",
+    LOG: "log"
 }

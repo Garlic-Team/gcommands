@@ -1,6 +1,7 @@
-const { Collector } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector')
+const { Collector, Collection } = require('discord.js');
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), Color = require("../structures/Color")
 const updater = require("../util/updater");
+const ms = require("ms")
 
 /**
  * The GCommansDispatcher class
@@ -14,6 +15,7 @@ class GCommandsDispatcher {
         */
         this.client = client;
         this.client.inhibitors = new Set();
+        this.client.cooldowns = new Collection();
     }
 
     /**
@@ -21,86 +23,138 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     async setGuildPrefix(prefix, guildId) {
-        if(!this.client.database || !this.client.database.working) return this.client.prefix;
-        this.client.guilds.cache.get(guildId).prefix = prefix;
+        if(!this.client.database) return false;
 
-        if(this.client.database.type = "mongodb") {
-            var guildSettings = require('../util/models/guild')
+        let guildData = await this.client.database.get(`guild_${guildId}`) || {}
+        guildData.prefix = prefix
 
-            const settings = await guildSettings.findOne({ id: guildId})
-            if(!settings) {
-              await guildSettings.create({
-                id: guildId,
-                prefix: prefix
-              })
+        this.client.database.set(`guild_${guildId}`, guildData)
+        this.client.guilds.cache.get(guildId).prefix = guildData.prefix;
 
-              return true;
-            }
-
-            settings.prefix = prefix
-            await settings.save()
-            return true;
-        } else if(this.client.database.type == "sqlite") {
-            this.client.database.sqlite.set(`guildPrefix_${guildId}`,prefix)
-            return true;
-        } else if(this.client.database.type == "mariadb") {
-            this.client.database.mariadb.set(this.client.database.mariadbOptions, guildId, `guildPrefix`, prefix)
-            return true;
-        } else {
-            console.log(new Color("&d[GCommands] &3Don't have database!").getText())
-            return false;
-        }
+        return true;
     }
 
     /**
      * Internal method to getGuildPrefix
-     * @returns {Stirng}
+     * @returns {String}
     */
     async getGuildPrefix(guildId, cache = true) {
-        if(!this.client.database || !this.client.database.working) return this.client.prefix;
+        if(!this.client.database) return this.client.prefix;
         if(cache) return this.client.guilds.cache.get(guildId).prefix ? this.client.guilds.cache.get(guildId).prefix : this.client.prefix;
 
-        if(this.client.database.type = "mongodb") {
-            var guildSettings = require('../util/models/guild')
-
-            const settings = await guildSettings.findOne({ id: guildId})
-            if(!settings) {
-              return this.client.prefix
-            }
-
-            return settings.prefix ? settings.prefix : this.client.prefix
-        } else if(this.client.database.type == "sqlite") {
-            var settings = this.client.database.sqlite.get(`guildPrefix_${guildId}`)
-            return settings ? settings : this.client.prefix;
-        } else if(this.client.database.type == "mariadb") {
-            var settings = this.client.database.mariadb.get(this.client.database.mariadbOptions, guildId, `guildPrefix`)
-            return settings ? settings : this.client.prefix;
-        }
+        let guildData = await this.client.database.get(`guild_${guildId}`)
+        return guildData ? guildData.prefix : this.client.prefix
     }
 
     /**
      * Internal method to getCooldown
-     * @returns {Stirng}
+     * @returns {String}
     */
-     async getCooldown(guildId, userId, cmdName) {
-        if(!this.client.database || !this.client.database.working) return 0;
+     async getCooldown(guildId, userId, command) {
+        if(!command.cooldown) return { cooldown: false } ;
+        let now = Date.now();
 
-        if(this.client.database.type = "mongodb") {
-            var user = require('../util/models/user')
+        let cooldown;
+        if(typeof command.cooldown == "object") cooldown = command.cooldown ? ms(command.cooldown.cooldown) : 0;
+        else cooldown = command.cooldown ? ms(command.cooldown) : 0;
 
-            const settings = await user.findOne({ id: userId, guild: guildId })
-            if(!settings) {
-              return 0
+        if(cooldown < 1800000 || !this.client.database) {
+            if (!this.client.cooldowns.has(command.name)) {
+                this.client.cooldowns.set(command.name, new Collection());
             }
 
-            return settings.cooldown
-        } else if(this.client.database.type == "sqlite") {
-            var settings = this.client.database.sqlite.get(`guild_${guildId}_${userId}`)
-            return settings ? settings : this.client.prefix;
-        } else if(this.client.database.type == "mariadb") {
-            var settings = this.client.database.mariadb.get(this.client.database.mariadbOptions, guildId + "##" + userId, `guildCooldown`)
-            return settings ? settings : this.client.prefix;
+            const timestamps = this.client.cooldowns.get(command.name);
+            const cooldownAmount = cooldown ? cooldown : this.client.defaultCooldown;
+            
+            if (timestamps.has(userId)) {
+                if (timestamps.has(userId)) {
+                    const expirationTime = timestamps.get(userId) + cooldownAmount;
+                
+                    if (now < expirationTime) {
+                        if(typeof command.cooldown == "object" && command.cooldown.agressive) {
+                            this.client.cooldowns.set(command.name, new Collection());
+                            return { cooldown: true, wait: ms(cooldown) }
+                        }
+
+                        const timeLeft = ms(expirationTime - now);
+
+                        return { cooldown: true, wait: timeLeft }
+                    }
+                }
+            }
+
+            timestamps.set(userId, now);
+            setTimeout(() => timestamps.delete(userId), cooldownAmount);
         }
+
+        if(!this.client.database) return 0;
+
+        let guildData = await this.client.database.get(`guild_${guildId}`) || {}
+        if(!guildData.users) guildData.users = {}
+        if(!guildData.users[userId]) guildData.users[userId] = guildData.users[userId] || {}
+
+        let userInfo = guildData.users[userId][command.name]
+
+        if(!userInfo) {
+            guildData.users[userId][command.name] = ms(command.cooldown) + now
+    
+            userInfo = guildData.users[userId][command.name]
+            this.client.database.set(`guild_${guildId}`, guildData)
+        }
+
+        if(now < userInfo) {
+            if(typeof command.cooldown == "object" && command.cooldown.agressive) {
+                guildData.users[userId][command.name] = ms(command.cooldown) + now
+    
+                userInfo = guildData.users[userId][command.name]
+                this.client.database.set(`guild_${guildId}`, guildData)
+                
+                return { cooldown: true, wait: ms(cooldown) }
+            }
+
+            return {cooldown: true, wait: ms(userInfo - now)}
+        } else {
+            guildData.users[userId] = guildData.users[userId] || {}
+            guildData.users[userId][command.name] = undefined
+
+            this.client.database.set(`guild_${guildId}`, guildData)
+        }
+
+        return { cooldown:false }
+    }
+
+    /**
+     * Internal method to setGuildLanguage
+     * @param {Snowflake} guildId
+     * @param {Snowflake} userId
+     * @param {Object} command
+     * @returns {boolean}
+    */
+    async setGuildLanguage(guildId, lang) {
+        if(!this.client.database) return false;
+
+        let guildData = await this.client.database.get(`guild_${guildId}`) || {}
+        guildData.language = lang
+
+        this.client.database.set(`guild_${guildId}`, guildData)
+        this.client.guilds.cache.get(guildId).language = guildData.language;
+
+        return true;
+    }
+
+    /**
+     * Internal method to getGuildLanguage
+     * @param {Snowflake} guildId
+     * @param {Snowflake} userId
+     * @param {Object} command
+     * @returns {boolean}
+    */
+     async getGuildLanguage(guildId, cache = true) {
+        if(!this.client.database) return this.client.language;
+        if(cache) return this.client.guilds.cache.get(guildId).language ? this.client.guilds.cache.get(guildId).language : this.client.language;
+
+        let guildData = await this.client.database.get(`guild_${guildId}`)
+        return guildData ? guildData.language : this.client.language
     }
 
     /**
@@ -109,7 +163,7 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     addInhibitor(inhibitor) {
-		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
+		if(typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
 		if(this.client.inhibitors.has(inhibitor)) return false;
 		this.client.inhibitors.add(inhibitor);
 		return true;
@@ -120,7 +174,7 @@ class GCommandsDispatcher {
      * @returns {Set}
     */
     removeInhibitor(inhibitor) {
-		if(typeof inhibitor !== 'function') return console.log('&d[GCommands] &cThe inhibitor must be a function.');
+		if(typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
 		return this.client.inhibitors.delete(inhibitor);
 	}
 

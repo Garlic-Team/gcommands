@@ -2,6 +2,7 @@ const ButtonEvent = require("../../structures/ButtonEvent")
  
 module.exports = (client) => {
     client.ws.on('INTERACTION_CREATE', data => {
+        if(data.type != 3) return;
         if (!data.message) return;
         
         if (data.data.component_type === 2) {

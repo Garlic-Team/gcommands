@@ -14,44 +14,26 @@ class GDatabaseLoader {
      * @private
      */
     async __loadDB() {
-        if(this.client.database.type == "mongodb") {
-            var mongoose = require("mongoose")
-            mongoose.connect(this.client.database.url, { useNewUrlParser: true, useUnifiedTopology: true })
-                .then((connection) => {
-                    console.log(new Color("&d[GCommands] &aMongodb loaded!",{json:false}).getText());
-                    this.client.database.working = true;
-                    return true;
-                })
-                .catch((e) => {
-                    console.log(new Color("&d[GCommands] &cMongodb url is not valid.",{json:false}).getText());
-                    this.client.database.working = false;
-                    return false;
-                })
-        }
-        else if(this.client.database.type == "sqlite") {
-            var sqliteDb = require("quick.db")
-            this.client.database.working = true;
-            this.client.database.sqlite = sqliteDb;
-        } else if(this.client.database.type == "mariadb") {
-            var mariaDb = require("quick-mariadb");
-            this.client.database.working = true;
-            this.client.database.mariadb = mariaDb;
-            this.client.database.mariadbOptions = {
-                host: this.client.database.host,
-                user: this.client.database.username,
-                password: this.client.database.password,
-                database: this.client.database.databaseName,
-                port: this.client.database.port
-            }
+        let dbType = this.GCommandsClient.database;
+        if(!dbType) this.client.database = undefined;
+        else { 
+            const Keyv = require('keyv');
+            this.client.database = new Keyv(dbType)
         }
 
         this.__guildConfig()
     }
 
     async __guildConfig() {
-        for(let guild of this.client.guilds.cache) {
-            guild.prefix = this.client.dispatcher.getGuildPrefix(guild.id, false);
-        }
+        this.client.guilds.cache.forEach(async (guild) => {
+            let prefix = await this.client.dispatcher.getGuildPrefix(guild.id, false)
+            guild.prefix = prefix;
+        })
+
+        this.client.guilds.cache.forEach(async (guild) => {
+            let language = await this.client.dispatcher.getGuildLanguage(guild.id, false)
+            guild.language = language;
+        })
 
         this.client.on("guildCreate", (guild) => {guild.prefix = this.client.dispatcher.getGuildPrefix(guild.id, false)})
     }
