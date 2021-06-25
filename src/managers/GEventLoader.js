@@ -630,7 +630,7 @@ class GEventLoader {
      * Internal method to getSlashArgs
      * @returns {object}
     */
-    async getSlashArgs(options) {
+    getSlashArgs(options) {
         var args = [];
   
         let check = (option) => {
@@ -656,7 +656,7 @@ class GEventLoader {
         return args;
     }
 
-    async getSlashArgs2(options) {
+    getSlashArgs2(options) {
         var args = {};
         for (let o of options) {
           if (o.type == 1) args[o.name] = this.getSlashArgs2(o.options || []);
