@@ -37,7 +37,14 @@ client.on("ready", () => {
             slash: "both",
             prefix: "."
         },
-        database: "read guide"
+        database: "url"
+        /* DB SUPPORT
+         * redis://user:pass@localhost:6379
+         * mongodb://user:pass@localhost:27017/dbname
+         * sqlite://path/to/database.sqlite
+         * postgresql://user:pass@localhost:5432/dbname
+         * mysql://user:pass@localhost:3306/dbname
+        */
     })
 
     gc.on("debug", (debug)=>{console.log(debug)})
