@@ -259,7 +259,7 @@ module.exports = Structures.extend("Message", Message => {
 
         createButtonCollector(filter, options = {}) {
             if(updater.checkDjsVersion("13")) return new ButtonCollectorV13(this, filter, options);
-            else return new ButtonCollectorV12(msg, filter, options);
+            else return new ButtonCollectorV12(this, filter, options);
         }
     
         awaitButtons(filter, options = {}) {
