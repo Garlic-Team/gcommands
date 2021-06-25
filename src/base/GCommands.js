@@ -33,26 +33,26 @@ class GCommands extends GCommandsBase {
         /**
          * EventDir
          * @property {String} eventDir
-         */
+        */
         this.eventDir = options.eventDir;
         this.client.discordjsversion = version
 
         /**
          * unkownCommandMessage
          * @property {String} unkownCommandMessage
-         */
+        */
         this.unkownCommandMessage = options.unkownCommandMessage;
 
         /**
          * AutoTyping
          * @property {Boolean} autoTyping
-         */
-         this.autoTyping = options.autoTyping;
+        */
+        this.autoTyping = options.autoTyping;
 
         /**
          * ownLanguageFile
          * @property {Object} ownLanguageFile
-         */
+        */
         if(!options.ownLanguageFile) this.languageFile = require("../util/message.json");
         else this.languageFile = options.ownLanguageFile;
         this.language = options.language;
@@ -66,12 +66,8 @@ class GCommands extends GCommandsBase {
         /**
          * database
          * @property {Object} database
-         */
-         this.database = undefined;
-        
-        if(options.database) {
-            this.database = options.database
-        }
+        */
+        this.database = options.database || undefined
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.commands = new Collection();
