@@ -22,7 +22,7 @@ class GCommandsDispatcher {
      * Internal method to setGuildPrefix
      * @returns {boolean}
     */
-    async setGuildPrefix(prefix, guildId) {
+    async setGuildPrefix(guildId, prefix) {
         if(!this.client.database) return false;
 
         let guildData = await this.client.database.get(`guild_${guildId}`) || {}

@@ -24,7 +24,7 @@ module.exports = Structures.extend('Guild', Guild => {
          * @returns {Boolean}
         */
 		async setCommandPrefix(prefix) {
-			this.client.dispatcher.setGuildPrefix(prefix, this.id);
+			this.client.dispatcher.setGuildPrefix(this.id, prefix);
 			this.client.emit('commandPrefixChange', this, this.prefix);
 		}
 
@@ -41,7 +41,7 @@ module.exports = Structures.extend('Guild', Guild => {
          * @returns {Boolean}
         */
 		async setLanguage(lang) {
-			this.client.dispatcher.setGuildLanguage(lang, this.id);
+			this.client.dispatcher.setGuildLanguage(this.id, lang);
 			this.client.emit('guildLanguageChange', this, this.language);
 		}
     }
