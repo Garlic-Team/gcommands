@@ -1,6 +1,6 @@
 const { Structures, MessageEmbed } = require("discord.js");
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), { createAPIMessage } = require("../util/util")
-const updater = require("../util/updater")
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), { createAPIMessage } = require("../util/util")
+const updater = require("../util/updater");
 
 module.exports = Structures.extend("TextChannel", TextChannel => {
     class GTextChannel extends TextChannel {
@@ -16,6 +16,7 @@ module.exports = Structures.extend("TextChannel", TextChannel => {
             }
 
             if(typeof result != "object") data.content = result;
+            if(typeof result == "object" && !result.content) data.embeds = [result.content];
             if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
             if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
             if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
@@ -56,6 +57,24 @@ module.exports = Structures.extend("TextChannel", TextChannel => {
         awaitButtons(msg, filter, options = {}) {
             return new Promise((resolve, reject) => {
                 const collector = this.createButtonCollector(msg, filter, options);
+                collector.once('end', (buttons, reason) => {
+                    if (options.errors && options.errors.includes(reason)) {
+                        reject(buttons);
+                    } else {
+                        resolve(buttons);
+                    }
+                });
+            })
+        }
+
+        createSelectMenuCollector(msg, filter, options = {}) {
+            if(updater.checkDjsVersion("13")) return new SelectMenuCollectorV13(msg, filter, options);
+            else return new SelectMenuCollectorV12(msg, filter, options);
+        }
+    
+        awaitSelectMenus(msg, filter, options = {}) {
+            return new Promise((resolve, reject) => {
+                const collector = this.createSelectMenuCollector(msg, filter, options);
                 collector.once('end', (buttons, reason) => {
                     if (options.errors && options.errors.includes(reason)) {
                         reject(buttons);

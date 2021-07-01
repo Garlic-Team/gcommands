@@ -4,19 +4,22 @@ const {Client, MessageEmbed} = require("discord.js")
 const Color = require("../structures/Color"), { createAPIMessage } = require("../util/util");
 
 /**
- * The ButtonEvent class
+ * The InteractionEvent class
  */
-class ButtonEvent {
+class InteractionEvent {
 
     /**
-     * Creates new ButtonEvent instance
+     * Creates new InteractionEvent instance
      * @param {Client} client
      * @param {Object} data 
     */
     constructor(client, data) {
         this.client = client;
 
-        this.id = data.data.custom_id;
+        if(data.data.values) {
+            this.selectMenuId = data.data.custom_id;
+            this.valueId = data.data.values;
+        } else this.id = data.data.custom_id;
 
         this.version = data.version;
 
@@ -49,7 +52,7 @@ class ButtonEvent {
      * Method to defer
      * @param {Boolean} ephemeral 
     */
-     async defer(ephemeral) {
+    async defer(ephemeral) {
         if (this.deferred || this.replied) return console.log(new Color('&d[GCommands] &cThis button already has a reply').getText());
         await this.client.api.interactions(this.discordID, this.token).callback.post({
             data: {
@@ -179,6 +182,8 @@ class ButtonEvent {
             apiMessage.client = this.client ? this.client : client;
             apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
             apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
             apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
         }
 
@@ -226,6 +231,8 @@ class ButtonEvent {
                 apiMessage.client = this.client;
                 apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
                 apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+                apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
 
@@ -234,6 +241,20 @@ class ButtonEvent {
 
         return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: { content: result }})
     }
+
+    /**
+     * Method to isSelectMenu
+    */
+    async isSelectMenu() {
+        return data.data.values ? true : false;
+    }
+
+    /**
+     * Method to isButton
+    */
+    async isButton() {
+        return data.data.values ? false : true;
+    }
 }
 
-module.exports = ButtonEvent;
+module.exports = InteractionEvent;

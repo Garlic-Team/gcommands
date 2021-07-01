@@ -55,7 +55,7 @@ class MessageButton {
 
     /**
      * Method to setLabel
-     * @param {String} style 
+     * @param {String} label 
     */
     setLabel(label) {
         this.label = resolveString(label);

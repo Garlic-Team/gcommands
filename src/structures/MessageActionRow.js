@@ -22,11 +22,31 @@ class MessageActionRow {
 
     /**
      * Method to addComponent
-     * @param {MessageButton} button  
+     * @param {MessageButton} MessageButton  
     */
     addComponent(component) {
         if(typeof component != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
         this.components.push(component)
+        return this;
+    }
+
+    /**
+     * Method to addComponents
+     * @param {MessageButton} MessageButton
+    */
+    addComponents(components) {
+        if(typeof components != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
+        this.components.push(...components.flat(Infinity).map((c) => c));
+        return this;
+    }
+
+    /**
+     * Method to removeOptions
+     * @param {Object} MessageButton 
+    */
+    removeComponents(index, deleteCount, ...options) {
+        if(typeof options != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        this.components.splice(index, deleteCount, ...components.flat(Infinity).map((c) => c));
         return this;
     }
 
