@@ -239,6 +239,20 @@ class SelectMenuEvent {
 
         return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: { content: result }})
     }
+
+    /**
+     * Method to isSelectMenu
+    */
+    async isSelectMenu() {
+        return true;
+    }
+
+    /**
+     * Method to isButton
+    */
+    async isButton() {
+        return false;
+    }
 }
 
 module.exports = SelectMenuEvent;

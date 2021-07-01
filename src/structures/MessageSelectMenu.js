@@ -76,7 +76,28 @@ class MessageSelectMenu {
      * @param {Object} MessageSelectOption 
     */
     addOption(option) {
+        if(typeof option != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
         this.options.push(option)
+        return this;
+    }
+
+    /**
+     * Method to addOptions
+     * @param {Object} MessageSelectOptions 
+    */
+    addOptions(...options) {
+        if(typeof options != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        this.options.push(...options.flat(Infinity).map((o) => o));
+        return this;
+    }
+    
+    /**
+     * Method to removeOptions
+     * @param {Object} MessageSelectOptions 
+    */
+    removeOptions(index, deleteCount, ...options) {
+        if(typeof options != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        this.components.splice(index, deleteCount, ...options.flat(Infinity).map((o) => o));
         return this;
     }
 

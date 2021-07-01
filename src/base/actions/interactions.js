@@ -9,12 +9,14 @@ module.exports = (client) => {
             const dropdown = new SelectMenuEvent(client, data)
 
             client.emit(`selectMenu`, dropdown)
+            client.emit("interaction", dropdown)
         }
 
         if (data.data.component_type == 2) {
             const button = new ButtonEvent(client, data);
 
             client.emit('clickButton', button);
+            client.emit("interaction", button)
         }
     });
 }

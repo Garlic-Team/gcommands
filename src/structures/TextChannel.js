@@ -1,6 +1,6 @@
 const { Structures, MessageEmbed } = require("discord.js");
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), { createAPIMessage } = require("../util/util")
-const updater = require("../util/updater")
+const updater = require("../util/updater");
 
 module.exports = Structures.extend("TextChannel", TextChannel => {
     class GTextChannel extends TextChannel {

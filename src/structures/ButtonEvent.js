@@ -49,7 +49,7 @@ class ButtonEvent {
      * Method to defer
      * @param {Boolean} ephemeral 
     */
-     async defer(ephemeral) {
+    async defer(ephemeral) {
         if (this.deferred || this.replied) return console.log(new Color('&d[GCommands] &cThis button already has a reply').getText());
         await this.client.api.interactions(this.discordID, this.token).callback.post({
             data: {
@@ -237,6 +237,20 @@ class ButtonEvent {
         }
 
         return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: { content: result }})
+    }
+
+    /**
+     * Method to isSelectMenu
+    */
+     async isSelectMenu() {
+        return false;
+    }
+
+    /**
+     * Method to isButton
+    */
+    async isButton() {
+        return true;
     }
 }
 
