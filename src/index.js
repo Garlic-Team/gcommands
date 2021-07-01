@@ -21,7 +21,7 @@ module.exports = {
     MessageButton: require("./structures/MessageButton"),
     MessageActionRow: require("./structures/MessageActionRow"),
     MessageSelectMenu: require("./structures/MessageSelectMenu"),
-    MessageSelectOption: require("./structures/MessageSelectOption"),
+    MessageSelectMenuOption: require("./structures/MessageSelectMenuOption"),
 
     ButtonCollectorV12: require("./structures/v13/ButtonCollector"),
     ButtonCollectorV13: require("./structures/v12/ButtonCollector"),

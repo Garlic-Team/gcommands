@@ -1,12 +1,12 @@
 const { resolveString } = require("../util/util");
 
 /**
- * The MessageSelectOption class
+ * The MessageSelectMenuOption class
  */
-class MessageSelectOption {
+class MessageSelectMenuOption {
 
     /**
-     * Creates new MessageSelectOption instance
+     * Creates new MessageSelectMenuOption instance
      * @param {Object} data 
     */
     constructor(data = {}) {
@@ -87,4 +87,4 @@ class MessageSelectOption {
     }
 }
 
-module.exports = MessageSelectOption;
+module.exports = MessageSelectMenuOption;
