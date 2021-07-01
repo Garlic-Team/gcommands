@@ -1,6 +1,6 @@
 {
   "name": "gcommands",
-  "version": "4.2.8",
+  "version": "4.2.9",
   "description": "Open-source slash/normal command handler",
   "main": "src/index.js",
   "types": "./typings/index.d.ts",

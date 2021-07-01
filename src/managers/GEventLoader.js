@@ -111,7 +111,9 @@ class GEventLoader {
                         msg.client = this.client;
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
                         msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
-
+                        msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
+                        msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
+                        
                         if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
@@ -241,6 +243,8 @@ class GEventLoader {
                         msg.client = this.client;
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
                         msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+                        msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
+                        msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
 
                         if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;

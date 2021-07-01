@@ -64,7 +64,7 @@ class GCommandsDispatcher {
             }
 
             const timestamps = this.client.cooldowns.get(command.name);
-            const cooldownAmount = cooldown ? cooldown : this.client.defaultCooldown;
+            const cooldownAmount = cooldown ? cooldown : ms(this.client.defaultCooldown);
             
             if (timestamps.has(userId)) {
                 if (timestamps.has(userId)) {
