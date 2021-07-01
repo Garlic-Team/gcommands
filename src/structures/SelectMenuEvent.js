@@ -4,19 +4,20 @@ const {Client, MessageEmbed} = require("discord.js")
 const Color = require("../structures/Color"), { createAPIMessage } = require("../util/util");
 
 /**
- * The ButtonEvent class
+ * The SelectMenuEvent class
  */
-class ButtonEvent {
+class SelectMenuEvent {
 
     /**
-     * Creates new ButtonEvent instance
+     * Creates new SelectMenuEvent instance
      * @param {Client} client
      * @param {Object} data 
     */
     constructor(client, data) {
         this.client = client;
 
-        this.id = data.data.custom_id;
+        this.selectMenuId = data.data.custom_id;
+        this.valueId = data.data.values;
 
         this.version = data.version;
 
@@ -240,4 +241,4 @@ class ButtonEvent {
     }
 }
 
-module.exports = ButtonEvent;
+module.exports = SelectMenuEvent;

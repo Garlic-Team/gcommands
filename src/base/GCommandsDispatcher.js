@@ -1,7 +1,7 @@
 const { Collector, Collection } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), Color = require("../structures/Color")
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require("../structures/Color")
 const updater = require("../util/updater");
-const ms = require("ms")
+const ms = require("ms");
 
 /**
  * The GCommansDispatcher class
@@ -198,6 +198,36 @@ class GCommandsDispatcher {
     awaitButtons(msg, filter, options = {}) {
         return new Promise((resolve, reject) => {
             const collector = this.createButtonCollector(msg, filter, options);
+            collector.once('end', (buttons, reason) => {
+                if (options.errors && options.errors.includes(reason)) {
+                    reject(buttons);
+                } else {
+                    resolve(buttons);
+                }
+            });
+        })
+    }
+
+    /**
+     * Internal method to createSelectMenuCollector
+     * @param {Function} filter 
+     * @param {Object} options
+     * @returns {Collector}
+    */
+    createSelectMenuCollector(msg, filter, options = {}) {
+        if(updater.checkDjsVersion("13")) return new SelectMenuCollectorV13(msg, filter, options);
+        else return new SelectMenuCollectorV12(msg, filter, options);
+    }
+
+    /**
+     * Internal method to createButtonCollector
+     * @param {Function} filter 
+     * @param {Object} options
+     * @returns {Collector}
+    */
+    awaitSelectMenus(msg, filter, options = {}) {
+        return new Promise((resolve, reject) => {
+            const collector = this.createSelectMenuCollector(msg, filter, options);
             collector.once('end', (buttons, reason) => {
                 if (options.errors && options.errors.includes(reason)) {
                     reject(buttons);

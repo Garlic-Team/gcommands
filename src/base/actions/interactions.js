@@ -1,11 +1,17 @@
-const ButtonEvent = require("../../structures/ButtonEvent")
- 
+const ButtonEvent = require("../../structures/ButtonEvent");
+const SelectMenuEvent = require("../../structures/SelectMenuEvent");
+
 module.exports = (client) => {
     client.ws.on('INTERACTION_CREATE', data => {
-        if(data.type != 3) return;
         if (!data.message) return;
         
-        if (data.data.component_type === 2) {
+        if(data.data.component_type == 3) {
+            const dropdown = new SelectMenuEvent(client, data)
+
+            client.emit(`selectMenu`, dropdown)
+        }
+
+        if (data.data.component_type == 2) {
             const button = new ButtonEvent(client, data);
 
             client.emit('clickButton', button);

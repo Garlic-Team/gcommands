@@ -1,5 +1,5 @@
 const { APIMessage, Structures } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), { createAPIMessage } = require("../util/util")
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), { createAPIMessage } = require("../util/util")
 const updater = require("../util/updater")
 
 module.exports = Structures.extend("Message", Message => {
@@ -265,6 +265,24 @@ module.exports = Structures.extend("Message", Message => {
         awaitButtons(filter, options = {}) {
             return new Promise((resolve, reject) => {
                 const collector = this.createButtonCollector(this, filter, options);
+                collector.once('end', (buttons, reason) => {
+                    if (options.errors && options.errors.includes(reason)) {
+                        reject(buttons);
+                    } else {
+                        resolve(buttons);
+                    }
+                });
+            })
+        }
+
+        createSelectMenuCollector(filter, options = {}) {
+            if(updater.checkDjsVersion("13")) return new SelectMenuCollectorV13(this, filter, options);
+            else return new SelectMenuCollectorV12(this, filter, options);
+        }
+    
+        awaitSelectMenus(filter, options = {}) {
+            return new Promise((resolve, reject) => {
+                const collector = this.createSelectMenuCollector(this, filter, options);
                 collector.once('end', (buttons, reason) => {
                     if (options.errors && options.errors.includes(reason)) {
                         reject(buttons);

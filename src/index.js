@@ -20,9 +20,14 @@ module.exports = {
     GDMChannel: require("./structures/DMChannel"),
     MessageButton: require("./structures/MessageButton"),
     MessageActionRow: require("./structures/MessageActionRow"),
-    
+    MessageSelectMenu: require("./structures/MessageSelectMenu"),
+    MessageSelectOption: require("./structures/MessageSelectOption"),
+
     ButtonCollectorV12: require("./structures/v13/ButtonCollector"),
     ButtonCollectorV13: require("./structures/v12/ButtonCollector"),
+
+    SelectMenuCollectorV12: require("./structures/v13/SelectMenuCollector"),
+    SelectMenuCollectorV13: require("./structures/v12/SelectMenuCollector"),
 
     // Other
     Color: require("./structures/Color"),
