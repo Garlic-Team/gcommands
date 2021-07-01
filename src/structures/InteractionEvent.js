@@ -4,19 +4,22 @@ const {Client, MessageEmbed} = require("discord.js")
 const Color = require("../structures/Color"), { createAPIMessage } = require("../util/util");
 
 /**
- * The ButtonEvent class
+ * The InteractionEvent class
  */
-class ButtonEvent {
+class InteractionEvent {
 
     /**
-     * Creates new ButtonEvent instance
+     * Creates new InteractionEvent instance
      * @param {Client} client
      * @param {Object} data 
     */
     constructor(client, data) {
         this.client = client;
 
-        this.id = data.data.custom_id;
+        if(data.data.values) {
+            this.selectMenuId = data.data.custom_id;
+            this.valueId = data.data.values;
+        } else this.id = data.data.custom_id;
 
         this.version = data.version;
 
@@ -242,16 +245,16 @@ class ButtonEvent {
     /**
      * Method to isSelectMenu
     */
-     async isSelectMenu() {
-        return false;
+    async isSelectMenu() {
+        return data.data.values ? true : false;
     }
 
     /**
      * Method to isButton
     */
     async isButton() {
-        return true;
+        return data.data.values ? false : true;
     }
 }
 
-module.exports = ButtonEvent;
+module.exports = InteractionEvent;

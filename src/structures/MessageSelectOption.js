@@ -1,19 +1,4 @@
-/* From discord-buttons edited */
 const { resolveString } = require("../util/util");
-const Color = require("../structures/Color")
-const styles = {
-    'blurple': 1,
-    'gray': 2,
-    'grey': 2,
-    'green': 3,
-    'red': 4,
-    'url': 5,
-    'primary': 1,
-    'secondary': 2,
-    'success': 3,
-    'danger': 4,
-    'link': 5
-};
 
 /**
  * The MessageSelectOption class
