@@ -3,6 +3,7 @@ const { Structures } = require("discord.js")
 module.exports = Structures.extend('Guild', Guild => {
     /**
      * The GuildStructure structure
+     * @extends Guild
      * @class
     */
 
@@ -12,11 +13,27 @@ module.exports = Structures.extend('Guild', Guild => {
         }
 
         /**
+         * Method to prefix
+         * @returns {Promise}
+        */
+        get prefix() {
+			return this.client.dispatcher.getGuildPrefix(this.id, true);
+        }
+
+        /**
+         * Method to language
+         * @returns {Promise}
+        */
+        get language() {
+			return this.client.dispatcher.getGuildLanguage(this.id, true);
+        }
+
+        /**
          * Method to getCommandPrefix
          * @returns {Promise}
         */
-        async getCommandPrefix() {
-			return this.client.dispatcher.getGuildPrefix(this.id);
+        async getCommandPrefix(cache = true) {
+			return this.client.dispatcher.getGuildPrefix(this.id, cache);
         }
 
         /**
