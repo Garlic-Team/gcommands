@@ -87,7 +87,7 @@ class InteractionEvent {
      * @param {Object} options 
     */
     async edit(result) {
-        if(result.autoDefer == undefined) {
+        if(result.autoDefer == true) {
             await this.client.api.interactions(this.discordID, this.token).callback.post({
                 data: {
                     type: 6,
