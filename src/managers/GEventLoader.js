@@ -91,6 +91,12 @@ class GEventLoader {
                 let member = message.member, guild = message.guild, channel = message.channel
                 let inhibit = await this.inhibit(commandos, {
                     message, member, guild, channel,
+                    /**
+                     * Respond
+                     * @type {Interface}
+                     * @param {RespondOptions} result 
+                     * @returns {Object}
+                    */
                     respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
                         let inlineReply = true;
@@ -223,6 +229,12 @@ class GEventLoader {
                 var msg = "";
                 commandos.run({
                     client, bot, message, member, guild, channel,
+                    /**
+                     * Respond
+                     * @type {Interface}
+                     * @param {RespondOptions} result 
+                     * @returns {Object}
+                    */
                     respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
                         let inlineReply = true;
@@ -463,7 +475,13 @@ class GEventLoader {
                         const client = this.client, bot = this.client, channel = member.guild.channels.cache.get(interaction.channel_id)
                         commandos.run({
                             client, bot, interaction, member, channel,
-                            guild: member.guild, 
+                            guild: member.guild,                             
+                            /**
+                             * Respond
+                             * @type {Interface}
+                             * @param {RespondOptions} result 
+                             * @returns {Object}
+                            */
                             respond: async(result) => {
                                 return this.slashRespond(channel, interaction, result)
                             },

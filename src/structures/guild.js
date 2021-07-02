@@ -4,28 +4,11 @@ module.exports = Structures.extend('Guild', Guild => {
     /**
      * The GuildStructure structure
      * @extends Guild
-     * @class
     */
 
     class GCommandsGuild extends Guild {
         constructor(...args) {
             super(...args)
-        }
-
-        /**
-         * Method to prefix
-         * @returns {Promise}
-        */
-        get prefix() {
-			return this.client.dispatcher.getGuildPrefix(this.id, true);
-        }
-
-        /**
-         * Method to language
-         * @returns {Promise}
-        */
-        get language() {
-			return this.client.dispatcher.getGuildLanguage(this.id, true);
         }
 
         /**
@@ -38,7 +21,7 @@ module.exports = Structures.extend('Guild', Guild => {
 
         /**
          * Method to setCommandPrefix
-         * @returns {Boolean}
+         * @returns {void}
         */
 		async setCommandPrefix(prefix) {
 			this.client.dispatcher.setGuildPrefix(this.id, prefix);
@@ -55,7 +38,7 @@ module.exports = Structures.extend('Guild', Guild => {
 
         /**
          * Method to setLanguage
-         * @returns {Boolean}
+         * @returns {void}
         */
 		async setLanguage(lang) {
 			this.client.dispatcher.setGuildLanguage(this.id, lang);

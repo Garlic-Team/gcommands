@@ -6,7 +6,6 @@ module.exports = Structures.extend("Message", Message => {
     /**
      * The MessageStructure structure
      * @extends Message
-     * @class
     */
     class GCommandsMessage extends Message {
         constructor(...args) {

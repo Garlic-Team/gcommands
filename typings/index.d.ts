@@ -1,6 +1,7 @@
-import { Client, Guild, Message } from 'discord.js';
-import { InteractionEvent } from '../src/structures/InteractionEvent';
+import { Channel, Client, Collector, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, MessageEmbed, Snowflake, User } from 'discord.js';
+import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
+import { Collection } from 'mongoose';
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish';
 
 declare module 'discord.js' {
@@ -59,8 +60,8 @@ declare module 'gcommands' {
     public prefix: string;
     public language: string;
 
-    public getCommandPrefix(cache?: boolean): Promise;
-    public getLanguage(cache?: boolean): Promise;
+    public getCommandPrefix(cache?: boolean): string;
+    public getLanguage(cache?: boolean): string;
 
     public setCommandPrefix(prefix: string): void;
     public setLanguage(language: GuildLanguageTypes): void;
@@ -115,7 +116,7 @@ declare module 'gcommands' {
 
     public collect(message: Message): Snowflake;
     public dispose(message: Message): Snowflake;
-    public endReason(): string;
+    public get endReason(): string;
   }
 
   export class SelectMenuCollector extends Collector<Snowflake, Message> {
@@ -129,7 +130,7 @@ declare module 'gcommands' {
 
     public collect(message: Message): Snowflake;
     public dispose(message: Message): Snowflake;
-    public endReason(): string;
+    public get endReason(): string;
   }
 
   export class MessageActionRow {
@@ -198,17 +199,16 @@ declare module 'gcommands' {
   }
 
   export class GCommandsDispatcher {
-    public client: Client;
-    public client: {
+    public client: Client & {
       inhibitors: Collection;
       cooldowns: Collection;
     }
 
     public setGuildPrefix(guildId: Snowflake, prefix: string): void;
     public setGuildLanguage(guildId: Snowflake, language: GuildLanguageTypes): void;
-    public getGuildPrefix(guildId: Snowflake): Promise;
-    public getGuildLanguage(guildId: Snowflake): Promise;
-    public getCooldown(guildId: Snowflake, userId: Snowflake, command: Collection): Promise;
+    public getGuildPrefix(guildId: Snowflake): string;
+    public getGuildLanguage(guildId: Snowflake): string;
+    public getCooldown(guildId: Snowflake, userId: Snowflake, command: Collection): string;
     public addInhibitor(inhibitor: Function): void;
     public removeInhibitor(inhibitor: Function): void;
 
@@ -248,5 +248,14 @@ declare module 'gcommands' {
     }
     defaultCooldown?: string;
     database?: string;
+  }
+
+  interface RespondOptions {
+    content: [string | MessageEmbed];
+    embeds?: [MessageEmbed];
+    components?: [MessageActionRow];
+    attachments?: [MessageAttachment | MessageAttachment[]];
+    ephemeral?: [boolean];
+    allowedMentions?: [object];
   }
 }
