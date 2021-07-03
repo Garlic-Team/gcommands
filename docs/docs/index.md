@@ -538,6 +538,7 @@ The MessageStructure structure
     * [.buttons(content, options)](#GCommandsMessage+buttons) ⇒ <code>Promise</code>
     * [.buttonsEdit(content, options)](#GCommandsMessage+buttonsEdit) ⇒ <code>Promise</code>
     * [.edit(options)](#GCommandsMessage+edit)
+    * [.update(options)](#GCommandsMessage+update)
     * [.inlineReply(content, options)](#GCommandsMessage+inlineReply) ⇒ <code>Promise</code>
     * [.buttonsWithReply(content, options)](#GCommandsMessage+buttonsWithReply) ⇒ <code>Promise</code>
 
@@ -569,6 +570,17 @@ Method to buttonsEdit
 
 ### gCommandsMessage.edit(options)
 Method to edit message
+
+**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+
+<a name="GCommandsMessage+update"></a>
+
+### gCommandsMessage.update(options)
+Method to update message
 
 **Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
 
@@ -612,6 +624,7 @@ The InteractionEvent class
     * [.defer(ephemeral)](#InteractionEvent+defer)
     * [.think(ephemeral)](#InteractionEvent+think)
     * [.edit(options)](#InteractionEvent+edit)
+    * [.update(options)](#InteractionEvent+update)
     * [.isSelectMenu()](#InteractionEvent+isSelectMenu)
     * [.isButton()](#InteractionEvent+isButton)
 
@@ -652,6 +665,17 @@ Method to think
 
 ### interactionEvent.edit(options)
 Method to edit
+
+**Kind**: instance method of [<code>InteractionEvent</code>](#InteractionEvent)  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+
+<a name="InteractionEvent+update"></a>
+
+### interactionEvent.update(options)
+Method to update
 
 **Kind**: instance method of [<code>InteractionEvent</code>](#InteractionEvent)  
 
