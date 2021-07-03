@@ -1,4 +1,4 @@
-name: "DOCS Build"
+name: "vue build | gcommands.js.org Build"
 
 on:
   push:
