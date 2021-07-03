@@ -2,6 +2,7 @@
 const { default: axios } = require("axios");
 const {Client, MessageEmbed} = require("discord.js")
 const Color = require("../structures/Color"), { createAPIMessage } = require("../util/util");
+const GMessage = require("./GMessage");
 
 /**
  * The InteractionEvent class
@@ -42,7 +43,7 @@ class InteractionEvent {
             this.clicker.user = this.client.users.cache.get(data.user.id);
         }
 
-        this.message = data.message;
+        this.message = new GMessage(this.client, data.message, this.channel);
 
         this.replied = false;
         this.deferred = false;
