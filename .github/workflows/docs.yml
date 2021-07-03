@@ -16,7 +16,7 @@ jobs:
       run: mkdir docs
 
     - name: Download
-      run: npm i jsdoc2md
+      run: npm i jsdoc-to-markdown
 
     - name: Build
       run: npm run docs:build
