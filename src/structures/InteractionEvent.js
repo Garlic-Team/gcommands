@@ -17,10 +17,20 @@ class InteractionEvent {
     constructor(client, data) {
         this.client = client;
 
-        if(data.data.values) {
-            this.selectMenuId = data.data.custom_id;
-            this.valueId = data.data.values;
-        } else this.id = data.data.custom_id;
+        /**
+         * selectMenuId
+         * @deprecated
+         */
+        this.selectMenuId = data.data.values ? data.data.custom_id : undefined;
+
+        /**
+         * selectMenuId
+         * @deprecated
+         */
+        this.valueId = data.data.values ? data.data.values : undefined;
+
+        this.id = data.data.custom_id;
+        this.values = data.data.values ? data.data.values : undefined
 
         this.version = data.version;
 
