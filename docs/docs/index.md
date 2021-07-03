@@ -621,6 +621,8 @@ The InteractionEvent class
 
 * [InteractionEvent](#InteractionEvent)
     * [new InteractionEvent(client, data)](#new_InteractionEvent_new)
+    * ~~[.selectMenuId](#InteractionEvent+selectMenuId)~~
+    * ~~[.valueId](#InteractionEvent+valueId)~~
     * [.defer(ephemeral)](#InteractionEvent+defer)
     * [.think(ephemeral)](#InteractionEvent+think)
     * [.edit(options)](#InteractionEvent+edit)
@@ -639,6 +641,22 @@ Creates new InteractionEvent instance
 | client | <code>Client</code> | 
 | data | <code>Object</code> | 
 
+<a name="InteractionEvent+selectMenuId"></a>
+
+### ~~interactionEvent.selectMenuId~~
+***Deprecated***
+
+selectMenuId
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+valueId"></a>
+
+### ~~interactionEvent.valueId~~
+***Deprecated***
+
+selectMenuId
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
 <a name="InteractionEvent+defer"></a>
 
 ### interactionEvent.defer(ephemeral)
