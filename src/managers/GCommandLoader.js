@@ -1,6 +1,7 @@
 const cmdUtils = require('../util/cmdUtils'), Color = require("../structures/Color"), { Events } = require("../util/Constants")
 const axios = require("axios");
 const fs = require("fs");
+const ms = require("ms")
 
 class GCommandLoader {
     constructor(GCommandsClient) {
@@ -212,13 +213,13 @@ class GCommandLoader {
                     this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
                 })
                 .catch((error) => {
-                    console.log(new Color("&d[GCommands] &cRequest failed! " + error + " &e("+cmd.name+")", {json:false}).getText());
+                    console.log(new Color(`&d[GCommands] ${error.response.status == 429 ? "&aWait &e" + ms(error.response.data["retry_after"] * 1000) : ""} &c${error} &e(${cmd.name})`, {json:false}).getText());
 
                     if(error.response) {
                         if(error.response.status == 429) {
                             setTimeout(() => {
                                 this.__tryAgain(cmd, config)
-                            }, 20000)
+                            }, (error.response.data["retry_after"]) * 1000)
                         } else {
                             try {
                                 this.GCommandsClient.emit(Events.DEBUG, new Color([
@@ -259,13 +260,13 @@ class GCommandLoader {
             this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
         })
         .catch((error) => {
-            console.log(new Color("&d[GCommands] &cRequest failed! " + error + " &e("+cmd.name+")", {json:false}).getText());
+            console.log(new Color(`&d[GCommands] ${error.response.status == 429 ? "&aWait &e" + ms(error.response.data["retry_after"] * 1000) : ""} &c${error} &e(${cmd.name})`, {json:false}).getText());
             
             if(error.response) {
                 if(error.response.status == 429) {
                     setTimeout(() => {
                         this.__tryAgain(cmd, config)
-                    }, 20000)
+                    }, (error.response.data["retry_after"]) * 1000)
                 }
             }
         })
