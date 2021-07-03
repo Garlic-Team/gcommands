@@ -1,0 +1,19 @@
+{
+  "name": "gcommands-docs",
+  "version": "4.2.9",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vuepress": "^1.8.2"
+  },
+  "dependencies": {
+    "vuepress-theme-yuu": "^3.0.1"
+  }
+}
