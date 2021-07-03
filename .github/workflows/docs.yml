@@ -1,0 +1,33 @@
+name: DOCS Auto Build
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Create Folder
+      run: mkdir docs
+
+    - name: Build
+      run: npm i jsdoc2md
+      run: npm run docs:build
+
+    - name: copy file
+      uses: canastro/copy-file-action@master
+      with:
+        source: "docs.md"
+        target: "docs/index.md"
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        publish_dir: ./docs
+        publish_branch: master
