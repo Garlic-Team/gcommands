@@ -34,14 +34,11 @@ class InteractionEvent {
 
         this.channel = client.channels.cache.get(data.channel_id);
 
-        this.clicker = {};
-
-        if (this.guild) {
-            this.clicker.member = this.guild.members.cache.get(data.member.user.id);
-            this.clicker.user = this.client.users.cache.get(data.member.user.id);
-        } else {
-            this.clicker.user = this.client.users.cache.get(data.user.id);
-        }
+        this.clicker = {
+            member: this.guild ? this.guild.members.cache.get(data.member.user.id) : undefined,
+            user: this.client.users.cache.get(data.guild_id ? data.member.user.id : data.user.id),
+            id: data.guild_id ? data.member.user.id : data.member.user.id,
+        };
 
         this.message = new GMessage(this.client, data.message, this.channel);
 
@@ -105,6 +102,7 @@ class InteractionEvent {
          * @param {Object} options 
         */
         let _send = async(result) => {
+            this.replied = true;
             this.slashRespond(result)
         }
 
@@ -113,12 +111,34 @@ class InteractionEvent {
          * @param {Object} options 
         */
          let _edit = async(result) => {
+            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
             this.slashEdit(result)
+        }
+
+        /**
+         * Method to replyFetch
+         * @param {Object} options 
+        */
+        let _fetch = async() => {
+            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
+            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].get());
+
+            if(apiMessage) {
+                apiMessage.client = this.client;
+                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+                apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
+            }
+
+            return new GMessage(this.client, apiMessage, this.channel);
         }
 
         return {
             send: _send,
-            edit: _edit
+            edit: _edit,
+            fetch: _fetch
         }
     }
 
