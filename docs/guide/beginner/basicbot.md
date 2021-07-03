@@ -150,6 +150,8 @@ client.on("ready", () => {
         }
     })
     
+    GCommandsClient.on("log", (log) => {console.log(log)})
+
     console.log("Ready")
 })
 
@@ -187,6 +189,8 @@ client.on("ready", () => {
         */
     })
     
+    GCommandsClient.on("log", (log) => {console.log(log)})
+
     console.log("Ready")
 })
 
