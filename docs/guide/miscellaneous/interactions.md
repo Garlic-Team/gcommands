@@ -102,7 +102,7 @@ client.on("clickButton", (button) => {
     const buttonRow = new MessageActionRow()
         .addComponent(buttonEdit)
 
-    button.edit({
+    button.message.edit({
       autoDefer: true, // if false use button.defer()
       content: "hi",
       components: buttonRow, // 1 button
@@ -130,11 +130,13 @@ client.on("clickButton", (button) => {
 |-- |-- | -- |
 | reply | The reply function, see below | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
 | think | The bot will reply with "Thinking..."
+| edit | The bot will edit the interaction **DEPRECATED** (use button.message.edit)
 | defer | The bot will reply with nothing
 
 ```js
 button.defer() //nothing
 button.think() //the reply is "Thinking..."
+button.edit("hello")
 ```
 
 #### Reply
@@ -142,6 +144,7 @@ button.think() //the reply is "Thinking..."
 |-- |-- | -- |
 | send | Send a reply
 | edit | Edit the reply
+| fetch | Fetch the reply
 
 ```js
 button.reply.send({
@@ -321,7 +324,7 @@ client.on("selectMenu", (menu) => {
   const buttonRow = new MessageActionRow()
       .addComponent(dropdown)
 
-  menu.edit({
+  menu.message.edit({
     content: "hi",
     components: actionRow, // 1 menu
     components: [actionRow, actionRow2] // 2 rows
@@ -348,6 +351,7 @@ client.on("selectMenu", (menu) => {
 |-- |-- | -- |
 | reply | The reply function, see below | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
 | think | The bot will reply with "Thinking..."
+| edit | The bot will edit the interaction **DEPRECATED** (use menu.message.edit)
 | defer | The bot will reply with nothing
 
 ```js
@@ -360,6 +364,7 @@ menu.think() //the reply is "Thinking..."
 |-- |-- | -- |
 | send | Send a reply
 | edit | Edit the reply
+| fetch | Fetch the reply
 
 ```js
 menu.reply.send({
