@@ -7,6 +7,22 @@ type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'ge
 declare module 'discord.js' {
   export interface Message {
     components: MessageActionRow[];
+    update(content: string | {
+      content: string,
+      embeds?: MessageEmbed,
+      ephemeral?: boolean,
+      components?: MessageActionRow | MessageActionRow[],
+      attachments?: MessageAttachment | MessageAttachment[],
+      allowedMentions?: object
+    })
+    edit(content: string | {
+      content: string,
+      embeds?: MessageEmbed,
+      ephemeral?: boolean,
+      components?: MessageActionRow | MessageActionRow[],
+      attachments?: MessageAttachment | MessageAttachment[],
+      allowedMentions?: object
+    })
     createButtonCollector(filter: CollectorFilter, options?: CollectorOptions): ButtonCollector;
     awaitButtons(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageButton>>;
 
@@ -16,6 +32,22 @@ declare module 'discord.js' {
 
   export interface Message extends discord.Message {
     components: MessageActionRow[];
+    update(content: string | {
+      content: string,
+      embeds?: MessageEmbed,
+      ephemeral?: boolean,
+      components?: MessageActionRow | MessageActionRow[],
+      attachments?: MessageAttachment | MessageAttachment[],
+      allowedMentions?: object
+    })
+    edit(content: string | {
+      content: string,
+      embeds?: MessageEmbed,
+      ephemeral?: boolean,
+      components?: MessageActionRow | MessageActionRow[],
+      attachments?: MessageAttachment | MessageAttachment[],
+      allowedMentions?: object
+    })
     createButtonCollector(filter: CollectorFilter, options?: CollectorOptions): ButtonCollector;
     awaitButtons(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageButton>>;
 
@@ -226,7 +258,7 @@ declare module 'gcommands' {
   }
 
   export class MessageSelectMenuOption {
-    constructor(data: MessageButton)
+    constructor(data: MessageSelectMenuOption)
     public label: string;
     public value: string;
     public description: string;
