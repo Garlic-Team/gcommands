@@ -1,10 +1,28 @@
-import { Channel, Client, Collector, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, MessageEmbed, Snowflake, User } from 'discord.js';
+import discord, { Channel, Client, Collector, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 import { Collection } from 'mongoose';
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish';
 
 declare module 'discord.js' {
+  export interface Message {
+    components: MessageActionRow[];
+    createButtonCollector(filter: CollectorFilter, options?: CollectorOptions): ButtonCollector;
+    awaitButtons(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageButton>>;
+
+    createSelectMenuCollector(filter: CollectorFilter, options?: CollectorOptions): SelectMenuCollector;
+    awaitSelectMenus(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageSelectMenu>>;
+  }
+
+  export interface Message extends discord.Message {
+    components: MessageActionRow[];
+    createButtonCollector(filter: CollectorFilter, options?: CollectorOptions): ButtonCollector;
+    awaitButtons(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageButton>>;
+
+    createSelectMenuCollector(filter: CollectorFilter, options?: CollectorOptions): SelectMenuCollector;
+    awaitSelectMenus(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageSelectMenu>>;
+  }
+
   interface ClientEvents {
     selectMenu: [InteractionEvent];
     clickButton: [InteractionEvent];
