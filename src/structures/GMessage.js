@@ -173,6 +173,45 @@ module.exports = Structures.extend("Message", Message => {
         }
 
         /**
+         * Method to update message
+         * @param {Object} options 
+        */
+        async update(result) {
+            if (typeof result == "object") {
+                var finalData = [];
+
+                if(result.components && !Array.isArray(result.components)) result.components = [result.components];
+                if(result.embeds && !Array.isArray(result.embeds)) result.embeds = [result.embeds]
+
+                if(typeof result == "object" && !result.content) result.embeds = [result]
+                if(typeof result.content == "object") {
+                    result.embeds = [result.content]
+                    result.content = "\u200B"
+                }
+
+                return this.client.api.channels(this.channel.id).messages[this.id].patch({
+                    data: {
+                        type: 7,
+                        data: {
+                            content: result.content,
+                            components: result.components,
+                            embeds: result.embeds
+                        },
+                    },
+                }).then(d => this.client.actions.MessageCreate.handle(d).message);
+            } else {
+                return this.client.api.channels(this.channel.id).messages[this.id].patch({
+                    data: {
+                        type: 7,
+                        data: {
+                            content: result,
+                        }
+                    }
+                })
+            }
+        }
+
+        /**
          * Method to inlineReply
          * @param {String} content
          * @param {Object} options

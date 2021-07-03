@@ -96,6 +96,22 @@ class InteractionEvent {
         this.slashEdit(result)
     }
 
+    /**
+     * Method to update
+     * @param {Object} options 
+    */
+    async update(result) {
+        if(result.autoDefer == true) {
+            await this.client.api.interactions(this.discordID, this.token).callback.post({
+                data: {
+                    type: 6,
+                },
+            });
+        }
+
+        this.slashEdit(result, true)
+    }
+
     get reply() {
         /**
          * Method to replySend
@@ -113,6 +129,15 @@ class InteractionEvent {
          let _edit = async(result) => {
             if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
             this.slashEdit(result)
+        }
+
+        /**
+         * Method to replyUpdate
+         * @param {Object} options 
+        */
+         let _update = async(result) => {
+            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
+            this.slashEdit(result, true)
         }
 
         /**
@@ -138,6 +163,7 @@ class InteractionEvent {
         return {
             send: _send,
             edit: _edit,
+            update: _update,
             fetch: _fetch
         }
     }
@@ -211,7 +237,7 @@ class InteractionEvent {
         return apiMessage
     }
 
-    async slashEdit(result) {
+    async slashEdit(result, update) {
         if (typeof result == "object") {
             if(result.components) {
                 if(!Array.isArray(result.components)) result.components = [result.components];
@@ -227,26 +253,28 @@ class InteractionEvent {
                 if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                 result.embeds = result.embeds;
             } else result.embeds = []
-            let finalFiles = [];
-            if(typeof result == "object" && result.attachments) {
-                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                result.attachments.forEach(file => {
-                    finalFiles.push({
-                        attachment: file.attachment,
-                        name: file.name,
-                        file: file.attachment
-                    })
-                })
-            }
             
-            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                data: {
-                    content: result.content,
-                    components: result.components,
-                    embeds: result.embeds || []
-                },
-                files: finalFiles   
-            }))
+            let apiMessage = {};
+            if(update) {
+                apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
+                    data: {
+                        type: 7,
+                        data: {
+                            content: result.content,
+                            components: result.components,
+                            embeds: result.embeds || []
+                        }
+                    }
+                })).toJSON();
+            } else {
+                apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
+                    data: {
+                        content: result.content,
+                        components: result.components,
+                        embeds: result.embeds || []
+                    } 
+                })).toJSON();
+            }
 
             if(apiMessage) {
                 apiMessage.client = this.client;
@@ -256,11 +284,37 @@ class InteractionEvent {
                 apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
-
             return apiMessage;
         }
 
-        return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: { content: result }})
+        let apiMessage;
+        if(update) {
+            apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
+                data: {
+                    data: {
+                        content: result,
+                    },
+                    type: 7
+                },
+            })).toJSON();
+        } else {
+            apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
+                data: {
+                    content: result,
+                } 
+            })).toJSON();
+        }
+
+        if(apiMessage) {
+            apiMessage.client = this.client;
+            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
+        }
+
+        return apiMessage;
     }
 
     /**

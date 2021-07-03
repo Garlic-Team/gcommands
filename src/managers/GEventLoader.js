@@ -1,6 +1,7 @@
 const { default: axios } = require("axios");
 const {Collection,MessageEmbed} = require("discord.js");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants"), { createAPIMessage } = require("../util/util");
+const GMessage = require("../structures/GMessage");
 
 /**
  * The GCommandsEventLoader class
@@ -312,10 +313,10 @@ class GEventLoader {
                         guild: guild, 
                         channel: guild.channels.cache.get(interaction.channel_id),
                         respond: async(result) => {
-                            return this.slashRespond(guild.channels.cache.get(interaction.channel_id), interaction, result)
+                            return this.slashRespond(guild.channels.cache.get(interaction.channel_id), interaction, result);
                         },
                         edit: async(result) => {
-                            return this.slashEdit(interaction, result)
+                            return this.slashEdit(interaction, result);
                         }
                     })
                     if(inhibit == false) return;
@@ -483,10 +484,10 @@ class GEventLoader {
                              * @returns {Object}
                             */
                             respond: async(result) => {
-                                return this.slashRespond(channel, interaction, result)
+                                return this.slashRespond(channel, interaction, result);
                             },
                             edit: async(result) => {
-                                return this.slashEdit(interaction, result)
+                                return this.slashEdit(interaction, result);
                             }
                         }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgs2(interaction.data.options || []))
                     } catch(e) {
@@ -597,7 +598,7 @@ class GEventLoader {
         }
 
         if(!result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
-        return apiMessage
+        return new GMessage(this.client, apiMessage, channel);
     }
 
     async slashEdit(interaction, result) {
@@ -646,7 +647,7 @@ class GEventLoader {
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
 
-            return apiMessage;
+            return new GMessage(this.client, apiMessage, channel);
         }
 
         return this.client.api.webhooks(this.client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
