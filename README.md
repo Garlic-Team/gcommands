@@ -58,4 +58,4 @@ You can find everything in the [guide](https://gcommands.js.org).<br>
 Join our [discord server](https://discord.gg/AjKJSBbGm2), if you need help or have any questions.
 
 ### 👥 | Contact
-<a href="https://discord.gg/AjKJSBbGm2"><img src="https://discord.com/api/guilds/833628077556367411/widget.png?style=banner1"></a>
+<a href="https://discord.gg/AjKJSBbGm2"><img src="https://discord.com/api/guilds/833628077556367411/widget.png?style=banner1"></a>a
