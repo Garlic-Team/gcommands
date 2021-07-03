@@ -23,6 +23,24 @@ declare module 'discord.js' {
     awaitSelectMenus(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageSelectMenu>>;
   }
 
+  export interface Guild {
+    prefix: string;
+
+    getCommandPrefix(): string;
+    setCommandPrefix(prefix: string): void;
+    getLanguage(): string;
+    setLanguage(language: GuildLanguageTypes): void;
+  }
+
+  export interface Guild extends discord.Guild {
+    prefix: string;
+
+    getCommandPrefix(): string;
+    setCommandPrefix(prefix: string): void;
+    getLanguage(): string;
+    setLanguage(language: GuildLanguageTypes): void;
+  }
+
   interface ClientEvents {
     selectMenu: [InteractionEvent];
     clickButton: [InteractionEvent];
