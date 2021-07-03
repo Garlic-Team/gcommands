@@ -19,6 +19,12 @@
 <dt><a href="#Color">Color</a></dt>
 <dd><p>The Color class</p>
 </dd>
+<dt><a href="#GCommandsGuild">GCommandsGuild</a> ⇐ <code>Guild</code></dt>
+<dd><p>The GuildStructure structure</p>
+</dd>
+<dt><a href="#GCommandsMessage">GCommandsMessage</a> ⇐ <code>Message</code></dt>
+<dd><p>The MessageStructure structure</p>
+</dd>
 <dt><a href="#InteractionEvent">InteractionEvent</a></dt>
 <dd><p>The InteractionEvent class</p>
 </dd>
@@ -33,12 +39,6 @@
 </dd>
 <dt><a href="#MessageSelectMenuOption">MessageSelectMenuOption</a></dt>
 <dd><p>The MessageSelectMenuOption class</p>
-</dd>
-<dt><a href="#GCommandsGuild">GCommandsGuild</a> ⇐ <code>Guild</code></dt>
-<dd><p>The GuildStructure structure</p>
-</dd>
-<dt><a href="#GCommandsMessage">GCommandsMessage</a> ⇐ <code>Message</code></dt>
-<dd><p>The MessageStructure structure</p>
 </dd>
 </dl>
 
@@ -488,6 +488,118 @@ Internal method to getText
 Internal method to getRGB
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
+<a name="GCommandsGuild"></a>
+
+## GCommandsGuild ⇐ <code>Guild</code>
+The GuildStructure structure
+
+**Kind**: global class  
+**Extends**: <code>Guild</code>  
+
+* [GCommandsGuild](#GCommandsGuild) ⇐ <code>Guild</code>
+    * [.getCommandPrefix()](#GCommandsGuild+getCommandPrefix) ⇒ <code>Promise</code>
+    * [.setCommandPrefix()](#GCommandsGuild+setCommandPrefix) ⇒ <code>void</code>
+    * [.getLanguage()](#GCommandsGuild+getLanguage) ⇒ <code>Promise</code>
+    * [.setLanguage()](#GCommandsGuild+setLanguage) ⇒ <code>void</code>
+
+<a name="GCommandsGuild+getCommandPrefix"></a>
+
+### gCommandsGuild.getCommandPrefix() ⇒ <code>Promise</code>
+Method to getCommandPrefix
+
+**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
+<a name="GCommandsGuild+setCommandPrefix"></a>
+
+### gCommandsGuild.setCommandPrefix() ⇒ <code>void</code>
+Method to setCommandPrefix
+
+**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
+<a name="GCommandsGuild+getLanguage"></a>
+
+### gCommandsGuild.getLanguage() ⇒ <code>Promise</code>
+Method to getLanguage
+
+**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
+<a name="GCommandsGuild+setLanguage"></a>
+
+### gCommandsGuild.setLanguage() ⇒ <code>void</code>
+Method to setLanguage
+
+**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
+<a name="GCommandsMessage"></a>
+
+## GCommandsMessage ⇐ <code>Message</code>
+The MessageStructure structure
+
+**Kind**: global class  
+**Extends**: <code>Message</code>  
+
+* [GCommandsMessage](#GCommandsMessage) ⇐ <code>Message</code>
+    * [.buttons(content, options)](#GCommandsMessage+buttons) ⇒ <code>Promise</code>
+    * [.buttonsEdit(content, options)](#GCommandsMessage+buttonsEdit) ⇒ <code>Promise</code>
+    * [.edit(options)](#GCommandsMessage+edit)
+    * [.inlineReply(content, options)](#GCommandsMessage+inlineReply) ⇒ <code>Promise</code>
+    * [.buttonsWithReply(content, options)](#GCommandsMessage+buttonsWithReply) ⇒ <code>Promise</code>
+
+<a name="GCommandsMessage+buttons"></a>
+
+### gCommandsMessage.buttons(content, options) ⇒ <code>Promise</code>
+Method to make buttons
+
+**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
+
+| Param | Type |
+| --- | --- |
+| content | <code>String</code> | 
+| options | <code>Object</code> | 
+
+<a name="GCommandsMessage+buttonsEdit"></a>
+
+### gCommandsMessage.buttonsEdit(content, options) ⇒ <code>Promise</code>
+Method to buttonsEdit
+
+**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
+
+| Param | Type |
+| --- | --- |
+| content | <code>String</code> | 
+| options | <code>Object</code> | 
+
+<a name="GCommandsMessage+edit"></a>
+
+### gCommandsMessage.edit(options)
+Method to edit message
+
+**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+
+<a name="GCommandsMessage+inlineReply"></a>
+
+### gCommandsMessage.inlineReply(content, options) ⇒ <code>Promise</code>
+Method to inlineReply
+
+**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
+
+| Param | Type |
+| --- | --- |
+| content | <code>String</code> | 
+| options | <code>Object</code> | 
+
+<a name="GCommandsMessage+buttonsWithReply"></a>
+
+### gCommandsMessage.buttonsWithReply(content, options) ⇒ <code>Promise</code>
+Method to buttonsWithReply
+
+**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
+
+| Param | Type |
+| --- | --- |
+| content | <code>String</code> | 
+| options | <code>Object</code> | 
+
 <a name="InteractionEvent"></a>
 
 ## InteractionEvent
@@ -923,118 +1035,6 @@ Method to setDefault
 Method to toJSON
 
 **Kind**: instance method of [<code>MessageSelectMenuOption</code>](#MessageSelectMenuOption)  
-<a name="GCommandsGuild"></a>
-
-## GCommandsGuild ⇐ <code>Guild</code>
-The GuildStructure structure
-
-**Kind**: global class  
-**Extends**: <code>Guild</code>  
-
-* [GCommandsGuild](#GCommandsGuild) ⇐ <code>Guild</code>
-    * [.getCommandPrefix()](#GCommandsGuild+getCommandPrefix) ⇒ <code>Promise</code>
-    * [.setCommandPrefix()](#GCommandsGuild+setCommandPrefix) ⇒ <code>void</code>
-    * [.getLanguage()](#GCommandsGuild+getLanguage) ⇒ <code>Promise</code>
-    * [.setLanguage()](#GCommandsGuild+setLanguage) ⇒ <code>void</code>
-
-<a name="GCommandsGuild+getCommandPrefix"></a>
-
-### gCommandsGuild.getCommandPrefix() ⇒ <code>Promise</code>
-Method to getCommandPrefix
-
-**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
-<a name="GCommandsGuild+setCommandPrefix"></a>
-
-### gCommandsGuild.setCommandPrefix() ⇒ <code>void</code>
-Method to setCommandPrefix
-
-**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
-<a name="GCommandsGuild+getLanguage"></a>
-
-### gCommandsGuild.getLanguage() ⇒ <code>Promise</code>
-Method to getLanguage
-
-**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
-<a name="GCommandsGuild+setLanguage"></a>
-
-### gCommandsGuild.setLanguage() ⇒ <code>void</code>
-Method to setLanguage
-
-**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
-<a name="GCommandsMessage"></a>
-
-## GCommandsMessage ⇐ <code>Message</code>
-The MessageStructure structure
-
-**Kind**: global class  
-**Extends**: <code>Message</code>  
-
-* [GCommandsMessage](#GCommandsMessage) ⇐ <code>Message</code>
-    * [.buttons(content, options)](#GCommandsMessage+buttons) ⇒ <code>Promise</code>
-    * [.buttonsEdit(content, options)](#GCommandsMessage+buttonsEdit) ⇒ <code>Promise</code>
-    * [.edit(options)](#GCommandsMessage+edit)
-    * [.inlineReply(content, options)](#GCommandsMessage+inlineReply) ⇒ <code>Promise</code>
-    * [.buttonsWithReply(content, options)](#GCommandsMessage+buttonsWithReply) ⇒ <code>Promise</code>
-
-<a name="GCommandsMessage+buttons"></a>
-
-### gCommandsMessage.buttons(content, options) ⇒ <code>Promise</code>
-Method to make buttons
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| content | <code>String</code> | 
-| options | <code>Object</code> | 
-
-<a name="GCommandsMessage+buttonsEdit"></a>
-
-### gCommandsMessage.buttonsEdit(content, options) ⇒ <code>Promise</code>
-Method to buttonsEdit
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| content | <code>String</code> | 
-| options | <code>Object</code> | 
-
-<a name="GCommandsMessage+edit"></a>
-
-### gCommandsMessage.edit(options)
-Method to edit message
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| options | <code>Object</code> | 
-
-<a name="GCommandsMessage+inlineReply"></a>
-
-### gCommandsMessage.inlineReply(content, options) ⇒ <code>Promise</code>
-Method to inlineReply
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| content | <code>String</code> | 
-| options | <code>Object</code> | 
-
-<a name="GCommandsMessage+buttonsWithReply"></a>
-
-### gCommandsMessage.buttonsWithReply(content, options) ⇒ <code>Promise</code>
-Method to buttonsWithReply
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| content | <code>String</code> | 
-| options | <code>Object</code> | 
-
 <a name="ReturnSystem"></a>
 
 ## ReturnSystem
