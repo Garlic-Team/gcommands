@@ -15,8 +15,10 @@ jobs:
     - name: Create Folder
       run: mkdir docs
 
-    - name: Build
+    - name: Download
       run: npm i jsdoc2md
+
+    - name: Build
       run: npm run docs:build
 
     - name: copy file
