@@ -7,22 +7,8 @@ type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'ge
 declare module 'discord.js' {
   export interface Message {
     components: MessageActionRow[];
-    update(content: string | {
-      content: string,
-      embeds?: MessageEmbed,
-      ephemeral?: boolean,
-      components?: MessageActionRow | MessageActionRow[],
-      attachments?: MessageAttachment | MessageAttachment[],
-      allowedMentions?: object
-    })
-    edit(content: string | {
-      content: string,
-      embeds?: MessageEmbed,
-      ephemeral?: boolean,
-      components?: MessageActionRow | MessageActionRow[],
-      attachments?: MessageAttachment | MessageAttachment[],
-      allowedMentions?: object
-    })
+    update(result: string | MessageEditAndUpdateOptions)
+    edit(result: string | MessageEditAndUpdateOptions)
     createButtonCollector(filter: CollectorFilter, options?: CollectorOptions): ButtonCollector;
     awaitButtons(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageButton>>;
 
@@ -32,22 +18,8 @@ declare module 'discord.js' {
 
   export interface Message extends discord.Message {
     components: MessageActionRow[];
-    update(content: string | {
-      content: string,
-      embeds?: MessageEmbed,
-      ephemeral?: boolean,
-      components?: MessageActionRow | MessageActionRow[],
-      attachments?: MessageAttachment | MessageAttachment[],
-      allowedMentions?: object
-    })
-    edit(content: string | {
-      content: string,
-      embeds?: MessageEmbed,
-      ephemeral?: boolean,
-      components?: MessageActionRow | MessageActionRow[],
-      attachments?: MessageAttachment | MessageAttachment[],
-      allowedMentions?: object
-    })
+    update(result: string | MessageEditAndUpdateOptions)
+    edit(result: string | MessageEditAndUpdateOptions)
     createButtonCollector(filter: CollectorFilter, options?: CollectorOptions): ButtonCollector;
     awaitButtons(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageButton>>;
 
@@ -333,5 +305,14 @@ declare module 'gcommands' {
     attachments?: [MessageAttachment | MessageAttachment[]];
     ephemeral?: [boolean];
     allowedMentions?: [object];
+  }
+
+  interface MessageEditAndUpdateOptions {
+    content: string,
+    embeds?: MessageEmbed,
+    ephemeral?: boolean,
+    components?: MessageActionRow | MessageActionRow[],
+    attachments?: MessageAttachment | MessageAttachment[],
+    allowedMentions?: object
   }
 }
