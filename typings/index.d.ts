@@ -41,6 +41,14 @@ declare module 'discord.js' {
     setLanguage(language: GuildLanguageTypes): void;
   }
 
+  export interface Client {
+    dispatcher: GCommandsDispatcher;
+  }
+
+  export interface Client extends discord.Client {
+    dispatcher: GCommandsDispatcher;
+  }
+
   interface ClientEvents {
     selectMenu: [InteractionEvent];
     clickButton: [InteractionEvent];
