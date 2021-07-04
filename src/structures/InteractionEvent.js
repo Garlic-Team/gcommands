@@ -1,6 +1,6 @@
 /* From discord-buttons edited */
 const { default: axios } = require("axios");
-const {Client, MessageEmbed} = require("discord.js")
+const {Client, MessageEmbed, Guild, NewsChannel, GuildMember, User} = require("discord.js")
 const Color = require("../structures/Color"), { createAPIMessage } = require("../util/util");
 const GMessage = require("./GMessage");
 
@@ -29,30 +29,80 @@ class InteractionEvent {
          */
         this.valueId = data.data.values ? data.data.values : undefined;
 
+        /**
+         * id
+         * @type {Number}
+         */
         this.id = data.data.custom_id;
+
+        /**
+         * values
+         * @type {Array}
+         */
         this.values = data.data.values ? data.data.values : undefined
 
+        /**
+         * version
+         * @type {Number}
+         */
         this.version = data.version;
 
+        /**
+         * token
+         * @type {String}
+         */
         this.token = data.token;
 
+        /**
+         * discordID
+         * @type {Number}
+         */
         this.discordID = data.id;
 
+        /**
+         * applicationID
+         * @type {Number}
+         */
         this.applicationID = data.application_id;
 
+        /**
+         * guild
+         * @type {Guild}
+         */
         this.guild = data.guild_id ? client.guilds.cache.get(data.guild_id) : undefined;
 
+        /**
+         * channel
+         * @type {TextChannel | NewsChannel | DMChannel}
+         */
         this.channel = client.channels.cache.get(data.channel_id);
 
+        /**
+         * clicker
+         * @type {GuildMember | User | Number}
+         */
         this.clicker = {
             member: this.guild ? this.guild.members.cache.get(data.member.user.id) : undefined,
             user: this.client.users.cache.get(data.guild_id ? data.member.user.id : data.user.id),
             id: data.guild_id ? data.member.user.id : data.member.user.id,
         };
 
+        /**
+         * message
+         * @type {GMessage}
+         */
         this.message = new GMessage(this.client, data.message, this.channel);
 
+        /**
+         * replied
+         * @type {boolean}
+         */
         this.replied = false;
+
+        /**
+         * deferred
+         * @type {boolean}
+         */
         this.deferred = false;
     }
 
