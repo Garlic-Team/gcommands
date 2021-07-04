@@ -599,7 +599,7 @@ class GEventLoader {
         }
 
         if(!result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
-        return new GMessage(this.client, apiMessage, channel);
+        return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
     }
 
     async slashEdit(interaction, result) {
@@ -650,7 +650,7 @@ class GEventLoader {
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
 
-            return new GMessage(this.client, apiMessage, channel);
+            return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
         }
 
         return this.client.api.webhooks(this.client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
