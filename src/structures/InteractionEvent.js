@@ -263,6 +263,7 @@ class InteractionEvent {
                 if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                 result.embeds = result.embeds;
             } else result.embeds = []
+            if(result.embeds && !result.content) result.content = "\u200B"
             
             let apiMessage = {};
             if(update) {

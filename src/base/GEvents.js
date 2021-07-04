@@ -14,6 +14,7 @@ class GEvents {
      * @param {GEventsOptions} options 
     */
     constructor(GCommandsClient, options = {}) {
+        if(!GCommandsClient.client) GCommandsClient = { client: GCommandsClient }
         if (typeof GCommandsClient.client !== 'object') return console.log(new Color("&d[GCommands EVENTS] &cNo discord.js client provided!",{json:false}).getText());
         if (!Object.keys(options).length) return console.log(new Color("&d[GCommands EVENTS] &cNo default options provided!",{json:false}).getText());
         if(!options.eventDir) return console.log(new Color("&d[GCommands EVENTS] &cNo default options provided! (eventDir)",{json:false}).getText());

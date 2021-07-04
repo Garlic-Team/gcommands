@@ -84,8 +84,8 @@ class GEventLoader {
             if (cmd.length === 0) return;
     
             try {
-                let commandos = this.client.commands.get(cmd);
-                if(!commandos) commandos = this.client.commands.get(this.client.aliases.get(cmd));
+                let commandos = this.client.gcommands.get(cmd);
+                if(!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(cmd));
                 if(!commandos) return;
                 if(commandos.slash == true || commandos.slash == "true") return;
 
@@ -298,7 +298,7 @@ class GEventLoader {
                 
                 if(this.client == undefined) return;
                 try {
-                    let commandos = this.client.commands.get(interaction.data.name);
+                    let commandos = this.client.gcommands.get(interaction.data.name);
                     if(!commandos) return;
                     if(commandos.slash == false || commandos.slash == "false") return;
                     if (!this.client.cooldowns.has(commandos.name)) {
@@ -557,6 +557,7 @@ class GEventLoader {
             if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
             data.embeds = result.embeds;
         }
+        if(result.embeds && !result.content) result.content = "\u200B"
 
         let finalFiles = [];
         if(typeof result == "object" && result.attachments) {
@@ -617,6 +618,8 @@ class GEventLoader {
                 if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                 result.embeds = result.embeds;
             } else result.embeds = []
+            if(result.embeds && !result.content) result.content = "\u200B"
+            
             let finalFiles = [];
             if(typeof result == "object" && result.attachments) {
                 if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]

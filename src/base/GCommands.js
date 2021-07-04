@@ -70,8 +70,8 @@ class GCommands extends GCommandsBase {
         this.database = options.database || undefined;
 
         this.client.categories = fs.readdirSync("./" + this.cmdDir );
-        this.client.commands = new Collection();
-        this.client.aliases = new Collection();
+        this.client.gcommands = new Collection();
+        this.client.galiases = new Collection();
 
         /**
          * Prefix

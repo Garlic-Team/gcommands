@@ -27,8 +27,8 @@ class GCommandLoader {
                 try {
                     file = await require(`../../../../${this.cmdDir}${dir}`);
 
-                    if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.aliases.set(alias, file.name));
-                    this.client.commands.set(file.name, file);
+                    if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
+                    this.client.gcommands.set(file.name, file);
                     this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &e("+fileName+") &3"+e).getText());
@@ -41,8 +41,8 @@ class GCommandLoader {
                     try {
                         file2 = await require(`../../../../${this.cmdDir}${dir}/${cmdFile}`);
     
-                        if (file2.aliases && Array.isArray(file2.aliases)) file2.aliases.forEach(alias => this.client.aliases.set(alias, file2.name));
-                        this.client.commands.set(file2.name, file2);
+                        if (file2.aliases && Array.isArray(file2.aliases)) file2.aliases.forEach(alias => this.client.galiases.set(alias, file2.name));
+                        this.client.gcommands.set(file2.name, file2);
                         this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &e("+fileName2+") &3"+e).getText());
@@ -62,14 +62,14 @@ class GCommandLoader {
      */
     async __createCommands() {
         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash commands...").getText())
-        let keys = Array.from(this.client.commands.keys());
+        let keys = Array.from(this.client.gcommands.keys());
 
         keys.forEach(async (cmdname) => {
             this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash command (&e"+cmdname+"&3)").getText());
             var options = [];
             var subCommandGroup = {};
             var subCommand = [];
-            const cmd = this.client.commands.get(cmdname)
+            const cmd = this.client.gcommands.get(cmdname)
             if(cmd.slash == false || cmd.slash == "false") return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
@@ -288,11 +288,11 @@ class GCommandLoader {
 
             var nowCMDS = [];
 
-            var keys = Array.from(this.client.commands.keys());
+            var keys = Array.from(this.client.gcommands.keys());
             keys.forEach(cmdname => {
                 nowCMDS.push(cmdname)
 
-                if(this.client.commands.get(cmdname).slash == false || this.client.commands.get(cmdname).slash == "false") {
+                if(this.client.gcommands.get(cmdname).slash == false || this.client.gcommands.get(cmdname).slash == "false") {
                     allcmds.forEach(cmd => {
                         if(cmd.name == cmdname) {
                             cmdUtils.__deleteCmd(this.client, cmd.id)
@@ -333,11 +333,11 @@ class GCommandLoader {
                 }
 
                 var nowCMDS = [];
-                var keys = Array.from(this.client.commands.keys());
+                var keys = Array.from(this.client.gcommands.keys());
                 keys.forEach(cmdname => {
                     nowCMDS.push(cmdname)
 
-                    if(this.client.commands.get(cmdname).slash == false || this.client.commands.get(cmdname).slash == "false") {
+                    if(this.client.gcommands.get(cmdname).slash == false || this.client.gcommands.get(cmdname).slash == "false") {
                         allcmds.forEach(cmd => {
                             if(cmd.name == cmdname) {
                                 cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)

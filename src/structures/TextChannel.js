@@ -25,6 +25,7 @@ module.exports = Structures.extend("TextChannel", TextChannel => {
                 if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
                 data.embeds = result.embeds;
             }
+            if(result.embeds && !result.content) result.content = "\u200B"
 
             let finalFiles = [];
             if(typeof result == "object" && result.attachments) {
