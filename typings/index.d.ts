@@ -120,6 +120,7 @@ declare module 'gcommands' {
     constructor(client: Client, data: object)
     public selectMenuId: string;
     public valueId: string;
+    public values: array;
     public id: string;
     public version: number;
     public token: number;
@@ -131,7 +132,7 @@ declare module 'gcommands' {
       member: GuildMember;
       user: User;
     }
-    public message: Object;
+    public message: Message;
     public replied: boolean;
     public deffered: boolean;
 
