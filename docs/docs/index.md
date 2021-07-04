@@ -635,6 +635,7 @@ The InteractionEvent class
     * [.message](#InteractionEvent+message) : <code>GMessage</code>
     * [.replied](#InteractionEvent+replied) : <code>boolean</code>
     * [.deferred](#InteractionEvent+deferred) : <code>boolean</code>
+    * [.reply](#InteractionEvent+reply)
     * [.defer(ephemeral)](#InteractionEvent+defer)
     * [.think(ephemeral)](#InteractionEvent+think)
     * [.edit(options)](#InteractionEvent+edit)
@@ -739,6 +740,12 @@ replied
 
 ### interactionEvent.deferred : <code>boolean</code>
 deferred
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+reply"></a>
+
+### interactionEvent.reply
+Method to reply
 
 **Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
 <a name="InteractionEvent+defer"></a>
