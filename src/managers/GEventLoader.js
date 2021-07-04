@@ -110,7 +110,7 @@ class GEventLoader {
                             if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.inlineReply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.inlineReply({content:options});
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.inlineReply({content:options});
                             else msg = await message.channel.send(options)
                         }
 
@@ -253,7 +253,7 @@ class GEventLoader {
                             if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.inlineReply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.inlineReply({content:options});
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.inlineReply({content:options});
                             else msg = await message.channel.send(options)
                         }
 
