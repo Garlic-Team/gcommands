@@ -1,6 +1,39 @@
 # Interactions
 If you want you can use event interaction and there detect if there is a dropdown/button.
 
+#### Functions
+| Function | Description | Returns |
+|-- |-- | -- |
+| reply | The reply function, see below | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
+| think | The bot will reply with "Thinking..."
+| edit | The bot will edit the interaction **DEPRECATED** (use button/menu.message.edit)
+| defer | The bot will reply with nothing
+
+```js
+button/menu.defer() //nothing
+button/menu.think() //the reply is "Thinking..."
+button/menu.edit("hello")
+```
+
+#### Reply
+| Function | Description |
+|-- |-- | -- |
+| send | Send a reply
+| edit | Edit the reply
+| fetch | Fetch the reply
+
+```js
+button/menu.reply.send({
+    content: "hi", // or MessageEmbed()
+    components: []
+})
+
+button/menu.reply.edit({
+    content: "hi", // or MessageEmbed()
+    components: []
+})
+```
+
 <branch version="2.x">
 
 ::: danger
@@ -98,6 +131,7 @@ The following steps will work for both normal and slash command.
 
 ```js
 client.on("clickButton", (button) => {
+    console.log(button, button.id)
     const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
     const buttonRow = new MessageActionRow()
         .addComponent(buttonEdit)
@@ -122,39 +156,6 @@ client.on("clickButton", (button) => {
             components: buttonRow
         })
     }, 2000)
-})
-```
-
-#### Functions
-| Function | Description | Returns |
-|-- |-- | -- |
-| reply | The reply function, see below | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
-| think | The bot will reply with "Thinking..."
-| edit | The bot will edit the interaction **DEPRECATED** (use button.message.edit)
-| defer | The bot will reply with nothing
-
-```js
-button.defer() //nothing
-button.think() //the reply is "Thinking..."
-button.edit("hello")
-```
-
-#### Reply
-| Function | Description |
-|-- |-- | -- |
-| send | Send a reply
-| edit | Edit the reply
-| fetch | Fetch the reply
-
-```js
-button.reply.send({
-    content: "hi", // or MessageEmbed()
-    components: []
-})
-
-button.reply.edit({
-    content: "hi", // or MessageEmbed()
-    components: []
 })
 ```
 
@@ -294,6 +295,7 @@ The following steps will work for both normal and slash command.
 
 ```js
 client.on("selectMenu", (menu) => {
+  console.log(menu, menu.id, menu.values)
   const dropdownOption = new MessageSelectMenuOption()
     .setDescription("test")
     .setLabel("a")
@@ -343,38 +345,6 @@ client.on("selectMenu", (menu) => {
           components: actionRow
       })
   }, 2000)
-})
-```
-
-#### Functions
-| Function | Description | Returns |
-|-- |-- | -- |
-| reply | The reply function, see below | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
-| think | The bot will reply with "Thinking..."
-| edit | The bot will edit the interaction **DEPRECATED** (use menu.message.edit)
-| defer | The bot will reply with nothing
-
-```js
-menu.defer() //nothing
-menu.think() //the reply is "Thinking..."
-```
-
-#### Reply
-| Function | Description |
-|-- |-- | -- |
-| send | Send a reply
-| edit | Edit the reply
-| fetch | Fetch the reply
-
-```js
-menu.reply.send({
-    content: "hi", // or MessageEmbed()
-    components: []
-})
-
-menu.reply.edit({
-    content: "hi", // or MessageEmbed()
-    components: []
 })
 ```
 
