@@ -36,7 +36,8 @@ module.exports = {
             collapsable: false,
             children: [
               '',
-              'setup'
+              'setup',
+              'faq'
             ]
           },
           {
