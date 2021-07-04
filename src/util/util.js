@@ -1,4 +1,5 @@
-const { APIMessage, MessageEmbed } = require("discord.js")
+const { APIMessage, MessagePayload, MessageEmbed } = require("discord.js")
+const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 
 module.exports = {
     resolveString(data) {
@@ -12,7 +13,7 @@ module.exports = {
      * @returns {object}
     */
     async createAPIMessage(client, interaction, content) {
-        const apiMessage = await APIMessage.create(client.channels.resolve(interaction.channel_id), content)
+        const apiMessage = await ifDjsV13 ? MessagePayload.create(client.channels.resolve(interaction.channel_id), content) : APIMessage.create(client.channels.resolve(interaction.channel_id), content)
         .resolveData()
         .resolveFiles();
         
