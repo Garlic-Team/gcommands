@@ -48,6 +48,7 @@ client.on("ready", () => {
     })
 
     gc.on("debug", (debug)=>{console.log(debug)})
+    gc.on("log", (log)=>{console.log(log)})
 })
 
 client.login("token")
