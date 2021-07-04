@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
-const {Collection,MessageEmbed} = require("discord.js");
-const Color = require("../structures/Color"), { Events } = require("../util/Constants"), { createAPIMessage } = require("../util/util");
+const {Collection,MessageEmbed, Message} = require("discord.js");
+const Color = require("../structures/Color"), { Events } = require("../util/Constants")
 const GMessage = require("../structures/GMessage");
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 
@@ -543,21 +543,12 @@ class GEventLoader {
     async slashRespond(channel, interaction, result) {
         if(!result.ephemeral && this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
-        var data = {
-            content: result
-        }
+        var data = {}
 
-        if (typeof result === 'object') {
-            if(typeof result == "object" && !result.content) {
-                const embed = new MessageEmbed(result)
-                data = await createAPIMessage(this.client, interaction, embed)
-            }
-            else if(typeof result.content == "object" ) {
-                const embed = new MessageEmbed(result.content)
-                data = await createAPIMessage(this.client, interaction, embed)
-            } else data = { content: result.content }
-        }
-
+        if(typeof result != "object") data.content = result;
+        if(typeof result == "object" && !result.content) data.embeds = [result];
+        if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
+        if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
         if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
         if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
         if(typeof result == "object" && result.components) {
