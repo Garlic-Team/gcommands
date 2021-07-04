@@ -1,8 +1,9 @@
 /* From discord-buttons edited */
 const { default: axios } = require("axios");
-const {Client, MessageEmbed, Guild, NewsChannel, GuildMember, User} = require("discord.js")
+const {Client, MessageEmbed, Guild, NewsChannel, GuildMember, User, Message} = require("discord.js")
 const Color = require("../structures/Color"), { createAPIMessage } = require("../util/util");
 const GMessage = require("./GMessage");
+const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 
 /**
  * The InteractionEvent class
@@ -91,7 +92,7 @@ class InteractionEvent {
          * message
          * @type {GMessage}
          */
-        this.message = new GMessage(this.client, data.message, this.channel);
+        this.message = ifDjsV13 ? new Message(this.client, data.message, this.channel) : new GMessage(this.client, data.message, this.channel);
 
         /**
          * replied
@@ -220,7 +221,7 @@ class InteractionEvent {
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
 
-            return new GMessage(this.client, apiMessage, this.channel);
+            return ifDjsV13 ? new Message(this.client, data.message, this.channel) : new GMessage(this.client, data.message, this.channel);
         }
 
         return {
@@ -276,7 +277,7 @@ class InteractionEvent {
                 data
             },
             files: finalFiles
-        })).toJSON();
+        }))
 
         let apiMessageMsg = {};
         try {
@@ -287,6 +288,7 @@ class InteractionEvent {
             }
         }
 
+        if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
         if(apiMessage) {
             apiMessage = apiMessageMsg;
             apiMessage.client = this.client ? this.client : client;
@@ -329,7 +331,7 @@ class InteractionEvent {
                             embeds: result.embeds || []
                         }
                     }
-                })).toJSON();
+                }))
             } else {
                 apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
                     data: {
@@ -337,9 +339,10 @@ class InteractionEvent {
                         components: result.components,
                         embeds: result.embeds || []
                     } 
-                })).toJSON();
+                }))
             }
 
+            if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
             if(apiMessage) {
                 apiMessage.client = this.client;
                 apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
@@ -360,15 +363,16 @@ class InteractionEvent {
                     },
                     type: 7
                 },
-            })).toJSON();
+            }))
         } else {
             apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
                 data: {
                     content: result,
                 } 
-            })).toJSON();
+            }))
         }
 
+        if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
         if(apiMessage) {
             apiMessage.client = this.client;
             apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};

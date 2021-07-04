@@ -2,6 +2,7 @@ const { default: axios } = require("axios");
 const {Collection,MessageEmbed} = require("discord.js");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants"), { createAPIMessage } = require("../util/util");
 const GMessage = require("../structures/GMessage");
+const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 
 /**
  * The GCommandsEventLoader class
@@ -100,17 +101,16 @@ class GEventLoader {
                     */
                     respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
-                        let inlineReply = true;
-                        if(options.inlineReply == false) inlineReply = false;
 
+                        if(ifDjsV13) options.client = this.client, options.channel = message.channel
                         if(typeof options == "object" && options.content) {
-                            if(inlineReply) msg = await message.buttonsWithReply(options.content, options)
-                            else  msg = await message.buttons(options.content, options)
+                            msg = await ifDjsV13 ? GMessage.buttons(options.content, options) : message.buttons(options.content, options)
                         } else if(typeof options == "object" && !options.content) {
-                            if(inlineReply) msg = await message.inlineReply(options)
+                            if(ifDjsV13) options.client = this.client, options.channel = message.channel
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.inlineReply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(inlineReply) msg = await message.inlineReply({content:options});
+                            if(inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.inlineReply({content:options});
                             else msg = await message.channel.send(options)
                         }
 
@@ -125,16 +125,22 @@ class GEventLoader {
                         return msg;
                     },
                     edit: async(options = undefined) => {
+                        if(ifDjsV13) options.client = this.client, options.channel = message.channel
                         if(typeof options == "object" && options.content) {
-                            msg = await message.buttonsEdit(msg.id, options.content, options)
-                            return msg;
-                        } else if(typeof options == "object" && !options.content) {
-                            msg = await message.buttonsEdit(msg.id, options, [])
-                            return msg;
+                            msg = await ifDjsV13 ? GMessage.buttonsEdit(msg.id, options.content, options) : message.buttonsEdit(msg.id, options.content, options)
                         } else {
-                            msg = await message.buttonsEdit(msg.id, options, [])
-                            return msg;
+                            msg = ifDjsV13 ? GMessage.buttonsEdit(msg.id, options, []) : message.buttonsEdit(msg.id, options, [])
                         }
+                        
+                        msg = await msg;
+                        msg = msg.toJSON()
+                        msg.client = this.client;
+                        msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
+                        msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+                        msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
+                        msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
+
+                        return msg;
                     }
                 })
                 if(inhibit == false) return;
@@ -238,20 +244,20 @@ class GEventLoader {
                     */
                     respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
-                        let inlineReply = true;
-                        if(options.inlineReply == false) inlineReply = false;
 
+                        if(ifDjsV13) options.client = this.client, options.channel = message.channel
                         if(typeof options == "object" && options.content) {
-                            if(inlineReply) msg = await message.buttonsWithReply(options.content, options)
-                            else  msg = await message.buttons(options.content, options)
+                            msg = await ifDjsV13 ? GMessage.buttons(options.content, options) : message.buttons(options.content, options)
                         } else if(typeof options == "object" && !options.content) {
-                            if(inlineReply) msg = await message.inlineReply(options)
+                            if(ifDjsV13) options.client = this.client, options.channel = message.channel
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.inlineReply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(inlineReply) msg = await message.inlineReply({content:options});
+                            if(inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.inlineReply({content:options});
                             else msg = await message.channel.send(options)
                         }
 
+                        msg = await msg;
                         msg = msg.toJSON()
                         msg.client = this.client;
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
@@ -263,16 +269,22 @@ class GEventLoader {
                         return msg;
                     },
                     edit: async(options = undefined) => {
+                        if(ifDjsV13) options.client = this.client, options.channel = message.channel
                         if(typeof options == "object" && options.content) {
-                            msg = await message.buttonsEdit(msg.id, options.content, options)
-                            return msg;
-                        } else if(typeof options == "object" && !options.content) {
-                            msg = await message.buttonsEdit(msg.id, options, [])
-                            return msg;
+                            msg = await ifDjsV13 ? GMessage.buttonsEdit(msg.id, options.content, options) : message.buttonsEdit(msg.id, options.content, options)
                         } else {
-                            msg = message.buttonsEdit(msg.id, options, [])
-                            return msg;
+                            msg = ifDjsV13 ? GMessage.buttonsEdit(msg.id, options, []) : message.buttonsEdit(msg.id, options, [])
                         }
+
+                        msg = await msg;
+                        msg = msg.toJSON()
+                        msg.client = this.client;
+                        msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
+                        msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
+                        msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
+                        msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
+
+                        return msg;
                     }
                 }, args, args)
             } catch(e) {
@@ -496,7 +508,6 @@ class GEventLoader {
                     
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
-                    console.log(e)
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     if(!this.unkownCommandMessage) return;
                     if(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage]) {
@@ -577,7 +588,7 @@ class GEventLoader {
                 data
             },
             files: finalFiles
-        })).toJSON();
+        }))
 
         let apiMessageMsg = {};
         try {
@@ -588,6 +599,7 @@ class GEventLoader {
             }
         }
 
+        if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
         if(apiMessage) {
             apiMessage = apiMessageMsg;
             apiMessage.client = this.client ? this.client : client;
@@ -599,7 +611,9 @@ class GEventLoader {
         }
 
         if(!result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
-        return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
+
+        if(ifDjsV13) return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
+        else return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
     }
 
     async slashEdit(interaction, result) {
@@ -650,7 +664,8 @@ class GEventLoader {
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
 
-            return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
+            if(ifDjsV13) return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
+            else return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
         }
 
         return this.client.api.webhooks(this.client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
