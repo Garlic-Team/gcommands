@@ -60,7 +60,8 @@ module.exports = {
         allowedMentions: { parse: [], repliedUser: true }, // mentions
         embeds: new MessageEmbed().setTitle("hi"),
         components: new MessageActionRow(), // [actionRow, actionRow2]
-        attachments: new MessageAttachment(Buffer.from("he"), "name.txt") // attachments
+        attachments: new MessageAttachment(Buffer.from("he"), "name.txt"), // attachments
+        inlineReply: false/true // inline reply
       })
 
       setTimeout(() => {
@@ -93,7 +94,8 @@ module.exports = {
         allowedMentions: { parse: [], repliedUser: true }, // Etiketlemeler
         embeds: new MessageEmbed().setTitle("selam"),
         components: new MessageActionRow(), // [actionRow, actionRow2] (Burası buton kullanmak isteyenler için ayrıldı.)
-        attachments: new MessageAttachment(Buffer.from("he"), "name.txt") // attachments
+        attachments: new MessageAttachment(Buffer.from("he"), "name.txt"), // attachments
+        inlineReply: false/true // inline reply
       })
   }
 };
