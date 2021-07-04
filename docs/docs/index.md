@@ -540,7 +540,6 @@ The MessageStructure structure
     * [.edit(options)](#GCommandsMessage+edit)
     * [.update(options)](#GCommandsMessage+update)
     * [.inlineReply(content, options)](#GCommandsMessage+inlineReply) ⇒ <code>Promise</code>
-    * [.buttonsWithReply(content, options)](#GCommandsMessage+buttonsWithReply) ⇒ <code>Promise</code>
 
 <a name="GCommandsMessage+buttons"></a>
 
@@ -592,18 +591,6 @@ Method to update message
 
 ### gCommandsMessage.inlineReply(content, options) ⇒ <code>Promise</code>
 Method to inlineReply
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| content | <code>String</code> | 
-| options | <code>Object</code> | 
-
-<a name="GCommandsMessage+buttonsWithReply"></a>
-
-### gCommandsMessage.buttonsWithReply(content, options) ⇒ <code>Promise</code>
-Method to buttonsWithReply
 
 **Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
 
