@@ -30,11 +30,11 @@ client.on("guildMemberUnboost", (newMember, oldPremiumSince, newPremiumSince) =>
 })
 ```
 
-### GuildMemberAcceptRules
-Shows who accepted the rules.
+### GuildMemberAcceptShipScreening
+Shows who accepted the member ship screening.
 
 ```js
-client.on("guildMemberAcceptRules", (member) => {
+client.on("guildMemberAcceptShipScreening", (member) => {
     console.log(member)
 })
 ```
