@@ -51,7 +51,7 @@ client.on("ready", () => {
     gc.on("log", (log)=>{console.log(log)})
 })
 
-client.login("token")
+client.login("bot token")
 ```
 
 ### ✍ | Examples
