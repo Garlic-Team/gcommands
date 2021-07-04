@@ -83,6 +83,7 @@ declare module 'discord.js' {
     voiceStreamingStop: [Channel, Channel];
 
     guildMemberNicknameUpdate: [GuildMember, string, string];
+    guildMemberAcceptShipScreening: [GuildMember];
     guildMemberBoost: [GuildMember, Number, Number];
     guildMemberUnboost: [GuildMember, Number, Number];
 
