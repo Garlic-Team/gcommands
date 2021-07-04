@@ -35,7 +35,10 @@ class GDatabaseLoader {
             guild.language = language;
         })
 
-        this.client.on("guildCreate", (guild) => {guild.prefix = this.client.dispatcher.getGuildPrefix(guild.id, false)})
+        this.client.on("guildCreate", (guild) => {
+            guild.prefix = this.client.dispatcher.getGuildPrefix(guild.id, false)
+            guild.language = this.client.dispatcher.getGuildLanguage(guild.id, false)
+        })
     }
 }
 

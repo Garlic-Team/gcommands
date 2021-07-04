@@ -1,7 +1,9 @@
 /* From discord-buttons edited */
 const { default: axios } = require("axios");
-const {Client, MessageEmbed} = require("discord.js")
-const Color = require("../structures/Color"), { createAPIMessage } = require("../util/util");
+const {Client, MessageEmbed, Guild, NewsChannel, GuildMember, User, Message} = require("discord.js")
+const Color = require("../structures/Color");
+const GMessage = require("./GMessage");
+const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 
 /**
  * The InteractionEvent class
@@ -16,35 +18,92 @@ class InteractionEvent {
     constructor(client, data) {
         this.client = client;
 
-        if(data.data.values) {
-            this.selectMenuId = data.data.custom_id;
-            this.valueId = data.data.values;
-        } else this.id = data.data.custom_id;
+        /**
+         * selectMenuId
+         * @deprecated
+         */
+        this.selectMenuId = data.data.values ? data.data.custom_id : undefined;
 
+        /**
+         * selectMenuId
+         * @deprecated
+         */
+        this.valueId = data.data.values ? data.data.values : undefined;
+
+        /**
+         * id
+         * @type {Number}
+         */
+        this.id = data.data.custom_id;
+
+        /**
+         * values
+         * @type {Array}
+         */
+        this.values = data.data.values ? data.data.values : undefined
+
+        /**
+         * version
+         * @type {Number}
+         */
         this.version = data.version;
 
+        /**
+         * token
+         * @type {String}
+         */
         this.token = data.token;
 
+        /**
+         * discordID
+         * @type {Number}
+         */
         this.discordID = data.id;
 
+        /**
+         * applicationID
+         * @type {Number}
+         */
         this.applicationID = data.application_id;
 
+        /**
+         * guild
+         * @type {Guild}
+         */
         this.guild = data.guild_id ? client.guilds.cache.get(data.guild_id) : undefined;
 
+        /**
+         * channel
+         * @type {TextChannel | NewsChannel | DMChannel}
+         */
         this.channel = client.channels.cache.get(data.channel_id);
 
-        this.clicker = {};
+        /**
+         * clicker
+         * @type {GuildMember | User | Number}
+         */
+        this.clicker = {
+            member: this.guild ? this.guild.members.cache.get(data.member.user.id) : undefined,
+            user: this.client.users.cache.get(data.guild_id ? data.member.user.id : data.user.id),
+            id: data.guild_id ? data.member.user.id : data.member.user.id,
+        };
 
-        if (this.guild) {
-            this.clicker.member = this.guild.members.cache.get(data.member.user.id);
-            this.clicker.user = this.client.users.cache.get(data.member.user.id);
-        } else {
-            this.clicker.user = this.client.users.cache.get(data.user.id);
-        }
+        /**
+         * message
+         * @type {GMessage}
+         */
+        this.message = ifDjsV13 ? new Message(this.client, data.message, this.channel) : new GMessage(this.client, data.message, this.channel);
 
-        this.message = data.message;
-
+        /**
+         * replied
+         * @type {boolean}
+         */
         this.replied = false;
+
+        /**
+         * deferred
+         * @type {boolean}
+         */
         this.deferred = false;
     }
 
@@ -87,7 +146,7 @@ class InteractionEvent {
      * @param {Object} options 
     */
     async edit(result) {
-        if(result.autoDefer == undefined) {
+        if(result.autoDefer == true) {
             await this.client.api.interactions(this.discordID, this.token).callback.post({
                 data: {
                     type: 6,
@@ -98,12 +157,32 @@ class InteractionEvent {
         this.slashEdit(result)
     }
 
+    /**
+     * Method to update
+     * @param {Object} options 
+    */
+    async update(result) {
+        if(result.autoDefer == true) {
+            await this.client.api.interactions(this.discordID, this.token).callback.post({
+                data: {
+                    type: 6,
+                },
+            });
+        }
+
+        this.slashEdit(result, true)
+    }
+
+    /**
+     * Method to reply
+    */
     get reply() {
         /**
          * Method to replySend
          * @param {Object} options 
         */
         let _send = async(result) => {
+            this.replied = true;
             this.slashRespond(result)
         }
 
@@ -112,31 +191,54 @@ class InteractionEvent {
          * @param {Object} options 
         */
          let _edit = async(result) => {
+            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
             this.slashEdit(result)
+        }
+
+        /**
+         * Method to replyUpdate
+         * @param {Object} options 
+        */
+         let _update = async(result) => {
+            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
+            this.slashEdit(result, true)
+        }
+
+        /**
+         * Method to replyFetch
+         * @param {Object} options 
+        */
+        let _fetch = async() => {
+            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
+            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].get());
+
+            if(apiMessage) {
+                apiMessage.client = this.client;
+                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+                apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
+            }
+
+            return ifDjsV13 ? new Message(this.client, data.message, this.channel) : new GMessage(this.client, data.message, this.channel);
         }
 
         return {
             send: _send,
-            edit: _edit
+            edit: _edit,
+            update: _update,
+            fetch: _fetch
         }
     }
 
     async slashRespond(result) {
-        var data = {
-            content: result
-        }
+        var data = {}
 
-        if (typeof result === 'object') {
-            if(typeof result == "object" && !result.content) {
-                const embed = new MessageEmbed(result)
-                data = await createAPIMessage(this.client, interaction, embed)
-            }
-            else if(typeof result.content == "object" ) {
-                const embed = new MessageEmbed(result.content)
-                data = await createAPIMessage(this.client, interaction, embed)
-            } else data = { content: result.content }
-        }
-
+        if(typeof result != "object") data.content = result;
+        if(typeof result == "object" && !result.content) data.embeds = [result];
+        if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
+        if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
         if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
         if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
         if(typeof result == "object" && result.components) {
@@ -166,7 +268,7 @@ class InteractionEvent {
                 data
             },
             files: finalFiles
-        })).toJSON();
+        }))
 
         let apiMessageMsg = {};
         try {
@@ -177,6 +279,7 @@ class InteractionEvent {
             }
         }
 
+        if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
         if(apiMessage) {
             apiMessage = apiMessageMsg;
             apiMessage.client = this.client ? this.client : client;
@@ -190,7 +293,7 @@ class InteractionEvent {
         return apiMessage
     }
 
-    async slashEdit(result) {
+    async slashEdit(result, update) {
         if (typeof result == "object") {
             if(result.components) {
                 if(!Array.isArray(result.components)) result.components = [result.components];
@@ -206,27 +309,31 @@ class InteractionEvent {
                 if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
                 result.embeds = result.embeds;
             } else result.embeds = []
-            let finalFiles = [];
-            if(typeof result == "object" && result.attachments) {
-                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                result.attachments.forEach(file => {
-                    finalFiles.push({
-                        attachment: file.attachment,
-                        name: file.name,
-                        file: file.attachment
-                    })
-                })
-            }
+            if(result.embeds && !result.content) result.content = "\u200B"
             
-            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                data: {
-                    content: result.content,
-                    components: result.components,
-                    embeds: result.embeds || []
-                },
-                files: finalFiles   
-            }))
+            let apiMessage = {};
+            if(update) {
+                apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
+                    data: {
+                        type: 7,
+                        data: {
+                            content: result.content,
+                            components: result.components,
+                            embeds: result.embeds || []
+                        }
+                    }
+                }))
+            } else {
+                apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
+                    data: {
+                        content: result.content,
+                        components: result.components,
+                        embeds: result.embeds || []
+                    } 
+                }))
+            }
 
+            if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
             if(apiMessage) {
                 apiMessage.client = this.client;
                 apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
@@ -235,11 +342,38 @@ class InteractionEvent {
                 apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
-
             return apiMessage;
         }
 
-        return this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].patch({ data: { content: result }})
+        let apiMessage;
+        if(update) {
+            apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
+                data: {
+                    data: {
+                        content: result,
+                    },
+                    type: 7
+                },
+            }))
+        } else {
+            apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
+                data: {
+                    content: result,
+                } 
+            }))
+        }
+
+        if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
+        if(apiMessage) {
+            apiMessage.client = this.client;
+            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
+        }
+
+        return apiMessage;
     }
 
     /**

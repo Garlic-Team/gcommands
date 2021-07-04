@@ -1,0 +1,24 @@
+name: "vue build | gcommands.js.org Build"
+
+on:
+  push:
+    branches:
+      - docs
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Build and Deploy
+      uses: jenkey2011/vuepress-deploy@1.6.1
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        TARGET_REPO: Garlic-Team/GCommands
+        TARGET_BRANCH: master
+        BUILD_SCRIPT: yarn && yarn build
+        BUILD_DIR: docs/.vuepress/dist/
+        CNAME: gcommands.js.org
+        COMMIT_MESSAGE: Deploy Docs

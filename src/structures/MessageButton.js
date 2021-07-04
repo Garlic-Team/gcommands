@@ -66,7 +66,7 @@ class MessageButton {
      * Method to setEmoji
      * @param {String} emoji  
     */
-     setEmoji(emoji) {
+    setEmoji(emoji) {
         this.emoji = this.parseEmoji(`${emoji}`);
         return this;
     }

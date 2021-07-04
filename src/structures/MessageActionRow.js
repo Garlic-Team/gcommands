@@ -1,4 +1,4 @@
-const Color = require("../structures/Color")
+const Color = require("../structures/Color");
 
 /**
  * The MessageActionRow class
@@ -22,7 +22,7 @@ class MessageActionRow {
 
     /**
      * Method to addComponent
-     * @param {MessageButton} MessageButton  
+     * @param {MessageButton | MessageSelectMenu} cmponent  
     */
     addComponent(component) {
         if(typeof component != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
@@ -32,7 +32,7 @@ class MessageActionRow {
 
     /**
      * Method to addComponents
-     * @param {MessageButton} MessageButton
+     * @param {MessageButton[] | MessageSelectMenu[]} components
     */
     addComponents(components) {
         if(typeof components != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
@@ -41,11 +41,13 @@ class MessageActionRow {
     }
 
     /**
-     * Method to removeOptions
-     * @param {Object} MessageButton 
+     * Method to removeComponents
+     * @param {Number} index
+     * @param {Number} deleteCount
+     * @param {MessageButton[] | MessageSelectMenu[]} components 
     */
-    removeComponents(index, deleteCount, ...options) {
-        if(typeof options != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+    removeComponents(index, deleteCount, ...components) {
+        if(typeof components != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
         this.components.splice(index, deleteCount, ...components.flat(Infinity).map((c) => c));
         return this;
     }

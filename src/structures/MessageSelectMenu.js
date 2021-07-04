@@ -60,7 +60,7 @@ class MessageSelectMenu {
 
     /**
      * Method to addOption
-     * @param {Object} MessageSelectOption 
+     * @param {MessageSelectOption} MessageSelectOption 
     */
     addOption(option) {
         if(typeof option != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
@@ -70,7 +70,7 @@ class MessageSelectMenu {
 
     /**
      * Method to addOptions
-     * @param {Object} MessageSelectOptions 
+     * @param {MessageSelectOption[]} MessageSelectOptions 
     */
     addOptions(...options) {
         if(typeof options != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
@@ -80,7 +80,9 @@ class MessageSelectMenu {
     
     /**
      * Method to removeOptions
-     * @param {Object} MessageSelectOptions 
+     * @param {Number} index
+     * @param {Number} deleteCount
+     * @param {MessageSelectOption[]} MessageSelectOptions 
     */
     removeOptions(index, deleteCount, ...options) {
         if(typeof options != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
