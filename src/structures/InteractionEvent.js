@@ -172,6 +172,9 @@ class InteractionEvent {
         this.slashEdit(result, true)
     }
 
+    /**
+     * Method to reply
+    */
     get reply() {
         /**
          * Method to replySend
