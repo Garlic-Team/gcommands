@@ -623,6 +623,18 @@ The InteractionEvent class
     * [new InteractionEvent(client, data)](#new_InteractionEvent_new)
     * ~~[.selectMenuId](#InteractionEvent+selectMenuId)~~
     * ~~[.valueId](#InteractionEvent+valueId)~~
+    * [.id](#InteractionEvent+id) : <code>Number</code>
+    * [.values](#InteractionEvent+values) : <code>Array</code>
+    * [.version](#InteractionEvent+version) : <code>Number</code>
+    * [.token](#InteractionEvent+token) : <code>String</code>
+    * [.discordID](#InteractionEvent+discordID) : <code>Number</code>
+    * [.applicationID](#InteractionEvent+applicationID) : <code>Number</code>
+    * [.guild](#InteractionEvent+guild) : <code>Guild</code>
+    * [.channel](#InteractionEvent+channel) : <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code>
+    * [.clicker](#InteractionEvent+clicker) : <code>GuildMember</code> \| <code>User</code> \| <code>Number</code>
+    * [.message](#InteractionEvent+message) : <code>GMessage</code>
+    * [.replied](#InteractionEvent+replied) : <code>boolean</code>
+    * [.deferred](#InteractionEvent+deferred) : <code>boolean</code>
     * [.defer(ephemeral)](#InteractionEvent+defer)
     * [.think(ephemeral)](#InteractionEvent+think)
     * [.edit(options)](#InteractionEvent+edit)
@@ -655,6 +667,78 @@ selectMenuId
 ***Deprecated***
 
 selectMenuId
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+id"></a>
+
+### interactionEvent.id : <code>Number</code>
+id
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+values"></a>
+
+### interactionEvent.values : <code>Array</code>
+values
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+version"></a>
+
+### interactionEvent.version : <code>Number</code>
+version
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+token"></a>
+
+### interactionEvent.token : <code>String</code>
+token
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+discordID"></a>
+
+### interactionEvent.discordID : <code>Number</code>
+discordID
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+applicationID"></a>
+
+### interactionEvent.applicationID : <code>Number</code>
+applicationID
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+guild"></a>
+
+### interactionEvent.guild : <code>Guild</code>
+guild
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+channel"></a>
+
+### interactionEvent.channel : <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code>
+channel
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+clicker"></a>
+
+### interactionEvent.clicker : <code>GuildMember</code> \| <code>User</code> \| <code>Number</code>
+clicker
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+message"></a>
+
+### interactionEvent.message : <code>GMessage</code>
+message
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+replied"></a>
+
+### interactionEvent.replied : <code>boolean</code>
+replied
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+deferred"></a>
+
+### interactionEvent.deferred : <code>boolean</code>
+deferred
 
 **Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
 <a name="InteractionEvent+defer"></a>
