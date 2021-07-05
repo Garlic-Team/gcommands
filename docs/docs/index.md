@@ -74,6 +74,7 @@ The main GCommands class
     * [.eventDir](#GCommands+eventDir)
     * [.unkownCommandMessage](#GCommands+unkownCommandMessage)
     * [.autoTyping](#GCommands+autoTyping)
+    * [.shardClusterName](#GCommands+shardClusterName)
     * [.database](#GCommands+database)
     * [.prefix](#GCommands+prefix)
     * [.slash](#GCommands+slash)
@@ -139,6 +140,18 @@ AutoTyping
 | Name | Type |
 | --- | --- |
 | autoTyping | <code>Boolean</code> | 
+
+<a name="GCommands+shardClusterName"></a>
+
+### gCommands.shardClusterName
+ShardClusterName
+
+**Kind**: instance property of [<code>GCommands</code>](#GCommands)  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| shardClusterName | <code>String</code> | 
 
 <a name="GCommands+database"></a>
 
