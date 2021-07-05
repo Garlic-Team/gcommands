@@ -1,8 +1,8 @@
 const { APIMessage, Structures, Message } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector')
-const updater = require("../util/updater")
+const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 
-if(!updater.checkDjsVersion("13")) {
+if(!ifDjsV13) {
     module.exports = Structures.extend("Message", Message => {
         /**
          * The MessageStructure structure
@@ -127,56 +127,47 @@ if(!updater.checkDjsVersion("13")) {
              * @param {Object} options 
             */
             async edit(result) {
-                if (typeof result == "object") {
-                    var finalData = [];
-    
-                    if(result.components && !Array.isArray(result.components)) result.components = [result.components];
-                    if(result.embeds && !Array.isArray(result.embeds)) result.embeds = [result.embeds]
-    
-                    if(typeof result == "object" && !result.content) result.embeds = [result]
-                    if(typeof result.content == "object") {
-                        result.embeds = [result.content]
-                        result.content = "\u200B"
-                    }
-    
-                    if(result.edited == false) {
-                        return this.client.api.channels(this.channel.id).messages[this.id].patch({
-                            data: {
-                                type: 7,
-                                data: {
-                                    content: result.content,
-                                    components: result.components,
-                                    embeds: result.embeds
-                                },
-                            },
-                        }).then(d => this.client.actions.MessageCreate.handle(d).message);
-                    }
-    
-                    let finalFiles = [];
-                    if(typeof result == "object" && result.attachments) {
-                        if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                        result.attachments.forEach(file => {
-                            finalFiles.push({
-                                attachment: file.attachment,
-                                name: file.name,
-                                file: file.attachment
-                            })
-                        })
-                    }
-    
-                    return this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
-                        data: {
-                            content: result.content,
-                            components: result.components || [],
-                            embeds: result.embeds || []
-                        },
-                        files: finalFiles
-                    })
-                } else {
-                    return this.client.api.channels(this.channel.id).messages[this.id].patch({ data: {
-                        content: result,
-                    }})
+                var data = {}
+        
+                if(typeof result != "object") data.content = result;
+                if(typeof result == "object" && !result.content) data.embeds = [result];
+                if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
+                if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
+                if(typeof result == "object" && result.components) {
+                    if(!Array.isArray(result.components)) result.components = [result.components];
+                    data.components = result.components;
                 }
+                if(typeof result == "object" && result.embeds) {
+                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+                    data.embeds = result.embeds;
+                }
+                if(result.embeds && !result.content) result.content = "\u200B"
+
+                if(result.edited == false) {
+                    return this.client.api.channels(this.channel.id).messages[this.id].patch({
+                        data: {
+                            type: 7,
+                            data
+                        },
+                    }).then(d => this.client.actions.MessageCreate.handle(d).message);
+                }
+
+                let apiMessage = (await this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
+                    data
+                }))
+        
+                if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
+                if(apiMessage) {
+                    apiMessage.client = this.client ? this.client : client;
+                    apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                    apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                    apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+                    apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+                    apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
+                }
+        
+                if(ifDjsV13) return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
+                else return apiMessage.id ? new GCommandsMessage(this.client, apiMessage, this.channel) : apiMessage;
             }
     
             /**
