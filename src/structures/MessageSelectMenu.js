@@ -1,5 +1,5 @@
 const { resolveString } = require("../util/util");
-const Color = require("../structures/Color")
+const Color = require("./Color")
 
 /**
  * The MessageSelectMenu class
