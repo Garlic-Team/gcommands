@@ -281,9 +281,10 @@ declare module 'gcommands' {
     language: GuildLanguageTypes;
     unkownCommandMessage?: boolean;
     slash: {
-    slash: string | boolean;
-    prefix: string;
-    }
+      slash: string | boolean;
+      prefix: string;
+    },
+    shardClusterName?: string;
     defaultCooldown?: string;
     database?: string;
   }
