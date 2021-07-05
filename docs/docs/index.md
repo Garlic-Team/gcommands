@@ -19,9 +19,6 @@
 <dt><a href="#Color">Color</a></dt>
 <dd><p>The Color class</p>
 </dd>
-<dt><a href="#GCommandsGuild">GCommandsGuild</a> ⇐ <code>Guild</code></dt>
-<dd><p>The GuildStructure structure</p>
-</dd>
 <dt><a href="#GCommandsMessage">GCommandsMessage</a> ⇐ <code>Message</code></dt>
 <dd><p>The MessageStructure structure</p>
 </dd>
@@ -488,44 +485,6 @@ Internal method to getText
 Internal method to getRGB
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
-<a name="GCommandsGuild"></a>
-
-## GCommandsGuild ⇐ <code>Guild</code>
-The GuildStructure structure
-
-**Kind**: global class  
-**Extends**: <code>Guild</code>  
-
-* [GCommandsGuild](#GCommandsGuild) ⇐ <code>Guild</code>
-    * [.getCommandPrefix()](#GCommandsGuild+getCommandPrefix) ⇒ <code>Promise</code>
-    * [.setCommandPrefix()](#GCommandsGuild+setCommandPrefix) ⇒ <code>void</code>
-    * [.getLanguage()](#GCommandsGuild+getLanguage) ⇒ <code>Promise</code>
-    * [.setLanguage()](#GCommandsGuild+setLanguage) ⇒ <code>void</code>
-
-<a name="GCommandsGuild+getCommandPrefix"></a>
-
-### gCommandsGuild.getCommandPrefix() ⇒ <code>Promise</code>
-Method to getCommandPrefix
-
-**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
-<a name="GCommandsGuild+setCommandPrefix"></a>
-
-### gCommandsGuild.setCommandPrefix() ⇒ <code>void</code>
-Method to setCommandPrefix
-
-**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
-<a name="GCommandsGuild+getLanguage"></a>
-
-### gCommandsGuild.getLanguage() ⇒ <code>Promise</code>
-Method to getLanguage
-
-**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
-<a name="GCommandsGuild+setLanguage"></a>
-
-### gCommandsGuild.setLanguage() ⇒ <code>void</code>
-Method to setLanguage
-
-**Kind**: instance method of [<code>GCommandsGuild</code>](#GCommandsGuild)  
 <a name="GCommandsMessage"></a>
 
 ## GCommandsMessage ⇐ <code>Message</code>
