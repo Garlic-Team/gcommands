@@ -29,9 +29,11 @@ if(!updater.checkDjsVersion("13")) {
                 if(result.embeds && !result.content) result.content = "\u200B"
 
                 let finalFiles = [];
-                if(typeof result == "object" && result.attachments) {
-                    if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                    result.attachments.forEach(file => {
+                if(typeof result == "object" && (result.attachments || result.files)) {
+                    let attachments = result.attachments || result.files
+
+                    if(!Array.isArray(attachments)) attachments = [attachments]
+                    attachments.forEach(file => {
                         finalFiles.push({
                             attachment: file.attachment,
                             name: file.name,

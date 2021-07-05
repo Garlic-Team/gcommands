@@ -13,7 +13,6 @@ module.exports = {
     GDatabaseLoader: require("./managers/GDatabaseLoader"),
 
     // Structures
-    GCommandsGuild: require("./structures/GGuild"),
     GCommandsMessage: require("./structures/GMessage"),
     GNewsChannel: require("./structures/NewsChannel"),
     GTextChannel: require("./structures/TextChannel"),

@@ -104,17 +104,6 @@ declare module 'discord.js' {
 }
 
 declare module 'gcommands' {
-  export class GCommandsGuild extends Guild {
-    public prefix: string;
-    public language: string;
-
-    public getCommandPrefix(cache?: boolean): string;
-    public getLanguage(cache?: boolean): string;
-
-    public setCommandPrefix(prefix: string): void;
-    public setLanguage(language: GuildLanguageTypes): void;
-  }
-
   export class InteractionEvent {
     constructor(client: Client, data: object)
     public selectMenuId: string;

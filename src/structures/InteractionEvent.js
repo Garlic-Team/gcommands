@@ -83,7 +83,7 @@ class InteractionEvent {
          * @type {GuildMember | User | Number}
          */
         this.clicker = {
-            member: this.guild ? this.guild.members.cache.get(data.member.user.id) : undefined,
+            member: data.guild_id ? this.guild.members.cache.get(data.member.user.id) : undefined,
             user: this.client.users.cache.get(data.guild_id ? data.member.user.id : data.user.id),
             id: data.guild_id ? data.member.user.id : data.member.user.id,
         };
@@ -251,9 +251,11 @@ class InteractionEvent {
         }
 
         let finalFiles = [];
-        if(typeof result == "object" && result.attachments) {
-            if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-            result.attachments.forEach(file => {
+        if(typeof result == "object" && (result.attachments || result.files)) {
+            let attachments = result.attachments || result.files
+
+            if(!Array.isArray(attachments)) attachments = [attachments]
+            attachments.forEach(file => {
                 finalFiles.push({
                     attachment: file.attachment,
                     name: file.name,
