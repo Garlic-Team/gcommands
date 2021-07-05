@@ -64,6 +64,12 @@ class GCommands extends GCommandsBase {
         }
 
         /**
+         * ShardClusterName
+         * @property {String} shardClusterName
+        */
+        this.shardClusterName = options.shardClusterName || "shard";
+
+        /**
          * database
          * @property {Object} database
         */
@@ -91,8 +97,6 @@ class GCommands extends GCommandsBase {
          */
         this.cooldownDefault = options.defaultCooldown ? options.defaultCooldown : 0;
 
-        this.GCommandsClient.unkownCommandMessage = this.unkownCommandMessage;
-        this.GCommandsClient.database = this.database;
         this.client.language = this.language;
         this.client.languageFile = this.languageFile;
         this.client.database = this.database
