@@ -92,17 +92,17 @@ class GCommands extends GCommandsBase {
         this.slash = options.slash.slash ? options.slash.slash : false;
 
         /**
-         * cooldownDefault
-         * @property {Number} cooldownDefault
+         * defaultCooldown
+         * @property {Number} defaultCooldown
          */
-        this.cooldownDefault = options.defaultCooldown ? options.defaultCooldown : 0;
+        this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
 
         this.client.language = this.language;
         this.client.languageFile = this.languageFile;
         this.client.database = this.database
         this.client.prefix = this.prefix;
         this.client.slash = this.slash;
-        this.client.cooldownDefault = this.cooldownDefault;
+        this.client.defaultCooldown = this.defaultCooldown;
         this.client.autoTyping = this.autoTyping ? msToSeconds(ms(this.autoTyping)) : null;
 
         process.setMaxListeners(50);
