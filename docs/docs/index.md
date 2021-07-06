@@ -78,7 +78,7 @@ The main GCommands class
     * [.database](#GCommands+database)
     * [.prefix](#GCommands+prefix)
     * [.slash](#GCommands+slash)
-    * [.cooldownDefault](#GCommands+cooldownDefault)
+    * [.defaultCooldown](#GCommands+defaultCooldown)
     * ["debug"](#GCommands+event_debug)
     * ["log"](#GCommands+event_log)
 
@@ -189,17 +189,17 @@ Slash
 | --- | --- |
 | slash | <code>String</code> | 
 
-<a name="GCommands+cooldownDefault"></a>
+<a name="GCommands+defaultCooldown"></a>
 
-### gCommands.cooldownDefault
-cooldownDefault
+### gCommands.defaultCooldown
+defaultCooldown
 
 **Kind**: instance property of [<code>GCommands</code>](#GCommands)  
 **Properties**
 
 | Name | Type |
 | --- | --- |
-| cooldownDefault | <code>Number</code> | 
+| defaultCooldown | <code>Number</code> | 
 
 <a name="GCommands+event_debug"></a>
 
