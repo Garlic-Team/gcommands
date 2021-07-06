@@ -1,4 +1,4 @@
-const { APIMessage, Structures, Message } = require('discord.js');
+const { APIMessage, Structures, Message, MessagePayload } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector')
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 
@@ -19,31 +19,30 @@ if(!ifDjsV13) {
              * @param {Object} options
              * @returns {Promise}
             */
-            async buttons(content, options) {
-                var embed = null;
-                if(typeof content == "object") {
-                    embed = content;
-                    content = "\u200B"
+            async buttons(result) {
+                var data = {}
+
+                if(typeof result != "object") data.content = result;
+                if(typeof result == "object" && !result.content) data.embeds = [result];
+                if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
+                if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
+                if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
+                if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+                if(typeof result == "object" && result.components) {
+                    if(!Array.isArray(result.components)) result.components = [result.components];
+                    data.components = result.components;
                 }
-    
-    
-                if(!options.allowedMentions) {
-                    options.allowedMentions = { parse: [] };
+                if(typeof result == "object" && result.embeds) {
+                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+                    data.embeds = result.embeds;
                 }
-    
-                if(options.components) {
-                    if(!Array.isArray(options.components)) options.components = [options.components];
-                    options.components = options.components;
-                }
-                if(options.embeds) {
-                    if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
-                    options.embeds = options.embeds;
-                }
-    
+        
                 let finalFiles = [];
-                if(options.attachments) {
-                    if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
-                    options.attachments.forEach(file => {
+                if(typeof result == "object" && (result.attachments || result.files)) {
+                    let attachments = result.attachments || result.files
+        
+                    if(!Array.isArray(attachments)) attachments = [attachments]
+                    attachments.forEach(file => {
                         finalFiles.push({
                             attachment: file.attachment,
                             name: file.name,
@@ -52,20 +51,14 @@ if(!ifDjsV13) {
                     })
                 }
     
-                if(options.inlineReply) {
-                    options.message_reference = {
+                if(result.inlineReply) {
+                    result.message_reference = {
                         message_id: this.channel.lastMessageID
                     }
                 }
 
                 return this.client.api.channels[this.channel.id].messages.post({
-                    data: {
-                        allowed_mentions: options.allowedMentions,
-                        content: content,
-                        components: options.components,
-                        options,
-                        embed: embed || null
-                    },
+                    data,
                     files: finalFiles
                 })
                 .then(d => this.client.actions.MessageCreate.handle(d).message);
@@ -278,30 +271,29 @@ if(!ifDjsV13) {
     */
     buttons: async function(content, options) {
         this.client = options.client, this.channel = options.channel
-        var embed = null;
-        if(typeof content == "object") {
-            embed = content;
-            content = "\u200B"
-        }
+        var data = {}
 
-
-        if(!options.allowedMentions) {
-            options.allowedMentions = { parse: [] };
+        if(typeof result != "object") data.content = result;
+        if(typeof result == "object" && !result.content) data.embeds = [result];
+        if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
+        if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
+        if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
+        if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+        if(typeof result == "object" && result.components) {
+            if(!Array.isArray(result.components)) result.components = [result.components];
+            data.components = result.components;
         }
-
-        if(options.components) {
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-        }
-        if(options.embeds) {
-            if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
-            options.embeds = options.embeds;
+        if(typeof result == "object" && result.embeds) {
+            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+            data.embeds = result.embeds;
         }
 
         let finalFiles = [];
-        if(options.attachments) {
-            if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
-            options.attachments.forEach(file => {
+        if(typeof result == "object" && (result.attachments || result.files)) {
+            let attachments = result.attachments || result.files
+
+            if(!Array.isArray(attachments)) attachments = [attachments]
+            attachments.forEach(file => {
                 finalFiles.push({
                     attachment: file.attachment,
                     name: file.name,
@@ -310,20 +302,14 @@ if(!ifDjsV13) {
             })
         }
 
-        if(options.inlineReply) {
-            options.message_reference = {
+        if(result.inlineReply) {
+            result.message_reference = {
                 message_id: this.channel.lastMessageID
             }
         }
 
         return this.client.api.channels[this.channel.id].messages.post({
-            data: {
-                allowed_mentions: options.allowedMentions,
-                content: content,
-                components: options.components,
-                options,
-                embed: embed || null
-            },
+            data,
             files: finalFiles
         })
         .then(d => this.client.actions.MessageCreate.handle(d).message);
@@ -380,36 +366,4 @@ if(!ifDjsV13) {
         })
         .then(d => this.client.actions.MessageCreate.handle(d).message);
     },
-
-    /**
-     * Method to inlineReply
-     * @param {String} content
-     * @param {Object} options
-     * @returns {Promise}
-    */
-    inlineReply: async function(content, options) {
-        this.client = options.client, this.channel = options.channel
-        const mentionRepliedUser = typeof ((options || content || {}).allowedMentions || {}).repliedUser === "undefined" ? true : ((options || content).allowedMentions).repliedUser;
-        delete ((options || content || {}).allowedMentions || {}).repliedUser;
-
-        const apiMessage = content instanceof APIMessage ? content.resolveData() : APIMessage.create(this.channel, content, options).resolveData();
-        Object.assign(apiMessage.data, { message_reference: { message_id: this.id } });
-
-        if (!apiMessage.data.allowed_mentions || Object.keys(apiMessage.data.allowed_mentions).length === 0)
-        apiMessage.data.allowed_mentions = { parse: ["users", "roles", "everyone"] };
-        if (typeof apiMessage.data.allowed_mentions.replied_user === "undefined")
-        Object.assign(apiMessage.data.allowed_mentions, { replied_user: mentionRepliedUser });
-
-        if (Array.isArray(apiMessage.data.content)) {
-            return Promise.all(apiMessage.split().map(x => {
-                x.data.allowed_mentions = apiMessage.data.allowed_mentions;
-                return x;
-            }).map(this.inlineReply.bind(this)));
-        }
-
-        const { data, files } = await apiMessage.resolveFiles();
-        return this.client.api.channels[this.channel.id].messages
-            .post({ data, files })
-            .then(d => this.client.actions.MessageCreate.handle(d).message);
-    }
 };

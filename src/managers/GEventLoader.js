@@ -247,13 +247,13 @@ class GEventLoader {
 
                         if(ifDjsV13) options.client = this.client, options.channel = message.channel
                         if(typeof options == "object" && options.content) {
-                            msg = await ifDjsV13 ? GMessage.buttons(options.content, options) : message.buttons(options.content, options)
+                            msg = await ifDjsV13 ? GMessage.buttons(options) : message.buttons(options)
                         } else if(typeof options == "object" && !options.content) {
                             if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.inlineReply(options)
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.send(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.inlineReply({content:options});
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.send({content:options});
                             else msg = await message.channel.send(options)
                         }
 
