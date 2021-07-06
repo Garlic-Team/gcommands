@@ -343,7 +343,7 @@ client.dispatcher.addInhibitor((interaction, {message, member, guild, channel, r
 ```
     
 ::: danger
-Working only in [GCommands v4.4.0 (dev build)](https://github.com/Garlic-Team/GCommands/pull/30)
+The second option is for [GCommands v4.4.0 (dev build)](https://github.com/Garlic-Team/GCommands/pull/30)
 :::
     
 </branch>
