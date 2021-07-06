@@ -213,7 +213,7 @@ class GCommandLoader {
                     this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
                 })
                 .catch((error) => {
-                    console.log(new Color(`&d[GCommands] ${error.response.status == 429 ? "&aWait &e" + ms(error.response.data["retry_after"] * 1000) : ""} &c${error} &e(${cmd.name})`, {json:false}).getText());
+                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status == 429 ? "&aWait &e" + ms(error.response.data["retry_after"] * 1000) : ""} &c${error} &e(${cmd.name})`, {json:false}).getText());
 
                     if(error.response) {
                         if(error.response.status == 429) {
@@ -244,8 +244,8 @@ class GCommandLoader {
                         }
                     }
                 })
-            }catch(e) {
-                console.log(e)
+            } catch(e) {
+                this.GCommandsClient.emit(Events.DEBUG, e)
             }  
         })
     }
@@ -260,7 +260,7 @@ class GCommandLoader {
             this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded: &e➜   &3" + cmd.name, {json:false}).getText());
         })
         .catch((error) => {
-            console.log(new Color(`&d[GCommands] ${error.response.status == 429 ? "&aWait &e" + ms(error.response.data["retry_after"] * 1000) : ""} &c${error} &e(${cmd.name})`, {json:false}).getText());
+            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status == 429 ? "&aWait &e" + ms(error.response.data["retry_after"] * 1000) : ""} &c${error} &e(${cmd.name})`, {json:false}).getText());
             
             if(error.response) {
                 if(error.response.status == 429) {
@@ -286,9 +286,9 @@ class GCommandLoader {
                 })
             }
 
-            var nowCMDS = [];
+            let nowCMDS = [];
 
-            var keys = Array.from(this.client.gcommands.keys());
+            let keys = Array.from(this.client.gcommands.keys());
             keys.forEach(cmdname => {
                 nowCMDS.push(cmdname)
 
@@ -302,14 +302,14 @@ class GCommandLoader {
             })
 
             allcmds.forEach(cmd => {
-                var f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
+                let f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
 
                 if(!f) {
                     cmdUtils.__deleteCmd(this.client, cmd.id)
                 }
             })
         } catch(e) {
-            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3Can't remove global commands!").getText())
+            return;
         }
 
         this.__deleteAllGuildCmds()
@@ -360,8 +360,6 @@ class GCommandLoader {
                 this.__createCommands();
             }
         } catch(e) {
-            this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3Can't remove guild commands!").getText())
-
             if((this.client.slash) || (this.client.slash == "both")) {
                 this.__createCommands();
             }

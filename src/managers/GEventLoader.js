@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
 const {Collection,MessageEmbed, Message} = require("discord.js");
+const { readdirSync } = require("fs");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants")
 const GMessage = require("../structures/GMessage");
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13"), { inhibit, interactionRefactor } = require("../util/util")
@@ -33,7 +34,6 @@ class GEventLoader {
      * @private
     */
     async messageEvent() {
-        if(this.client == undefined) return;
         if((this.client.slash == false) || (this.client.slash == "both")) {
             this.client.on('message', async(message) => {
                 messageEventUse(message)
@@ -108,10 +108,10 @@ class GEventLoader {
                             msg = await ifDjsV13 ? GMessage.buttons(options) : message.buttons(options)
                         } else if(typeof options == "object" && !options.content) {
                             if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.send(options)
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.reply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.send({content:options});
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.reply({content:options});
                             else msg = await message.channel.send(options)
                         }
 
@@ -144,7 +144,7 @@ class GEventLoader {
 
                         return msg;
                     }
-                })
+                }, args, args)
                 if(inhibitReturn == false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
@@ -252,10 +252,10 @@ class GEventLoader {
                             msg = await ifDjsV13 ? GMessage.buttons(options) : message.buttons(options)
                         } else if(typeof options == "object" && !options.content) {
                             if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.send(options)
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.reply(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.send({content:options});
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.reply({content:options});
                             else msg = await message.channel.send(options)
                         }
 
@@ -291,6 +291,7 @@ class GEventLoader {
                 }, args, args)
             } catch(e) {
                 this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+
                 if(!this.GCommandsClient.unkownCommandMessage) return;
                 if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
                     message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace("{COMMAND}",cmd));
@@ -305,12 +306,10 @@ class GEventLoader {
      * @private
     */
     async slashEvent() {
-        if(this.client == undefined) return;
         if((this.client.slash) || (this.client.slash == "both")) {
             this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
                 if(interaction.type != 2) return;
                 
-                if(this.client == undefined) return;
                 try {
                     let commandos = this.client.gcommands.get(interaction.data.name);
                     if(!commandos) return;
@@ -332,7 +331,7 @@ class GEventLoader {
                         edit: async(result) => {
                             return this.slashEdit(interaction, result);
                         }
-                    })
+                    }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgsObject(interaction.data.options || []))
                     if(inhibitReturn == false) return;
 
                     let guildLanguage = await this.client.dispatcher.getGuildLanguage(member.guild.id);
@@ -503,7 +502,7 @@ class GEventLoader {
                             edit: async(result) => {
                                 return this.slashEdit(interaction, result);
                             }
-                        }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgs2(interaction.data.options || []))
+                        }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgsObject(interaction.data.options || []))
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     }
@@ -511,6 +510,7 @@ class GEventLoader {
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+
                     if(!this.unkownCommandMessage) return;
                     if(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage]) {
                         this.client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -533,13 +533,9 @@ class GEventLoader {
      * @private
     */
     async loadMoreEvents() {
-        require("../base/actions/channel")(this.client)
-        require("../base/actions/guild")(this.client)
-        require("../base/actions/guildmember")(this.client)
-        require("../base/actions/role")(this.client)
-        require("../base/actions/user")(this.client)
-        require("../base/actions/voiceupdate")(this.client)
-        require("../base/actions/interactions")(this.client)
+        await readdirSync(`${__dirname}/../base/actions/`).forEach(file => {
+            require(`../base/actions/${file}`)(this.client)
+        })
     }
 
     async slashRespond(channel, interaction, result) {
@@ -613,40 +609,24 @@ class GEventLoader {
 
     async slashEdit(interaction, result) {
         if (typeof result == "object") {
-            if(result.components) {
+            var data = {}
+        
+            if(typeof result != "object") data.content = result;
+            if(typeof result == "object" && !result.content) data.embeds = [result];
+            if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
+            if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
+            if(typeof result == "object" && result.components) {
                 if(!Array.isArray(result.components)) result.components = [result.components];
-
-                result.components = result.components;
-            } else result.components = [];
-
-            if(typeof result.content == "object") {
-                result.embeds = [result.content]
-                result.content = "\u200B"
+                data.components = result.components;
             }
             if(typeof result == "object" && result.embeds) {
-                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds];
-                result.embeds = result.embeds;
-            } else result.embeds = []
+                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
+                data.embeds = result.embeds;
+            }
             if(result.embeds && !result.content) result.content = "\u200B"
             
-            let finalFiles = [];
-            if(typeof result == "object" && result.attachments) {
-                if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                result.attachments.forEach(file => {
-                    finalFiles.push({
-                        attachment: file.attachment,
-                        name: file.name,
-                        file: file.attachment
-                    })
-                })
-            }
-            
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                data: {
-                    content: result.content,
-                    components: result.components,
-                    embeds: result.embeds || []
-                },
+                data,
                 files: finalFiles   
             }))
 
@@ -671,7 +651,7 @@ class GEventLoader {
      * @returns {object}
     */
     getSlashArgs(options) {
-        var args = [];
+        let args = [];
   
         let check = (option) => {
           if (!option) return;
@@ -696,11 +676,11 @@ class GEventLoader {
         return args;
     }
 
-    getSlashArgs2(options) {
+    getSlashArgsObject(options) {
         var args = {};
         for (let o of options) {
-          if (o.type == 1) args[o.name] = this.getSlashArgs2(o.options || []);
-          else if (o.type == 2) args[o.name] = this.getSlashArgs2(o.options || []); 
+          if (o.type == 1) args[o.name] = this.getSlashArgsObject(o.options || []);
+          else if (o.type == 2) args[o.name] = this.getSlashArgsObject(o.options || []); 
           else {
               args[o.name] = o.value;
           }
