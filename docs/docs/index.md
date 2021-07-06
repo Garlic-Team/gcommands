@@ -414,7 +414,6 @@ The GCommandsEventLoader class
     * [new GEventLoader(GCommandsClient)](#new_GEventLoader_new)
     * [.GCommandsClient](#GEventLoader+GCommandsClient)
     * [.getSlashArgs()](#GEventLoader+getSlashArgs) ⇒ <code>object</code>
-    * [.inhibit()](#GEventLoader+inhibit) ⇒ <code>object</code>
 
 <a name="new_GEventLoader_new"></a>
 
@@ -442,12 +441,6 @@ GCommandsEventLoader options
 
 ### gEventLoader.getSlashArgs() ⇒ <code>object</code>
 Internal method to getSlashArgs
-
-**Kind**: instance method of [<code>GEventLoader</code>](#GEventLoader)  
-<a name="GEventLoader+inhibit"></a>
-
-### gEventLoader.inhibit() ⇒ <code>object</code>
-Internal method to inhivit
 
 **Kind**: instance method of [<code>GEventLoader</code>](#GEventLoader)  
 <a name="Color"></a>
@@ -580,6 +573,8 @@ The InteractionEvent class
 
 * [InteractionEvent](#InteractionEvent)
     * [new InteractionEvent(client, data)](#new_InteractionEvent_new)
+    * [.type](#InteractionEvent+type) : <code>Number</code>
+    * [.componentType](#InteractionEvent+componentType) : <code>Number</code>
     * ~~[.selectMenuId](#InteractionEvent+selectMenuId)~~
     * ~~[.valueId](#InteractionEvent+valueId)~~
     * [.id](#InteractionEvent+id) : <code>Number</code>
@@ -613,6 +608,18 @@ Creates new InteractionEvent instance
 | client | <code>Client</code> | 
 | data | <code>Object</code> | 
 
+<a name="InteractionEvent+type"></a>
+
+### interactionEvent.type : <code>Number</code>
+type
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
+<a name="InteractionEvent+componentType"></a>
+
+### interactionEvent.componentType : <code>Number</code>
+componentType
+
+**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
 <a name="InteractionEvent+selectMenuId"></a>
 
 ### ~~interactionEvent.selectMenuId~~
