@@ -4,6 +4,7 @@ const {Client, MessageEmbed, Guild, NewsChannel, GuildMember, User, Message} = r
 const Color = require("../structures/Color");
 const GMessage = require("./GMessage");
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
+const { interactionRefactor } = require("../util/util")
 
 /**
  * The InteractionEvent class
@@ -16,6 +17,7 @@ class InteractionEvent {
      * @param {Object} data 
     */
     constructor(client, data) {
+        this.functions = interactionRefactor(client, data)
         this.client = client;
 
         /**
@@ -350,20 +352,6 @@ class InteractionEvent {
 
         if(ifDjsV13) return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
         else return apiMessage.id ? new GMessage(this.client, apiMessage, this.channel) : apiMessage;
-    }
-
-    /**
-     * Method to isSelectMenu
-    */
-    async isSelectMenu() {
-        return data.data.values ? true : false;
-    }
-
-    /**
-     * Method to isButton
-    */
-    async isButton() {
-        return data.data.values ? false : true;
     }
 }
 
