@@ -19,6 +19,18 @@ class InteractionEvent {
         this.client = client;
 
         /**
+         * type
+         * @type {Number}
+         */
+        this.type = data.type
+
+        /**
+         * componentType
+         * @type {Number}
+         */
+        this.componentType = data.data.component_type
+
+        /**
          * selectMenuId
          * @deprecated
          */

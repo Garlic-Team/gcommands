@@ -111,8 +111,8 @@ class GCommandLoader {
 
                         options.push({
                             name: option,
-                            description: optionDescription,
-                            type: parseInt(optionType),
+                            description: optionDescription || option,
+                            type: parseInt(optionType) || 3,
                             required: a < cmd.minArgs ? cmd.minArgs : 0,
                         })
                     }

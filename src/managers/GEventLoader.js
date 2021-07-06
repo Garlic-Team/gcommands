@@ -2,7 +2,7 @@ const { default: axios } = require("axios");
 const {Collection,MessageEmbed, Message} = require("discord.js");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants")
 const GMessage = require("../structures/GMessage");
-const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
+const ifDjsV13 = require("../util/updater").checkDjsVersion("13"), { inhibit, interactionRefactor } = require("../util/util")
 
 /**
  * The GCommandsEventLoader class
@@ -90,8 +90,9 @@ class GEventLoader {
                 if(!commandos) return;
                 if(commandos.slash == true || commandos.slash == "true") return;
 
+
                 let member = message.member, guild = message.guild, channel = message.channel
-                let inhibit = await this.inhibit(commandos, {
+                let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                     message, member, guild, channel,
                     /**
                      * Respond
@@ -104,23 +105,24 @@ class GEventLoader {
 
                         if(ifDjsV13) options.client = this.client, options.channel = message.channel
                         if(typeof options == "object" && options.content) {
-                            msg = await ifDjsV13 ? GMessage.buttons(options.content, options) : message.buttons(options.content, options)
+                            msg = await ifDjsV13 ? GMessage.buttons(options) : message.buttons(options)
                         } else if(typeof options == "object" && !options.content) {
                             if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.inlineReply(options)
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.send(options)
                             else msg = await message.channel.send(options)
                         } else {
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.inlineReply({content:options});
+                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.send({content:options});
                             else msg = await message.channel.send(options)
                         }
 
+                        msg = await msg;
                         msg = msg.toJSON()
                         msg.client = this.client;
                         msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
                         msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
                         msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
                         msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
-                        
+
                         if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
@@ -143,7 +145,7 @@ class GEventLoader {
                         return msg;
                     }
                 })
-                if(inhibit == false) return;
+                if(inhibitReturn == false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
                 let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos)
@@ -320,7 +322,7 @@ class GEventLoader {
                     let guild = await this.client.guilds.cache.get(interaction.guild_id)
                     let member = guild.members.cache.get(interaction.member.user.id);
 
-                    let inhibit = await this.inhibit(commandos, {
+                    let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                         interaction, member,
                         guild: guild, 
                         channel: guild.channels.cache.get(interaction.channel_id),
@@ -331,7 +333,7 @@ class GEventLoader {
                             return this.slashEdit(interaction, result);
                         }
                     })
-                    if(inhibit == false) return;
+                    if(inhibitReturn == false) return;
 
                     let guildLanguage = await this.client.dispatcher.getGuildLanguage(member.guild.id);
                     let cooldown = await this.client.dispatcher.getCooldown(member.guild.id, member.user.id, commandos)
@@ -704,18 +706,6 @@ class GEventLoader {
           }
         }
         return args;
-    }
-
-    /**
-     * Internal method to inhivit
-     * @returns {object}
-    */
-    async inhibit(cmd, data) {
-		for(const inhibitor of this.client.inhibitors) {
-			let inhibit = inhibitor(cmd, data);
-			return inhibit;
-		}
-		return null;
     }
 }
 
