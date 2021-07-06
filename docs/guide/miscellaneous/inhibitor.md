@@ -314,6 +314,16 @@ client.dispatcher.addInhibitor((cmd, slash, message) => {
 For example, if you want to check if a person is on the blacklist, you must use addInhibitor.<br>
 You need put code to ready event!
 
+
+```js
+client.dispatcher.addInhibitor((cmd, {message, member, guild, channel, respond, edit}) => {
+        if(member.id == "126454") {
+            respond("blacklisted")
+            return false;
+        }
+})
+```    
+
 ```js
 client.dispatcher.addInhibitor((interaction, {message, member, guild, channel, respond, edit}) => {
     if(interaction.isCommand()) {
@@ -331,5 +341,9 @@ client.dispatcher.addInhibitor((interaction, {message, member, guild, channel, r
     }
 })
 ```
-
+    
+::: danger
+Working only in [GCommands v4.4.0 (dev build)](https://github.com/Garlic-Team/GCommands/pull/30)
+:::
+    
 </branch>
