@@ -53,5 +53,15 @@ module.exports = {
 			return inhibit;
 		}
 		return null;
-    }
+    },
+
+    /**
+     * Internal method to isClass
+     * @returns {boolean}
+    */
+	isClass(input) {
+		return typeof input === 'function' &&
+        typeof input.prototype === 'object' &&
+        input.toString().substring(0, 5) === 'class';
+	}
 }

@@ -1,7 +1,9 @@
 const cmdUtils = require('../util/cmdUtils'), Color = require("../structures/Color"), { Events } = require("../util/Constants")
 const axios = require("axios");
 const fs = require("fs");
-const ms = require("ms")
+const ms = require("ms");
+const { isClass } = require('../util/util');
+const Command = require('../structures/Command');
 
 class GCommandLoader {
     constructor(GCommandsClient) {
@@ -25,10 +27,16 @@ class GCommandLoader {
             var fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
-                    file = await require(`../../../../${this.cmdDir}${dir}`);
+                    let finalFile;
 
-                    if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
-                    this.client.gcommands.set(file.name, file);
+                    file = await require(`../../../../${this.cmdDir}${dir}`);
+                    if (isClass(file)) {
+                        finalFile = new file(this.client)
+                        if(!(finalFile instanceof Command)) return console.log(new Color(`&d[GCommands] &cComamnd ${fileName} doesnt belong in Commands.`).getText())
+                    } else finalFile = file;
+
+                    if (finalFile && finalFile.aliases && Array.isArray(finalFile.aliases)) finalFile.aliases.forEach(alias => this.client.galiases.set(alias, finalFile.name));
+                    this.client.gcommands.set(finalFile.name, finalFile);
                     this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
                 } catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &e("+fileName+") &3"+e).getText());
@@ -39,10 +47,16 @@ class GCommandLoader {
                     var file2;
                     var fileName2 = cmdFile.split(".").reverse()[1]
                     try {
+                        let finalFile2;
+
                         file2 = await require(`../../../../${this.cmdDir}${dir}/${cmdFile}`);
-    
-                        if (file2.aliases && Array.isArray(file2.aliases)) file2.aliases.forEach(alias => this.client.galiases.set(alias, file2.name));
-                        this.client.gcommands.set(file2.name, file2);
+                        if (isClass(file)) {
+                            finalFile2 = new file2(this.client)
+                            if(!(finalFile2 instanceof Command)) return console.log(new Color(`&d[GCommands] &cComamnd ${finalFile2} doesnt belong in Commands.`).getText())
+                        } else finalFile2 = file2;
+
+                        if (finalFile2.aliases && Array.isArray(finalFile2.aliases)) finalFile2.aliases.forEach(alias => this.client.galiases.set(alias, finalFile2.name));
+                        this.client.gcommands.set(finalFile2.name, finalFile2);
                         this.GCommandsClient.emit(Events.LOG, new Color("&d[GCommands] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &e("+fileName2+") &3"+e).getText());

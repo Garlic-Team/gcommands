@@ -270,6 +270,10 @@ declare module 'gcommands' {
     ): this;
   }
 
+  export class Command {
+    constructor(client: Client, options: CommandOptions)
+  }
+
   interface GEvents {
     debug: [string];
     log: [string];
@@ -305,5 +309,21 @@ declare module 'gcommands' {
     components?: MessageActionRow | MessageActionRow[],
     attachments?: MessageAttachment | MessageAttachment[],
     allowedMentions?: object
+  }
+
+  interface CommandOptions {
+    name: string;
+    description: string;
+    cooldown?: string;
+    expectedArgs?: string;
+    minArgs?: number;
+    userRequiredPermissions?: Array | String;
+    userRequiredRoles?: Array | String;
+    clientRequiredPermissions?: Array | String;
+    userOnly?: Array | Snowflake;
+    channelOnly?: Array | Snowflake;
+    guildOnly?: Array | Snowflake;
+    nsfw?: boolean;
+    aliases?: Array;
   }
 }

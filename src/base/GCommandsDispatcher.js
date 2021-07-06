@@ -1,4 +1,4 @@
-const { Collector, Collection } = require('discord.js');
+const { Collector, Collection, User, Team } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require("../structures/Color")
 const updater = require("../util/updater");
 const ms = require("ms");
@@ -16,6 +16,8 @@ class GCommandsDispatcher {
         this.client = client;
         this.client.inhibitors = new Set();
         this.client.cooldowns = new Collection();
+
+        this.fetchClientApplication();
     }
 
     /**
@@ -51,6 +53,7 @@ class GCommandsDispatcher {
      * @returns {String}
     */
      async getCooldown(guildId, userId, command) {
+        if(this.client.application.owners.some(user => user.id == userId)) return { cooldown: false };
         let now = Date.now();
 
         let cooldown;
@@ -148,12 +151,25 @@ class GCommandsDispatcher {
      * @param {Object} command
      * @returns {boolean}
     */
-     async getGuildLanguage(guildId, cache = true) {
+    async getGuildLanguage(guildId, cache = true) {
         if(!this.client.database) return this.client.language;
         if(cache) return this.client.guilds.cache.get(guildId).language ? this.client.guilds.cache.get(guildId).language : this.client.language;
 
         let guildData = await this.client.database.get(`guild_${guildId}`)
         return guildData ? guildData.language : this.client.language
+    }
+
+    /**
+     * Internal method to fetchClientApplication
+     * @returns {Array}
+    */
+    async fetchClientApplication() {
+        this.client.application = await this.client.fetchApplication()
+        if(this.client.application.owner instanceof Team) {
+            this.client.application.owners = this.client.application.owner.members.array().map(teamMember => teamMember.user)
+        } else this.client.application.owners = this.client.application.owner
+
+        return this.client.application.owners;
     }
 
     /**
