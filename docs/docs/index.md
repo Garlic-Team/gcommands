@@ -241,6 +241,7 @@ The GCommansDispatcher class
     * [.getCooldown()](#GCommandsDispatcher+getCooldown) ⇒ <code>String</code>
     * [.setGuildLanguage(guildId, userId, command)](#GCommandsDispatcher+setGuildLanguage) ⇒ <code>boolean</code>
     * [.getGuildLanguage(guildId, userId, command)](#GCommandsDispatcher+getGuildLanguage) ⇒ <code>boolean</code>
+    * [.fetchClientApplication()](#GCommandsDispatcher+fetchClientApplication) ⇒ <code>Array</code>
     * [.addInhibitor(inhibitor)](#GCommandsDispatcher+addInhibitor) ⇒ <code>boolean</code>
     * [.removeInhibitor()](#GCommandsDispatcher+removeInhibitor) ⇒ <code>Set</code>
     * [.createButtonCollector(filter, options)](#GCommandsDispatcher+createButtonCollector) ⇒ <code>Collector</code>
@@ -304,6 +305,12 @@ Internal method to getGuildLanguage
 | userId | <code>Snowflake</code> | 
 | command | <code>Object</code> | 
 
+<a name="GCommandsDispatcher+fetchClientApplication"></a>
+
+### gCommandsDispatcher.fetchClientApplication() ⇒ <code>Array</code>
+Internal method to fetchClientApplication
+
+**Kind**: instance method of [<code>GCommandsDispatcher</code>](#GCommandsDispatcher)  
 <a name="GCommandsDispatcher+addInhibitor"></a>
 
 ### gCommandsDispatcher.addInhibitor(inhibitor) ⇒ <code>boolean</code>
