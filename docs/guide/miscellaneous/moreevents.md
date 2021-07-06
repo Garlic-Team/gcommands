@@ -272,3 +272,37 @@ When user change language
 ```js
 client.on("guildLanguageChange", (guild, language) => {})
 ```
+
+### ClickButton
+When user click to button
+
+```js
+client.on("clickButton", (button) => {})
+```
+
+### SelectMenu
+When user select option in dropdown(select) menu
+
+```js
+client.on("selectMenu", (button) => {})
+```
+
+### ClickButton
+When user click to button
+
+```js
+client.on("clickButton", (button) => {})
+```
+
+### interaction
+selectMenu + clickButton events with 
+```js
+interaction.isSelectMenu()
+interaction.isButton()
+```
+
+only in djs v12!
+
+```js
+client.on("interaction", (interaction) => {})
+```
