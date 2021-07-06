@@ -1,3 +1,4 @@
+const { Snowflake } = require("discord.js");
 const Color = require("./Color");
 
 class Command {
@@ -52,19 +53,19 @@ class Command {
 
         /**
          * userOnly
-         * @type {import("discord.js").Snowflake | Array}
+         * @type {Snowflake | Array}
          */
         this.userOnly = options.userOnly;
 
         /**
          * channelOnly
-         * @type {import("discord.js").Snowflake | Array}
+         * @type {Snowflake | Array}
          */
         this.channelOnly = options.channelOnly;
 
         /**
          * guildOnly
-         * @type {import("discord.js").Snowflake}
+         * @type {Snowflake}
          */
         this.guildOnly = options.guildOnly;    
 
