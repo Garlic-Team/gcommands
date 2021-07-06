@@ -230,7 +230,7 @@ client.on("ready", () => {
            slash: 'both', //true = slash only, false = only normal, both = slash and normal
            prefix: '.' // for normal commands
         },
-        defaultCooldown: 3,
+        defaultCooldown: "3s",
         database: "url"
         /* DB SUPPORT
          * redis://user:pass@localhost:6379
@@ -263,7 +263,8 @@ Below are all the available options.
 | slash.slash      	    | ✅        | If set to **true**, only slash commands will execute. If set to **false**, only normal commands will execute. If set to **both**, both types will execute 	|
 | slash.prefix     	    | ✅        | Default prefix for normal commands.                                                                                     	                                |
 | defaultCooldown 	    | ✅        | Default cooldown for all commands. (in seconds)                                                                                                            |
-| database    	    | ❌    	   | DB                                                             	                                |                                                                                                               |
+| shardClusterName 	    | ❌        | Your shard cluster name if you are sharding. Default is "shard"                                                                                                            |
+| database    	    | ❌    	   | DB                                                                                                    |
 
 </language>
 <language lang="tk">
@@ -284,7 +285,7 @@ client.on("ready", () => {
            slash: 'both', // true = Sadece eğik çizgi komutları | false = Sadece normal komutlar | both = Her ikisini de destekler.
            prefix: '.' // Normal komutları kullanacaksan bir önek oluştur.
         },
-        defaultCooldown: 3, // Komut bekleme süresi.
+        defaultCooldown: "3s", // Komut bekleme süresi.
         database: "url"
         /* DB SUPPORT
          * redis://user:pass@localhost:6379
@@ -317,6 +318,7 @@ Aşağıda kullanabileceğin bütün ayarlar mevcut.
 | slash.slash      	    | ✅        | Eğer **true** ayarlanırsa sadece eğik çizgi komutları, **false** olarak ayarlanırsa sadece normal komutları veya both olarak ayarlanırsa her iki komut türünü de kullanabilirsin. 	|
 | slash.prefix     	    | ✅        | Normal komutlar için önek.                                                                                     	                                |
 | defaultCooldown 	    | ✅        | Bütün komutlarda geçerli olan bekleme süresi. (Saniye cinsinden.)                                                                                                            |
+| shardClusterName 	    | ❌        | Shard işlemi uyguluyorsan Shard Cluster adı. Varsayılan ad "shard".                                                                                                            |
 | database    	    | ❌    	   | DB                                                             
 
 </language>
