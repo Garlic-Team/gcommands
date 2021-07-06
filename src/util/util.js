@@ -39,7 +39,7 @@ module.exports = {
 
         interaction.isCommand = async() => is.command;
         interaction.isButton = async() => is.button;
-        interaction.isMenu = async() => is.menu;
+        interaction.isSelectMenu = async() => is.menu;
         return interaction;
     },
 
