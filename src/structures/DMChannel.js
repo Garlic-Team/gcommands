@@ -13,9 +13,11 @@ if(!updater.checkDjsVersion("13")) {
                 var data = {}
 
                 if(typeof result != "object") data.content = result;
-                if(typeof result == "object" && !result.content) data.embeds = [result];
+                if(typeof result == "object" && !result.content && result instanceof MessageEmbed) data.embeds = [result];
+                if(typeof result == "object" && !result.content && result instanceof MessageAttachment) result.attachments = [result];
                 if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-                if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
+                if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageEmbed) data.embeds = [result.content];
+                if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageAttachment) data.attachments = [result.content];
                 if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
                 if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
                 if(typeof result == "object" && result.components) {

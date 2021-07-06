@@ -1,5 +1,5 @@
 const { default: axios } = require("axios");
-const {Collection,MessageEmbed, Message} = require("discord.js");
+const {Collection,MessageEmbed, Message, MessageAttachment} = require("discord.js");
 const { readdirSync } = require("fs");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants")
 const GMessage = require("../structures/GMessage");
@@ -544,9 +544,11 @@ class GEventLoader {
         var data = {}
 
         if(typeof result != "object") data.content = result;
-        if(typeof result == "object" && !result.content) data.embeds = [result];
+        if(typeof result == "object" && !result.content && result instanceof MessageEmbed) data.embeds = [result];
+        if(typeof result == "object" && !result.content && result instanceof MessageAttachment) result.attachments = [result];
         if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-        if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
+        if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageEmbed) data.embeds = [result.content];
+        if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageAttachment) data.attachments = [result.content];
         if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
         if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
         if(typeof result == "object" && result.components) {
@@ -557,7 +559,6 @@ class GEventLoader {
             if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
             data.embeds = result.embeds;
         }
-        if(result.embeds && !result.content) result.content = "\u200B"
 
         let finalFiles = [];
         if(typeof result == "object" && (result.attachments || result.files)) {
