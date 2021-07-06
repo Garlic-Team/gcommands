@@ -594,8 +594,6 @@ The InteractionEvent class
     * [.think(ephemeral)](#InteractionEvent+think)
     * [.edit(options)](#InteractionEvent+edit)
     * [.update(options)](#InteractionEvent+update)
-    * [.isSelectMenu()](#InteractionEvent+isSelectMenu)
-    * [.isButton()](#InteractionEvent+isButton)
 
 <a name="new_InteractionEvent_new"></a>
 
@@ -758,18 +756,6 @@ Method to update
 | --- | --- |
 | options | <code>Object</code> | 
 
-<a name="InteractionEvent+isSelectMenu"></a>
-
-### interactionEvent.isSelectMenu()
-Method to isSelectMenu
-
-**Kind**: instance method of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+isButton"></a>
-
-### interactionEvent.isButton()
-Method to isButton
-
-**Kind**: instance method of [<code>InteractionEvent</code>](#InteractionEvent)  
 <a name="MessageActionRow"></a>
 
 ## MessageActionRow
