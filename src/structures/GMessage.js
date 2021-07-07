@@ -15,11 +15,11 @@ if(!ifDjsV13) {
     
             /**
              * Method to make buttons
-             * @param {String} content
-             * @param {Object} options
+             * @param {Object | String | MessageEmbed | MessageAttachment} result
              * @returns {Promise}
             */
             async buttons(result) {
+                if(result.inlineReply == undefined) result.inlineReply = true;
                 var data = {}
 
                 if(typeof result != "object") data.content = result;
@@ -28,6 +28,7 @@ if(!ifDjsV13) {
                 if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
                 if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
                 if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+                if(typeof result == "object" && result.inlineReply && this.channel.lastMessageID) data.message_reference = { message_id: this.channel.lastMessageID }
                 if(typeof result == "object" && result.components) {
                     if(!Array.isArray(result.components)) result.components = [result.components];
                     data.components = result.components;
@@ -49,12 +50,6 @@ if(!ifDjsV13) {
                             file: file.attachment
                         })
                     })
-                }
-    
-                if(result.inlineReply) {
-                    result.message_reference = {
-                        message_id: this.channel.lastMessageID
-                    }
                 }
 
                 return this.client.api.channels[this.channel.id].messages.post({
@@ -265,12 +260,12 @@ if(!ifDjsV13) {
 } else module.exports = {
     /**
      * Method to make buttons
-     * @param {String} content
-     * @param {Object} options
+     * @param {Object | String | MessageEmbed | MessageAttachment} result
      * @returns {Promise}
     */
-    buttons: async function(content, options) {
-        this.client = options.client, this.channel = options.channel
+    buttons: async function(result) {
+        if(result.inlineReply == undefined) result.inlineReply = true;
+        this.client = result.client, this.channel = result.channel
         var data = {}
 
         if(typeof result != "object") data.content = result;
@@ -279,7 +274,7 @@ if(!ifDjsV13) {
         if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
         if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
         if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-        if(typeof result == "object" && result.inlineReply) data.message_reference = { message_id: this.channel.lastMessageID }
+        if(typeof result == "object" && result.inlineReply && this.channel.lastMessageID) data.message_reference = { message_id: this.channel.lastMessageID }
         if(typeof result == "object" && result.components) {
             if(!Array.isArray(result.components)) result.components = [result.components];
             data.components = result.components;
