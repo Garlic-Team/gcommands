@@ -85,10 +85,6 @@ class Command {
     async run({client, interaction, member, message, guild, channel, respond, edit}, arrayArgs, objectArgs) {
         return console.log(new Color(`&d[GCommands] &cCommand ${this.name} doesn't provide a run method!`).getText())
     }
-
-    onTest(reason, data) {
-
-    }
 }
 
 module.exports = Command;
