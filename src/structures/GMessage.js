@@ -219,7 +219,7 @@ if(!ifDjsV13) {
             }
     
             createButtonCollector(filter, options = {}) {
-                if(updater.checkDjsVersion("13")) return new ButtonCollectorV13(this, filter, options);
+                if(ifDjsV13) return new ButtonCollectorV13(this, filter, options);
                 else return new ButtonCollectorV12(this, filter, options);
             }
         
@@ -237,7 +237,7 @@ if(!ifDjsV13) {
             }
     
             createSelectMenuCollector(filter, options = {}) {
-                if(updater.checkDjsVersion("13")) return new SelectMenuCollectorV13(this, filter, options);
+                if(ifDjsV13) return new SelectMenuCollectorV13(this, filter, options);
                 else return new SelectMenuCollectorV12(this, filter, options);
             }
         
