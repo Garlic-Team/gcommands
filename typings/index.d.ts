@@ -273,7 +273,22 @@ declare module 'gcommands' {
   export class Command {
     constructor(client: Client, options: CommandOptions)
 
-    public run(options: CommandRunOptions, args: Array, args: Object | Array) : void;
+    public name: string;
+    public description: string;
+    public cooldown: string;
+    public expectedArgs: String | Array;
+    public minArgs: number;
+    public clientRequiredPermissions: String | Array;
+    public userRequiredPermissions: String | Array;
+    public userRequiredRoles: String | Array;
+    public userOnly: Snowflake | Array;
+    public channelOnly: Snowflake | Array;
+    public guildOnly: Snowflake | String;
+    public nsfw: boolean;
+    public aliases: Array;
+
+    public run(options: CommandRunOptions, args: Array, args2: Object | Array): void;
+    public onTest(reason: 'throttling', data: { throttle: object, remaining: number }): Promise<String>;
   }
 
   interface GEvents {
@@ -296,12 +311,12 @@ declare module 'gcommands' {
   }
 
   interface CommandRunOptions {
-    client: Client,
-    interaction: Object,
-    member: GuildMember,
-    message: Message,
-    guild: Guild,
-    channel: TextChannel | NewsChannel,
+    client: Client;
+    interaction: Object;
+    member: GuildMember;
+    message: Message;
+    guild: Guild;
+    channel: TextChannel | NewsChannel;
     
     respond(options: string | CommandRespondOptions): void;
     edit(options: string | CommandEditOptions): void;
