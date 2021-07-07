@@ -3,6 +3,7 @@ const {Collection,MessageEmbed, Message, MessageAttachment} = require("discord.j
 const { readdirSync } = require("fs");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants")
 const GMessage = require("../structures/GMessage");
+const GPayload = require("../structures/GPayload");
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13"), { inhibit, interactionRefactor } = require("../util/util")
 
 /**
@@ -311,7 +312,7 @@ class GEventHandling {
                             return this.slashRespond(channel, interaction, result);
                         },
                         edit: async(result) => {
-                            return this.slashEdit(interaction, result);
+                            return this.slashEdit(channel, interaction, result);
                         }
                     }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgsObject(interaction.data.options || []))
                     if(inhibitReturn == false) return;
@@ -443,7 +444,7 @@ class GEventHandling {
                                 return this.slashRespond(channel, interaction, result);
                             },
                             edit: async(result) => {
-                                return this.slashEdit(interaction, result);
+                                return this.slashEdit(channel, interaction, result);
                             }
                         }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgsObject(interaction.data.options || []))
                     } catch(e) {
@@ -483,47 +484,18 @@ class GEventHandling {
     }
 
     async slashRespond(channel, interaction, result) {
-        if(!result.ephemeral && this.client.autoTyping) channel.startTyping(this.client.autoTyping);
+        if(typeof result == "object" && !result.ephemeral && this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
-        var data = {}
-
-        if(typeof result != "object") data.content = result;
-        if(typeof result == "object" && !result.content && result instanceof MessageEmbed) data.embeds = [result];
-        if(typeof result == "object" && !result.content && result instanceof MessageAttachment) result.attachments = [result];
-        if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-        if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageEmbed) data.embeds = [result.content];
-        if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageAttachment) data.attachments = [result.content];
-        if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-        if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-        if(typeof result == "object" && result.components) {
-            if(!Array.isArray(result.components)) result.components = [result.components];
-            data.components = result.components;
-        }
-        if(typeof result == "object" && result.embeds) {
-            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-            data.embeds = result.embeds;
-        }
-
-        let finalFiles = [];
-        if(typeof result == "object" && (result.attachments || result.files)) {
-            let attachments = result.attachments || result.files
-
-            if(!Array.isArray(attachments)) attachments = [attachments]
-            attachments.forEach(file => {
-                finalFiles.push({
-                    attachment: file.attachment,
-                    name: file.name,
-                    file: file.attachment
-                })
-            })
-        }
+        let GPayloadResult = GPayload.create(channel, result)
+            .resolveData()
+            .resolveFiles();
 
         let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: result.thinking ? 5 : 4,
-                data
+                data: GPayloadResult.data
             },
-            files: finalFiles
+            files: GPayloadResult.files
         }))
 
         let apiMessageMsg = {};
@@ -546,33 +518,21 @@ class GEventHandling {
             apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
         }
 
-        if(!result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
+        if(typeof result == "object" && !result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
 
         if(ifDjsV13) return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
         else return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
     }
 
-    async slashEdit(interaction, result) {
+    async slashEdit(channel, interaction, result) {
         if (typeof result == "object") {
-            var data = {}
-        
-            if(typeof result != "object") data.content = result;
-            if(typeof result == "object" && !result.content) data.embeds = [result];
-            if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-            if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
-            if(typeof result == "object" && result.components) {
-                if(!Array.isArray(result.components)) result.components = [result.components];
-                data.components = result.components;
-            }
-            if(typeof result == "object" && result.embeds) {
-                if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                data.embeds = result.embeds;
-            }
-            if(result.embeds && !result.content) result.content = "\u200B"
+            let GPayloadResult = GPayload.create(channel, result)
+                .resolveData()
+                .resolveFiles();
             
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                data,
-                files: finalFiles   
+                data: GPayloadResult.data,
+                files: GPayloadResult.files   
             }))
 
             if(apiMessage) {

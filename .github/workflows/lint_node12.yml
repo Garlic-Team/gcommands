@@ -1,4 +1,4 @@
-name: Lint (Node 10.x)
+name: Lint (Node 12.x)
 
 on:
   push:

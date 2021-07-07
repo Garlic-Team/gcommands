@@ -1,4 +1,4 @@
-import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel } from 'discord.js';
+import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish';
@@ -192,13 +192,13 @@ declare module 'gcommands' {
     public type: number;
     public disabled: boolean;
 
-    public setStyle(style: MessageButtonStyle): this;
-    public setLabel(label: string): this;
-    public setEmoji(emoji: string): this;
-    public setURL(url: string): this;
-    public setDisabled(disabled: boolean): this;
-    public setID(id: number): this;
-    public toJSON(): this;
+    public setStyle(style: MessageButtonStyle): MessageButton;
+    public setLabel(label: string): MessageButton;
+    public setEmoji(emoji: string): MessageButton;
+    public setURL(url: string): MessageButton;
+    public setDisabled(disabled: boolean): MessageButton;
+    public setID(id: number): MessageButton;
+    public toJSON(): MessageButton;
   }
 
   export class MessageSelectMenu {
@@ -209,14 +209,14 @@ declare module 'gcommands' {
     public custom_id: string;
     public options: object;
 
-    public setPlaceholder(placeholder: string): this;
-    public setMaxValues(max: number): this;
-    public setMinValues(min: number): this;
-    public setID(id: number): this;
+    public setPlaceholder(placeholder: string): tMessageSelectMenuhis;
+    public setMaxValues(max: number): MessageSelectMenu;
+    public setMinValues(min: number): MessageSelectMenu;
+    public setID(id: number): MessageSelectMenu;
     public addOption(option: MessageSelectMenuOption)
     public addOptions(...options: MessageSelectMenuOption[])
     public removeOptions(index: number, deleteCount: number, ...options: MessageSelectMenuOption[])
-    public toJSON(): this;
+    public toJSON(): MessageSelectMenu;
   }
 
   export class MessageSelectMenuOption {
@@ -228,12 +228,12 @@ declare module 'gcommands' {
     public emoji: object;
     public default: boolean;
 
-    public setLabel(label: string): this;
-    public setValue(value: string): this;
-    public setDescription(value: string): this;
-    public setEmoji(emoji: string): this;
-    public setDefault(disabled: boolean): this;
-    public toJSON(): this;
+    public setLabel(label: string): MessageSelectMenuOption;
+    public setValue(value: string): MessageSelectMenuOption;
+    public setDescription(value: string): MessageSelectMenuOption;
+    public setEmoji(emoji: string): MessageSelectMenuOption;
+    public setDefault(disabled: boolean): MessageSelectMenuOption;
+    public toJSON(): MessageSelectMenuOption;
   }
 
   export class GCommandsDispatcher {
@@ -299,6 +299,19 @@ declare module 'gcommands' {
     public run(client: Client, ...args): void;
   }
 
+  export class GPayload {
+    constructor(channel: TextChannel | NewsChannel | DMChannel, options: String | GPayloadOptions)
+
+    public channel: TextChannel | NewsChannel | DMChannel;
+    public options: GPayloadOptions;
+    public data: GPayloadOptions;
+    public files: GPayloadFiles;
+
+    public create(channel: TextChannel | NewsChannel | DMChannel, options: String | GPayloadOptions): GPayload;
+    public resolveData(): GPayload;
+    public resolveFiles(): GPayload;
+  }
+
   interface GEvents {
     debug: [string];
     log: [string];
@@ -326,11 +339,11 @@ declare module 'gcommands' {
     guild: Guild;
     channel: TextChannel | NewsChannel;
     
-    respond(options: string | CommandRespondOptions): void;
-    edit(options: string | CommandEditOptions): void;
+    respond(options: string | GPayloadOptions): void;
+    edit(options: string | GPayloadOptions): void;
   }
 
-  interface RespondOptions {
+  interface GPayloadOptions {
     content: [string | MessageEmbed];
     embeds?: [MessageEmbed];
     components?: [MessageActionRow];
@@ -339,10 +352,9 @@ declare module 'gcommands' {
     allowedMentions?: [object];
   }
 
-  interface CommandEditOptions {
-    content: [string | MessageEmbed];
-    embeds?: [MessageEmbed];
-    components?: [MessageActionRow];
+  interface GPayloadFiles {
+    files?: [MessageAttachment | MessageAttachment[]];
+    attachments?: [MessageAttachment | MessageAttachment[]];
   }
 
   interface MessageEditAndUpdateOptions {

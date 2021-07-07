@@ -1,5 +1,6 @@
 const { APIMessage, Structures, Message, MessagePayload } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector')
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
+const GPayload = require('./GPayload');
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 
 if(!ifDjsV13) {
@@ -19,42 +20,13 @@ if(!ifDjsV13) {
              * @returns {Promise}
             */
             async buttons(result) {
-                if(result.inlineReply == undefined) result.inlineReply = true;
-                var data = {}
-
-                if(typeof result != "object") data.content = result;
-                if(typeof result == "object" && !result.content) data.embeds = [result];
-                if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-                if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
-                if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-                if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-                if(typeof result == "object" && result.inlineReply && this.channel.lastMessageID) data.message_reference = { message_id: this.channel.lastMessageID }
-                if(typeof result == "object" && result.components) {
-                    if(!Array.isArray(result.components)) result.components = [result.components];
-                    data.components = result.components;
-                }
-                if(typeof result == "object" && result.embeds) {
-                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                    data.embeds = result.embeds;
-                }
-        
-                let finalFiles = [];
-                if(typeof result == "object" && (result.attachments || result.files)) {
-                    let attachments = result.attachments || result.files
-        
-                    if(!Array.isArray(attachments)) attachments = [attachments]
-                    attachments.forEach(file => {
-                        finalFiles.push({
-                            attachment: file.attachment,
-                            name: file.name,
-                            file: file.attachment
-                        })
-                    })
-                }
+                let GPayloadResult = GPayload.create(this.channel, result)
+                    .resolveData()
+                    .resolveFiles();
 
                 return this.client.api.channels[this.channel.id].messages.post({
-                    data,
-                    files: finalFiles
+                    data: GPayloadResult.data,
+                    files: GPayloadResult.files
                 })
                 .then(d => this.client.actions.MessageCreate.handle(d).message);
             }
@@ -66,46 +38,12 @@ if(!ifDjsV13) {
              * @returns {Promise}
             */
             async buttonsEdit(msgID, content, options) {
-                var embed = null;
-                if(typeof content == "object") {
-                    embed = content;
-                    content = "\u200B"
-                }
-    
-                if(!options.allowedMentions) {
-                    options.allowedMentions = { parse: [] };
-                }
-    
-                if(options.components) {
-                    if(!Array.isArray(options.components)) options.components = [options.components];
-                    options.components = options.components;
-                }
-                if(options.embeds) {
-                    if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
-                    options.embeds = options.embeds;
-                }
-    
-                let finalFiles = [];
-                if(options.attachments) {
-                    if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
-                    options.attachments.forEach(file => {
-                        finalFiles.push({
-                            attachment: file.attachment,
-                            name: file.name,
-                            file: file.attachment
-                        })
-                    })
-                }
+                let GPayloadResult = GPayload.create(this.channel, result)
+                    .resolveData()
+                    .resolveFiles();
     
                 return this.client.api.channels[this.channel.id].messages[msgID].patch({
-                    data: {
-                        allowed_mentions: options.allowedMentions,
-                        content: content,
-                        components: options.components,
-                        options,
-                        embed: embed || null
-                    },
-                    files: finalFiles
+                    data: GPayloadResult.data
                 })
                 .then(d => this.client.actions.MessageCreate.handle(d).message);
             }
@@ -115,33 +53,21 @@ if(!ifDjsV13) {
              * @param {Object} options 
             */
             async edit(result) {
-                var data = {}
-        
-                if(typeof result != "object") data.content = result;
-                if(typeof result == "object" && !result.content) data.embeds = [result];
-                if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-                if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
-                if(typeof result == "object" && result.components) {
-                    if(!Array.isArray(result.components)) result.components = [result.components];
-                    data.components = result.components;
-                }
-                if(typeof result == "object" && result.embeds) {
-                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                    data.embeds = result.embeds;
-                }
-                if(result.embeds && !result.content) result.content = "\u200B"
+                let GPayloadResult = GPayload.create(this.channel, result)
+                    .resolveData()
+                    .resolveFiles();
 
                 if(result.edited == false) {
                     return this.client.api.channels(this.channel.id).messages[this.id].patch({
                         data: {
                             type: 7,
-                            data
+                            data: GPayloadResult.data
                         },
                     }).then(d => this.client.actions.MessageCreate.handle(d).message);
                 }
 
                 let apiMessage = (await this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
-                    data
+                    data: GPayloadResult.data
                 }))
         
                 if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
@@ -163,26 +89,14 @@ if(!ifDjsV13) {
              * @param {Object} options 
             */
             async update(result) {
-                var data = {}
-        
-                if(typeof result != "object") data.content = result;
-                if(typeof result == "object" && !result.content) data.embeds = [result];
-                if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-                if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
-                if(typeof result == "object" && result.components) {
-                    if(!Array.isArray(result.components)) result.components = [result.components];
-                    data.components = result.components;
-                }
-                if(typeof result == "object" && result.embeds) {
-                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                    data.embeds = result.embeds;
-                }
-                if(result.embeds && !result.content) result.content = "\u200B"
-
+                let GPayloadResult = GPayload.create(this.channel, result)
+                    .resolveData()
+                    .resolveFiles();
+                
                 return this.client.api.channels(this.channel.id).messages[this.id].patch({
                     data: {
                         type: 7,
-                        data
+                        data: GPayloadResult.data
                     },
                 }).then(d => this.client.actions.MessageCreate.handle(d).message);
             }
@@ -264,43 +178,15 @@ if(!ifDjsV13) {
      * @returns {Promise}
     */
     buttons: async function(result) {
-        if(result.inlineReply == undefined) result.inlineReply = true;
         this.client = result.client, this.channel = result.channel
-        var data = {}
 
-        if(typeof result != "object") data.content = result;
-        if(typeof result == "object" && !result.content) data.embeds = [result];
-        if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-        if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
-        if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-        if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-        if(typeof result == "object" && result.inlineReply && this.channel.lastMessageID) data.message_reference = { message_id: this.channel.lastMessageID }
-        if(typeof result == "object" && result.components) {
-            if(!Array.isArray(result.components)) result.components = [result.components];
-            data.components = result.components;
-        }
-        if(typeof result == "object" && result.embeds) {
-            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-            data.embeds = result.embeds;
-        }
-
-        let finalFiles = [];
-        if(typeof result == "object" && (result.attachments || result.files)) {
-            let attachments = result.attachments || result.files
-
-            if(!Array.isArray(attachments)) attachments = [attachments]
-            attachments.forEach(file => {
-                finalFiles.push({
-                    attachment: file.attachment,
-                    name: file.name,
-                    file: file.attachment
-                })
-            })
-        }
+        let GPayloadResult = GPayload.create(this.channel, result)
+            .resolveData()
+            .resolveFiles();
 
         return this.client.api.channels[this.channel.id].messages.post({
-            data,
-            files: finalFiles
+            data: GPayloadResult.data,
+            files: GPayloadResult.files
         })
         .then(d => this.client.actions.MessageCreate.handle(d).message);
     },
@@ -313,46 +199,14 @@ if(!ifDjsV13) {
     */
     buttonsEdit: async function(msgID, content, options) {
         this.client = options.client, this.channel = options.channel
-        var embed = null;
-        if(typeof content == "object") {
-            embed = content;
-            content = "\u200B"
-        }
 
-        if(!options.allowedMentions) {
-            options.allowedMentions = { parse: [] };
-        }
-
-        if(options.components) {
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-        }
-        if(options.embeds) {
-            if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
-            options.embeds = options.embeds;
-        }
-
-        let finalFiles = [];
-        if(options.attachments) {
-            if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
-            options.attachments.forEach(file => {
-                finalFiles.push({
-                    attachment: file.attachment,
-                    name: file.name,
-                    file: file.attachment
-                })
-            })
-        }
+        let GPayloadResult = GPayload.create(this.channel, result)
+            .resolveData()
+            .resolveFiles();
 
         return this.client.api.channels[this.channel.id].messages[msgID].patch({
-            data: {
-                allowed_mentions: options.allowedMentions,
-                content: content,
-                components: options.components,
-                options,
-                embed: embed || null
-            },
-            files: finalFiles
+            data: GPayloadResult.data,
+            files: GPayloadResult.files
         })
         .then(d => this.client.actions.MessageCreate.handle(d).message);
     },

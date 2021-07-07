@@ -4,7 +4,8 @@ const {Client, MessageEmbed, Guild, NewsChannel, GuildMember, User, Message} = r
 const Color = require("../structures/Color");
 const GMessage = require("./GMessage");
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
-const { interactionRefactor } = require("../util/util")
+const { interactionRefactor } = require("../util/util");
+const GPayload = require("./GPayload");
 
 /**
  * The InteractionEvent class
@@ -247,45 +248,16 @@ class InteractionEvent {
     }
 
     async slashRespond(result) {
-        var data = {}
-
-        if(typeof result != "object") data.content = result;
-        if(typeof result == "object" && !result.content && result instanceof MessageEmbed) data.embeds = [result];
-        if(typeof result == "object" && !result.content && result instanceof MessageAttachment) result.attachments = [result];
-        if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-        if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageEmbed) data.embeds = [result.content];
-        if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageAttachment) data.attachments = [result.content];
-        if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-        if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-        if(typeof result == "object" && result.components) {
-            if(!Array.isArray(result.components)) result.components = [result.components];
-            data.components = result.components;
-        }
-        if(typeof result == "object" && result.embeds) {
-            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-            data.embeds = result.embeds;
-        }
-
-        let finalFiles = [];
-        if(typeof result == "object" && (result.attachments || result.files)) {
-            let attachments = result.attachments || result.files
-
-            if(!Array.isArray(attachments)) attachments = [attachments]
-            attachments.forEach(file => {
-                finalFiles.push({
-                    attachment: file.attachment,
-                    name: file.name,
-                    file: file.attachment
-                })
-            })
-        }
+        let GPayloadResult = GPayload.create(this.channel, result)
+            .resolveData()
+            .resolveFiles();
 
         let apiMessage = (await this.client.api.interactions(this.discordID, this.token).callback.post({
             data: {
                 type: result.thinking ? 5 : 4,
-                data
+                data: GPayloadResult.data
             },
-            files: finalFiles
+            files: GPayloadResult.files
         }))
 
         let apiMessageMsg = {};
@@ -312,33 +284,21 @@ class InteractionEvent {
     }
 
     async slashEdit(result, update) {
-        var data = {}
+        let GPayloadResult = GPayload.create(this.channel, result)
+            .resolveData()
+            .resolveFiles();
         
-        if(typeof result != "object") data.content = result;
-        if(typeof result == "object" && !result.content) data.embeds = [result];
-        if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-        if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
-        if(typeof result == "object" && result.components) {
-            if(!Array.isArray(result.components)) result.components = [result.components];
-            data.components = result.components;
-        }
-        if(typeof result == "object" && result.embeds) {
-            if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-            data.embeds = result.embeds;
-        }
-        if(result.embeds && !result.content) result.content = "\u200B"
-
         let apiMessage = {}
         if(update) {
             apiMessage = this.client.api.interactions(this.discordID, this.token).callback.post({
                 data: {
                     type: 7,
-                    data
+                    data: GPayloadResult.data
                 },
             })
         } else {
             apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                data
+                data: GPayloadResult.data
             }))
         }
 

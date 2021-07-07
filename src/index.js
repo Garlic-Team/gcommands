@@ -23,10 +23,9 @@ module.exports = {
     MessageSelectMenuOption: require("./structures/MessageSelectMenuOption"),
     Command: require("./structures/Command"),
     Event: require("./structures/Event"),
-
+    GPayload: require("./structures/GPayload"),
     ButtonCollectorV12: require("./structures/v13/ButtonCollector"),
     ButtonCollectorV13: require("./structures/v12/ButtonCollector"),
-
     SelectMenuCollectorV12: require("./structures/v13/SelectMenuCollector"),
     SelectMenuCollectorV13: require("./structures/v12/SelectMenuCollector"),
 

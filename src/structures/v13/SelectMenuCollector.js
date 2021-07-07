@@ -79,7 +79,7 @@ class SelectMenuCollector extends Collector {
   }
 
   static key(menu) {
-    return menu.selectMenuId;
+    return menu.id;
   }
 }
 

@@ -1,6 +1,7 @@
 const { Structures, MessageEmbed, MessageAttachment, TextChannel } = require("discord.js");
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector')
-const updater = require("../util/updater")
+const updater = require("../util/updater");
+const GPayload = require("./GPayload");
 
 if(!updater.checkDjsVersion("13")) {
     module.exports = Structures.extend("DMChannel", DMChannel => {
@@ -10,45 +11,13 @@ if(!updater.checkDjsVersion("13")) {
             }
 
             async send(result) {
-                var data = {}
-
-                if(typeof result != "object") data.content = result;
-                if(typeof result == "object" && result.inlineReply == undefined) result.inlineReply = true;
-                if(typeof result == "object" && !result.content && result instanceof MessageEmbed) data.embeds = [result];
-                if(typeof result == "object" && !result.content && result instanceof MessageAttachment) result.attachments = [result];
-                if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
-                if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageEmbed) data.embeds = [result.content];
-                if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageAttachment) data.attachments = [result.content];
-                if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
-                if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
-                if(typeof result == "object" && result.inlineReply && this.lastMessageID) data.message_reference = { message_id: this.lastMessageID }
-                if(typeof result == "object" && result.components) {
-                    if(!Array.isArray(result.components)) result.components = [result.components];
-                    data.components = result.components;
-                }
-                if(typeof result == "object" && result.embeds) {
-                    if(!Array.isArray(result.embeds)) result.embeds = [result.embeds]
-                    data.embeds = result.embeds;
-                }
-                if(result.embeds && !result.content) result.content = "\u200B"
-
-                let finalFiles = [];
-                if(typeof result == "object" && (result.attachments || result.files)) {
-                    let attachments = result.attachments || result.files
-
-                    if(!Array.isArray(attachments)) attachments = [attachments]
-                    attachments.forEach(file => {
-                        finalFiles.push({
-                            attachment: file.attachment,
-                            name: file.name,
-                            file: file.attachment
-                        })
-                    })
-                }
+                let GPayloadResult = GPayload.create(this, result)
+                    .resolveData()
+                    .resolveFiles();
 
                 return this.client.api.channels[this.id].messages.post({
-                    data,
-                    files: finalFiles
+                    data: GPayloadResult.data,
+                    files: GPayloadResult.files
                 })
                 .then(d => this.client.actions.MessageCreate.handle(d).message);
             }
