@@ -1,0 +1,26 @@
+name: Lint (Node 16.x)
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.x
+    - name: Lint
+      uses: github/super-linter@v3
+      env:
+        VALIDATE_ALL_CODEBASE: true
+        VALIDATE_JAVASCRIPT_ES: true
+        DEFAULT_BRANCH: master
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
