@@ -17,13 +17,10 @@
   },
   "keywords": [
     "gcommands",
-    "cmdhandler",
-    "slashcommandhandler",
-    "slashcmds",
-    "slash commands",
-    "handler slash commands",
-    "command handler",
-    "discord js slash"
+    "command",
+    "discord bot",
+    "handler",
+    "slash command handler"
   ],
   "author": "Garlic-Team",
   "license": "MIT",
@@ -32,6 +29,9 @@
   },
   "scripts": {
     "docs:build": "jsdoc2md ./src/**/** > docs.md"
+  },
+  "engines": {
+    "node": ">=12.0.0"
   },
   "homepage": "https://gcommands.js.org"
 }
