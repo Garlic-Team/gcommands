@@ -507,7 +507,7 @@ The MessageStructure structure
 **Extends**: <code>Message</code>  
 
 * [GCommandsMessage](#GCommandsMessage) ⇐ <code>Message</code>
-    * [.buttons(content, options)](#GCommandsMessage+buttons) ⇒ <code>Promise</code>
+    * [.buttons(result)](#GCommandsMessage+buttons) ⇒ <code>Promise</code>
     * [.buttonsEdit(content, options)](#GCommandsMessage+buttonsEdit) ⇒ <code>Promise</code>
     * [.edit(options)](#GCommandsMessage+edit)
     * [.update(options)](#GCommandsMessage+update)
@@ -515,15 +515,14 @@ The MessageStructure structure
 
 <a name="GCommandsMessage+buttons"></a>
 
-### gCommandsMessage.buttons(content, options) ⇒ <code>Promise</code>
+### gCommandsMessage.buttons(result) ⇒ <code>Promise</code>
 Method to make buttons
 
 **Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
 
 | Param | Type |
 | --- | --- |
-| content | <code>String</code> | 
-| options | <code>Object</code> | 
+| result | <code>Object</code> \| <code>String</code> \| <code>MessageEmbed</code> \| <code>MessageAttachment</code> | 
 
 <a name="GCommandsMessage+buttonsEdit"></a>
 
