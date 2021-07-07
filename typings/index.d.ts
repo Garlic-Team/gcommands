@@ -288,7 +288,6 @@ declare module 'gcommands' {
     public aliases: Array;
 
     public run(options: CommandRunOptions, args: Array, args2: Object | Array): void;
-    public onTest(reason: 'throttling', data: { throttle: object, remaining: number }): Promise<String>;
   }
 
   interface GEvents {
