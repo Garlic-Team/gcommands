@@ -303,7 +303,7 @@ if(!ifDjsV13) {
         }
 
         if(result.inlineReply) {
-            result.message_reference = {
+            data.message_reference = {
                 message_id: this.channel.lastMessageID
             }
         }

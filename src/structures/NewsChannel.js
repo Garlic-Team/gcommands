@@ -1,4 +1,4 @@
-const { Structures, MessageEmbed, NewsChannel } = require("discord.js");
+const { Structures, MessageEmbed, MessageAttachment, TextChannel } = require("discord.js");
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector')
 const updater = require("../util/updater")
 
@@ -10,6 +10,7 @@ if(!updater.checkDjsVersion("13")) {
             }
 
             async send(result) {
+                if(result.inlineReply == undefined) result.inlineReply = true;
                 var data = {}
 
                 if(typeof result != "object") data.content = result;
@@ -29,6 +30,11 @@ if(!updater.checkDjsVersion("13")) {
                     data.embeds = result.embeds;
                 }
                 if(result.embeds && !result.content) result.content = "\u200B"
+                if(result.inlineReply) {
+                    data.message_reference = {
+                        message_id: this.lastMessageID
+                    }
+                }
 
                 let finalFiles = [];
                 if(typeof result == "object" && (result.attachments || result.files)) {
