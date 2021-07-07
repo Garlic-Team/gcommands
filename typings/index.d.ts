@@ -290,6 +290,15 @@ declare module 'gcommands' {
     public run(options: CommandRunOptions, args: Array, args2: Object | Array): void;
   }
 
+  export class Event {
+    constructor(client: Client, options: EventOptions)
+
+    public name: string;
+    public once: boolean;
+
+    public run(client: Client, ...args): void;
+  }
+
   interface GEvents {
     debug: [string];
     log: [string];
@@ -359,5 +368,10 @@ declare module 'gcommands' {
     guildOnly?: Array | Snowflake;
     nsfw?: boolean;
     aliases?: Array;
+  }
+
+  interface EventOptions {
+    name: string;
+    once: boolean;
   }
 }

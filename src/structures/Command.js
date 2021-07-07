@@ -1,4 +1,5 @@
 const { Snowflake } = require("discord.js");
+const { resolveString } = require("../util/util");
 const Color = require("./Color");
 
 class Command {
@@ -7,19 +8,19 @@ class Command {
          * Name
          * @type {String}
          */
-        this.name = String(options.name);
+        this.name = resolveString(options.name);
 
         /**
          * Description
          * @type {String}
          */
-        this.description = String(options.description);
+        this.description = resolveString(options.description);
 
         /**
          * Cooldown
          * @type {String}
          */
-        this.cooldown = String(options.cooldown);
+        this.cooldown = resolveString(options.cooldown);
 
         /**
          * expectedArgs
