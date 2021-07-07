@@ -10,10 +10,10 @@ if(!updater.checkDjsVersion("13")) {
             }
 
             async send(result) {
-                if(result.inlineReply == undefined) result.inlineReply = true;
                 var data = {}
 
                 if(typeof result != "object") data.content = result;
+                if(typeof result == "object" && result.inlineReply == undefined) result.inlineReply = true;
                 if(typeof result == "object" && !result.content && result instanceof MessageEmbed) data.embeds = [result];
                 if(typeof result == "object" && !result.content && result instanceof MessageAttachment) result.attachments = [result];
                 if(typeof result == "object" && typeof result.content != "object") data.content = result.content;
