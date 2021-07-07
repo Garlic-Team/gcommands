@@ -10,11 +10,11 @@
 <dt><a href="#GCommandsDispatcher">GCommandsDispatcher</a></dt>
 <dd><p>The GCommansDispatcher class</p>
 </dd>
-<dt><a href="#GEvents">GEvents</a></dt>
-<dd><p>The GEvents class</p>
+<dt><a href="#GEventHandling">GEventHandling</a></dt>
+<dd><p>The GEventHandling class</p>
 </dd>
 <dt><a href="#GEventLoader">GEventLoader</a></dt>
-<dd><p>The GCommandsEventLoader class</p>
+<dd><p>The GEventLoader class</p>
 </dd>
 <dt><a href="#Color">Color</a></dt>
 <dd><p>The Color class</p>
@@ -376,80 +376,80 @@ Internal method to createButtonCollector
 | filter | <code>function</code> | 
 | options | <code>Object</code> | 
 
-<a name="GEvents"></a>
+<a name="GEventHandling"></a>
 
-## GEvents
-The GEvents class
-
-**Kind**: global class  
-
-* [GEvents](#GEvents)
-    * [new GEvents(client, options)](#new_GEvents_new)
-    * [.eventDir](#GEvents+eventDir) : <code>GEventsOptions</code>
-
-<a name="new_GEvents_new"></a>
-
-### new GEvents(client, options)
-Creates new GEvents instance
-
-
-| Param | Type |
-| --- | --- |
-| client | <code>DiscordClient</code> | 
-| options | <code>GEventsOptions</code> | 
-
-<a name="GEvents+eventDir"></a>
-
-### gEvents.eventDir : <code>GEventsOptions</code>
-GEventsOptions options
-
-**Kind**: instance property of [<code>GEvents</code>](#GEvents)  
-**Properties**
-
-| Name | Type |
-| --- | --- |
-| eventDir | <code>String</code> | 
-
-<a name="GEventLoader"></a>
-
-## GEventLoader
-The GCommandsEventLoader class
+## GEventHandling
+The GEventHandling class
 
 **Kind**: global class  
 
-* [GEventLoader](#GEventLoader)
-    * [new GEventLoader(GCommandsClient)](#new_GEventLoader_new)
-    * [.GCommandsClient](#GEventLoader+GCommandsClient)
-    * [.getSlashArgs()](#GEventLoader+getSlashArgs) ⇒ <code>object</code>
+* [GEventHandling](#GEventHandling)
+    * [new GEventHandling(GCommandsClient)](#new_GEventHandling_new)
+    * [.GCommandsClient](#GEventHandling+GCommandsClient)
+    * [.getSlashArgs()](#GEventHandling+getSlashArgs) ⇒ <code>object</code>
 
-<a name="new_GEventLoader_new"></a>
+<a name="new_GEventHandling_new"></a>
 
-### new GEventLoader(GCommandsClient)
-Creates new GCommandsEventLoader instance
+### new GEventHandling(GCommandsClient)
+Creates new GEventHandling instance
 
 
 | Param | Type |
 | --- | --- |
 | GCommandsClient | <code>GCommandsClient</code> | 
 
-<a name="GEventLoader+GCommandsClient"></a>
+<a name="GEventHandling+GCommandsClient"></a>
 
-### gEventLoader.GCommandsClient
-GCommandsEventLoader options
+### gEventHandling.GCommandsClient
+GEventHandling options
 
-**Kind**: instance property of [<code>GEventLoader</code>](#GEventLoader)  
+**Kind**: instance property of [<code>GEventHandling</code>](#GEventHandling)  
 **Properties**
 
 | Name | Type |
 | --- | --- |
 | GCommandsClient | <code>Object</code> | 
 
-<a name="GEventLoader+getSlashArgs"></a>
+<a name="GEventHandling+getSlashArgs"></a>
 
-### gEventLoader.getSlashArgs() ⇒ <code>object</code>
+### gEventHandling.getSlashArgs() ⇒ <code>object</code>
 Internal method to getSlashArgs
 
-**Kind**: instance method of [<code>GEventLoader</code>](#GEventLoader)  
+**Kind**: instance method of [<code>GEventHandling</code>](#GEventHandling)  
+<a name="GEventLoader"></a>
+
+## GEventLoader
+The GEventLoader class
+
+**Kind**: global class  
+
+* [GEventLoader](#GEventLoader)
+    * [new GEventLoader(client, options)](#new_GEventLoader_new)
+    * [.GCommandsClient](#GEventLoader+GCommandsClient) : <code>GEventLoaderOptions</code>
+
+<a name="new_GEventLoader_new"></a>
+
+### new GEventLoader(client, options)
+Creates new GEventLoader instance
+
+
+| Param | Type |
+| --- | --- |
+| client | <code>DiscordClient</code> | 
+| options | <code>GEventLoaderOptions</code> | 
+
+<a name="GEventLoader+GCommandsClient"></a>
+
+### gEventLoader.GCommandsClient : <code>GEventLoaderOptions</code>
+GEventLoader options
+
+**Kind**: instance property of [<code>GEventLoader</code>](#GEventLoader)  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| eventDir | <code>String</code> | 
+
 <a name="Color"></a>
 
 ## Color
