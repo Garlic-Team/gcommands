@@ -1,4 +1,4 @@
-import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User } from 'discord.js';
+import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish';
@@ -272,6 +272,8 @@ declare module 'gcommands' {
 
   export class Command {
     constructor(client: Client, options: CommandOptions)
+
+    public run(options: CommandRunOptions, args: Array, args: Object | Array) : void;
   }
 
   interface GEvents {
@@ -293,6 +295,18 @@ declare module 'gcommands' {
     database?: string;
   }
 
+  interface CommandRunOptions {
+    client: Client,
+    interaction: Object,
+    member: GuildMember,
+    message: Message,
+    guild: Guild,
+    channel: TextChannel | NewsChannel,
+    
+    respond(options: string | CommandRespondOptions): void;
+    edit(options: string | CommandEditOptions): void;
+  }
+
   interface RespondOptions {
     content: [string | MessageEmbed];
     embeds?: [MessageEmbed];
@@ -300,6 +314,12 @@ declare module 'gcommands' {
     attachments?: [MessageAttachment | MessageAttachment[]];
     ephemeral?: [boolean];
     allowedMentions?: [object];
+  }
+
+  interface CommandEditOptions {
+    content: [string | MessageEmbed];
+    embeds?: [MessageEmbed];
+    components?: [MessageActionRow];
   }
 
   interface MessageEditAndUpdateOptions {
