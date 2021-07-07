@@ -75,7 +75,6 @@ class GCommands extends GCommandsBase {
         */
         this.database = options.database || undefined;
 
-        this.client.categories = fs.readdirSync("./" + this.cmdDir );
         this.client.gcommands = new Collection();
         this.client.galiases = new Collection();
 
@@ -105,7 +104,6 @@ class GCommands extends GCommandsBase {
         this.client.defaultCooldown = this.defaultCooldown;
         this.client.autoTyping = this.autoTyping ? msToSeconds(ms(this.autoTyping)) : null;
 
-        process.setMaxListeners(50);
         process.on('uncaughtException', (error) => {
             this.emit(Events.LOG, new Color("&d[GCommands Errors] &eHandled: &a" + error + ` ${error.response ? error.response.data.message : ""} ${error.response ? error.response.data.code : ""} | use debug for full error`).getText());
             setTimeout(() => {this.emit(Events.DEBUG, error)}, 1000)

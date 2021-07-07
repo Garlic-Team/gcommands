@@ -1,5 +1,3 @@
-const {Collection,MessageEmbed,APIMessage} = require("discord.js")
-
 module.exports = {
     /**
      * Internal method to deleteCmd

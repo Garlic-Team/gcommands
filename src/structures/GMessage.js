@@ -279,6 +279,7 @@ if(!ifDjsV13) {
         if(typeof result == "object" && typeof result.content == "object") data.embeds = [result.content];
         if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
         if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+        if(typeof result == "object" && result.inlineReply) data.message_reference = { message_id: this.channel.lastMessageID }
         if(typeof result == "object" && result.components) {
             if(!Array.isArray(result.components)) result.components = [result.components];
             data.components = result.components;
@@ -300,12 +301,6 @@ if(!ifDjsV13) {
                     file: file.attachment
                 })
             })
-        }
-
-        if(result.inlineReply) {
-            data.message_reference = {
-                message_id: this.channel.lastMessageID
-            }
         }
 
         return this.client.api.channels[this.channel.id].messages.post({

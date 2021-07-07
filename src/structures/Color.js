@@ -1,3 +1,5 @@
+const { resolveString } = require("../util/util");
+
 /**
  * The Color class
  */
@@ -16,21 +18,10 @@ class Color {
          * @param {ColorOptions} json
          * @type {ColorOptions}
         */
-		this.text = text;
+		this.text = resolveString(text);
 
 		this.json = options.json;
 
-		if(typeof this.text == "object") {
-			this.text2 = "";
-			var i;
-			for (i = 0; i < this.text.length; i++) {
-				this.text2 += text[i] + "\n"
-			}
-		}
-
-		if(this.text2) {
-			this.text = this.text2
-		}
         this.text = this.text
 			// COLORS
 			.replace(/&c/g, "\x1b[31m")

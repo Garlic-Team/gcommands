@@ -21,6 +21,7 @@ if(!updater.checkDjsVersion("13")) {
                 if(typeof result == "object" && typeof result.content == "object" && result.content instanceof MessageAttachment) data.attachments = [result.content];
                 if(typeof result == "object" && result.allowedMentions) { data.allowedMentions = result.allowedMentions } else data.allowedMentions = { parse: [], repliedUser: true }
                 if(typeof result == "object" && result.ephemeral) { data.flags = 64 }
+                if(typeof result == "object" && result.inlineReply) data.message_reference = { message_id: this.channel.lastMessageID }
                 if(typeof result == "object" && result.components) {
                     if(!Array.isArray(result.components)) result.components = [result.components];
                     data.components = result.components;
@@ -30,11 +31,6 @@ if(!updater.checkDjsVersion("13")) {
                     data.embeds = result.embeds;
                 }
                 if(result.embeds && !result.content) result.content = "\u200B"
-                if(result.inlineReply) {
-                    data.message_reference = {
-                        message_id: this.lastMessageID
-                    }
-                }
 
                 let finalFiles = [];
                 if(typeof result == "object" && (result.attachments || result.files)) {

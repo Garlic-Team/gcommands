@@ -127,7 +127,7 @@ class GCommandLoader {
                             name: option,
                             description: optionDescription || option,
                             type: parseInt(optionType) || 3,
-                            required: a < cmd.minArgs ? cmd.minArgs : 0,
+                            required: a < cmd.minArgs,
                         })
                     }
                 }
@@ -350,8 +350,9 @@ class GCommandLoader {
                 var keys = Array.from(this.client.gcommands.keys());
                 keys.forEach(cmdname => {
                     nowCMDS.push(cmdname)
+                    let command = this.client.gcommands.get(cmdname);
 
-                    if(this.client.gcommands.get(cmdname).slash == false || this.client.gcommands.get(cmdname).slash == "false") {
+                    if(command.slash == false || command.slash == "false") {
                         allcmds.forEach(cmd => {
                             if(cmd.name == cmdname) {
                                 cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)

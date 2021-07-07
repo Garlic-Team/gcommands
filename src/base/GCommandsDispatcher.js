@@ -167,7 +167,7 @@ class GCommandsDispatcher {
         this.client.application = await this.client.fetchApplication()
         if(this.client.application.owner instanceof Team) {
             this.client.application.owners = this.client.application.owner.members.array().map(teamMember => teamMember.user)
-        } else this.client.application.owners = this.client.application.owner
+        } else this.client.application.owners = [this.client.application.owner]
 
         return this.client.application.owners;
     }
