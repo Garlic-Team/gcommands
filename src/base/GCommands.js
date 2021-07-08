@@ -69,8 +69,22 @@ class GCommands extends GCommandsBase {
         */
         this.database = options.database || undefined;
 
+        /**
+         * gcategories
+         * @property {Array}
+         */
         this.client.gcategories = fs.readdirSync(`./${this.cmdDir}`)
+
+        /**
+         * gcommands
+         * @property {Collection}
+         */
         this.client.gcommands = new Collection();
+
+        /**
+         * galiases
+         * @property {Collection}
+         */
         this.client.galiases = new Collection();
 
         /**

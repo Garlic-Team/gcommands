@@ -15,6 +15,10 @@ class MessageSelectMenuOption {
 
     setup(data) {
         this.label = 'label' in data ? resolveString(data.label) : null;
+        this.value = 'value' in data ? resolveString(data.value) : null;
+        this.description = 'description' in data ? resolveString(data.description) : null;
+        this.emoji = 'emoji' in data ? parseEmoji(data.emoji) : null;
+        this.default = 'default' in data ? Boolean(data.default) : false;
 
         return this.toJSON();
     }

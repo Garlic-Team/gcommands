@@ -10,12 +10,14 @@ class MessageActionRow {
      * @param {Object} data 
     */
     constructor(data = {}) {
+        this.type = 1;
+        this.components = [];
+
         this.setup(data);
     }
 
     setup(data) {
-        this.type = 1;
-        this.components = [];
+        this.components = 'components' in data ? Array(data.components) : [];
 
         return this.toJSON();
     }

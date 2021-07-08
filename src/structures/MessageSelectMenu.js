@@ -11,13 +11,19 @@ class MessageSelectMenu {
      * @param {Object} data 
     */
     constructor(data = {}) {
+        this.type = 3;
         this.options = [];
 
         this.setup(data);
     }
 
     setup(data) {
-        this.type = 3;
+        this.placeholder = 'placeholder' in data ? resolveString(data.placeholder) : null;
+        this.max_values = 'max_values' in data ? Number(data.max_values) : 1;
+        this.min_values = 'min_values' in data ? Number(data.min_values) : 1;
+        this.id = 'id' in data ? resolveString(data.id) : null;
+        this.options = 'options' in data ? Array(data.options) : [];
+        this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
         return this.toJSON();
     }
@@ -55,6 +61,15 @@ class MessageSelectMenu {
     */
     setID(id) {
         this.custom_id = this.style === 5 ? null : resolveString(id);
+        return this;
+    }
+
+    /**
+     * Method to setDisabled
+     * @param {String} boolean 
+    */
+     setDisabled(boolean = true) {
+        this.disabled = Boolean(boolean);
         return this;
     }
 
@@ -101,6 +116,7 @@ class MessageSelectMenu {
             max_values: this.max_values || this.options.length,
             placeholder: this.placeholder || "",
             custom_id: this.custom_id,
+            disabled: this.disabled,
             options: this.options
         }
     }

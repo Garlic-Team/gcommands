@@ -213,6 +213,7 @@ declare module 'gcommands' {
     public setMaxValues(max: number): MessageSelectMenu;
     public setMinValues(min: number): MessageSelectMenu;
     public setID(id: number): MessageSelectMenu;
+    public setDisabled(disabled: boolean): MessageSelectMenu;
     public addOption(option: MessageSelectMenuOption)
     public addOptions(...options: MessageSelectMenuOption[])
     public removeOptions(index: number, deleteCount: number, ...options: MessageSelectMenuOption[])
