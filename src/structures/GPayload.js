@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageAttachment, TextChannel, NewsChannel, DMChannel } = require("discord.js");
+const { MessageEmbed, MessageAttachment } = require("discord.js");
 
 class GPayload {
     constructor(channel, options) {
