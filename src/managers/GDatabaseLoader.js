@@ -32,7 +32,8 @@ class GDatabaseLoader {
         let allShardsWithGuilds = await this.__getAllGuilds();
         allShardsWithGuilds.forEach(async(allGuilds) => {
             allGuilds.forEach(async (guild) => {
-                let prefix = await this.client.dispatcher.getGuildPrefix(guild.id, false), language = await this.client.dispatcher.getGuildLanguage(guild.id, false)
+                let prefix = await this.client.dispatcher.getGuildPrefix(guild.id, false), language = await this.client.dispatcher.getGuildLanguage(guild.id, false);
+
                 guild.prefix = prefix;
                 guild.language = language;
     
@@ -43,16 +44,18 @@ class GDatabaseLoader {
                 }
 
                 guild.getLanguage = async(cache = true) => this.client.dispatcher.getGuildLanguage(guild.id, cache);
-                guild.setLanguage = async(prefix) => {
+                guild.setLanguage = async(lang) => {
                     this.client.dispatcher.setGuildLanguage(guild.id, lang);
                     this.client.emit('guildLanguageChange', guild, guild.language);
                 }
             })
         })
 
-        this.client.on("guildCreate", (guild) => {
-            guild.prefix = this.client.dispatcher.getGuildPrefix(guild.id, false)
-            guild.language = this.client.dispatcher.getGuildLanguage(guild.id, false)
+        this.client.on("guildCreate", async(guild) => {
+            let prefix = await this.client.dispatcher.getGuildPrefix(guild.id, false), language = await this.client.dispatcher.getGuildLanguage(guild.id, false);
+
+            guild.prefix = prefix;
+            guild.language = language;
 
             guild.getCommandPrefix = async(cache = true) => this.client.dispatcher.getGuildPrefix(guild.id, cache);
             guild.setCommandPrefix = async(prefix) => {
@@ -61,7 +64,7 @@ class GDatabaseLoader {
             }
 
             guild.getLanguage = async(cache = true) => this.client.dispatcher.getGuildLanguage(guild.id, cache);
-            guild.setLanguage = async(prefix) => {
+            guild.setLanguage = async(lang) => {
                 this.client.dispatcher.setGuildLanguage(guild.id, lang);
                 this.client.emit('guildLanguageChange', guild, guild.language);
             }
