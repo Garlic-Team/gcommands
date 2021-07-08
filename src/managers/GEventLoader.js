@@ -67,7 +67,7 @@ class GEventLoader {
                     try {
                         let finalFile2;
 
-                        file2 = await require(`../../../../${this.eventDir}${dir}/${cmdFile}`);
+                        file2 = await require(`../../../../${this.eventDir}${dir}/${eventFile}`);
                         if (isClass(file)) {
                             finalFile2 = new file2(this.client)
                             if(!(finalFile2 instanceof Event)) return console.log(new Color(`&d[GEvents] &cEvent ${fileName2} doesnt belong in Events.`).getText());
