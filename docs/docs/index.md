@@ -873,6 +873,7 @@ The MessageSelectMenu class
     * [.setMaxValues(int)](#MessageSelectMenu+setMaxValues)
     * [.setMinValues(int)](#MessageSelectMenu+setMinValues)
     * [.setID(id)](#MessageSelectMenu+setID)
+    * [.setDisabled(boolean)](#MessageSelectMenu+setDisabled)
     * [.addOption(MessageSelectOption)](#MessageSelectMenu+addOption)
     * [.addOptions(MessageSelectOptions)](#MessageSelectMenu+addOptions)
     * [.removeOptions(index, deleteCount, MessageSelectOptions)](#MessageSelectMenu+removeOptions)
@@ -931,6 +932,17 @@ Method to setID
 | Param | Type |
 | --- | --- |
 | id | <code>String</code> | 
+
+<a name="MessageSelectMenu+setDisabled"></a>
+
+### messageSelectMenu.setDisabled(boolean)
+Method to setDisabled
+
+**Kind**: instance method of [<code>MessageSelectMenu</code>](#MessageSelectMenu)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| boolean | <code>String</code> | <code>true</code> | 
 
 <a name="MessageSelectMenu+addOption"></a>
 
