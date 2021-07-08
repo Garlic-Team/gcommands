@@ -19,9 +19,6 @@
 <dt><a href="#Color">Color</a></dt>
 <dd><p>The Color class</p>
 </dd>
-<dt><a href="#GCommandsMessage">GCommandsMessage</a> ⇐ <code>Message</code></dt>
-<dd><p>The MessageStructure structure</p>
-</dd>
 <dt><a href="#InteractionEvent">InteractionEvent</a></dt>
 <dd><p>The InteractionEvent class</p>
 </dd>
@@ -44,6 +41,15 @@
 <dl>
 <dt><a href="#ReturnSystem">ReturnSystem</a></dt>
 <dd><p>Return system for slash</p>
+</dd>
+<dt><a href="#edit">edit</a></dt>
+<dd><p>Method to edit message</p>
+</dd>
+<dt><a href="#update">update</a></dt>
+<dd><p>Method to update message</p>
+</dd>
+<dt><a href="#send">send</a> ⇒ <code>Promise</code></dt>
+<dd><p>Method to send</p>
 </dd>
 </dl>
 
@@ -498,78 +504,6 @@ Internal method to getText
 Internal method to getRGB
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
-<a name="GCommandsMessage"></a>
-
-## GCommandsMessage ⇐ <code>Message</code>
-The MessageStructure structure
-
-**Kind**: global class  
-**Extends**: <code>Message</code>  
-
-* [GCommandsMessage](#GCommandsMessage) ⇐ <code>Message</code>
-    * [.buttons(result)](#GCommandsMessage+buttons) ⇒ <code>Promise</code>
-    * [.buttonsEdit(content, options)](#GCommandsMessage+buttonsEdit) ⇒ <code>Promise</code>
-    * [.edit(options)](#GCommandsMessage+edit)
-    * [.update(options)](#GCommandsMessage+update)
-    * [.inlineReply(content, options)](#GCommandsMessage+inlineReply) ⇒ <code>Promise</code>
-
-<a name="GCommandsMessage+buttons"></a>
-
-### gCommandsMessage.buttons(result) ⇒ <code>Promise</code>
-Method to make buttons
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| result | <code>Object</code> \| <code>String</code> \| <code>MessageEmbed</code> \| <code>MessageAttachment</code> | 
-
-<a name="GCommandsMessage+buttonsEdit"></a>
-
-### gCommandsMessage.buttonsEdit(content, options) ⇒ <code>Promise</code>
-Method to buttonsEdit
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| content | <code>String</code> | 
-| options | <code>Object</code> | 
-
-<a name="GCommandsMessage+edit"></a>
-
-### gCommandsMessage.edit(options)
-Method to edit message
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| options | <code>Object</code> | 
-
-<a name="GCommandsMessage+update"></a>
-
-### gCommandsMessage.update(options)
-Method to update message
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| options | <code>Object</code> | 
-
-<a name="GCommandsMessage+inlineReply"></a>
-
-### gCommandsMessage.inlineReply(content, options) ⇒ <code>Promise</code>
-Method to inlineReply
-
-**Kind**: instance method of [<code>GCommandsMessage</code>](#GCommandsMessage)  
-
-| Param | Type |
-| --- | --- |
-| content | <code>String</code> | 
-| options | <code>Object</code> | 
-
 <a name="InteractionEvent"></a>
 
 ## InteractionEvent
@@ -1146,6 +1080,39 @@ return {
      allowedMentions: { parse: [], repliedUser: true }
  }
 ```
+<a name="edit"></a>
+
+## edit
+Method to edit message
+
+**Kind**: global variable  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+
+<a name="update"></a>
+
+## update
+Method to update message
+
+**Kind**: global variable  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+
+<a name="send"></a>
+
+## send ⇒ <code>Promise</code>
+Method to send
+
+**Kind**: global variable  
+
+| Param | Type |
+| --- | --- |
+| result | <code>Object</code> | 
+
 <a name="respond"></a>
 
 ## respond(result) ⇒ <code>Object</code>
