@@ -105,15 +105,17 @@ class GCommands extends GCommandsBase {
         });
         
         this.client.dispatcher = new GCommandsDispatcher(this.client);
-        setTimeout(() => {
-            new GDatabaseLoader(this.GCommandsClient);
-            new GEventHandling(this.GCommandsClient);
-            new GCommandLoader(this.GCommandsClient);
-            new GEventLoader(this.GCommandsClient);
-        }, 1000)
 
+        this.loadSys()
         GUpdater.__updater();
     }
+
+    async loadSys() {
+        new GDatabaseLoader(this.GCommandsClient)
+        new GEventHandling(this.GCommandsClient)
+        new GEventLoader(this.GCommandsClient)
+        new GCommandLoader(this.GCommandsClient)
+    };
 }
 
 module.exports = GCommands;

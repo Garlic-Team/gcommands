@@ -3,7 +3,6 @@ class GDatabaseLoader {
         this.GCommandsClient = GCommandsClient;
         this.client = this.GCommandsClient.client;
         this.shardClusterName = this.GCommandsClient.shardClusterName
-
         this.__loadDB()
     }
 
@@ -12,7 +11,7 @@ class GDatabaseLoader {
      * @returns {boolean}
      * @private
      */
-    async __loadDB() {
+    __loadDB() {
         let dbType = this.GCommandsClient.database;
         if(!dbType) this.client.database = undefined;
         else { 
@@ -30,26 +29,27 @@ class GDatabaseLoader {
      */
     async __guildConfig() {
         let allShardsWithGuilds = await this.__getAllGuilds();
-        allShardsWithGuilds.forEach(async(allGuilds) => {
-            allGuilds.forEach(async (guild) => {
-                let prefix = await this.client.dispatcher.getGuildPrefix(guild.id, false), language = await this.client.dispatcher.getGuildLanguage(guild.id, false);
 
-                guild.prefix = prefix;
-                guild.language = language;
+        for (let allGuilds of allShardsWithGuilds) {
+            for (let guild of allGuilds) {
+                let prefix = await this.client.dispatcher.getGuildPrefix(guild[1].id, false), language = await this.client.dispatcher.getGuildLanguage(guild[1].id, false);
+
+                guild[1].prefix = prefix;
+                guild[1].language = language;
     
-                guild.getCommandPrefix = async(cache = true) => this.client.dispatcher.getGuildPrefix(guild.id, cache);
-                guild.setCommandPrefix = async(prefix) => {
-                    this.client.dispatcher.setGuildPrefix(guild.id, prefix);
-                    this.client.emit('commandPrefixChange', guild, guild.prefix);
+                guild[1].getCommandPrefix = async(cache = true) => this.client.dispatcher.getGuildPrefix(guild[1].id, cache);
+                guild[1].setCommandPrefix = async(prefix) => {
+                    this.client.dispatcher.setGuildPrefix(guild[1].id, prefix);
+                    this.client.emit('commandPrefixChange', guild[1], prefix);
                 }
 
-                guild.getLanguage = async(cache = true) => this.client.dispatcher.getGuildLanguage(guild.id, cache);
-                guild.setLanguage = async(lang) => {
-                    this.client.dispatcher.setGuildLanguage(guild.id, lang);
-                    this.client.emit('guildLanguageChange', guild, guild.language);
+                guild[1].getLanguage = async(cache = true) => this.client.dispatcher.getGuildLanguage(guild[1].id, cache);
+                guild[1].setLanguage = async(lang) => {
+                    this.client.dispatcher.setGuildLanguage(guild[1].id, lang);
+                    this.client.emit('guildLanguageChange', guild[1], lang);
                 }
-            })
-        })
+            }
+        }
 
         this.client.on("guildCreate", async(guild) => {
             let prefix = await this.client.dispatcher.getGuildPrefix(guild.id, false), language = await this.client.dispatcher.getGuildLanguage(guild.id, false);

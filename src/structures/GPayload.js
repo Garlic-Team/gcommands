@@ -34,7 +34,7 @@ class GPayload {
      */
     resolveData() {
         if(this.data) return this;
-        this.data = {};
+        else this.data = {};
 
         if(typeof this.options != "object") this.data.content = this.options;
         if(typeof this.options == "object" && this.options.inlineReply == undefined) this.data.inlineReply = true;
