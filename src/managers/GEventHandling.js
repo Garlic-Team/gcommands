@@ -527,12 +527,10 @@ class GEventHandling {
     async slashEdit(channel, interaction, result) {
         if (typeof result == "object") {
             let GPayloadResult = GPayload.create(channel, result)
-                .resolveData()
-                .resolveFiles();
+                .resolveData();
             
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                data: GPayloadResult.data,
-                files: GPayloadResult.files   
+                data: GPayloadResult.data
             }))
 
             if(apiMessage) {

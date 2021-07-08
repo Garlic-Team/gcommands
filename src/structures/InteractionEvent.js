@@ -285,8 +285,7 @@ class InteractionEvent {
 
     async slashEdit(result, update) {
         let GPayloadResult = GPayload.create(this.channel, result)
-            .resolveData()
-            .resolveFiles();
+            .resolveData();
         
         let apiMessage = {}
         if(update) {

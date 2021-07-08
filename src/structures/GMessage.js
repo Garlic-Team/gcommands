@@ -39,8 +39,7 @@ if(!ifDjsV13) {
             */
             async buttonsEdit(msgID, content, options) {
                 let GPayloadResult = GPayload.create(this.channel, result)
-                    .resolveData()
-                    .resolveFiles();
+                    .resolveData();
     
                 return this.client.api.channels[this.channel.id].messages[msgID].patch({
                     data: GPayloadResult.data
@@ -54,8 +53,7 @@ if(!ifDjsV13) {
             */
             async edit(result) {
                 let GPayloadResult = GPayload.create(this.channel, result)
-                    .resolveData()
-                    .resolveFiles();
+                    .resolveData();
 
                 if(result.edited == false) {
                     return this.client.api.channels(this.channel.id).messages[this.id].patch({
@@ -90,8 +88,7 @@ if(!ifDjsV13) {
             */
             async update(result) {
                 let GPayloadResult = GPayload.create(this.channel, result)
-                    .resolveData()
-                    .resolveFiles();
+                    .resolveData();
                 
                 return this.client.api.channels(this.channel.id).messages[this.id].patch({
                     data: {
@@ -201,12 +198,10 @@ if(!ifDjsV13) {
         this.client = options.client, this.channel = options.channel
 
         let GPayloadResult = GPayload.create(this.channel, result)
-            .resolveData()
-            .resolveFiles();
+            .resolveData();
 
         return this.client.api.channels[this.channel.id].messages[msgID].patch({
-            data: GPayloadResult.data,
-            files: GPayloadResult.files
+            data: GPayloadResult.data
         })
         .then(d => this.client.actions.MessageCreate.handle(d).message);
     },
