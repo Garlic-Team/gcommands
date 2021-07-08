@@ -1,8 +1,7 @@
 const { default: axios } = require("axios");
-const {Collection,MessageEmbed, Message, MessageAttachment} = require("discord.js");
+const {Collection, Message} = require("discord.js");
 const { readdirSync } = require("fs");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants")
-const GMessage = require("../structures/GMessage");
 const GPayload = require("../structures/GPayload");
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13"), { inhibit, interactionRefactor } = require("../util/util")
 
@@ -64,13 +63,13 @@ class GEventHandling {
 
             if(this.client.database) {
                 let guildDefaultPrefix;
-                if(Array.isArray(message.guild.prefix)) {
-                    message.guild.prefix.some(pf => {
+                if(Array.isArray((await message.guild.getCommandPrefix()))) {
+                    (await message.guild.getCommandPrefix()).some(pf => {
                         if(message.content.startsWith(pf)) {
                             guildDefaultPrefix = pf;
                         }
                     })
-                } else guildDefaultPrefix = message.guild.prefix
+                } else guildDefaultPrefix = await message.guild.getCommandPrefix()
 
                 let guildSettings = guildDefaultPrefix || clientDefaultPrefix;
                 prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
@@ -91,6 +90,7 @@ class GEventHandling {
 
 
                 let member = message.member, guild = message.guild, channel = message.channel
+                let botMessageInhibit;
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                     message, member, guild, channel,
                     /**
@@ -99,49 +99,18 @@ class GEventHandling {
                      * @param {RespondOptions} result 
                      * @returns {Object}
                     */
-                    respond: async(options = undefined) => {
+                     respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
-                        if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                        if(typeof options == "object" && options.content) {
-                            msg = await ifDjsV13 ? GMessage.buttons(options) : message.buttons(options)
-                        } else if(typeof options == "object" && !options.content) {
-                            if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.reply(options)
-                            else msg = await message.channel.send(options)
-                        } else {
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.reply({content:options});
-                            else msg = await message.channel.send(options)
-                        }
-
-                        msg = await msg;
-                        msg = msg.toJSON()
-                        msg.client = this.client;
-                        msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
-                        msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
-                        msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
-                        msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
+                        let msg = await message.send(options);
+                        botMessageInhibit = msg;
 
                         if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
                     edit: async(options = undefined) => {
-                        if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                        if(typeof options == "object" && options.content) {
-                            msg = await ifDjsV13 ? GMessage.buttonsEdit(msg.id, options.content, options) : message.buttonsEdit(msg.id, options.content, options)
-                        } else {
-                            msg = ifDjsV13 ? GMessage.buttonsEdit(msg.id, options, []) : message.buttonsEdit(msg.id, options, [])
-                        }
-                        
-                        msg = await msg;
-                        msg = msg.toJSON()
-                        msg.client = this.client;
-                        msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
-                        msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
-                        msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
-                        msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
-
-                        return msg;
+                        if(!botMessageInhibit) return console.log(new Color("&d[GCommands Errors] &cFirst you need to send a respond."))
+                        return await botMessageInhibit.edit(options);
                     }
                 }, args, args)
                 if(inhibitReturn == false) return;
@@ -219,7 +188,7 @@ class GEventHandling {
                 this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
 
                 const client = this.client, bot = this.client
-                var msg = "";
+                let botMessage;
                 commandos.run({
                     client, bot, message, member, guild, channel,
                     /**
@@ -231,50 +200,19 @@ class GEventHandling {
                     respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
-                        if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                        if(typeof options == "object" && options.content) {
-                            msg = await ifDjsV13 ? GMessage.buttons(options) : message.buttons(options)
-                        } else if(typeof options == "object" && !options.content) {
-                            if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply(options) : message.reply(options)
-                            else msg = await message.channel.send(options)
-                        } else {
-                            if(options.inlineReply) msg = await ifDjsV13 ? GMessage.inlineReply({content:options}) : message.reply({content:options});
-                            else msg = await message.channel.send(options)
-                        }
-
-                        msg = await msg;
-                        msg = msg.toJSON()
-                        msg.client = this.client;
-                        msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
-                        msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
-                        msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
-                        msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
+                        let msg = await message.send(options);
+                        botMessage = msg;
 
                         if(this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
                     edit: async(options = undefined) => {
-                        if(ifDjsV13) options.client = this.client, options.channel = message.channel
-                        if(typeof options == "object" && options.content) {
-                            msg = await ifDjsV13 ? GMessage.buttonsEdit(msg.id, options.content, options) : message.buttonsEdit(msg.id, options.content, options)
-                        } else {
-                            msg = ifDjsV13 ? GMessage.buttonsEdit(msg.id, options, []) : message.buttonsEdit(msg.id, options, [])
-                        }
-
-                        msg = await msg;
-                        msg = msg.toJSON()
-                        msg.client = this.client;
-                        msg.createButtonCollector = function createButtonCollector(filter, options) {return client.dispatcher.createButtonCollector(msg, filter, options)}
-                        msg.awaitButtons = function awaitButtons(filter, options) {return client.dispatcher.awaitButtons(msg, filter, options)}
-                        msg.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return client.dispatcher.createSelectMenuCollector(msg, filter, options)};
-                        msg.awaitSelectMenus = function awaitSelectMenus(filter, options) {return client.dispatcher.awaitSelectMenus(msg, filter, options)};
-
-                        return msg;
+                        if(!botMessage) return console.log(new Color("&d[GCommands Errors] &cFirst you need to send a respond."))
+                        return await botMessage.edit(options);
                     }
                 }, args, args)
             } catch(e) {
-                this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                this.GCommandsClient.emit(Events.DEBUG, e);
 
                 if(!this.GCommandsClient.unkownCommandMessage) return;
                 if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
@@ -453,8 +391,7 @@ class GEventHandling {
                     
                     this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
                 }catch(e) {
-                    console.log(e)
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, e);
 
                     if(!this.unkownCommandMessage) return;
                     if(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage]) {
@@ -520,8 +457,7 @@ class GEventHandling {
 
         if(typeof result == "object" && !result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
 
-        if(ifDjsV13) return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
-        else return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
+        return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
     }
 
     async slashEdit(channel, interaction, result) {
@@ -542,8 +478,7 @@ class GEventHandling {
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
 
-            if(ifDjsV13) return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
-            else return apiMessage.id ? new GMessage(this.client, apiMessage, channel) : apiMessage;
+            return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
         }
 
         return this.client.api.webhooks(this.client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})

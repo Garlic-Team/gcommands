@@ -111,6 +111,7 @@ class GCommands extends GCommandsBase {
     }
 
     async loadSys() {
+        require("../structures/GMessage"); require("../structures/GGuild"); require("../structures/DMChannel"); require("../structures/NewsChannel"); require("../structures/TextChannel");
         new GDatabaseLoader(this.GCommandsClient)
         new GEventHandling(this.GCommandsClient)
         new GEventLoader(this.GCommandsClient)

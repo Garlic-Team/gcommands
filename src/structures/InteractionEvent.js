@@ -3,7 +3,6 @@ const { default: axios } = require("axios");
 const {Client, MessageEmbed, Guild, NewsChannel, GuildMember, User, Message} = require("discord.js")
 const Color = require("../structures/Color");
 const GMessage = require("./GMessage");
-const ifDjsV13 = require("../util/updater").checkDjsVersion("13")
 const { interactionRefactor } = require("../util/util");
 const GPayload = require("./GPayload");
 
@@ -107,7 +106,7 @@ class InteractionEvent {
          * message
          * @type {GMessage}
          */
-        this.message = ifDjsV13 ? new Message(this.client, data.message, this.channel) : new GMessage(this.client, data.message, this.channel);
+        this.message = new Message(this.client, data.message, this.channel)
 
         /**
          * replied
@@ -236,7 +235,7 @@ class InteractionEvent {
                 apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
 
-            return ifDjsV13 ? new Message(this.client, data.message, this.channel) : new GMessage(this.client, data.message, this.channel);
+            return new Message(this.client, data.message, this.channel)
         }
 
         return {
@@ -311,8 +310,7 @@ class InteractionEvent {
             apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
         }
 
-        if(ifDjsV13) return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
-        else return apiMessage.id ? new GMessage(this.client, apiMessage, this.channel) : apiMessage;
+        return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 }
 
