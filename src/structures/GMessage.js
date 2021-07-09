@@ -81,7 +81,7 @@ module.exports = Object.defineProperties(Message.prototype, {
     },
 
     createButtonCollector: {
-        value: async function(filter, options = {}) {
+        value: function(filter, options = {}) {
             if(ifDjsV13) return new ButtonCollectorV13(this, filter, options);
             else return new ButtonCollectorV12(this, filter, options);
         }
@@ -90,7 +90,7 @@ module.exports = Object.defineProperties(Message.prototype, {
     awaitButtons: {
         value: async function(filter, options = {}) {
             return new Promise((resolve, reject) => {
-                const collector = this.createButtonCollector(this, filter, options);
+                const collector = this.client.dispatcher.createButtonCollector(this, filter, options);
                 collector.once('end', (buttons, reason) => {
                     if (options.errors && options.errors.includes(reason)) {
                         reject(buttons);
@@ -103,7 +103,7 @@ module.exports = Object.defineProperties(Message.prototype, {
     },
 
     createSelectMenuCollector: {
-        value: async function(filter, options = {}) {
+        value: function(filter, options = {}) {
             if(ifDjsV13) return new SelectMenuCollectorV13(this, filter, options);
             else return new SelectMenuCollectorV12(this, filter, options);
         }
@@ -112,7 +112,7 @@ module.exports = Object.defineProperties(Message.prototype, {
     awaitSelectMenus: {
         value: async function(filter, options = {}) {
             return new Promise((resolve, reject) => {
-                const collector = this.createSelectMenuCollector(this, filter, options);
+                const collector = this.client.dispatcher.createSelectMenuCollector(this, filter, options);
                 collector.once('end', (buttons, reason) => {
                     if (options.errors && options.errors.includes(reason)) {
                         reject(buttons);
