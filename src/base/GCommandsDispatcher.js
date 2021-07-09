@@ -1,6 +1,6 @@
 const { Collector, Collection, User, Team } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require("../structures/Color")
-const updater = require("../util/updater");
+const ifDjsV13 = require("../util/updater").checkDjsVersion("13");
 const ms = require("ms");
 
 /**
@@ -164,7 +164,7 @@ class GCommandsDispatcher {
      * @returns {Array}
     */
     async fetchClientApplication() {
-        this.client.application = await this.client.fetchApplication()
+        if(!ifDjsV13) this.client.application = await this.client.fetchApplication()
         if(this.client.application.owner instanceof Team) {
             this.client.application.owners = this.client.application.owner.members.array().map(teamMember => teamMember.user)
         } else this.client.application.owners = [this.client.application.owner]
@@ -200,7 +200,7 @@ class GCommandsDispatcher {
      * @returns {Collector}
     */
     createButtonCollector(msg, filter, options = {}) {
-        if(updater.checkDjsVersion("13")) return new ButtonCollectorV13(msg, filter, options);
+        if(ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
         else return new ButtonCollectorV12(msg, filter, options);
     }
 
@@ -230,7 +230,7 @@ class GCommandsDispatcher {
      * @returns {Collector}
     */
     createSelectMenuCollector(msg, filter, options = {}) {
-        if(updater.checkDjsVersion("13")) return new SelectMenuCollectorV13(msg, filter, options);
+        if(ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
         else return new SelectMenuCollectorV12(msg, filter, options);
     }
 

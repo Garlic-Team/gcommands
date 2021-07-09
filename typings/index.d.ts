@@ -296,6 +296,7 @@ declare module 'gcommands' {
 
     public name: string;
     public once: boolean;
+    public ws: boolean;
 
     public run(client: Client, ...args): void;
   }

@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const Event = require("../structures/Event");
 const { isClass } = require("../util/util");
+const { eventNames } = require("process");
 
 /**
  * The GEventLoader class
@@ -95,10 +96,12 @@ class GEventLoader {
         this.client.events.forEach(event => {
             if(event.name == "ready") return event.run(this.client);
 
-            if (event.once) {
-                this.client.once(event.name, (...args) => event.run(this.client, ...args));
+            if(event.ws) {
+                if(event.once) this.client.ws.once(event.name, (...args) => event.run(this.client, ...args));
+                else this.client.ws.on(event.name, (...args) => event.run(this.client, ...args));
             } else {
-                this.client.on(event.name, (...args) => event.run(this.client, ...args));
+                if(event.once) this.client.once(event.name, (...args) => event.run(this.client, ...args));
+                else this.client.on(event.name, (...args) => event.run(this.client, ...args));
             }
         })
     }

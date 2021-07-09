@@ -13,9 +13,15 @@ class Event {
          * @type {Boolean}
          */
          this.once = Boolean(options.once) || false;
+
+        /**
+         * ws
+         * @type {Boolean}
+         */
+         this.ws = Boolean(options.ws) || false;
     }
 
-    async run(...args) {
+    async run(client, ...args) {
         return console.log(new Color(`&d[GEvents] &cEvent ${this.name} doesn't provide a run method!`).getText())
     }
 }
