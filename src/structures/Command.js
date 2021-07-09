@@ -81,6 +81,12 @@ class Command {
          * @type {Array}
          */
         this.aliases = Array(options.aliases);
+
+        /**
+         * category
+         * @type {String}
+         */
+        this.category = resolveString(options.category);
     }
 
     async run({client, interaction, member, message, guild, channel, respond, edit}, arrayArgs, objectArgs) {

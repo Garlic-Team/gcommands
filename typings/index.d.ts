@@ -287,6 +287,7 @@ declare module 'gcommands' {
     public guildOnly: Snowflake | String;
     public nsfw: boolean;
     public aliases: Array;
+    public category: string;
 
     public run(options: CommandRunOptions, args: Array, args2: Object | Array): void;
   }
