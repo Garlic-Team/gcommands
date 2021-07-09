@@ -120,7 +120,7 @@ class GCommands extends GCommandsBase {
         
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 
-        this.loadSys()
+        setTimeout(() => { this.loadSys() }, 1000)
         GUpdater.__updater();
     }
 
