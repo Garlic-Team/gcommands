@@ -165,6 +165,8 @@ class GCommandsDispatcher {
     */
     async fetchClientApplication() {
         if(!ifDjsV13) this.client.application = await this.client.fetchApplication()
+        if(this.client.application.owner == null) return this.client.application.owners = [];
+        
         if(this.client.application.owner instanceof Team) {
             this.client.application.owners = this.client.application.owner.members.array().map(teamMember => teamMember.user)
         } else this.client.application.owners = [this.client.application.owner]
