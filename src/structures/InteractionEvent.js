@@ -1,10 +1,6 @@
-/* From discord-buttons edited */
-const { default: axios } = require("axios");
-const {Client, MessageEmbed, Guild, NewsChannel, GuildMember, User, Message} = require("discord.js")
-const Color = require("../structures/Color");
+const {Client, GuildMember, User, Message} = require("discord.js")
 const GMessage = require("./GMessage");
 const { interactionRefactor } = require("../util/util");
-const GPayload = require("./GPayload");
 const GInteraction = require("./GInteraction");
 
 /**

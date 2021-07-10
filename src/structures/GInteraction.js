@@ -19,9 +19,14 @@ class GInteraction {
 
         /**
          * author
-         * @type {GuildMember | User | Number}
+         * @type {User}
          */
         this.author = this.client.users.cache.get(data.guild_id ? data.member.user.id : data.user.id);
+
+        /**
+         * member
+         * @type {GuildMember || null}
+         */
         this.member = data.guild_id ? this.guild.members.cache.get(data.member.user.id) : null;
 
         this.interaction = {
