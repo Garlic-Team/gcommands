@@ -25,7 +25,7 @@ class GInteraction {
 
         /**
          * member
-         * @type {GuildMember || null}
+         * @type {GuildMember | null}
          */
         this.member = data.guild_id ? this.guild.members.cache.get(data.member.user.id) : null;
 
