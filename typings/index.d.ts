@@ -1,4 +1,4 @@
-import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel } from 'discord.js';
+import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, MembershipStates } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish';
@@ -104,23 +104,21 @@ declare module 'discord.js' {
 }
 
 declare module 'gcommands' {
-  export class InteractionEvent {
-    constructor(client: Client, data: object)
-    public selectMenuId: string;
-    public valueId: string;
-    public values: array;
-    public id: string;
-    public version: number;
+  export class GInteraction {
+    public type: number;
     public token: number;
-    public discordID: number;
-    public applicationID: number;
+    public discordId: number;
+    public version: number;
+    public applicationId: number;
     public guild: Guild;
-    public channel: Channel;
-    public clicker: {
-      member: GuildMember;
-      user: User;
+    public channel: TextChannel | NewsChannel | DMChannel;
+    public author: User;
+    public member: GuildMember;
+    public interaction: {
+      name: string;
+      id: number;
+      options: Array;
     }
-    public message: Message;
     public replied: boolean;
     public deffered: boolean;
 
@@ -132,6 +130,19 @@ declare module 'gcommands' {
       send(result: Object): void;
       edit(result: Object): void;
     }
+  }
+
+  export class InteractionEvent extends GInteraction {
+    constructor(client: Client, data: object)
+
+    public values: array;
+    public id: string;
+    public clicker: {
+      member: GuildMember;
+      user: User;
+    }
+    
+    public message: Message;
   }
 
   export class Color {

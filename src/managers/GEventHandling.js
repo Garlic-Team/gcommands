@@ -1,7 +1,8 @@
 const { default: axios } = require("axios");
 const {Collection, Message} = require("discord.js");
 const { readdirSync } = require("fs");
-const Color = require("../structures/Color"), { Events } = require("../util/Constants")
+const Color = require("../structures/Color"), { Events } = require("../util/Constants");
+const GInteraction = require("../structures/GInteraction");
 const GPayload = require("../structures/GPayload");
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13"), { inhibit, interactionRefactor } = require("../util/util")
 
@@ -229,34 +230,35 @@ class GEventHandling {
     */
     async slashEvent() {
         if((this.client.slash) || (this.client.slash == "both")) {
-            this.client.ws.on('INTERACTION_CREATE', async (interaction) => {
+            this.client.ws.on('INTERACTION_CREATE', async (int) => {
+                let interaction = new GInteraction(this.client, int)
+
                 if(interaction.type != 2) return;
-                
                 try {
-                    let commandos = this.client.gcommands.get(interaction.data.name);
+                    let commandos = this.client.gcommands.get(interaction.interaction.name);
                     if(!commandos) return;
                     if(commandos.slash == false || commandos.slash == "false") return;
                     if (!this.client.cooldowns.has(commandos.name)) {
                         this.client.cooldowns.set(commandos.name, new Collection());
                     }
 
-                    let guild = await this.client.guilds.cache.get(interaction.guild_id), member = guild.members.cache.get(interaction.member.user.id), channel = guild.channels.cache.get(interaction.channel_id);
-
                     let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
-                        interaction, member,
-                        guild: guild, 
-                        channel: channel,
+                        interaction, 
+                        member: interaction.member,
+                        author: interaction.user,
+                        guild: interaction.guild, 
+                        channel: interaction.channel,
                         respond: async(result) => {
                             return this.slashRespond(channel, interaction, result);
                         },
                         edit: async(result) => {
                             return this.slashEdit(channel, interaction, result);
                         }
-                    }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgsObject(interaction.data.options || []))
+                    }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
                     if(inhibitReturn == false) return;
 
-                    let guildLanguage = await this.client.dispatcher.getGuildLanguage(member.guild.id);
-                    let cooldown = await this.client.dispatcher.getCooldown(member.guild.id, member.user.id, commandos)
+                    let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.member.guild.id);
+                    let cooldown = await this.client.dispatcher.getCooldown(interaction.member.guild.id, interaction.member.user.id, commandos)
                     if(cooldown.cooldown) {
                         return this.client.api.interactions(interaction.id, interaction.token).callback.post({
                             data: {
@@ -368,10 +370,13 @@ class GEventHandling {
                          *  }
                          */
 
-                        const client = this.client, bot = this.client, channel = member.guild.channels.cache.get(interaction.channel_id)
+                        const client = this.client, bot = this.client
                         commandos.run({
-                            client, bot, interaction, member, channel,
-                            guild: member.guild,                             
+                            client, bot, interaction,
+                            member: interaction.member,
+                            author: interaction.user,
+                            guild: interaction.guild, 
+                            channel: interaction.channel,                          
                             /**
                              * Respond
                              * @type {Interface}
@@ -379,17 +384,17 @@ class GEventHandling {
                              * @returns {Object}
                             */
                             respond: async(result) => {
-                                return this.slashRespond(channel, interaction, result);
+                                return this.slashRespond(interaction.channel, interaction, result);
                             },
                             edit: async(result) => {
-                                return this.slashEdit(channel, interaction, result);
+                                return this.slashEdit(interaction.channel, interaction, result);
                             }
-                        }, await this.getSlashArgs(interaction.data.options || []), await this.getSlashArgsObject(interaction.data.options || []))
+                        }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
                     }
                     
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.data.name).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.interaction.name).getText())
                 }catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, e);
 
