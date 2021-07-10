@@ -513,27 +513,13 @@ The InteractionEvent class
 
 * [InteractionEvent](#InteractionEvent)
     * [new InteractionEvent(client, data)](#new_InteractionEvent_new)
-    * [.type](#InteractionEvent+type) : <code>Number</code>
     * [.componentType](#InteractionEvent+componentType) : <code>Number</code>
     * ~~[.selectMenuId](#InteractionEvent+selectMenuId)~~
     * ~~[.valueId](#InteractionEvent+valueId)~~
     * [.id](#InteractionEvent+id) : <code>Number</code>
     * [.values](#InteractionEvent+values) : <code>Array</code>
-    * [.version](#InteractionEvent+version) : <code>Number</code>
-    * [.token](#InteractionEvent+token) : <code>String</code>
-    * [.discordID](#InteractionEvent+discordID) : <code>Number</code>
-    * [.applicationID](#InteractionEvent+applicationID) : <code>Number</code>
-    * [.guild](#InteractionEvent+guild) : <code>Guild</code>
-    * [.channel](#InteractionEvent+channel) : <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code>
     * [.clicker](#InteractionEvent+clicker) : <code>GuildMember</code> \| <code>User</code> \| <code>Number</code>
     * [.message](#InteractionEvent+message) : <code>GMessage</code>
-    * [.replied](#InteractionEvent+replied) : <code>boolean</code>
-    * [.deferred](#InteractionEvent+deferred) : <code>boolean</code>
-    * [.reply](#InteractionEvent+reply)
-    * [.defer(ephemeral)](#InteractionEvent+defer)
-    * [.think(ephemeral)](#InteractionEvent+think)
-    * [.edit(options)](#InteractionEvent+edit)
-    * [.update(options)](#InteractionEvent+update)
 
 <a name="new_InteractionEvent_new"></a>
 
@@ -546,12 +532,6 @@ Creates new InteractionEvent instance
 | client | <code>Client</code> | 
 | data | <code>Object</code> | 
 
-<a name="InteractionEvent+type"></a>
-
-### interactionEvent.type : <code>Number</code>
-type
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
 <a name="InteractionEvent+componentType"></a>
 
 ### interactionEvent.componentType : <code>Number</code>
@@ -586,42 +566,6 @@ id
 values
 
 **Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+version"></a>
-
-### interactionEvent.version : <code>Number</code>
-version
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+token"></a>
-
-### interactionEvent.token : <code>String</code>
-token
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+discordID"></a>
-
-### interactionEvent.discordID : <code>Number</code>
-discordID
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+applicationID"></a>
-
-### interactionEvent.applicationID : <code>Number</code>
-applicationID
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+guild"></a>
-
-### interactionEvent.guild : <code>Guild</code>
-guild
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+channel"></a>
-
-### interactionEvent.channel : <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code>
-channel
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
 <a name="InteractionEvent+clicker"></a>
 
 ### interactionEvent.clicker : <code>GuildMember</code> \| <code>User</code> \| <code>Number</code>
@@ -634,68 +578,6 @@ clicker
 message
 
 **Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+replied"></a>
-
-### interactionEvent.replied : <code>boolean</code>
-replied
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+deferred"></a>
-
-### interactionEvent.deferred : <code>boolean</code>
-deferred
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+reply"></a>
-
-### interactionEvent.reply
-Method to reply
-
-**Kind**: instance property of [<code>InteractionEvent</code>](#InteractionEvent)  
-<a name="InteractionEvent+defer"></a>
-
-### interactionEvent.defer(ephemeral)
-Method to defer
-
-**Kind**: instance method of [<code>InteractionEvent</code>](#InteractionEvent)  
-
-| Param | Type |
-| --- | --- |
-| ephemeral | <code>Boolean</code> | 
-
-<a name="InteractionEvent+think"></a>
-
-### interactionEvent.think(ephemeral)
-Method to think
-
-**Kind**: instance method of [<code>InteractionEvent</code>](#InteractionEvent)  
-
-| Param | Type |
-| --- | --- |
-| ephemeral | <code>Boolean</code> | 
-
-<a name="InteractionEvent+edit"></a>
-
-### interactionEvent.edit(options)
-Method to edit
-
-**Kind**: instance method of [<code>InteractionEvent</code>](#InteractionEvent)  
-
-| Param | Type |
-| --- | --- |
-| options | <code>Object</code> | 
-
-<a name="InteractionEvent+update"></a>
-
-### interactionEvent.update(options)
-Method to update
-
-**Kind**: instance method of [<code>InteractionEvent</code>](#InteractionEvent)  
-
-| Param | Type |
-| --- | --- |
-| options | <code>Object</code> | 
-
 <a name="MessageActionRow"></a>
 
 ## MessageActionRow
