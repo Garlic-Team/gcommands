@@ -36,24 +36,28 @@ class GPayload {
         if(this.data) return this;
         else this.data = {};
 
-        if(typeof this.options != "object") this.data.content = this.options;
-        if(typeof this.options == "object" && this.options.inlineReply == undefined) this.data.inlineReply = true;
-        if(typeof this.options == "object" && this.options.inlineReply == false) this.data.inlineReply = false;
-        if(typeof this.options == "object" && !this.options.content && this.options instanceof MessageEmbed) this.data.embeds = [this.options];
-        if(typeof this.options == "object" && !this.options.content && this.options instanceof MessageAttachment) this.options.attachments = [this.options];
-        if(typeof this.options == "object" && typeof this.options.content != "object") this.data.content = this.options.content;
-        if(typeof this.options == "object" && typeof this.options.content == "object" && this.options.content instanceof MessageEmbed) this.data.embeds = [this.options.content];
-        if(typeof this.options == "object" && typeof this.options.content == "object" && this.options.content instanceof MessageAttachment) this.data.attachments = [this.options.content];
-        if(typeof this.options == "object" && this.options.allowedMentions) { this.data.allowedMentions = this.options.allowedMentions } else this.data.allowedMentions = { parse: [], repliedUser: true }
-        if(typeof this.options == "object" && this.options.ephemeral) { this.data.flags = 64 }
-        if(typeof this.options == "object" && this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
-        if(typeof this.options == "object" && this.options.components) {
-            if(!Array.isArray(this.options.components)) this.options.components = [this.options.components];
-            this.data.components = this.options.components;
-        }
-        if(typeof this.options == "object" && this.options.embeds) {
-            if(!Array.isArray(this.options.embeds)) this.options.embeds = [this.options.embeds]
-            this.data.embeds = this.options.embeds;
+        let type = typeof this.options;
+        if(type != "object") this.data.content = this.options;
+        
+        if(type == "object") {
+            if(this.options.inlineReply == undefined) this.data.inlineReply = true;
+            if(this.options.inlineReply == false) this.data.inlineReply = false;
+            if(!this.options.content && this.options instanceof MessageEmbed) this.data.embeds = [this.options];
+            if(!this.options.content && this.options instanceof MessageAttachment) this.options.attachments = [this.options];
+            if(typeof this.options.content != "object") this.data.content = this.options.content;
+            if(typeof this.options.content == "object" && this.options.content instanceof MessageEmbed) this.data.embeds = [this.options.content];
+            if(typeof this.options.content == "object" && this.options.content instanceof MessageAttachment) this.data.attachments = [this.options.content];
+            if(this.options.allowedMentions) { this.data.allowedMentions = this.options.allowedMentions } else this.data.allowedMentions = { parse: [], repliedUser: true }
+            if(this.options.ephemeral) { this.data.flags = 64 }
+            if(this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
+            if(this.options.components) {
+                if(!Array.isArray(this.options.components)) this.options.components = [this.options.components];
+                this.data.components = this.options.components;
+            }
+            if(this.options.embeds) {
+                if(!Array.isArray(this.options.embeds)) this.options.embeds = [this.options.embeds]
+                this.data.embeds = this.options.embeds;
+            }
         }
 
         return this;
