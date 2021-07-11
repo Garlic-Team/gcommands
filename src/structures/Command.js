@@ -72,9 +72,15 @@ class Command {
 
         /**
          * nsfw
-         * @type {String | Array}
+         * @type {Boolean}
          */
         this.nsfw = Boolean(options.nfsw) || false;
+
+        /**
+         * slash
+         * @type {Boolean}
+         */
+        this.slash = Boolean(options.slash) || true;
 
         /**
          * aliases
