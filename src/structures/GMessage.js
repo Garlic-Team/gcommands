@@ -65,9 +65,6 @@ module.exports = Object.defineProperties(Message.prototype, {
     */
     send: {
         value: async function(result) {
-            if(typeof result != "object") result = { content: result, inlineReply: true }
-            else result.inlineReply = true;
-
             let GPayloadResult = GPayload.create(this.channel, result)
                 .resolveData()
                 .resolveFiles();

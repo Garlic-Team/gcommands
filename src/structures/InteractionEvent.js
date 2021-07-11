@@ -1,4 +1,5 @@
 const { interactionRefactor } = require("../util/util");
+const { Message } = require("discord.js")
 const GInteraction = require("./GInteraction");
 
 /**
