@@ -384,10 +384,10 @@ class GEventHandling {
                              * @returns {Object}
                             */
                             respond: async(result) => {
-                                return this.slashRespond(interaction.channel, interaction, result);
+                                return interaction.reply.send(result);
                             },
                             edit: async(result) => {
-                                return this.slashEdit(interaction.channel, interaction, result);
+                                return interaction.reply.edit(result);
                             }
                         }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
                     } catch(e) {
@@ -423,70 +423,6 @@ class GEventHandling {
         await readdirSync(`${__dirname}/../base/actions/`).forEach(file => {
             require(`../base/actions/${file}`)(this.client)
         })
-    }
-
-    async slashRespond(channel, interaction, result) {
-        if(typeof result == "object" && !result.ephemeral && this.client.autoTyping) channel.startTyping(this.client.autoTyping);
-
-        let GPayloadResult = GPayload.create(channel, result)
-            .resolveData()
-            .resolveFiles();
-
-        let apiMessage = (await this.client.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: result.thinking ? 5 : 4,
-                data: GPayloadResult.data
-            },
-            files: GPayloadResult.files
-        }))
-
-        let apiMessageMsg = {};
-        try {
-            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${interaction.token}/messages/@original`)).data;
-        } catch(e) {
-            apiMessage = {
-                id: undefined
-            }
-        }
-
-        if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
-        if(apiMessage) {
-            apiMessage = apiMessageMsg;
-            apiMessage.client = this.client ? this.client : client;
-            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
-            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
-            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
-        }
-
-        if(typeof result == "object" && !result.ephemeral && this.client.autoTyping) channel.stopTyping(true)
-
-        return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
-    }
-
-    async slashEdit(channel, interaction, result) {
-        if (typeof result == "object") {
-            let GPayloadResult = GPayload.create(channel, result)
-                .resolveData();
-            
-            let apiMessage = (await this.client.api.webhooks(this.client.user.id, interaction.token).messages[result.messageId ? result.messageId : "@original"].patch({
-                data: GPayloadResult.data
-            }))
-
-            if(apiMessage) {
-                apiMessage.client = this.client;
-                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
-                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
-                apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
-                apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
-                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
-            }
-
-            return apiMessage.id ? new Message(this.client, apiMessage, channel) : apiMessage;
-        }
-
-        return this.client.api.webhooks(this.client.user.id, interaction.token).messages["@original"].patch({ data: { content: result }})
     }
 
     /**
