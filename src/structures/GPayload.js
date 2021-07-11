@@ -44,7 +44,7 @@ class GPayload {
         if(this.options.content && typeof this.options.content == "object") {
             this.data.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
             this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : [];
-        }
+        } else this.data.content = this.options.content || null
 
         this.data.allowedMentions = this.options.allowedMentions ? this.options.allowedMentions : { parse: [], repliedUser: true }
         this.data.flags = this.options.ephemeral ? 64 : null
@@ -54,7 +54,6 @@ class GPayload {
         if(this.options.attachments) this.options.attachments = !Array.isArray(this.options.attachments) ? [this.options.attachments] : this.options.attachments
 
         if(this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
-
 
         return this;
     }
