@@ -38,6 +38,7 @@ class GPayload {
 
         if(typeof this.options != "object") this.data.content = this.options;
         if(typeof this.options == "object" && this.options.inlineReply == undefined) this.data.inlineReply = true;
+        if(typeof this.options == "object" && this.options.inlineReply == false) this.data.inlineReply = false;
         if(typeof this.options == "object" && !this.options.content && this.options instanceof MessageEmbed) this.data.embeds = [this.options];
         if(typeof this.options == "object" && !this.options.content && this.options instanceof MessageAttachment) this.options.attachments = [this.options];
         if(typeof this.options == "object" && typeof this.options.content != "object") this.data.content = this.options.content;

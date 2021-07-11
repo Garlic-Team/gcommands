@@ -1,5 +1,3 @@
-const {Client, GuildMember, User, Message} = require("discord.js")
-const GMessage = require("./GMessage");
 const { interactionRefactor } = require("../util/util");
 const GInteraction = require("./GInteraction");
 
