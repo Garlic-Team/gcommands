@@ -4,18 +4,60 @@ const GPayload = require("./GPayload");
 
 class GInteraction {
     constructor(client, data) {
+
+        /**
+         * client
+         * @type {Client}
+         */
         this.client = client;
 
+        /**
+         * type
+         * @type {number}
+         */
         this.type = data.type;
+
+        /**
+         * token
+         * @type {string}
+         */
         this.token = data.token;
+
+        /**
+         * discordId
+         * @type {number}
+         */
         this.discordId = data.id;
+
+        /**
+         * version
+         * @type {number}
+         */
         this.version = data.version;
+
+        /**
+         * applicationId
+         * @type {number}
+         */
         this.applicationId = data.application_id;
 
+        /**
+         * guild
+         * @type {Guild}
+         */
         this.guild = data.guild_id ? this.client.guilds.cache.get(data.guild_id) : null;
+
+        /**
+         * channel
+         * @type {TextChannel | NewsChannel | DMChannel}
+         */
         this.channel = data.guild_id ? this.guild.channels.cache.get(data.channel_id) : client.channels.cache.get(data.channel_id)
         
-        this.createdTimestamp = new Date();
+        /**
+         * createdTimestamp
+         * @type {Number}
+         */
+        this.createdTimestamp = Date.now();
 
         /**
          * author
@@ -29,6 +71,10 @@ class GInteraction {
          */
         this.member = data.guild_id ? this.guild.members.cache.get(data.member.user.id) : null;
 
+        /**
+         * interaction
+         * @type {Object}
+         */
         this.interaction = {
             name: data.data.name,
             options: data.data.options,
