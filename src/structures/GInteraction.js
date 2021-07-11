@@ -172,7 +172,7 @@ class GInteraction {
         */
         let _send = async(result) => {
             this.replied = true;
-            this.slashRespond(result)
+            return this.slashRespond(result)
         }
 
         /**
@@ -181,7 +181,7 @@ class GInteraction {
         */
          let _edit = async(result) => {
             if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
-            this.slashEdit(result)
+            return this.slashEdit(result)
         }
 
         /**
@@ -190,7 +190,7 @@ class GInteraction {
         */
          let _update = async(result) => {
             if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
-            this.slashEdit(result, true)
+            return this.slashEdit(result, true)
         }
 
         /**
@@ -226,8 +226,6 @@ class GInteraction {
             .resolveData()
             .resolveFiles();
 
-        console.log(GPayloadResult)
-
         let apiMessage = (await this.client.api.interactions(this.discordId, this.token).callback.post({
             data: {
                 type: result.thinking ? 5 : 4,
@@ -256,7 +254,7 @@ class GInteraction {
             apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
         }
 
-        return apiMessage
+        return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 
     async slashEdit(result, update) {
