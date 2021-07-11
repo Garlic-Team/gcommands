@@ -47,7 +47,7 @@ class GEventHandling {
         }
 
         let messageEventUse = async(message) => {
-            if (!message || !message.author || message.author.bot) return;
+            if (!message || !message.author || message.author.bot || !message.guild) return;
 
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
 
@@ -249,10 +249,10 @@ class GEventHandling {
                         guild: interaction.guild, 
                         channel: interaction.channel,
                         respond: async(result) => {
-                            return this.slashRespond(channel, interaction, result);
+                            return interaction.reply.send(result);
                         },
                         edit: async(result) => {
-                            return this.slashEdit(channel, interaction, result);
+                            return interaction.reply.edit(result);
                         }
                     }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
                     if(inhibitReturn == false) return;

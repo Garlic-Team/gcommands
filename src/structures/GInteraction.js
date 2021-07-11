@@ -226,6 +226,8 @@ class GInteraction {
             .resolveData()
             .resolveFiles();
 
+        console.log(GPayloadResult)
+
         let apiMessage = (await this.client.api.interactions(this.discordId, this.token).callback.post({
             data: {
                 type: result.thinking ? 5 : 4,
