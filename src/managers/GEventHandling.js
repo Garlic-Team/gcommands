@@ -306,7 +306,7 @@ class GEventHandling {
                     if(commandos.clientRequiredPermissions) {
                         if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
-                        if(member.guild.channels.cache.get(interaction.channel_id).permissionsFor(member.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
+                        if(member.guild.channels.cache.get(interaction.channel.id).permissionsFor(member.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
                             this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
@@ -323,7 +323,7 @@ class GEventHandling {
                     if(commandos.userRequiredPermissions) {
                         if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
-                        if(!this.client.guilds.cache.get(interaction.guild_id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) {
+                        if(!this.client.guilds.cache.get(interaction.guild.id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) {
                             this.client.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
