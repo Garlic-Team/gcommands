@@ -2,7 +2,16 @@ const { Message } = require("discord.js");
 const Color = require("../structures/Color");
 const GPayload = require("./GPayload");
 
+/**
+ * The GInteraction class
+ */
 class GInteraction {
+
+    /**
+     * Creates new GInteraction instance
+     * @param {Client} client
+     * @param {Object} data 
+    */
     constructor(client, data) {
 
         /**

@@ -1,6 +1,15 @@
 const { MessageEmbed, MessageAttachment } = require("discord.js");
 
+/**
+ * The GPayload class
+ */
 class GPayload {
+
+    /**
+     * Creates new GPayload instance
+     * @param {TextChannel | NewsChannel | DMChannel} channel
+     * @param {options} data 
+    */
     constructor(channel, options) {
         /**
          * Channel

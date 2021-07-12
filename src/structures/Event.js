@@ -1,6 +1,15 @@
 const { resolveString } = require("../util/util");
 
+/**
+ * The Event class
+ */
 class Event {
+
+    /**
+     * Creates new Event instance
+     * @param {Client} client
+     * @param {Object} options 
+    */
     constructor(client, options = {}) {
         /**
          * Name

@@ -2,7 +2,16 @@ const { Snowflake } = require("discord.js");
 const { resolveString } = require("../util/util");
 const Color = require("./Color");
 
+/**
+ * The Command class
+ */
 class Command {
+
+    /**
+     * Creates new Command instance
+     * @param {Client} client
+     * @param {Object} options 
+    */
     constructor(client, options = {}) {
         /**
          * Name
