@@ -19,6 +19,18 @@
 <dt><a href="#Color">Color</a></dt>
 <dd><p>The Color class</p>
 </dd>
+<dt><a href="#Command">Command</a></dt>
+<dd><p>The Command class</p>
+</dd>
+<dt><a href="#Event">Event</a></dt>
+<dd><p>The Event class</p>
+</dd>
+<dt><a href="#GInteraction">GInteraction</a></dt>
+<dd><p>The GInteraction class</p>
+</dd>
+<dt><a href="#GPayload">GPayload</a></dt>
+<dd><p>The GPayload class</p>
+</dd>
 <dt><a href="#InteractionEvent">InteractionEvent</a></dt>
 <dd><p>The InteractionEvent class</p>
 </dd>
@@ -504,6 +516,426 @@ Internal method to getText
 Internal method to getRGB
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
+<a name="Command"></a>
+
+## Command
+The Command class
+
+**Kind**: global class  
+
+* [Command](#Command)
+    * [new Command(client, options)](#new_Command_new)
+    * [.name](#Command+name) : <code>String</code>
+    * [.description](#Command+description) : <code>String</code>
+    * [.cooldown](#Command+cooldown) : <code>String</code>
+    * [.expectedArgs](#Command+expectedArgs) : <code>String</code> \| <code>Array</code>
+    * [.minArgs](#Command+minArgs) : <code>Number</code>
+    * [.userRequiredPermissions](#Command+userRequiredPermissions) : <code>String</code> \| <code>Array</code>
+    * [.userRequiredRoles](#Command+userRequiredRoles) : <code>String</code> \| <code>Array</code>
+    * [.clientRequiredPermissions](#Command+clientRequiredPermissions) : <code>String</code> \| <code>Array</code>
+    * [.userOnly](#Command+userOnly) : <code>Snowflake</code> \| <code>Array</code>
+    * [.channelOnly](#Command+channelOnly) : <code>Snowflake</code> \| <code>Array</code>
+    * [.guildOnly](#Command+guildOnly) : <code>Snowflake</code>
+    * [.nsfw](#Command+nsfw) : <code>Boolean</code>
+    * [.slash](#Command+slash) : <code>Boolean</code>
+    * [.aliases](#Command+aliases) : <code>Array</code>
+    * [.category](#Command+category) : <code>String</code>
+
+<a name="new_Command_new"></a>
+
+### new Command(client, options)
+Creates new Command instance
+
+
+| Param | Type |
+| --- | --- |
+| client | <code>Client</code> | 
+| options | <code>Object</code> | 
+
+<a name="Command+name"></a>
+
+### command.name : <code>String</code>
+Name
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+description"></a>
+
+### command.description : <code>String</code>
+Description
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+cooldown"></a>
+
+### command.cooldown : <code>String</code>
+Cooldown
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+expectedArgs"></a>
+
+### command.expectedArgs : <code>String</code> \| <code>Array</code>
+expectedArgs
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+minArgs"></a>
+
+### command.minArgs : <code>Number</code>
+minArgs
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+userRequiredPermissions"></a>
+
+### command.userRequiredPermissions : <code>String</code> \| <code>Array</code>
+userRequiredPermissions
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+userRequiredRoles"></a>
+
+### command.userRequiredRoles : <code>String</code> \| <code>Array</code>
+userRequiredRoles
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+clientRequiredPermissions"></a>
+
+### command.clientRequiredPermissions : <code>String</code> \| <code>Array</code>
+clientRequiredPermissions
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+userOnly"></a>
+
+### command.userOnly : <code>Snowflake</code> \| <code>Array</code>
+userOnly
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+channelOnly"></a>
+
+### command.channelOnly : <code>Snowflake</code> \| <code>Array</code>
+channelOnly
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+guildOnly"></a>
+
+### command.guildOnly : <code>Snowflake</code>
+guildOnly
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+nsfw"></a>
+
+### command.nsfw : <code>Boolean</code>
+nsfw
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+slash"></a>
+
+### command.slash : <code>Boolean</code>
+slash
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+aliases"></a>
+
+### command.aliases : <code>Array</code>
+aliases
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Command+category"></a>
+
+### command.category : <code>String</code>
+category
+
+**Kind**: instance property of [<code>Command</code>](#Command)  
+<a name="Event"></a>
+
+## Event
+The Event class
+
+**Kind**: global class  
+
+* [Event](#Event)
+    * [new Event(client, options)](#new_Event_new)
+    * [.name](#Event+name) : <code>String</code>
+    * [.once](#Event+once) : <code>Boolean</code>
+    * [.ws](#Event+ws) : <code>Boolean</code>
+
+<a name="new_Event_new"></a>
+
+### new Event(client, options)
+Creates new Event instance
+
+
+| Param | Type |
+| --- | --- |
+| client | <code>Client</code> | 
+| options | <code>Object</code> | 
+
+<a name="Event+name"></a>
+
+### event.name : <code>String</code>
+Name
+
+**Kind**: instance property of [<code>Event</code>](#Event)  
+<a name="Event+once"></a>
+
+### event.once : <code>Boolean</code>
+once
+
+**Kind**: instance property of [<code>Event</code>](#Event)  
+<a name="Event+ws"></a>
+
+### event.ws : <code>Boolean</code>
+ws
+
+**Kind**: instance property of [<code>Event</code>](#Event)  
+<a name="GInteraction"></a>
+
+## GInteraction
+The GInteraction class
+
+**Kind**: global class  
+
+* [GInteraction](#GInteraction)
+    * [new GInteraction(client, data)](#new_GInteraction_new)
+    * [.client](#GInteraction+client) : <code>Client</code>
+    * [.type](#GInteraction+type) : <code>number</code>
+    * [.token](#GInteraction+token) : <code>string</code>
+    * [.discordId](#GInteraction+discordId) : <code>number</code>
+    * [.version](#GInteraction+version) : <code>number</code>
+    * [.applicationId](#GInteraction+applicationId) : <code>number</code>
+    * [.guild](#GInteraction+guild) : <code>Guild</code>
+    * [.channel](#GInteraction+channel) : <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code>
+    * [.createdTimestamp](#GInteraction+createdTimestamp) : <code>Number</code>
+    * [.author](#GInteraction+author) : <code>User</code>
+    * [.member](#GInteraction+member) : <code>GuildMember</code> \| <code>null</code>
+    * [.interaction](#GInteraction+interaction) : <code>Object</code>
+    * [.replied](#GInteraction+replied) : <code>boolean</code>
+    * [.deferred](#GInteraction+deferred) : <code>boolean</code>
+    * [.reply](#GInteraction+reply)
+    * [.defer(ephemeral)](#GInteraction+defer)
+    * [.think(ephemeral)](#GInteraction+think)
+    * [.edit(options)](#GInteraction+edit)
+    * [.update(options)](#GInteraction+update)
+
+<a name="new_GInteraction_new"></a>
+
+### new GInteraction(client, data)
+Creates new GInteraction instance
+
+
+| Param | Type |
+| --- | --- |
+| client | <code>Client</code> | 
+| data | <code>Object</code> | 
+
+<a name="GInteraction+client"></a>
+
+### gInteraction.client : <code>Client</code>
+client
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+type"></a>
+
+### gInteraction.type : <code>number</code>
+type
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+token"></a>
+
+### gInteraction.token : <code>string</code>
+token
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+discordId"></a>
+
+### gInteraction.discordId : <code>number</code>
+discordId
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+version"></a>
+
+### gInteraction.version : <code>number</code>
+version
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+applicationId"></a>
+
+### gInteraction.applicationId : <code>number</code>
+applicationId
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+guild"></a>
+
+### gInteraction.guild : <code>Guild</code>
+guild
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+channel"></a>
+
+### gInteraction.channel : <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code>
+channel
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+createdTimestamp"></a>
+
+### gInteraction.createdTimestamp : <code>Number</code>
+createdTimestamp
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+author"></a>
+
+### gInteraction.author : <code>User</code>
+author
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+member"></a>
+
+### gInteraction.member : <code>GuildMember</code> \| <code>null</code>
+member
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+interaction"></a>
+
+### gInteraction.interaction : <code>Object</code>
+interaction
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+replied"></a>
+
+### gInteraction.replied : <code>boolean</code>
+replied
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+deferred"></a>
+
+### gInteraction.deferred : <code>boolean</code>
+deferred
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+reply"></a>
+
+### gInteraction.reply
+Method to reply
+
+**Kind**: instance property of [<code>GInteraction</code>](#GInteraction)  
+<a name="GInteraction+defer"></a>
+
+### gInteraction.defer(ephemeral)
+Method to defer
+
+**Kind**: instance method of [<code>GInteraction</code>](#GInteraction)  
+
+| Param | Type |
+| --- | --- |
+| ephemeral | <code>Boolean</code> | 
+
+<a name="GInteraction+think"></a>
+
+### gInteraction.think(ephemeral)
+Method to think
+
+**Kind**: instance method of [<code>GInteraction</code>](#GInteraction)  
+
+| Param | Type |
+| --- | --- |
+| ephemeral | <code>Boolean</code> | 
+
+<a name="GInteraction+edit"></a>
+
+### gInteraction.edit(options)
+Method to edit
+
+**Kind**: instance method of [<code>GInteraction</code>](#GInteraction)  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+
+<a name="GInteraction+update"></a>
+
+### gInteraction.update(options)
+Method to update
+
+**Kind**: instance method of [<code>GInteraction</code>](#GInteraction)  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+
+<a name="GPayload"></a>
+
+## GPayload
+The GPayload class
+
+**Kind**: global class  
+
+* [GPayload](#GPayload)
+    * [new GPayload(channel, data)](#new_GPayload_new)
+    * _instance_
+        * [.channel](#GPayload+channel) : <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code>
+        * [.options](#GPayload+options) : <code>string</code> \| <code>GPayloadOptions</code>
+        * [.data](#GPayload+data) : <code>GPayloadOptions</code>
+        * [.files](#GPayload+files) : <code>Array.&lt;MessageFile&gt;</code>
+        * [.resolveData()](#GPayload+resolveData) ⇒ [<code>GPayload</code>](#GPayload)
+        * [.resolveFiles()](#GPayload+resolveFiles) ⇒ [<code>GPayload</code>](#GPayload)
+    * _static_
+        * [.create(channel, options)](#GPayload.create) ⇒ [<code>GPayload</code>](#GPayload)
+
+<a name="new_GPayload_new"></a>
+
+### new GPayload(channel, data)
+Creates new GPayload instance
+
+
+| Param | Type |
+| --- | --- |
+| channel | <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code> | 
+| data | <code>options</code> | 
+
+<a name="GPayload+channel"></a>
+
+### gPayload.channel : <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code>
+Channel
+
+**Kind**: instance property of [<code>GPayload</code>](#GPayload)  
+<a name="GPayload+options"></a>
+
+### gPayload.options : <code>string</code> \| <code>GPayloadOptions</code>
+Options
+
+**Kind**: instance property of [<code>GPayload</code>](#GPayload)  
+<a name="GPayload+data"></a>
+
+### gPayload.data : <code>GPayloadOptions</code>
+Data sendable to the API
+
+**Kind**: instance property of [<code>GPayload</code>](#GPayload)  
+<a name="GPayload+files"></a>
+
+### gPayload.files : <code>Array.&lt;MessageFile&gt;</code>
+Files sendable to the API
+
+**Kind**: instance property of [<code>GPayload</code>](#GPayload)  
+<a name="GPayload+resolveData"></a>
+
+### gPayload.resolveData() ⇒ [<code>GPayload</code>](#GPayload)
+Resolves data.
+
+**Kind**: instance method of [<code>GPayload</code>](#GPayload)  
+<a name="GPayload+resolveFiles"></a>
+
+### gPayload.resolveFiles() ⇒ [<code>GPayload</code>](#GPayload)
+Resolves files.
+
+**Kind**: instance method of [<code>GPayload</code>](#GPayload)  
+<a name="GPayload.create"></a>
+
+### GPayload.create(channel, options) ⇒ [<code>GPayload</code>](#GPayload)
+Creates a `GPayload` from user-level arguments.
+
+**Kind**: static method of [<code>GPayload</code>](#GPayload)  
+
+| Param | Type |
+| --- | --- |
+| channel | <code>TextChannel</code> \| <code>NewsChannel</code> \| <code>DMChannel</code> | 
+| options | <code>string</code> \| <code>GPayloadOptions</code> | 
+
 <a name="InteractionEvent"></a>
 
 ## InteractionEvent
