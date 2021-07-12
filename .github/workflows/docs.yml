@@ -12,9 +12,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Create Folder
-      run: mkdir docs
-
     - name: Download
       run: npm i @discordjs/docgen
 
