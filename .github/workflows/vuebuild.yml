@@ -19,6 +19,6 @@ jobs:
         TARGET_REPO: Garlic-Team/GCommands
         TARGET_BRANCH: master
         BUILD_SCRIPT: yarn && yarn build
-        BUILD_DIR: docs/.vuepress/dist/
+        BUILD_DIR: guide/.vuepress/dist/
         CNAME: gcommands.js.org
         COMMIT_MESSAGE: Deploy Docs
