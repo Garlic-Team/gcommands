@@ -51,7 +51,7 @@ class GPayload {
         this.data.inlineReply = this.options.inlineReply == undefined || null ? true : false;
 
         if(this.options.content && typeof this.options.content == "object") {
-            this.data.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
+            this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
             this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : [];
         } else this.data.content = this.options.content || null
 
@@ -64,6 +64,7 @@ class GPayload {
 
         if(this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
 
+        console.log(this)
         return this;
     }
 
