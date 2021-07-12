@@ -296,10 +296,10 @@ class GEventHandling {
 
                     if(commandos.channelOnly) {
                         if(typeof commandos.channelOnly == "object") {
-                            let channels = commandos.channelOnly.some(v => interaction.channel_id == v);
+                            let channels = commandos.channelOnly.some(v => interaction.channel.id == v);
                             if(!channels) return;
                         } else {
-                            if(interaction.channel_id !== commandos.channelOnly) return;
+                            if(interaction.channel.id !== commandos.channelOnly) return;
                         }
                     }
 

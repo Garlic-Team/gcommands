@@ -64,7 +64,6 @@ class GPayload {
 
         if(this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
 
-        console.log(this)
         return this;
     }
 
