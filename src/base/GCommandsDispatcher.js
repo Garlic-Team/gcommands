@@ -11,7 +11,7 @@ class GCommandsDispatcher {
 
         /**
          * GCommandsDispatcher options
-         * @property {Object} client
+         * @type {Object} client
         */
         this.client = client;
         this.client.inhibitors = new Set();

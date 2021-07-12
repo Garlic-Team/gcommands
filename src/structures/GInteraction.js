@@ -173,6 +173,7 @@ class GInteraction {
 
     /**
      * Method to reply
+     * @type {get}
     */
     get reply() {
         /**

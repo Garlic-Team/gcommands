@@ -26,82 +26,76 @@ class GCommands extends GCommandsBase {
 
         /**
          * CmdDir
-         * @property {String} cmdDir
+         * @type {String}
         */
-        this.cmdDir = options.cmdDir;
+         this.cmdDir = options.cmdDir;
 
         /**
          * EventDir
-         * @property {String} eventDir
+         * @type {String}
         */
         this.eventDir = options.eventDir;
         this.client.discordjsversion = version;
 
         /**
          * unkownCommandMessage
-         * @property {String} unkownCommandMessage
+         * @type {String} unkownCommandMessage
         */
         this.unkownCommandMessage = options.unkownCommandMessage;
 
         /**
          * AutoTyping
-         * @property {Boolean} autoTyping
+         * @type {Boolean} autoTyping
         */
         this.autoTyping = options.autoTyping;
 
         /**
          * ownLanguageFile
-         * @property {Object} ownLanguageFile
+         * @type {Object} ownLanguageFile
         */
         if(!options.ownLanguageFile) this.languageFile = require("../util/message.json");
         else this.languageFile = options.ownLanguageFile;
         this.language = options.language;
 
         /**
-         * ShardClusterName
-         * @property {String} shardClusterName
-        */
-        this.shardClusterName = options.shardClusterName || "shard";
-
-        /**
          * database
-         * @property {Object} database
+         * @type {Object} database
         */
         this.database = options.database || undefined;
 
         /**
          * gcategories
-         * @property {Array}
+         * @type {Array}
          */
         this.client.gcategories = fs.readdirSync(`./${this.cmdDir}`)
 
         /**
          * gcommands
-         * @property {Collection}
+         * @type {Collection}
          */
         this.client.gcommands = new Collection();
 
         /**
          * galiases
-         * @property {Collection}
+         * @type {Collection}
          */
         this.client.galiases = new Collection();
 
         /**
          * Prefix
-         * @property {String} prefix
+         * @type {String} prefix
          */
         this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
 
         /**
          * Slash
-         * @property {String} slash
+         * @type {String} slash
          */
         this.slash = options.slash.slash ? options.slash.slash : false;
 
         /**
          * defaultCooldown
-         * @property {Number} defaultCooldown
+         * @type {Number} defaultCooldown
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
 

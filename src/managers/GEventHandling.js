@@ -18,7 +18,7 @@ class GEventHandling {
     constructor(GCommandsClient) {
         /**
          * GEventHandling options
-         * @property {Object} GCommandsClient
+         * @type {Object} GCommandsClient
         */
         this.GCommandsClient = GCommandsClient;
 

@@ -24,12 +24,14 @@ class InteractionEvent extends GInteraction {
 
         /**
          * selectMenuId
+         * @type {String}
          * @deprecated
          */
         this.selectMenuId = data.data.values ? data.data.custom_id : undefined;
 
         /**
-         * selectMenuId
+         * valueId
+         * @type {Array}
          * @deprecated
          */
         this.valueId = data.data.values ? data.data.values : undefined;
