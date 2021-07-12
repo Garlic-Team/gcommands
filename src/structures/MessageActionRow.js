@@ -27,7 +27,7 @@ class MessageActionRow {
      * @param {MessageButton | MessageSelectMenu} cmponent  
     */
     addComponent(component) {
-        if(typeof component != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
+        if(typeof component !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
         this.components.push(component)
         return this;
     }
@@ -37,7 +37,7 @@ class MessageActionRow {
      * @param {MessageButton[] | MessageSelectMenu[]} components
     */
     addComponents(components) {
-        if(typeof components != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
+        if(typeof components !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageButton!").getText())
         this.components.push(...components.flat(Infinity).map((c) => c));
         return this;
     }
@@ -49,7 +49,7 @@ class MessageActionRow {
      * @param {MessageButton[] | MessageSelectMenu[]} components 
     */
     removeComponents(index, deleteCount, ...components) {
-        if(typeof components != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        if(typeof components !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
         this.components.splice(index, deleteCount, ...components.flat(Infinity).map((c) => c));
         return this;
     }

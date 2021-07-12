@@ -46,7 +46,7 @@ class GPayload {
         else this.data = {};
 
         let type = typeof this.options;
-        if(type != "object" || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options }
+        if(type !== "object" || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options }
 
         this.data.inlineReply = this.options.inlineReply == undefined || null ? true : false;
 

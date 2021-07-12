@@ -127,7 +127,7 @@ class GEventHandling {
                 }
 
                 if(commandos.guildOnly) {
-                    if(message.guild.id != commandos.guildOnly) return;
+                    if(message.guild.id !== commandos.guildOnly) return;
                 } 
 
                 if(commandos.userOnly) {
@@ -135,7 +135,7 @@ class GEventHandling {
                         let users = commandos.userOnly.some(v => message.author.id == v)
                         if(!users) return;
                     } else {
-                        if(message.author.id != commandos.userOnly) return;
+                        if(message.author.id !== commandos.userOnly) return;
                     }
                 }
 
@@ -144,7 +144,7 @@ class GEventHandling {
                         let channels = commandos.channelOnly.some(v => message.channel.id == v)
                         if(!channels) return;
                     } else {
-                        if(message.channel.id != commandos.channelOnly) return;
+                        if(message.channel.id !== commandos.channelOnly) return;
                     }
                 }
 
@@ -233,7 +233,7 @@ class GEventHandling {
             this.client.ws.on('INTERACTION_CREATE', async (int) => {
                 let interaction = new GInteraction(this.client, int)
 
-                if(interaction.type != 2) return;
+                if(interaction.type !== 2) return;
                 try {
                     let commandos = this.client.gcommands.get(interaction.interaction.name);
                     if(!commandos) return;
@@ -290,7 +290,7 @@ class GEventHandling {
                             let users = commandos.userOnly.some(v => interaction.member.user.id == v)
                             if(!users) return;
                         } else {
-                            if(interaction.member.user.id != commandos.userOnly) return;
+                            if(interaction.member.user.id !== commandos.userOnly) return;
                         }
                     }
 
@@ -299,7 +299,7 @@ class GEventHandling {
                             let channels = commandos.channelOnly.some(v => interaction.channel_id == v);
                             if(!channels) return;
                         } else {
-                            if(interaction.channel_id != commandos.channelOnly) return;
+                            if(interaction.channel_id !== commandos.channelOnly) return;
                         }
                     }
 

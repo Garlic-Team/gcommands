@@ -16,7 +16,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.region != newGuild.region) {
+        if(oldGuild.region !== newGuild.region) {
             client.emit("guildRegionUpdate",
                 newGuild,
                 oldGuild.region,
@@ -24,7 +24,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.banner != newGuild.banner) {
+        if(oldGuild.banner !== newGuild.banner) {
             client.emit("guildBannerUpdate",
                 newGuild,
                 oldGuild.banner,
@@ -32,7 +32,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.afkChannel != newGuild.afkChannel) {
+        if(oldGuild.afkChannel !== newGuild.afkChannel) {
             client.emit("guildAfkChannelUpdate",
                 newGuild,
                 oldGuild.afkChannel,
@@ -40,7 +40,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.vanityURLCode != newGuild.vanityURLCode) {
+        if(oldGuild.vanityURLCode !== newGuild.vanityURLCode) {
             client.emit("guildVanityURLUpdate",
                 newGuild,
                 oldGuild.vanityURLCode,
@@ -48,7 +48,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.features.length != newGuild.features.length) {
+        if(oldGuild.features.length !== newGuild.features.length) {
             client.emit("guildFeaturesUpdate",
                 newGuild,
                 oldGuild.features,
@@ -56,7 +56,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.nameAcronym != newGuild.nameAcronym) {
+        if(oldGuild.nameAcronym !== newGuild.nameAcronym) {
             client.emit("guildAcronymUpdate",
                 newGuild,
                 oldGuild.nameAcronym,
@@ -64,7 +64,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.ownerID != newGuild.ownerID) {
+        if(oldGuild.ownerID !== newGuild.ownerID) {
             client.emit("guildOwnerUpdate",
                 newGuild,
                 oldGuild.ownerID,
@@ -72,7 +72,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.maximumMembers != newGuild.maximumMembers ) {
+        if(oldGuild.maximumMembers !== newGuild.maximumMembers ) {
             client.emit("guildMaximumMembersUpdate",
                 newGuild,
                 oldGuild.maximumMembers,
@@ -80,7 +80,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.partnered != newGuild.partnered ) {
+        if(oldGuild.partnered !== newGuild.partnered ) {
             client.emit("guildPartnerUpdate",
                 newGuild,
                 oldGuild.partnered,
@@ -88,7 +88,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldGuild.verified != newGuild.verified ) {
+        if(oldGuild.verified !== newGuild.verified ) {
             client.emit("guildVerifyUpdate",
                 newGuild,
                 oldGuild.verified,

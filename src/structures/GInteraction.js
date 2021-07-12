@@ -252,7 +252,7 @@ class GInteraction {
             }
         }
 
-        if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
+        if(typeof apiMessage !== "object") apiMessage = apiMessage.toJSON();
         if(apiMessage) {
             apiMessage = apiMessageMsg;
             apiMessage.client = this.client ? this.client : client;
@@ -284,7 +284,7 @@ class GInteraction {
             }))
         }
 
-        if(typeof apiMessage != "object") apiMessage = apiMessage.toJSON();
+        if(typeof apiMessage !== "object") apiMessage = apiMessage.toJSON();
         if(apiMessage) {
             apiMessage.client = this.client ? this.client : client;
             apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};

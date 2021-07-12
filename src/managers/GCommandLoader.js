@@ -84,7 +84,7 @@ class GCommandLoader {
             var subCommandGroup = {};
             var subCommand = [];
             const cmd = this.client.gcommands.get(cmdname)
-            if(cmd.slash == false || cmd.slash == "false") return;
+            if(String(cmd.slash) == "false") return;
 
             if(!cmd.name) return console.log(new Color("&d[GCommands] &cParameter name is required! ("+cmdname+")",{json:false}).getText());
             if(!cmd.description) return console.log(new Color("&d[GCommands] &cParameter description is required! ("+cmdname+")",{json:false}).getText());
@@ -294,7 +294,7 @@ class GCommandLoader {
      async __deleteAllGlobalCmds() {
         try {
             var allcmds = await cmdUtils.__getAllCommands(this.client);
-            if(!this.client.slash) {
+            if(String(this.client.slash) == "false") {
                 allcmds.forEach(cmd => {
                     cmdUtils.__deleteCmd(this.client, cmd.id)
                 })

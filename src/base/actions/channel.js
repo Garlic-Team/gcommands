@@ -1,6 +1,6 @@
 module.exports = (client) => {
     client.on("channelUpdate", async(oldChannel, newChannel) => {
-        if(oldChannel.permissionOverwrites != newChannel.permissionOverwrites) {
+        if(oldChannel.permissionOverwrites !== newChannel.permissionOverwrites) {
             client.emit("guildChannelPermissionsUpdate",
                 newChannel,
                 oldChannel.permissionOverwrites,
@@ -24,7 +24,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldChannel.type != newChannel.type) {
+        if(oldChannel.type !== newChannel.type) {
             client.emit("guildChannelTypeUpdate",
                 newChannel,
                 oldChannel.type,
@@ -32,7 +32,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldChannel.type == "voice" && oldChannel.userLimit != newChannel.userLimit) {
+        if(oldChannel.type == "voice" && oldChannel.userLimit !== newChannel.userLimit) {
             client.emit("guildChannelUserLimitUpdate",
                 newChannel,
                 oldChannel.userLimit,
@@ -40,7 +40,7 @@ module.exports = (client) => {
             )
         }
 
-        if(oldChannel.type == "voice" && oldChannel.bitrate != newChannel.bitrate) {
+        if(oldChannel.type == "voice" && oldChannel.bitrate !== newChannel.bitrate) {
             client.emit("guildChannelBitrateUpdate",
                 newChannel,
                 oldChannel.bitrate,

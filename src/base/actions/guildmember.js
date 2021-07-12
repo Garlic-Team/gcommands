@@ -18,7 +18,7 @@ module.exports = (client) => {
             )
         }
 
-        if (oldMember.nickname != newMember.nickname) {
+        if (oldMember.nickname !== newMember.nickname) {
             client.emit('guildMemberNicknameUpdate',
                 newMember,
                 oldMember.nickname,
