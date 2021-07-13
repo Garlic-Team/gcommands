@@ -53,7 +53,9 @@ class GEventHandling {
 
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
 
-            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : this.client.prefixes.filter(p => message.content.startsWith(p))
+            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : (await message.guild.getCommandPrefix()).filter(p => message.content.startsWith(p))
+            if(prefix.length === 0) return;
+
             if (this.GCommandsClient.caseSensitivePrefixes && !message.content.toLowerCase().startsWith(prefix[0].toLowerCase())) return;
             else if (!message.content.startsWith(prefix[0])) return;
         
