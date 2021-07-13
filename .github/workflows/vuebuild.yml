@@ -22,3 +22,12 @@ jobs:
         BUILD_DIR: guide/.vuepress/dist/
         CNAME: gcommands.js.org
         COMMIT_MESSAGE: Deploy Docs
+
+    - name: Copy
+      uses: andstor/copycat-action@v3
+      with:
+        personal_token: ${{ secrets.ACCESS_TOKEN }}
+        src_path: /.
+        dst_path: /guide/
+        dst_owner: Garlic-Team
+        dst_repo_name: gcommands
