@@ -10,7 +10,7 @@ class MessageSelectMenu {
      * Creates new MessageSelectMenu instance
      * @param {Object} data 
     */
-    constructor(data = {}) {
+     constructor(data = {}) {
 
         /**
          * type
@@ -33,7 +33,7 @@ class MessageSelectMenu {
      * @returns {MessageSelectMenu}
      * @private
      */
-    setup(data) {
+     setup(data) {
         /**
          * placeholder
          * @type {String} 
@@ -58,10 +58,6 @@ class MessageSelectMenu {
         */
         this.id = 'id' in data ? resolveString(data.id) : null;
 
-        /**
-         * options
-         * @type {Array} 
-        */
         this.options = 'options' in data ? Array(data.options) : [];
 
         /**
@@ -113,7 +109,7 @@ class MessageSelectMenu {
      * Method to setDisabled
      * @param {String} boolean 
     */
-     setDisabled(boolean = true) {
+    setDisabled(boolean = true) {
         this.disabled = Boolean(boolean);
         return this;
     }
