@@ -17,7 +17,7 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         TARGET_REPO: Garlic-Team/GCommands
-        TARGET_BRANCH: master
+        TARGET_BRANCH: master/guide
         BUILD_SCRIPT: yarn && yarn build
         BUILD_DIR: guide/.vuepress/dist/
         CNAME: gcommands.js.org
