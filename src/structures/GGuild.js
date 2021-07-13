@@ -1,4 +1,4 @@
-const { Guild } = require("discord.js");
+const { Guild } = require('discord.js');
 
 module.exports = Object.defineProperties(Guild.prototype, {
     getCommandPrefix: {
@@ -6,7 +6,6 @@ module.exports = Object.defineProperties(Guild.prototype, {
             return this.client.dispatcher.getGuildPrefix(this.id, cache)
         }
     },
-
     setCommandPrefix: {
         value: async function(prefix)  {
             this.client.dispatcher.setGuildPrefix(this.id, prefix);

@@ -1,10 +1,10 @@
-const { Collection } = require("discord.js");
-const Color = require("../structures/Color"), { Events } = require("../util/Constants");
+const { Collection } = require('discord.js');
+const Color = require('../structures/Color'), { Events } = require('../util/Constants');
 const path = require('path');
 const fs = require('fs');
-const Event = require("../structures/Event");
-const { isClass } = require("../util/util");
-const { eventNames } = require("process");
+const Event = require('../structures/Event');
+const { isClass } = require('../util/util');
+const { eventNames } = require('process');
 
 /**
  * The GEventLoader class
@@ -18,7 +18,7 @@ class GEventLoader {
     */
     constructor(GCommandsClient, options = {}) {
         if(!GCommandsClient.client) GCommandsClient = { client: GCommandsClient }
-        if (typeof GCommandsClient.client !== 'object') return console.log(new Color("&d[GCommands EVENTS] &cNo discord.js client provided!",{json:false}).getText());
+        if (typeof GCommandsClient.client !== 'object') return console.log(new Color('&d[GCommands EVENTS] &cNo discord.js client provided!',{json:false}).getText());
 
         /**
          * GCommandsClient
@@ -56,9 +56,9 @@ class GEventLoader {
     async __loadEventFiles() {
         await fs.readdirSync(`${__dirname}/../../../../${this.eventDir}`).forEach(async(dir) => {
             let file;
-            let fileName = dir.split(".").reverse()[1]
-            let fileType = dir.split(".").reverse()[0]
-            if(fileType == "js" || fileType == "ts") {
+            let fileName = dir.split('.').reverse()[1]
+            let fileType = dir.split('.').reverse()[0]
+            if(fileType == 'js' || fileType == 'ts') {
                 try {
                     let finalFile;
 
@@ -69,15 +69,15 @@ class GEventLoader {
                     } else finalFile = file;
 
                     this.client.gevents.set(finalFile.name, finalFile);
-                    this.GCommandsClient.emit(Events.LOG, new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName, {json:false}).getText());
+                    this.GCommandsClient.emit(Events.LOG, new Color('&d[GEvents] &aLoaded (File): &e➜   &3' + fileName, {json:false}).getText());
                 } catch(e) {
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
-                    this.GCommandsClient.emit(Events.LOG, new Color("&d[GEvents] &cCan't load " + fileName).getText());
+                    this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GEvents Debug] '+e).getText());
+                    this.GCommandsClient.emit(Events.LOG, new Color('&d[GEvents] &cCan\'t load ' + fileName).getText());
                 }
             } else {
                 fs.readdirSync(`${this.eventDir}${dir}`).forEach(async(eventFile) => {
                     let file2;
-                    let fileName2 = eventFile.split(".").reverse()[1];
+                    let fileName2 = eventFile.split('.').reverse()[1];
                     try {
                         let finalFile2;
 
@@ -88,10 +88,10 @@ class GEventLoader {
                         } else finalFile2 = file2;
 
                         this.client.gevents.set(finalFile2.name, finalFile2);
-                        this.GCommandsClient.emit(Events.LOG, new Color("&d[GEvents] &aLoaded (File): &e➜   &3" + fileName2, {json:false}).getText());
+                        this.GCommandsClient.emit(Events.LOG, new Color('&d[GEvents] &aLoaded (File): &e➜   &3' + fileName2, {json:false}).getText());
                     } catch(e) {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GEvents Debug] "+e).getText());
-                        this.GCommandsClient.emit(Events.LOG, new Color("&d[GEvents] &cCan't load " + fileName2).getText());
+                        this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GEvents Debug] '+e).getText());
+                        this.GCommandsClient.emit(Events.LOG, new Color('&d[GEvents] &cCan\'t load ' + fileName2).getText());
                     }
                 })
             }
@@ -107,7 +107,7 @@ class GEventLoader {
     */
     async __loadEvents() {
         this.client.gevents.forEach(event => {
-            if(event.name == "ready") return event.run(this.client);
+            if(event.name == 'ready') return event.run(this.client);
 
             if(event.ws) {
                 if(event.once) this.client.ws.once(event.name, (...args) => event.run(this.client, ...args));

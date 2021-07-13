@@ -1,5 +1,5 @@
-const InteractionEvent = require("../../structures/InteractionEvent");
-const { inhibit, interactionRefactor } = require("../../util/util")
+const InteractionEvent = require('../../structures/InteractionEvent');
+const { inhibit, interactionRefactor } = require('../../util/util')
 
 module.exports = (client) => {
     client.ws.on('INTERACTION_CREATE', async(data) => {
@@ -23,7 +23,7 @@ module.exports = (client) => {
             if(inhibitReturn == false) return;
 
             client.emit(data.data.component_type == 3 ? `selectMenu` : `clickButton`, interaction)
-            client.emit("interaction", interaction)
+            client.emit('interaction', interaction)
         }
     });
 }

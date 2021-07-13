@@ -1,6 +1,6 @@
-const { interactionRefactor } = require("../util/util");
-const { Message } = require("discord.js")
-const GInteraction = require("./GInteraction");
+const { interactionRefactor } = require('../util/util');
+const { Message } = require('discord.js')
+const GInteraction = require('./GInteraction');
 
 /**
  * The InteractionEvent class

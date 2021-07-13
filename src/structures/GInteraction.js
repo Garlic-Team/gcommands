@@ -1,6 +1,6 @@
-const { Message } = require("discord.js");
-const Color = require("../structures/Color");
-const GPayload = require("./GPayload");
+const { Message } = require('discord.js');
+const Color = require('../structures/Color');
+const GPayload = require('./GPayload');
 
 /**
  * The GInteraction class
@@ -190,7 +190,7 @@ class GInteraction {
          * @param {Object} options 
         */
          let _edit = async(result) => {
-            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
+            if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
             return this.slashEdit(result)
         }
 
@@ -199,7 +199,7 @@ class GInteraction {
          * @param {Object} options 
         */
          let _update = async(result) => {
-            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
+            if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
             return this.slashEdit(result, true)
         }
 
@@ -208,8 +208,8 @@ class GInteraction {
          * @param {Object} options 
         */
         let _fetch = async() => {
-            if(!this.replied) return console.log(new Color("&d[GCommands] &cThis button has no reply.").getText())
-            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages["@original"].get());
+            if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
+            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
 
             if(apiMessage) {
                 apiMessage.client = this.client;
@@ -253,7 +253,7 @@ class GInteraction {
             }
         }
 
-        if(typeof apiMessage !== "object") apiMessage = apiMessage.toJSON();
+        if(typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
         if(apiMessage) {
             apiMessage = apiMessageMsg;
             apiMessage.client = this.client ? this.client : client;
@@ -280,12 +280,12 @@ class GInteraction {
                 },
             })
         } else {
-            apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : "@original"].patch({
+            apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : '@original'].patch({
                 data: GPayloadResult.data
             }))
         }
 
-        if(typeof apiMessage !== "object") apiMessage = apiMessage.toJSON();
+        if(typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
         if(apiMessage) {
             apiMessage.client = this.client ? this.client : client;
             apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};

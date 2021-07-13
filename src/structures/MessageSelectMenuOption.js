@@ -1,4 +1,4 @@
-const { resolveString, parseEmoji } = require("../util/util");
+const { resolveString, parseEmoji } = require('../util/util');
 
 /**
  * The MessageSelectMenuOption class

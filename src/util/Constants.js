@@ -11,6 +11,6 @@
 */
 
 exports.Events = {
-    DEBUG: "debug",
-    LOG: "log"
+    DEBUG: 'debug',
+    LOG: 'log'
 }

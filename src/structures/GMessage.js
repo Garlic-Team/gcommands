@@ -1,7 +1,7 @@
 const { Message } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
 const GPayload = require('./GPayload');
-const ifDjsV13 = (require("../util/updater")).checkDjsVersion("13");
+const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
 
 module.exports = Object.defineProperties(Message.prototype, {
     /**
@@ -26,7 +26,7 @@ module.exports = Object.defineProperties(Message.prototype, {
                 data: GPayloadResult.data
             }))
 
-            if(typeof apiMessage !== "object") apiMessage = apiMessage.toJSON();
+            if(typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
             if(apiMessage) {
                 apiMessage.client = this.client ? this.client : client;
                 apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};

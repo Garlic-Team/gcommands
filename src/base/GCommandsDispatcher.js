@@ -1,7 +1,7 @@
 const { Collector, Collection, User, Team } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require("../structures/Color")
-const ifDjsV13 = require("../util/updater").checkDjsVersion("13");
-const ms = require("ms");
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require('../structures/Color')
+const ifDjsV13 = require('../util/updater').checkDjsVersion('13');
+const ms = require('ms');
 
 /**
  * The GCommansDispatcher class
@@ -71,7 +71,7 @@ class GCommandsDispatcher {
         let now = Date.now();
 
         let cooldown;
-        if(typeof command.cooldown == "object") cooldown = command.cooldown ? ms(command.cooldown.cooldown) : ms(this.client.defaultCooldown);
+        if(typeof command.cooldown == 'object') cooldown = command.cooldown ? ms(command.cooldown.cooldown) : ms(this.client.defaultCooldown);
         else cooldown = command.cooldown ? ms(command.cooldown) : ms(this.client.defaultCooldown);
 
         if(cooldown < 1800000 || !this.client.database) {
@@ -86,7 +86,7 @@ class GCommandsDispatcher {
                     const expirationTime = timestamps.get(userId) + cooldown;
                 
                     if (now < expirationTime) {
-                        if(typeof command.cooldown == "object" && command.cooldown.agressive) {
+                        if(typeof command.cooldown == 'object' && command.cooldown.agressive) {
                             this.client.cooldowns.set(command.name, new Collection());
                             return { cooldown: true, wait: ms(cooldown) }
                         }
@@ -119,7 +119,7 @@ class GCommandsDispatcher {
         }
 
         if(now < userInfo) {
-            if(typeof command.cooldown == "object" && command.cooldown.agressive) {
+            if(typeof command.cooldown == 'object' && command.cooldown.agressive) {
                 guildData.users[userId][command.name] = ms(command.cooldown) + now
     
                 userInfo = guildData.users[userId][command.name]

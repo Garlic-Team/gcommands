@@ -1,8 +1,8 @@
-const {Collection} = require("discord.js");
-const { readdirSync } = require("fs");
-const Color = require("../structures/Color"), { Events } = require("../util/Constants");
-const GInteraction = require("../structures/GInteraction");
-const ifDjsV13 = require("../util/updater").checkDjsVersion("13"), { inhibit, interactionRefactor } = require("../util/util")
+const {Collection} = require('discord.js');
+const { readdirSync } = require('fs');
+const Color = require('../structures/Color'), { Events } = require('../util/Constants');
+const GInteraction = require('../structures/GInteraction');
+const ifDjsV13 = require('../util/updater').checkDjsVersion('13'), { inhibit, interactionRefactor } = require('../util/util')
 
 /**
  * The GEventHandling class
@@ -37,7 +37,7 @@ class GEventHandling {
      * @private
     */
     async messageEvent() {
-        if((this.client.slash == false) || (this.client.slash == "both")) {
+        if((this.client.slash == false) || (this.client.slash == 'both')) {
             this.client.on('message', async(message) => {
                 messageEventUse(message)
             })
@@ -68,7 +68,7 @@ class GEventHandling {
                 let commandos = this.client.gcommands.get(cmd);
                 if(!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(cmd));
                 if(!commandos) return;
-                if(String(commandos.slash) == "true") return;
+                if(String(commandos.slash) == 'true') return;
 
                 let member = message.member, guild = message.guild, channel = message.channel
                 let botMessageInhibit;
@@ -90,7 +90,7 @@ class GEventHandling {
                         return msg;
                     },
                     edit: async(options = undefined) => {
-                        if(!botMessageInhibit) return console.log(new Color("&d[GCommands Errors] &cFirst you need to send a respond."))
+                        if(!botMessageInhibit) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'))
                         return await botMessageInhibit.edit(options);
                     }
                 }, args, args)
@@ -111,7 +111,7 @@ class GEventHandling {
                 } 
 
                 if(commandos.userOnly) {
-                    if(typeof commandos.userOnly == "object") {
+                    if(typeof commandos.userOnly == 'object') {
                         let users = commandos.userOnly.some(v => message.author.id == v)
                         if(!users) return;
                     } else {
@@ -120,7 +120,7 @@ class GEventHandling {
                 }
 
                 if(commandos.channelOnly) {
-                    if(typeof commandos.channelOnly == "object") {
+                    if(typeof commandos.channelOnly == 'object') {
                         let channels = commandos.channelOnly.some(v => message.channel.id == v)
                         if(!channels) return;
                     } else {
@@ -128,14 +128,14 @@ class GEventHandling {
                     }
                 }
 
-                if(commandos.channelTextOnly && message.channel.type != "text") return message.send(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage])
-                if(commandos.channelNewsOnly && message.channel.type != "news") return message.send(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage])
+                if(commandos.channelTextOnly && message.channel.type != 'text') return message.send(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage])
+                if(commandos.channelNewsOnly && message.channel.type != 'news') return message.send(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage])
 
                 if(commandos.clientRequiredPermissions) {
                     if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if(message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "));
+                        let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
                         return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
                     }
                 }
@@ -144,7 +144,7 @@ class GEventHandling {
                     if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if(!message.member.permissions.has(commandos.userRequiredPermissions)) {
-                        let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "));
+                        let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
                         return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
                     }
                 }
@@ -154,7 +154,7 @@ class GEventHandling {
 
                     let roles = commandos.userRequiredRoles.some(v => message.member._roles.includes(v))
                     if(!roles) {
-                        let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``);
+                        let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
                         return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
                     }
                 }
@@ -164,12 +164,12 @@ class GEventHandling {
 
                     let roles = commandos.userRequiredRole.some(v => message.member._roles.includes(v))
                     if(!roles) {
-                        let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(", ")}\``);
+                        let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
                         return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
                     }
                 }
 
-                this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + message.author.id + "&3 used &a" + cmd).getText())
+                this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + message.author.id + '&3 used &a' + cmd).getText())
 
                 const client = this.client, bot = this.client
                 let botMessage;
@@ -191,7 +191,7 @@ class GEventHandling {
                         return msg;
                     },
                     edit: async(options = undefined) => {
-                        if(!botMessage) return console.log(new Color("&d[GCommands Errors] &cFirst you need to send a respond."))
+                        if(!botMessage) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'))
                         return await botMessage.edit(options);
                     }
                 }, args, args)
@@ -200,7 +200,7 @@ class GEventHandling {
 
                 if(!this.GCommandsClient.unkownCommandMessage) return;
                 if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace("{COMMAND}",cmd));
+                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace('{COMMAND}',cmd));
                 }
             }
         }
@@ -212,7 +212,7 @@ class GEventHandling {
      * @private
     */
     async slashEvent() {
-        if((this.client.slash) || (this.client.slash == "both")) {
+        if((this.client.slash) || (this.client.slash == 'both')) {
             this.client.ws.on('INTERACTION_CREATE', async (int) => {
                 let interaction = new GInteraction(this.client, int)
 
@@ -220,7 +220,7 @@ class GEventHandling {
                 try {
                     let commandos = this.client.gcommands.get(interaction.interaction.name);
                     if(!commandos) return;
-                    if(commandos.slash == false || commandos.slash == "false") return;
+                    if(commandos.slash == false || commandos.slash == 'false') return;
                     if (!this.client.cooldowns.has(commandos.name)) {
                         this.client.cooldowns.set(commandos.name, new Collection());
                     }
@@ -247,7 +247,7 @@ class GEventHandling {
                     if(commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage])
 
                     if(commandos.userOnly) {
-                        if(typeof commandos.userOnly == "object") {
+                        if(typeof commandos.userOnly == 'object') {
                             let users = commandos.userOnly.some(v => interaction.member.user.id == v)
                             if(!users) return;
                         } else {
@@ -256,7 +256,7 @@ class GEventHandling {
                     }
 
                     if(commandos.channelOnly) {
-                        if(typeof commandos.channelOnly == "object") {
+                        if(typeof commandos.channelOnly == 'object') {
                             let channels = commandos.channelOnly.some(v => interaction.channel.id == v);
                             if(!channels) return;
                         } else {
@@ -264,19 +264,19 @@ class GEventHandling {
                         }
                     }
 
-                    if(commandos.channelTextOnly && interaction.channel.type != "text") return interaction.reply.send({content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true})
-                    if(commandos.channelNewsOnly && interaction.channel.type != "news") return interaction.reply.send({content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true})
+                    if(commandos.channelTextOnly && interaction.channel.type != 'text') return interaction.reply.send({content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true})
+                    if(commandos.channelNewsOnly && interaction.channel.type != 'news') return interaction.reply.send({content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true})
 
                     if(commandos.clientRequiredPermissions) {
                         if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
-                        if(member.guild.channels.cache.get(interaction.channel.id).permissionsFor(member.guild.me).missing(commandos.clientRequiredPermissions).length > 0) return interaction.reply.send({content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")), ephemeral: true})
+                        if(member.guild.channels.cache.get(interaction.channel.id).permissionsFor(member.guild.me).missing(commandos.clientRequiredPermissions).length > 0) return interaction.reply.send({content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true})
                     }
 
                     if(commandos.userRequiredPermissions) {
                         if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
-                        if(!this.client.guilds.cache.get(interaction.guild.id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) return interaction.reply.send({content:this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")), ephemeral: true})
+                        if(!this.client.guilds.cache.get(interaction.guild.id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) return interaction.reply.send({content:this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true})
                     }
 
                     if((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
@@ -284,7 +284,7 @@ class GEventHandling {
                         if(!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
     
                         let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v))
-                        if(!roles) return interaction.reply.send({content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``), ephemeral: true})
+                        if(!roles) return interaction.reply.send({content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true})
                     }
 
                     try {
@@ -295,7 +295,7 @@ class GEventHandling {
                          * @param {Object} interaction
                          * @example 
                          *  return {
-                         *      content: "hi",
+                         *      content: 'hi',
                          *      ephemeral: true,
                          *      allowedMentions: { parse: [], repliedUser: true }
                          *  }
@@ -322,10 +322,10 @@ class GEventHandling {
                             }
                         }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
                     } catch(e) {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3" + e).getText())
+                        this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3' + e).getText())
                     }
                     
-                    this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands Debug] &3User &a" + interaction.member.user.id + "&3 used &a" + interaction.interaction.name).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + interaction.member.user.id + '&3 used &a' + interaction.interaction.name).getText())
                 }catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, e);
 
@@ -335,7 +335,7 @@ class GEventHandling {
                             data: {
                                 type: 4,
                                 data: {
-                                    content: this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace("{COMMAND}",interaction.data.name)
+                                    content: this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace('{COMMAND}',interaction.data.name)
                                 }
                             }
                         });

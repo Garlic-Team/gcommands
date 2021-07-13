@@ -1,7 +1,7 @@
 module.exports = (client) => {
-    client.on("userUpdate", async(oldUser, newUser) => {
+    client.on('userUpdate', async(oldUser, newUser) => {
         if(oldUser.displayAvatarURL() !== newUser.displayAvatarURL()) {
-            client.emit("userAvatarUpdate",
+            client.emit('userAvatarUpdate',
                 newUser,
                 oldUser.displayAvatarURL(),
                 newUser.displayAvatarURL()
@@ -9,7 +9,7 @@ module.exports = (client) => {
         }
 
         if(oldUser.username !== newUser.username) {
-            client.emit("userUsernameUpdate",
+            client.emit('userUsernameUpdate',
                 newUser,
                 oldUser.username,
                 newUser.username
@@ -17,7 +17,7 @@ module.exports = (client) => {
         }
 
         if(oldUser.discriminator !== newUser.discriminator) {
-            client.emit("userDiscriminatorUpdate",
+            client.emit('userDiscriminatorUpdate',
                 newUser,
                 oldUser.discriminator,
                 newUser.discriminator
@@ -26,7 +26,7 @@ module.exports = (client) => {
 
 
         if(oldUser.flags !== newUser.flags) {
-            client.emit("userFlagsUpdate",
+            client.emit('userFlagsUpdate',
                 newUser,
                 oldUser.flags,
                 newUser.flags

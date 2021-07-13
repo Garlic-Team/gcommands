@@ -1,4 +1,4 @@
-const { resolveString } = require("../util/util");
+const { resolveString } = require('../util/util');
 
 /**
  * The Event class

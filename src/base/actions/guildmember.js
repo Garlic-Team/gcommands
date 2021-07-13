@@ -1,9 +1,9 @@
-const { default: axios } = require("axios");
+const { default: axios } = require('axios');
 
 module.exports = (client) => {
-    client.on("guildMemberUpdate", async(oldMember, newMember) => {
+    client.on('guildMemberUpdate', async(oldMember, newMember) => {
         if(oldMember.premiumSince && newMember.premiumSince) {
-            client.emit("guildMemberBoost",
+            client.emit('guildMemberBoost',
                 newMember,
                 oldMember.premiumSince,
                 newMember.premiumSince
@@ -11,7 +11,7 @@ module.exports = (client) => {
         }
 
         if(oldMember.premiumSince && !newMember.premiumSince) {
-            client.emit("guildMemberUnboost",
+            client.emit('guildMemberUnboost',
                 newMember,
                 oldMember.premiumSince,
                 newMember.premiumSince
@@ -30,10 +30,10 @@ module.exports = (client) => {
             let url = `https://discord.com/api/v9/guilds/${newMember.guild.id}/members/${newMember.user.id}`
 
             let config = {
-                method: "GET",
+                method: 'GET',
                 headers: {
                     Authorization: `Bot ${client.token}`,
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json'
                 },
                 url,
             }

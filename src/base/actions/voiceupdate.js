@@ -1,5 +1,5 @@
 module.exports = (client) => {
-    client.on("voiceStateUpdate", async(oldState, newState) => {
+    client.on('voiceStateUpdate', async(oldState, newState) => {
         const oldMember = oldState.member;
         const newMember = newState.member;
 

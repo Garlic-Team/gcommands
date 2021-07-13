@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageAttachment } = require("discord.js");
+const { MessageEmbed, MessageAttachment } = require('discord.js');
 
 /**
  * The GPayload class
@@ -46,11 +46,11 @@ class GPayload {
         else this.data = {};
 
         let type = typeof this.options;
-        if(type !== "object" || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options }
+        if(type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options }
 
         this.options.inlineReply = this.options.inlineReply == undefined ? true : false;
 
-        if(this.options.content && typeof this.options.content == "object") {
+        if(this.options.content && typeof this.options.content == 'object') {
             this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
             this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : [];
         } else this.data.content = this.options.content || null
@@ -75,7 +75,7 @@ class GPayload {
         if (this.files) return this;
 
         let finalFiles = [];
-        if(typeof this.options == "object" && (this.options.attachments || this.options.files)) {
+        if(typeof this.options == 'object' && (this.options.attachments || this.options.files)) {
             let attachments = this.options.attachments || this.options.files
 
             if(!Array.isArray(attachments)) attachments = [attachments]

@@ -1,23 +1,23 @@
 module.exports = (client) => {
-    client.on("channelUpdate", async(oldChannel, newChannel) => {
+    client.on('channelUpdate', async(oldChannel, newChannel) => {
         if(oldChannel.permissionOverwrites !== newChannel.permissionOverwrites) {
-            client.emit("guildChannelPermissionsUpdate",
+            client.emit('guildChannelPermissionsUpdate',
                 newChannel,
                 oldChannel.permissionOverwrites,
                 newChannel.permissionOverwrites,
             );
         }
 
-        if(oldChannel.type == "text" && oldChannel.topic !== newChannel.topic) {
-            client.emit("guildChannelTopicUpdate",
+        if(oldChannel.type == 'text' && oldChannel.topic !== newChannel.topic) {
+            client.emit('guildChannelTopicUpdate',
                 newChannel,
                 oldChannel.topic,
                 newChannel.topic
             )
         }
 
-        if(oldChannel.type == "text" && oldChannel.nsfw !== newChannel.nsfw) {
-            client.emit("guildChannelNSFWUpdate",
+        if(oldChannel.type == 'text' && oldChannel.nsfw !== newChannel.nsfw) {
+            client.emit('guildChannelNSFWUpdate',
                 newChannel,
                 oldChannel.nsfw,
                 newChannel.nsfw
@@ -25,23 +25,23 @@ module.exports = (client) => {
         }
 
         if(oldChannel.type !== newChannel.type) {
-            client.emit("guildChannelTypeUpdate",
+            client.emit('guildChannelTypeUpdate',
                 newChannel,
                 oldChannel.type,
                 newChannel.type
             )
         }
 
-        if(oldChannel.type == "voice" && oldChannel.userLimit !== newChannel.userLimit) {
-            client.emit("guildChannelUserLimitUpdate",
+        if(oldChannel.type == 'voice' && oldChannel.userLimit !== newChannel.userLimit) {
+            client.emit('guildChannelUserLimitUpdate',
                 newChannel,
                 oldChannel.userLimit,
                 newChannel.userLimit
             )
         }
 
-        if(oldChannel.type == "voice" && oldChannel.bitrate !== newChannel.bitrate) {
-            client.emit("guildChannelBitrateUpdate",
+        if(oldChannel.type == 'voice' && oldChannel.bitrate !== newChannel.bitrate) {
+            client.emit('guildChannelBitrateUpdate',
                 newChannel,
                 oldChannel.bitrate,
                 newChannel.bitrate

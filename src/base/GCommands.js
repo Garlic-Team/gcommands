@@ -1,8 +1,8 @@
-const GCommandLoader = require("../managers/GCommandLoader"), Color = require("../structures/Color"), GCommandsBase = require("./GCommandsBase"), GCommandsDispatcher = require("./GCommandsDispatcher"), GEventLoader = require("../managers/GEventLoader"), GEventHandling = require("../managers/GEventHandling"), GDatabaseLoader = require("../managers/GDatabaseLoader"), { Events } = require("../util/Constants"), GUpdater = require("../util/updater"), {msToSeconds} = require("../util/util");
+const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsBase = require('./GCommandsBase'), GCommandsDispatcher = require('./GCommandsDispatcher'), GEventLoader = require('../managers/GEventLoader'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), {msToSeconds} = require('../util/util');
 const { Collection, version } = require('discord.js');
-const axios = require("axios");
-const fs = require("fs");
-const ms = require("ms");
+const axios = require('axios');
+const fs = require('fs');
+const ms = require('ms');
 
 /**
  * The main GCommands class
@@ -16,10 +16,10 @@ class GCommands extends GCommandsBase {
     constructor(client, options = {}) {
         super(client, options)
 
-        if (typeof client !== "object") return console.log(new Color("&d[GCommands] &cNo discord.js client provided!",{json:false}).getText());
-        if (!Object.keys(options).length) return console.log(new Color("&d[GCommands] &cNo default options provided!",{json:false}).getText());
-        if(!options.cmdDir) return console.log(new Color("&d[GCommands] &cNo default options provided! (cmdDir)",{json:false}).getText());
-        if(!options.language) return console.log(new Color("&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))",{json:false}).getText());
+        if (typeof client !== 'object') return console.log(new Color('&d[GCommands] &cNo discord.js client provided!',{json:false}).getText());
+        if (!Object.keys(options).length) return console.log(new Color('&d[GCommands] &cNo default options provided!',{json:false}).getText());
+        if(!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{json:false}).getText());
+        if(!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))',{json:false}).getText());
 
         /**
          * GCommandsClient
@@ -79,7 +79,7 @@ class GCommands extends GCommandsBase {
          * ownLanguageFile
          * @type {Object}
         */
-        if(!options.ownLanguageFile) this.languageFile = require("../util/message.json");
+        if(!options.ownLanguageFile) this.languageFile = require('../util/message.json');
         else this.languageFile = options.ownLanguageFile;
 
         /**
@@ -143,7 +143,7 @@ class GCommands extends GCommandsBase {
         this.client.autoTyping = this.autoTyping ? msToSeconds(ms(this.autoTyping)) : null;
 
         process.on('uncaughtException', (error) => {
-            this.emit(Events.LOG, new Color("&d[GCommands Errors] &eHandled: &a" + error + ` ${error.response ? error.response.data.message : ""} ${error.response ? error.response.data.code : ""} | use debug for full error`).getText());
+            this.emit(Events.LOG, new Color('&d[GCommands Errors] &eHandled: &a' + error + ` ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
             setTimeout(() => {this.emit(Events.DEBUG, error)}, 1000)
         });
         
@@ -154,7 +154,7 @@ class GCommands extends GCommandsBase {
     }
 
     async loadSys() {
-        require("../structures/GMessage"); require("../structures/GGuild"); require("../structures/DMChannel"); require("../structures/NewsChannel"); require("../structures/TextChannel");
+        require('../structures/GMessage'); require('../structures/GGuild'); require('../structures/DMChannel'); require('../structures/NewsChannel'); require('../structures/TextChannel');
         new GDatabaseLoader(this.GCommandsClient)
         new GEventHandling(this.GCommandsClient)
         new GEventLoader(this.GCommandsClient)

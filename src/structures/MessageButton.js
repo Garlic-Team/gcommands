@@ -1,6 +1,6 @@
 /* From discord-buttons edited */
-const { resolveString, parseEmoji } = require("../util/util");
-const Color = require("./Color")
+const { resolveString, parseEmoji } = require('../util/util');
+const Color = require('./Color')
 const styles = {
     'blurple': 1,
     'gray': 2,
@@ -148,22 +148,22 @@ class MessageButton {
     }
 
     resolveStyle(style) {
-        if (!style || style === undefined || style === null) return console.log(new Color("&d[GCommands] &cAn invalid button styles was provided").getText())
+        if (!style || style === undefined || style === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText())
     
-        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color("&d[GCommands] &cAn invalid button styles was provided").getText())
+        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText())
     
         return styles[style] || style;
     }
     
     resolveButton(data) {
-        if (!data.style) return console.log(new Color("&d[GCommands] &cPlease provide button style").getText())
+        if (!data.style) return console.log(new Color('&d[GCommands] &cPlease provide button style').getText())
     
-        if (!data.label) return console.log(new Color("&d[GCommands] &cPlease provide button label").getText())
+        if (!data.label) return console.log(new Color('&d[GCommands] &cPlease provide button label').getText())
     
         if (data.style === 5) {
-            if (!data.url) return console.log(new Color("&d[GCommands] &cYou provided url style, you must provide an URL").getText())
+            if (!data.url) return console.log(new Color('&d[GCommands] &cYou provided url style, you must provide an URL').getText())
         } else {
-            if (!data.custom_id) return console.log(new Color("&d[GCommands] &cPlease provide button id").getText())
+            if (!data.custom_id) return console.log(new Color('&d[GCommands] &cPlease provide button id').getText())
         }
     
         return {

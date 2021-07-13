@@ -1,7 +1,7 @@
 module.exports = (client) => {
-    client.on("guildUpdate", async(oldGuild, newGuild) => {
+    client.on('guildUpdate', async(oldGuild, newGuild) => {
         if(oldGuild.premiumTier < newGuild.premiumTier) {
-            client.emit("guildBoostLevelUp",
+            client.emit('guildBoostLevelUp',
                 newGuild,
                 oldGuild.premiumTier,
                 newGuild.premiumTier
@@ -9,7 +9,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.premiumTier > newGuild.premiumTier) {
-            client.emit("guildBoostLevelDown",
+            client.emit('guildBoostLevelDown',
                 newGuild,
                 oldGuild.premiumTier,
                 newGuild.premiumTier
@@ -17,7 +17,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.region !== newGuild.region) {
-            client.emit("guildRegionUpdate",
+            client.emit('guildRegionUpdate',
                 newGuild,
                 oldGuild.region,
                 newGuild.region
@@ -25,7 +25,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.banner !== newGuild.banner) {
-            client.emit("guildBannerUpdate",
+            client.emit('guildBannerUpdate',
                 newGuild,
                 oldGuild.banner,
                 newGuild.banner
@@ -33,7 +33,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.afkChannel !== newGuild.afkChannel) {
-            client.emit("guildAfkChannelUpdate",
+            client.emit('guildAfkChannelUpdate',
                 newGuild,
                 oldGuild.afkChannel,
                 newGuild.afkChannel
@@ -41,7 +41,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.vanityURLCode !== newGuild.vanityURLCode) {
-            client.emit("guildVanityURLUpdate",
+            client.emit('guildVanityURLUpdate',
                 newGuild,
                 oldGuild.vanityURLCode,
                 newGuild.vanityURLCode
@@ -49,7 +49,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.features.length !== newGuild.features.length) {
-            client.emit("guildFeaturesUpdate",
+            client.emit('guildFeaturesUpdate',
                 newGuild,
                 oldGuild.features,
                 newGuild.features
@@ -57,7 +57,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.nameAcronym !== newGuild.nameAcronym) {
-            client.emit("guildAcronymUpdate",
+            client.emit('guildAcronymUpdate',
                 newGuild,
                 oldGuild.nameAcronym,
                 newGuild.nameAcronym
@@ -65,7 +65,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.ownerID !== newGuild.ownerID) {
-            client.emit("guildOwnerUpdate",
+            client.emit('guildOwnerUpdate',
                 newGuild,
                 oldGuild.ownerID,
                 newGuild.ownerID
@@ -73,7 +73,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.maximumMembers !== newGuild.maximumMembers ) {
-            client.emit("guildMaximumMembersUpdate",
+            client.emit('guildMaximumMembersUpdate',
                 newGuild,
                 oldGuild.maximumMembers,
                 newGuild.maximumMembers
@@ -81,7 +81,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.partnered !== newGuild.partnered ) {
-            client.emit("guildPartnerUpdate",
+            client.emit('guildPartnerUpdate',
                 newGuild,
                 oldGuild.partnered,
                 newGuild.partnered
@@ -89,7 +89,7 @@ module.exports = (client) => {
         }
 
         if(oldGuild.verified !== newGuild.verified ) {
-            client.emit("guildVerifyUpdate",
+            client.emit('guildVerifyUpdate',
                 newGuild,
                 oldGuild.verified,
                 newGuild.verified

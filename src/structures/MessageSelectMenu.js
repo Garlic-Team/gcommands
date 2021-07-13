@@ -1,5 +1,5 @@
-const { resolveString } = require("../util/util");
-const Color = require("./Color")
+const { resolveString } = require('../util/util');
+const Color = require('./Color')
 
 /**
  * The MessageSelectMenu class
@@ -119,7 +119,7 @@ class MessageSelectMenu {
      * @param {MessageSelectMenuOption} MessageSelectMenuOption 
     */
     addOption(option) {
-        if(typeof option !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        if(typeof option !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText())
         this.options.push(option)
         return this;
     }
@@ -129,7 +129,7 @@ class MessageSelectMenu {
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption 
     */
     addOptions(...options) {
-        if(typeof options !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        if(typeof options !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText())
         this.options.push(...options.flat(Infinity).map((o) => o));
         return this;
     }
@@ -141,7 +141,7 @@ class MessageSelectMenu {
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption[] 
     */
     removeOptions(index, deleteCount, ...options) {
-        if(typeof options !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        if(typeof options !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText())
         this.components.splice(index, deleteCount, ...options.flat(Infinity).map((o) => o));
         return this;
     }
@@ -155,7 +155,7 @@ class MessageSelectMenu {
             type: 3,
             min_values: this.min_values,
             max_values: this.max_values || this.options.length,
-            placeholder: this.placeholder || "",
+            placeholder: this.placeholder || '',
             custom_id: this.custom_id,
             disabled: this.disabled,
             options: this.options
