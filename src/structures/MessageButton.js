@@ -46,7 +46,7 @@ class MessageButton {
          * label
          * @type {String} 
         */
-        this.label = 'label' in data ? resolveString(data.label) : null;ň
+        this.label = 'label' in data ? resolveString(data.label) : null;
 
         /**
          * disabled

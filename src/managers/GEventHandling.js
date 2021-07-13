@@ -55,35 +55,12 @@ class GEventHandling {
 
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
 
-            let clientDefaultPrefix;
-            if(Array.isArray(this.client.prefix)) {
-                this.client.prefix.some(pf => {
-                    if(message.content.startsWith(pf)) {
-                        clientDefaultPrefix = pf;
-                    }
-                })
-            } else clientDefaultPrefix = this.client.prefix
-
-            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : clientDefaultPrefix
-
-            if(this.client.database) {
-                let guildDefaultPrefix;
-                if(Array.isArray((await message.guild.getCommandPrefix()))) {
-                    (await message.guild.getCommandPrefix()).some(pf => {
-                        if(message.content.startsWith(pf)) {
-                            guildDefaultPrefix = pf;
-                        }
-                    })
-                } else guildDefaultPrefix = await message.guild.getCommandPrefix()
-
-                let guildSettings = guildDefaultPrefix || clientDefaultPrefix;
-                prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex)[0] : guildSettings
-            }
-
-            if (!message.content.startsWith(prefix)) return;
+            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : this.client.prefixes.filter(p => message.content.startsWith(p))
+            if (this.GCommandsClient.caseSensitivePrefixes && !message.content.toLowerCase().startsWith(prefix[0].toLowerCase())) return;
+            else if (!message.content.startsWith(prefix[0])) return;
         
             const args = message.content.slice(prefix.length).trim().split(/ +/g);
-            const cmd = args.shift().toLowerCase();
+            const cmd = this.GCommandsClient.caseSensitiveCommands ? args.shift().toLowerCase() : args.shift();
             
             if (cmd.length === 0) return;
     
@@ -91,8 +68,7 @@ class GEventHandling {
                 let commandos = this.client.gcommands.get(cmd);
                 if(!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(cmd));
                 if(!commandos) return;
-                if(commandos.slash == true || commandos.slash == "true") return;
-
+                if(String(commandos.slash) == "true") return;
 
                 let member = message.member, guild = message.guild, channel = message.channel
                 let botMessageInhibit;

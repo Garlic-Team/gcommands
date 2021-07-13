@@ -34,39 +34,56 @@ class GCommands extends GCommandsBase {
         this.client = client;
 
         /**
+         * caseSensitiveCommands
+         * @type {Boolean}
+         * @default true
+        */
+        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true
+
+        /**
+         * caseSensitivePrefixes
+         * @type {Boolean}
+         * @default true
+        */
+        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true
+
+        /**
          * CmdDir
          * @type {String}
         */
-         this.cmdDir = options.cmdDir;
+        this.cmdDir = options.cmdDir;
 
         /**
          * EventDir
          * @type {String}
+         * @default undefined
         */
         this.eventDir = options.eventDir;
         this.client.discordjsversion = version;
 
         /**
          * unkownCommandMessage
-         * @type {String} unkownCommandMessage
+         * @type {Boolean}
+         * @default false
         */
         this.unkownCommandMessage = options.unkownCommandMessage;
 
         /**
          * AutoTyping
-         * @type {Boolean} autoTyping
+         * @type {Boolean}
+         * @default false
         */
         this.autoTyping = options.autoTyping;
 
         /**
          * ownLanguageFile
-         * @type {Object} ownLanguageFile
+         * @type {Object}
         */
         if(!options.ownLanguageFile) this.languageFile = require("../util/message.json");
         else this.languageFile = options.ownLanguageFile;
 
         /**
-         * ôanguage
+         * language
          * @type {Object} language
         */
         this.language = options.language;
@@ -74,8 +91,9 @@ class GCommands extends GCommandsBase {
         /**
          * database
          * @type {Object} database
+         * @default undefined
         */
-        this.database = options.database || undefined;
+        this.database = options.database;
 
         /**
          * gcategories
@@ -97,26 +115,29 @@ class GCommands extends GCommandsBase {
 
         /**
          * Prefix
-         * @type {String} prefix
+         * @type {String}
+         * @default undefined
          */
-        this.prefix = options.slash.prefix ? options.slash.prefix : undefined;
+        this.prefix = !Array.isArray(options.slash.prefix) ? [options.slash.prefix] : options.slash.prefix;
 
         /**
          * Slash
-         * @type {String} slash
+         * @type {String}
+         * @default false
          */
         this.slash = options.slash.slash ? options.slash.slash : false;
 
         /**
          * defaultCooldown
-         * @type {Number} defaultCooldown
+         * @type {Number}
+         * @default 0
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
 
         this.client.language = this.language;
         this.client.languageFile = this.languageFile;
         this.client.database = this.database
-        this.client.prefix = this.prefix;
+        this.client.prefixes = this.prefix;
         this.client.slash = this.slash;
         this.client.defaultCooldown = this.defaultCooldown;
         this.client.autoTyping = this.autoTyping ? msToSeconds(ms(this.autoTyping)) : null;

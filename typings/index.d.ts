@@ -338,9 +338,10 @@ declare module 'gcommands' {
     unkownCommandMessage?: boolean;
     slash: {
       slash: string | boolean;
-      prefix: string;
+      prefix?: string;
     },
-    shardClusterName?: string;
+    caseSensitiveCommands?: boolean;
+    caseSensitivePrefixes?: boolean;
     defaultCooldown?: string;
     database?: string;
   }

@@ -89,7 +89,7 @@ class Command {
          * slash
          * @type {Boolean}
          */
-        this.slash = Boolean(options.slash) || true;
+        this.slash = Boolean(options.slash) || null;
 
         /**
          * aliases
