@@ -74,6 +74,18 @@ class Command {
         this.channelOnly = options.channelOnly;
 
         /**
+         * channelTextOnly
+         * @type {Boolean}
+         */
+        this.channelTextOnly = Boolean(options.channelTextOnly) || undefined;
+
+        /**
+         * channelNewsOnly
+         * @type {Boolean}
+         */
+         this.channelNewsOnly = Boolean(options.channelNewsOnly) || undefined;
+
+        /**
          * guildOnly
          * @type {Snowflake}
          */

@@ -295,6 +295,8 @@ declare module 'gcommands' {
     public userRequiredRoles: String | Array;
     public userOnly: Snowflake | Array;
     public channelOnly: Snowflake | Array;
+    public channelTextOnly: Boolean;
+    public channelNewsOnly: Boolean;
     public guildOnly: Snowflake | String;
     public nsfw: boolean;
     public aliases: Array;

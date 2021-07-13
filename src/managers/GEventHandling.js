@@ -1,9 +1,7 @@
-const { default: axios } = require("axios");
-const {Collection, Message} = require("discord.js");
+const {Collection} = require("discord.js");
 const { readdirSync } = require("fs");
 const Color = require("../structures/Color"), { Events } = require("../util/Constants");
 const GInteraction = require("../structures/GInteraction");
-const GPayload = require("../structures/GPayload");
 const ifDjsV13 = require("../util/updater").checkDjsVersion("13"), { inhibit, interactionRefactor } = require("../util/util")
 
 /**
@@ -128,6 +126,9 @@ class GEventHandling {
                     }
                 }
 
+                if(commandos.channelTextOnly && message.channel.type != "text") return message.send(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage])
+                if(commandos.channelNewsOnly && message.channel.type != "news") return message.send(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage])
+
                 if(commandos.clientRequiredPermissions) {
                     if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
@@ -239,31 +240,9 @@ class GEventHandling {
 
                     let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.member.guild.id);
                     let cooldown = await this.client.dispatcher.getCooldown(interaction.member.guild.id, interaction.member.user.id, commandos)
-                    if(cooldown.cooldown) {
-                        return this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                            data: {
-                                type: 4,
-                                data: {
-                                    flags: 64,
-                                    content: this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name)
-                                }
-                            }
-                        });
-                    }
+                    if(cooldown.cooldown) return interaction.reply.send(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
 
-                    if(commandos.nsfw) {
-                        if(!channel.nsfw) {
-                            return this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                data: {
-                                    type: 4,
-                                    data: {
-                                        flags: 64,
-                                        content:  this.client.languageFile.NSFW[guildLanguage]
-                                    }
-                                }
-                            });
-                        }
-                    }
+                    if(commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage])
 
                     if(commandos.userOnly) {
                         if(typeof commandos.userOnly == "object") {
@@ -283,38 +262,19 @@ class GEventHandling {
                         }
                     }
 
+                    if(commandos.channelTextOnly && interaction.channel.type != "text") return interaction.reply.send({content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true})
+                    if(commandos.channelNewsOnly && interaction.channel.type != "news") return interaction.reply.send({content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true})
+
                     if(commandos.clientRequiredPermissions) {
                         if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
-                        if(member.guild.channels.cache.get(interaction.channel.id).permissionsFor(member.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                data: {
-                                    type: 4,
-                                    data: {
-                                        flags: 64,
-                                        content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
-                                    }
-                                }
-                            });
-                            return;
-                        }
+                        if(member.guild.channels.cache.get(interaction.channel.id).permissionsFor(member.guild.me).missing(commandos.clientRequiredPermissions).length > 0) return interaction.reply.send({content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.clientRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")), ephemeral: true})
                     }
 
                     if(commandos.userRequiredPermissions) {
                         if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
-                        if(!this.client.guilds.cache.get(interaction.guild.id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) {
-                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                data: {
-                                    type: 4,
-                                    data: {
-                                        flags: 64,
-                                        content: this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", "))
-                                    }
-                                }
-                            });
-                            return;
-                        }
+                        if(!this.client.guilds.cache.get(interaction.guild.id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) return interaction.reply.send({content:this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace("{PERMISSION}",commandos.userRequiredPermissions.map(v => v.split(" ").map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(" ")).join(", ")), ephemeral: true})
                     }
 
                     if((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
@@ -322,18 +282,7 @@ class GEventHandling {
                         if(!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
     
                         let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v))
-                        if(!roles) {
-                            this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                                data: {
-                                    type: 4,
-                                    data: {
-                                        flags: 64,
-                                        content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``),
-                                    }
-                                }
-                            }); 
-                            return;
-                        }
+                        if(!roles) return interaction.reply.send({content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace("{ROLES}", `\`${commandos.userRequiredRoles.map(r => member.guild.roles.cache.get(r).name).join(", ")}\``), ephemeral: true})
                     }
 
                     try {
