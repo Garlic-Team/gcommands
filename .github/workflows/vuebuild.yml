@@ -27,6 +27,7 @@ jobs:
       uses: andstor/copycat-action@v3
       with:
         personal_token: ${{ secrets.ACCESS_TOKEN }}
+        clean: true
         src_path: /.
         dst_path: /guide/
         dst_owner: Garlic-Team
