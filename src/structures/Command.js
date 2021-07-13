@@ -1,6 +1,6 @@
-const { Snowflake } = require('discord.js');
-const { resolveString } = require('../util/util');
-const Color = require('./Color');
+const { Snowflake } = require("discord.js");
+const { resolveString } = require("../util/util");
+const Color = require("./Color");
 
 /**
  * The Command class
@@ -34,8 +34,15 @@ class Command {
         /**
          * expectedArgs
          * @type {String | Array}
+         * @deprecated
          */
         this.expectedArgs = options.expectedArgs;
+
+        /**
+         * args
+         * @type {String | Array}
+         */
+        this.args = options.args;
 
         /**
          * minArgs

@@ -101,27 +101,16 @@ class GCommandLoader {
         keys.forEach(async (cmdname) => {
             this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands] &3Creating slash command (&e'+cmdname+'&3)').getText());
             let options = [];
-            let subCommandGroup = {};
-            let subCommand = [];
             const cmd = this.client.gcommands.get(cmdname)
             if(String(cmd.slash) == 'false') return;
 
             if(!cmd.name) return console.log(new Color('&d[GCommands] &cParameter name is required! ('+cmdname+')',{json:false}).getText());
             if(!cmd.description) return console.log(new Color('&d[GCommands] &cParameter description is required! ('+cmdname+')',{json:false}).getText());
 
-            if(cmd.subCommandGroup) {
-                subCommandGroup = [
-                    {
-                        name: cmd.subCommandGroup,
-                        description: cmd.subCommandGroup,
-                        type: 2
-                    }
-                ]
-            }
-
-            if (cmd.expectedArgs) {
-                if(typeof cmd.expectedArgs == 'object') {
-                    cmd.expectedArgs.forEach(option => {
+            if(cmd.expectedArgs) cmd.args = cmd.expectedArgs
+            if (cmd.args) {
+                if(typeof cmd.args == 'object') {
+                    cmd.args.forEach(option => {
                         options.push({
                             name: option.name,
                             description: option.description,
@@ -132,8 +121,8 @@ class GCommandLoader {
                         })
                     })
                 } else {
-                    let split = cmd.expectedArgs
-                    .substring(1, cmd.expectedArgs.length - 1)
+                    let split = cmd.args
+                    .substring(1, cmd.args.length - 1)
                     .split(/[>\]] [<\[]/)
             
                     for (let a = 0; a < split.length; ++a) {
@@ -152,62 +141,6 @@ class GCommandLoader {
                     }
                 }
             }
-
-            if(cmd.subCommand) {
-                cmd.subCommand.forEach(sc => {
-                    try {
-                        let opt = []
-                        let optionsSplit = sc.split(';')[1]
-
-                        if(optionsSplit) {
-                            let split = optionsSplit
-                                .substring(1, optionsSplit.length - 1)
-                                .split(/[>\]] [<\[]/)
-                
-                            for (let a = 0; a < split.length; ++a) {
-                                let item = split[a]
-                                let option = item.replace(/ /g, '-').split(':')[0] ? item.replace(/ /g, '-').split(':')[0] : item.replace(/ /g, '-');
-                                let optionType = item.replace(/ /g, '-').split(':')[1] ? item.replace(/ /g, '-').split(':')[1] : 3;
-                                let optionDescription = item.replace(/ /g, '-').split(':')[2] ? item.replace(/ /g, '-').split(':')[2] : item;
-                                if(optionType == 1 || optionType == 2) optionType = 3
-
-                                opt.push({
-                                    name: option,
-                                    description: optionDescription,
-                                    type: parseInt(optionType),
-                                    required: a < cmd.minArgs,
-                                })
-                            }
-                        }
-
-                        subCommand.push({
-                            name: sc.split(';')[0],
-                            description: sc.split(';')[0],
-                            type: 1,
-                            options: opt || []
-                        })
-                    } catch(e) {
-                        subCommand.push({
-                            name: sc.name,
-                            description: sc.description,
-                            type: 1,
-                            options: sc.options || []
-                        })
-                    }
-                })
-            }
-
-            if(cmd.subCommandGroup) {
-                subCommandGroup = [
-                    {
-                        name: subCommandGroup[0].name,
-                        description: subCommandGroup[0].name,
-                        type: subCommandGroup[0].type,
-                        options: subCommand
-                    }
-                ]
-            }
-
             try {
                 let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
         
@@ -217,20 +150,6 @@ class GCommandLoader {
                     name: cmd.name.toLowerCase(),
                     description: cmd.description,
                     options: options || []
-                }
-
-                if(cmd.subCommandGroup && cmd.subCommand) {
-                     cmdd = {
-                        name: cmd.name.toLowerCase(),
-                        description: cmd.description,
-                        options: subCommandGroup || []
-                    };
-                } else {
-                    cmdd = {
-                        name: cmd.name.toLowerCase(),
-                        description: cmd.description,
-                        options: options || []
-                    };
                 }
 
                 let config = {
