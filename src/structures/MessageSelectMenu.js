@@ -11,18 +11,63 @@ class MessageSelectMenu {
      * @param {Object} data 
     */
     constructor(data = {}) {
+
+        /**
+         * type
+         * @type {Number} 
+        */
         this.type = 3;
+
+        /**
+         * options
+         * @type {Array} 
+        */
         this.options = [];
 
         this.setup(data);
     }
 
+    /**
+     * Setup
+     * @param {Object} data 
+     * @returns {MessageSelectMenu}
+     * @private
+     */
     setup(data) {
+        /**
+         * placeholder
+         * @type {String} 
+        */
         this.placeholder = 'placeholder' in data ? resolveString(data.placeholder) : null;
+
+        /**
+         * maxValues
+         * @type {number} 
+        */
         this.max_values = 'max_values' in data ? Number(data.max_values) : 1;
+
+        /**
+         * minValues
+         * @type {number} 
+        */
         this.min_values = 'min_values' in data ? Number(data.min_values) : 1;
+
+        /**
+         * id
+         * @type {String} 
+        */
         this.id = 'id' in data ? resolveString(data.id) : null;
+
+        /**
+         * options
+         * @type {Array} 
+        */
         this.options = 'options' in data ? Array(data.options) : [];
+
+        /**
+         * disabled
+         * @type {Boolean} 
+        */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
         return this.toJSON();
@@ -75,7 +120,7 @@ class MessageSelectMenu {
 
     /**
      * Method to addOption
-     * @param {MessageSelectOption} MessageSelectOption 
+     * @param {MessageSelectMenuOption} MessageSelectMenuOption 
     */
     addOption(option) {
         if(typeof option !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
@@ -85,7 +130,7 @@ class MessageSelectMenu {
 
     /**
      * Method to addOptions
-     * @param {MessageSelectOption[]} MessageSelectOptions 
+     * @param {MessageSelectMenuOption[]} MessageSelectMenuOption 
     */
     addOptions(...options) {
         if(typeof options !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
@@ -97,7 +142,7 @@ class MessageSelectMenu {
      * Method to removeOptions
      * @param {Number} index
      * @param {Number} deleteCount
-     * @param {MessageSelectOption[]} MessageSelectOptions 
+     * @param {MessageSelectMenuOption[]} MessageSelectMenuOption[] 
     */
     removeOptions(index, deleteCount, ...options) {
         if(typeof options !== "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())

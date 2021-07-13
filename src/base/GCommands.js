@@ -10,7 +10,7 @@ const ms = require("ms");
 class GCommands extends GCommandsBase {
     /**
      * The GCommands class
-     * @param {Object} client - Discord.js Client
+     * @param {Client} client - Discord.js Client
      * @param {Object} options - Options (cmdDir, eventDir etc)
      */
     constructor(client, options = {}) {
@@ -21,7 +21,16 @@ class GCommands extends GCommandsBase {
         if(!options.cmdDir) return console.log(new Color("&d[GCommands] &cNo default options provided! (cmdDir)",{json:false}).getText());
         if(!options.language) return console.log(new Color("&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))",{json:false}).getText());
 
+        /**
+         * GCommandsClient
+         * @type {GCommands}
+        */
         this.GCommandsClient = this;
+
+        /**
+         * client
+         * @type {Client}
+        */
         this.client = client;
 
         /**
@@ -55,6 +64,11 @@ class GCommands extends GCommandsBase {
         */
         if(!options.ownLanguageFile) this.languageFile = require("../util/message.json");
         else this.languageFile = options.ownLanguageFile;
+
+        /**
+         * ôanguage
+         * @type {Object} language
+        */
         this.language = options.language;
 
         /**

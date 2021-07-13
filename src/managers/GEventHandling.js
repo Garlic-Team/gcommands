@@ -17,11 +17,15 @@ class GEventHandling {
      */
     constructor(GCommandsClient) {
         /**
-         * GEventHandling options
-         * @type {Object} GCommandsClient
+         * GCommandsClient
+         * @type {GCommands}
         */
         this.GCommandsClient = GCommandsClient;
 
+        /**
+         * client
+         * @type {Client}
+        */
         this.client = GCommandsClient.client;
 
         this.messageEvent()
@@ -427,7 +431,8 @@ class GEventHandling {
 
     /**
      * Internal method to getSlashArgs
-     * @returns {object}
+     * @returns {Array}
+     * @private
     */
     getSlashArgs(options) {
         let args = [];
@@ -455,6 +460,11 @@ class GEventHandling {
         return args;
     }
 
+    /**
+     * Internal method to getSlashArgsObject
+     * @returns {object}
+     * @private
+    */
     getSlashArgsObject(options) {
         var args = {};
         for (let o of options) {

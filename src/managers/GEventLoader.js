@@ -21,14 +21,27 @@ class GEventLoader {
         if (typeof GCommandsClient.client !== 'object') return console.log(new Color("&d[GCommands EVENTS] &cNo discord.js client provided!",{json:false}).getText());
 
         /**
-         * GEventLoader options
-         * @type {GEventLoaderOptions}
-         * @property {String} eventDir
+         * GCommandsClient
+         * @type {GCommands}
         */
-
         this.GCommandsClient = GCommandsClient;
+
+        /**
+         * eventDir
+         * @type {String}
+        */
         this.eventDir = this.GCommandsClient.eventDir ? this.GCommandsClient.eventDir : options.eventDir;
+
+        /**
+         * client
+         * @type {Client}
+        */
         this.client = GCommandsClient.client;
+
+        /**
+         * gevents
+         * @type {Collection}
+        */
         this.client.gevents = new Collection();
 
         if(!this.eventDir) return;

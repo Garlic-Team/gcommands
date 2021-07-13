@@ -7,14 +7,28 @@ const ms = require("ms");
  * The GCommansDispatcher class
  */
 class GCommandsDispatcher {
+    /**
+     * The GCommansDispatcher class
+     * @param {Client} client - Discord.js Client
+     */
     constructor(client) {
 
         /**
-         * GCommandsDispatcher options
-         * @type {Object} client
+         * client
+         * @type {Client} client
         */
         this.client = client;
+
+        /**
+         * Inhibitors
+         * @type {Set}
+        */
         this.client.inhibitors = new Set();
+
+        /**
+         * Cooldowns
+         * @type {Collection}
+        */
         this.client.cooldowns = new Collection();
 
         this.fetchClientApplication();
@@ -52,7 +66,7 @@ class GCommandsDispatcher {
      * Internal method to getCooldown
      * @returns {String}
     */
-     async getCooldown(guildId, userId, command) {
+    async getCooldown(guildId, userId, command) {
         if(this.client.application.owners.some(user => user.id == userId)) return { cooldown: false };
         let now = Date.now();
 
@@ -161,6 +175,7 @@ class GCommandsDispatcher {
 
     /**
      * Internal method to fetchClientApplication
+     * @private
      * @returns {Array}
     */
     async fetchClientApplication() {

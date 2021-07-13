@@ -1,8 +1,25 @@
+/**
+ * The GDatabaseLoader class
+ */
 class GDatabaseLoader {
+    /**
+     * The GDatabaseLoader class
+     * @param {GCommands} GCommandsClient
+    */
     constructor(GCommandsClient) {
+
+        /**
+         * GCommandsClient
+         * @type {GCommands}
+        */
         this.GCommandsClient = GCommandsClient;
+
+        /**
+         * client
+         * @type {Client}
+        */
         this.client = this.GCommandsClient.client;
-        this.shardClusterName = this.GCommandsClient.shardClusterName
+        
         this.__loadDB()
     }
 

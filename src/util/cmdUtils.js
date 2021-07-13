@@ -1,6 +1,9 @@
 module.exports = {
     /**
      * Internal method to deleteCmd
+     * @param {Client} client
+     * @param {Number} commandId
+     * @param {?Number} guildId
      * @private
     */
     __deleteCmd: async function(client, commandId, guildId = undefined) {
@@ -16,7 +19,9 @@ module.exports = {
 
     /**
      * Internal method to getAllCmds
-     * @returns {object}
+     * @param {Client} client
+     * @param {Number} guildId
+     * @private
     */
     __getAllCommands: async function(client, guildId = undefined) {
         try {

@@ -7,15 +7,31 @@ class MessageActionRow {
 
     /**
      * Creates new MessageActionRow instance
-     * @param {Object} data 
+     * @param {Array} data 
     */
     constructor(data = {}) {
+
+        /**
+         * type
+         * @type {Number} 
+        */
         this.type = 1;
+
+        /**
+         * components
+         * @type {Array} 
+        */
         this.components = [];
 
         this.setup(data);
     }
 
+    /**
+     * Setup
+     * @param {Array} data 
+     * @returns {MessageActionRow}
+     * @private
+     */
     setup(data) {
         this.components = 'components' in data ? Array(data.components) : [];
 

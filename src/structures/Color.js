@@ -13,13 +13,15 @@ class Color {
 	constructor(text = "", options = {}) {
 
         /**
-         * Color options
-         * @param {string} text
-         * @param {ColorOptions} json
-         * @type {ColorOptions}
+         * text
+         * @type {String}
         */
 		this.text = resolveString(text);
 
+        /**
+         * json
+         * @type {Object}
+        */
 		this.json = options.json;
 
         this.text = this.text

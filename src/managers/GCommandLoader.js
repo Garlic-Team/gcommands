@@ -5,11 +5,31 @@ const ms = require("ms");
 const { isClass } = require('../util/util');
 const Command = require('../structures/Command');
 
+/**
+ * The GCommandLoader class
+ */
 class GCommandLoader {
+    /**
+     * The GCommandLoader class
+     * @param {GCommands} GCommandsClient
+     */
     constructor(GCommandsClient) {
+        /**
+         * GCommandsClient
+         * @type {GCommands}
+        */
         this.GCommandsClient = GCommandsClient;
+
+        /**
+         * client
+         * @type {Client}
+        */
         this.client = this.GCommandsClient.client;
 
+        /**
+         * cmdDir
+         * @type {String}
+        */
         this.cmdDir = this.GCommandsClient.cmdDir;
 
         this.__loadCommands()

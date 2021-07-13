@@ -13,11 +13,41 @@ class MessageSelectMenuOption {
         this.setup(data);
     }
 
+    /**
+     * Setup
+     * @param {Object} data 
+     * @returns {MessageButton}
+     * @private
+     */
     setup(data) {
+        /**
+         * label
+         * @type {String} 
+        */
         this.label = 'label' in data ? resolveString(data.label) : null;
+
+        /**
+         * value
+         * @type {String} 
+        */
         this.value = 'value' in data ? resolveString(data.value) : null;
+
+        /**
+         * description
+         * @type {String} 
+        */
         this.description = 'description' in data ? resolveString(data.description) : null;
+
+        /**
+         * emoji
+         * @type {String} 
+        */
         this.emoji = 'emoji' in data ? parseEmoji(data.emoji) : null;
+
+        /**
+         * default
+         * @type {Boolean} 
+        */
         this.default = 'default' in data ? Boolean(data.default) : false;
 
         return this.toJSON();

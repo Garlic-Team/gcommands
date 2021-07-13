@@ -22,6 +22,11 @@ module.exports = {
         }
     },
 
+    /**
+     * Internal method to checkDjsVersion
+     * @returns {Boolean}
+     * @private
+    */
     checkDjsVersion: function(needVer) {
         var ver = parseInt(version.split("")[0] + version.split("")[1]);
         if(ver == parseInt(needVer)) {

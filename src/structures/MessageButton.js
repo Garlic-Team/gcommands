@@ -28,17 +28,50 @@ class MessageButton {
         this.setup(data);
     }
 
+    /**
+     * Setup
+     * @param {Object} data 
+     * @returns {MessageButton}
+     * @private
+     */
     setup(data) {
+
+        /**
+         * style
+         * @type {String} 
+        */
         this.style = 'style' in data ? this.resolveStyle(resolveString(data.style)) : null;
-        this.label = 'label' in data ? resolveString(data.label) : null;
+
+        /**
+         * label
+         * @type {String} 
+        */
+        this.label = 'label' in data ? resolveString(data.label) : null;ň
+
+        /**
+         * disabled
+         * @type {Boolean} 
+        */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
         if (this.style === 5) {
+            /**
+             * url
+             * @type {String} 
+            */
             this.url = 'url' in data ? resolveString(data.url) : null;
         } else {
+            /**
+             * customId
+             * @type {String} 
+            */
             this.custom_id = 'id' in data ? resolveString(data.id): null;
         }
 
+        /**
+         * type
+         * @type {Number} 
+        */
         this.type = 2;
 
         return this.toJSON();
