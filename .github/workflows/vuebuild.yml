@@ -11,24 +11,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@main
+      
+    - name: Download
+      run: npm i
 
-    - name: Build and Deploy
-      uses: jenkey2011/vuepress-deploy@1.6.1
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        TARGET_REPO: Garlic-Team/GCommands
-        TARGET_BRANCH: master
-        BUILD_SCRIPT: yarn && yarn build
-        BUILD_DIR: guide/.vuepress/dist/
-        CNAME: gcommands.js.org
-        COMMIT_MESSAGE: Deploy Docs
+    - name: Build
+      run: npm run build
 
-    - name: Copy
-      uses: andstor/copycat-action@v3
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        personal_token: ${{ secrets.ACCESS_TOKEN }}
-        clean: true
-        src_path: /.
-        dst_path: /guide/
-        dst_owner: Garlic-Team
-        dst_repo_name: gcommands
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        publish_dir: ./guide/.vuepress/dist
+        publish_branch: master
+        destination_dir: ./guide/
