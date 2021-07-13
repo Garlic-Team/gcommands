@@ -9,11 +9,11 @@ module.exports = {
      * @private
     */
     __updater: async function() {
-        var { Color } = require("../index")
-        var version = require("../index").version
+        let { Color } = require("../index")
+        let version = require("../index").version
 
-        var GCommandsUpdater = await axios.get("https://registry.npmjs.org/gcommands")
-        var stableVersion = GCommandsUpdater.data["dist-tags"].latest
+        let GCommandsUpdater = await axios.get("https://registry.npmjs.org/gcommands")
+        let stableVersion = GCommandsUpdater.data["dist-tags"].latest
 
         if(stableVersion !== version && !version.includes("dev")) {
             console.log(new Color("&d[GCommands Updater] &cPlease update GCommands &ehttps://npmjs.org/package/gcommands").getText())
@@ -28,7 +28,7 @@ module.exports = {
      * @private
     */
     checkDjsVersion: function(needVer) {
-        var ver = parseInt(version.split("")[0] + version.split("")[1]);
+        let ver = parseInt(version.split("")[0] + version.split("")[1]);
         if(ver == parseInt(needVer)) {
             return true;
         } else {

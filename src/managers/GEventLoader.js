@@ -55,9 +55,9 @@ class GEventLoader {
     */
     async __loadEventFiles() {
         await fs.readdirSync(`${__dirname}/../../../../${this.eventDir}`).forEach(async(dir) => {
-            var file;
-            var fileName = dir.split(".").reverse()[1]
-            var fileType = dir.split(".").reverse()[0]
+            let file;
+            let fileName = dir.split(".").reverse()[1]
+            let fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
                     let finalFile;
@@ -76,8 +76,8 @@ class GEventLoader {
                 }
             } else {
                 fs.readdirSync(`${this.eventDir}${dir}`).forEach(async(eventFile) => {
-                    var file2;
-                    var fileName2 = eventFile.split(".").reverse()[1];
+                    let file2;
+                    let fileName2 = eventFile.split(".").reverse()[1];
                     try {
                         let finalFile2;
 

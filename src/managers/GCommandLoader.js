@@ -42,9 +42,9 @@ class GCommandLoader {
      */
      async __loadCommands() {
         await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`).forEach(async(dir) => {
-            var file;
-            var fileName = dir.split(".").reverse()[1]
-            var fileType = dir.split(".").reverse()[0]
+            let file;
+            let fileName = dir.split(".").reverse()[1]
+            let fileType = dir.split(".").reverse()[0]
             if(fileType == "js" || fileType == "ts") {
                 try {
                     let finalFile;
@@ -64,8 +64,8 @@ class GCommandLoader {
                 }
             } else {
                 fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(cmdFile) => {
-                    var file2;
-                    var fileName2 = cmdFile.split(".").reverse()[1]
+                    let file2;
+                    let fileName2 = cmdFile.split(".").reverse()[1]
                     try {
                         let finalFile2;
 
@@ -100,9 +100,9 @@ class GCommandLoader {
 
         keys.forEach(async (cmdname) => {
             this.GCommandsClient.emit(Events.DEBUG, new Color("&d[GCommands] &3Creating slash command (&e"+cmdname+"&3)").getText());
-            var options = [];
-            var subCommandGroup = {};
-            var subCommand = [];
+            let options = [];
+            let subCommandGroup = {};
+            let subCommand = [];
             const cmd = this.client.gcommands.get(cmdname)
             if(String(cmd.slash) == "false") return;
 
@@ -132,15 +132,15 @@ class GCommandLoader {
                         })
                     })
                 } else {
-                    var split = cmd.expectedArgs
+                    let split = cmd.expectedArgs
                     .substring(1, cmd.expectedArgs.length - 1)
                     .split(/[>\]] [<\[]/)
             
                     for (let a = 0; a < split.length; ++a) {
-                        var item = split[a];
-                        var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
-                        var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
-                        var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                        let item = split[a];
+                        let option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                        let optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                        let optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
                         if(optionType == 1 || optionType == 2) optionType = 3
 
                         options.push({
@@ -156,19 +156,19 @@ class GCommandLoader {
             if(cmd.subCommand) {
                 cmd.subCommand.forEach(sc => {
                     try {
-                        var opt = []
-                        var optionsSplit = sc.split(";")[1]
+                        let opt = []
+                        let optionsSplit = sc.split(";")[1]
 
                         if(optionsSplit) {
-                            var split = optionsSplit
+                            let split = optionsSplit
                                 .substring(1, optionsSplit.length - 1)
                                 .split(/[>\]] [<\[]/)
                 
                             for (let a = 0; a < split.length; ++a) {
-                                var item = split[a]
-                                var option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
-                                var optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
-                                var optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
+                                let item = split[a]
+                                let option = item.replace(/ /g, '-').split(":")[0] ? item.replace(/ /g, '-').split(":")[0] : item.replace(/ /g, '-');
+                                let optionType = item.replace(/ /g, '-').split(":")[1] ? item.replace(/ /g, '-').split(":")[1] : 3;
+                                let optionDescription = item.replace(/ /g, '-').split(":")[2] ? item.replace(/ /g, '-').split(":")[2] : item;
                                 if(optionType == 1 || optionType == 2) optionType = 3
 
                                 opt.push({
@@ -209,11 +209,11 @@ class GCommandLoader {
             }
 
             try {
-                var url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
+                let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
         
                 if(cmd.guildOnly) url = `https://discord.com/api/v8/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
-                var cmdd = {
+                let cmdd = {
                     name: cmd.name.toLowerCase(),
                     description: cmd.description,
                     options: options || []
@@ -233,7 +233,7 @@ class GCommandLoader {
                     };
                 }
 
-                var config = {
+                let config = {
                     method: "POST",
                     headers: {
                         Authorization: `Bot ${this.client.token}`,
@@ -313,7 +313,7 @@ class GCommandLoader {
     */
      async __deleteAllGlobalCmds() {
         try {
-            var allcmds = await cmdUtils.__getAllCommands(this.client);
+            let allcmds = await cmdUtils.__getAllCommands(this.client);
             if(String(this.client.slash) == "false") {
                 allcmds.forEach(cmd => {
                     cmdUtils.__deleteCmd(this.client, cmd.id)
@@ -357,7 +357,7 @@ class GCommandLoader {
     async __deleteAllGuildCmds() {
         try {
             this.client.guilds.cache.forEach(async(guild) => {
-                var allcmds = await cmdUtils.__getAllCommands(this.client, guild.id);
+                let allcmds = await cmdUtils.__getAllCommands(this.client, guild.id);
                 if(!allcmds) return;
 
                 if(!this.client.slash) {
@@ -366,8 +366,8 @@ class GCommandLoader {
                     })
                 }
 
-                var nowCMDS = [];
-                var keys = Array.from(this.client.gcommands.keys());
+                let nowCMDS = [];
+                let keys = Array.from(this.client.gcommands.keys());
                 keys.forEach(cmdname => {
                     nowCMDS.push(cmdname)
                     let command = this.client.gcommands.get(cmdname);
@@ -382,7 +382,7 @@ class GCommandLoader {
                 })
 
                 allcmds.forEach(cmd => {
-                    var f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
+                    let f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
 
                     if(!f) {
                         cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)

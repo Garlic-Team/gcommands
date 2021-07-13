@@ -393,7 +393,7 @@ class GEventHandling {
      * @private
     */
     getSlashArgsObject(options) {
-        var args = {};
+        let args = {};
         for (let o of options) {
           if (o.type == 1) args[o.name] = this.getSlashArgsObject(o.options || []);
           else if (o.type == 2) args[o.name] = this.getSlashArgsObject(o.options || []); 
