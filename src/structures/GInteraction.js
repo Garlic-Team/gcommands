@@ -1,6 +1,7 @@
 const { Message } = require('discord.js');
 const Color = require('../structures/Color');
 const GPayload = require('./GPayload');
+const axios = require('axios');
 
 /**
  * The GInteraction class
@@ -246,9 +247,9 @@ class GInteraction {
 
         let apiMessageMsg = {};
         try {
-            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${interaction.token}/messages/@original`)).data;
+            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.token}/messages/@original`)).data;
         } catch(e) {
-            apiMessage = {
+            apiMessageMsg = {
                 id: undefined
             }
         }
