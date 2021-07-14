@@ -1,10 +1,10 @@
-const ms = require("ms");
-const StringArgumentType = require("./types/string");
-const IntegerArgumentType = require("./types/integer");
-const BooleanArgumentType = require("./types/boolean");
-const ChannelArgumentType = require("./types/channel");
-const UserArgumentType = require("./types/user");
-const RoleArgumentType = require("./types/role");
+const ms = require('ms');
+const StringArgumentType = require('./types/string');
+const IntegerArgumentType = require('./types/integer');
+const BooleanArgumentType = require('./types/boolean');
+const ChannelArgumentType = require('./types/channel');
+const UserArgumentType = require('./types/user');
+const RoleArgumentType = require('./types/role');
 
 /**
  * The Argument class

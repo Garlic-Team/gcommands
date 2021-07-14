@@ -1,6 +1,6 @@
-const { Snowflake } = require("discord.js");
-const { resolveString } = require("../util/util");
-const Color = require("../structures/Color");
+const { Snowflake } = require('discord.js');
+const { resolveString } = require('../util/util');
+const Color = require('../structures/Color');
 
 /**
  * The Command class

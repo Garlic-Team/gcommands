@@ -22,7 +22,7 @@ class IntegerArgumentType extends ArgumentType {
 	async validate(argument, message) {
 		const guildLanguage = await message.guild.getLanguage();
 
-		if(!parseInt(message.content)) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace("{argument}", argument.name).replace("{type}", "integer")
+		if(!parseInt(message.content)) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'integer')
 
 		if(argument.oneOf && !argument.oneOf.includes(message.content.toLowerCase())) return `Please enter one of the following options: ${argument.oneOf.map(opt => `\`${opt}\``).join(', ')}`;
 	}

@@ -23,10 +23,10 @@ class ChannelArgumentType extends ArgumentType {
 		const matches = message.content.match(/([0-9]+)/);
 		const guildLanguage = await message.guild.getLanguage();
 
-		if(!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace("{argument}", argument.name).replace("{type}", "channel")
+		if(!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'channel')
 
 		let channel = this.client.channels.cache.get(matches[1]);
-		if(!channel) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace("{argument}", argument.name).replace("{type}", "channel")
+		if(!channel) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'channel')
 	}
 }
 

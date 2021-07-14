@@ -23,10 +23,10 @@ class RoleArgumentType extends ArgumentType {
 		const matches = message.content.match(/([0-9]+)/);
 		const guildLanguage = await message.guild.getLanguage();
 
-		if(!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace("{argument}", argument.name).replace("{type}", "role")
+		if(!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'role')
 
 		let user = message.guild.roles.cache.get(matches[1]);
-		if(!user) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace("{argument}", argument.name).replace("{type}", "role")
+		if(!user) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'role')
 	}
 }
 
