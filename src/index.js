@@ -21,7 +21,7 @@ module.exports = {
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
     MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'),
-    Command: require('./structures/Command'),
+    Command: require('./commands/base'),
     Event: require('./structures/Event'),
     GPayload: require('./structures/GPayload'),
     ButtonCollectorV12: require('./structures/v13/ButtonCollector'),
@@ -32,7 +32,7 @@ module.exports = {
     // Other
     Color: require('./structures/Color'),
     Util: require('./util/util'),
-    CommandType: {
+    ArgumentType: {
         SUB_COMMAND: 1,
         SUB_COMMAND_GROUP: 2,
         STRING: 3,

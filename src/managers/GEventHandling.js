@@ -1,5 +1,6 @@
 const {Collection} = require('discord.js');
 const { readdirSync } = require('fs');
+const Argument = require('../commands/argument');
 const Color = require('../structures/Color'), { Events } = require('../util/Constants');
 const GInteraction = require('../structures/GInteraction');
 const ifDjsV13 = require('../util/updater').checkDjsVersion('13'), { inhibit, interactionRefactor } = require('../util/util')
@@ -167,6 +168,29 @@ class GEventHandling {
                         let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
                         return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
                     }
+                }
+
+                for(let i in commandos.args) {
+                    let arg = new Argument(this.client, commandos.args[i]);
+
+                    if(args[i]) {
+                        let argInvalid = await arg.argument.validate(arg, {content: args[i], guild: message.guild})
+                        if(argInvalid) {
+                            let argInput = await arg.obtain(message, argInvalid)
+                            if(!argInput.valid) argInput = await arg.obtain(message, argInput.prompt);
+        
+                            if(argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                            args[i] = argInput.content;
+                        }
+    
+                        continue;
+                    }
+
+                    let argInput = await arg.obtain(message)
+                    if(!argInput.valid) argInput = await arg.obtain(message, argInput.prompt);
+
+                    if(argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                    args[i] = argInput.content;
                 }
 
                 this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + message.author.id + '&3 used &a' + cmd).getText())

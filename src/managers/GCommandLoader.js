@@ -3,7 +3,7 @@ const axios = require('axios');
 const fs = require('fs');
 const ms = require('ms');
 const { isClass } = require('../util/util');
-const Command = require('../structures/Command');
+const Command = require('../commands/base');
 
 /**
  * The GCommandLoader class

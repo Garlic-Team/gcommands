@@ -86,5 +86,27 @@
         "slovak": "Príkaz môžete využiť iba v nsfw room.",
         "turkish": "Bu komutu sadece nsfw kanalında kullanabilirsiniz.",
         "polish": "Tej komendy możesz użyć tylko na kanale NSFW."
+    },
+    "ARGS_TIME_LIMIT": {
+        "english": "You have no time left to answer. You must run the command again.",
+        "spanish": "No te queda tiempo para responder. Debe ejecutar el comando de nuevo.",
+        "portuguese": "Não lhe resta tempo para responder. Deve executar o comando de novo.",
+        "russian": "У вас не осталось времени на ответ. Вы должны выполнить команду еще раз.",
+        "german": "Sie haben keine Zeit mehr zu antworten. Sie müssen den Befehl erneut ausführen.",
+        "czech": "Na odpověď vám nezbývá čas. Příkaz musíte spustit znovu.",
+        "slovak": "Na odpoveď vám už nezostáva čas. Príkaz musíte spustiť znova.",
+        "turkish": "Cevaplamak için zamanınız kalmadı. Komutu tekrar çalıştırmanız gerekir.",
+        "polish": "Nie masz już czasu na odpowiedź. Musisz ponownie uruchomić polecenie."
+    },
+    "ARGS_MUST_CONTAIN": {
+        "english": "The argument `{argument}` must contain a {type}.",
+        "spanish": "El argumento `{argument}` debe contener un {type}.",
+        "portuguese": "O argumento ``{argument}` deve conter um {type}.",
+        "russian": "Аргумент `{argument}` должен содержать {type}.",
+        "german": "Das Argument `{argument}` muss einen {type} enthalten.",
+        "czech": "Argument `{argument}` musí obsahovat {type}.",
+        "slovak": "Argument `{argument}` musí obsahovať {type}.",
+        "turkish": "`{argument}` bağımsız değişkeni bir {type} içermelidir.",
+        "polish": "Argument `{argument}` musi zawierać {type}."
     }
 }
