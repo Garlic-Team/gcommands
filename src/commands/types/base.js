@@ -27,7 +27,7 @@ class ArgumentType {
      * @param {Argument}
      * @param {Message|Object}
      */
-    validate(argument, message) {
+    validate() {
         return console.log(new Color('&d[GCommands Args] &cArgument doesnt have provided validate() method'))
     }
 }
