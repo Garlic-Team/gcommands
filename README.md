@@ -1,5 +1,5 @@
 <div align="center">
-    <h1>G Commands</h1>
+    <h1>GCommands</h1>
   <p>
     <a href="https://www.npmjs.com/package/gcommands"><img src="https://img.shields.io/npm/v/gcommands?maxAge=3600" alt="NPM version" /></a>
     <a href="https://www.npmjs.com/package/gcommands"><img src="https://img.shields.io/npm/dt/gcommands?maxAge=3600" alt="NPM downloads" /></a>
@@ -16,10 +16,10 @@
 npm install gcommands
 yarn install gcommands
 
-npm install github:Garlic-Team/GCommands#dev #dev build
+npm install Garlic-Team/GCommands#dev #dev build
 ```
 
-If you're updating from 3.x to 4.x, check https://gcommands.js.org/guide/additional/fromv3tov4.html
+If you're updating from 4.x to 5.x, check https://gcommands.js.org/guide/additional/fromv4tov5.html
 
 ### 📜 | Setup
 ```js
@@ -55,7 +55,7 @@ client.login("bot token")
 ```
 
 ### ✍ | Examples
-You can find everything in the [guide](https://gcommands.js.org).<br>
+You can find everything in the [guide](https://gcommands.js.org/guide/) and [docs](https://gcommands.js.org/docs/).<br>
 Join our [discord server](https://discord.gg/AjKJSBbGm2), if you need help or have any questions.
 
 ### 👥 | Contact

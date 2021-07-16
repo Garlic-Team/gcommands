@@ -1,7 +1,7 @@
 {
   "name": "gcommands",
   "version": "5.2.3-dev",
-  "description": "Open-source slash/normal command handler",
+  "description": "Powerful and flexible command handler that can do everything!",
   "main": "src/index.js",
   "types": "./typings/index.d.ts",
   "dependencies": {
