@@ -6,31 +6,31 @@
 
 First, you need to create a bot in Discord's Developer Applications page. Head to [Applications Page](https://discord.com/developers/applications) and hit New Application button. A modal will appear asking you for name, enter the bot name you want and hit Create!
 
-![Create App](https://raw.githubusercontent.com/xHyroM/test/master/createapp.png)
+![Create App](https://gcommands.js.org/guide/createapp.png)
 
 Navigate to `Bot` tab on left-pane, then click on `Add Bot`. It will ask you for confirmation, just click on `Yes, do it!`
 
-![Add Bot](https://raw.githubusercontent.com/xHyroM/test/master/addbot.png)
+![Add Bot](https://gcommands.js.org/guide/addbot.png)
 
 And your bot now has a life! Yes, a life! It has successfully become a Discord User.
 Now you can go ahead and invite the bot to your server. Now navigate to `OAuth2` tab and scroll down a bit; then select `bot` scope. And optionally, below there you can select permissions to give to bot!
 
-![OAuth2](https://raw.githubusercontent.com/xHyroM/test/master/oauth2.png)
+![OAuth2](https://gcommands.js.org/guide/oauth2.png)
 
 </language>
 <language lang="tk">
 
 İlk başta Discord Geliştiriciler sayfasından kendimize bir bot oluşturmamız gerekiyor. [Buradan](https://discord.com/developers/applications) aplikasyonlar sayfasına gidip yeni bir tane aplikasyon oluşturmayı denemelisin.
 
-![Create App](https://raw.githubusercontent.com/xHyroM/test/master/createapp.png)
+![Create App](https://gcommands.js.org/guide/createapp.png)
 
 Sol taraftan `Bot` kısmına git ve `Bot Ekle` butonuna tıkla. Bu işlemi `Evet bunu yapalım!` butonuna tıklayarak onaylamalısın.
 
-![Add Bot](https://raw.githubusercontent.com/xHyroM/test/master/addbot.png)
+![Add Bot](https://gcommands.js.org/guide/addbot.png)
 
 Sesi duyuyor musun? Botuna hayat verdik! Artık oluşturduğun aplikasyon Discord'un bir üyesi. Botunu artık sunuculara davet edebiliriz ve onun üzerinden işlemleri yapabiliriz. Şimdi yine sol taraftan, `OAuth2` sekmesine gitmelisin. Oraya ulaştığın zaman biraz aşağıya git daha sonrasında şu iki tiki işaretle: `bot` ve `commands`. İstediğin başka yetkiler varsa yine oradan sağlayabilirsin.
 
-![OAuth2](https://raw.githubusercontent.com/xHyroM/test/master/oauth2.png)
+![OAuth2](https://gcommands.js.org/guide/oauth2.png)
 
 </language>
 
@@ -42,7 +42,7 @@ What is a token? It acts like a password for bots to login!
 
 On the `Bot` page itself, there is a `Copy Token` button - go ahead and click on it! Token will be on your clipboard. Alternatively, you can `Click to Reveal Token`.
 
-![Token](https://raw.githubusercontent.com/xHyroM/test/master/token.png)
+![Token](https://gcommands.js.org/guide/token.png)
 
 ::: warning
 Token should **NEVER** be shared with **ANYONE**! Token gives **complete**, yes complete access over bot and can destroy it *badly*.
@@ -59,7 +59,7 @@ Token de ne ola ki? Token bir çeşit parola işlevi görür. Bu parola olmadan 
 
 Şimdi `Bot` sekmesine tekrar gidelim. Orada artık botumuzun ismini ve diğer özellikleri görebilirsin. Tokenini `Copy` butonu sayesinde kopyala. Dilersen `Tokeni Göster` butonuna basarak tokeni gözünle görebileceğin hale getirebilirsin.
 
-![Token](https://raw.githubusercontent.com/xHyroM/test/master/token.png)
+![Token](https://gcommands.js.org/guide/token.png)
 
 ::: warning
 Tokenini kimseyle **paylaşmamalısın**. Bunun ana sebebi tokenin birisinin eline geçerse botuna zarar verebilir ve istenmeyen sonuçlarla karşılaşabilirsin. 
