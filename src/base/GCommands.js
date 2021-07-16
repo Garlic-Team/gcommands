@@ -1,4 +1,4 @@
-const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsBase = require('./GCommandsBase'), GCommandsDispatcher = require('./GCommandsDispatcher'), GEventLoader = require('../managers/GEventLoader'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), {msToSeconds} = require('../util/util');
+const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsBase = require('./GCommandsBase'), GCommandsDispatcher = require('./GCommandsDispatcher'), { GEvents: GEventLoader } = require('@gcommands/events'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), {msToSeconds} = require('../util/util');
 const { Collection, version } = require('discord.js');
 const fs = require('fs');
 const ms = require('ms');

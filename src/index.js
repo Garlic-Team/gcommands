@@ -4,7 +4,7 @@ module.exports = {
     // Root classes
     GCommandsBase: require('./base/GCommandsBase'),
     GCommands: require('./base/GCommands.js'),
-    GEventLoader: require('./managers/GEventLoader'),
+    GEventLoader: require('@gcommands/events').GEventLoader,
     GCommandsDispatcher: require('./base/GCommandsDispatcher'),
 
     // Loaders
@@ -22,7 +22,7 @@ module.exports = {
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
     MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'),
     Command: require('./commands/base'),
-    Event: require('./structures/Event'),
+    Event: require('@gcommands/events').Event,
     GPayload: require('./structures/GPayload'),
     ButtonCollectorV12: require('./structures/v13/ButtonCollector'),
     ButtonCollectorV13: require('./structures/v12/ButtonCollector'),

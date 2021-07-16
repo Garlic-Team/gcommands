@@ -1,123 +1,48 @@
-const { Collection } = require('discord.js');
-const Color = require('../structures/Color'), { Events } = require('../util/Constants');
-const path = require('path');
-const fs = require('fs');
-const Event = require('../structures/Event');
-const { isClass } = require('../util/util');
-const { eventNames } = require('process');
+// ONLY FOR DOCS
+const GEvents = require("@gcommands/events")
 
 /**
  * The GEventLoader class
  */
-class GEventLoader {
+class GEventLoader extends null {}
 
-    /**
-     * Creates new GEventLoader instance
-     * @param {DiscordClient} client 
-     * @param {GEventLoaderOptions} options 
-    */
-    constructor(GCommandsClient, options = {}) {
-        if(!GCommandsClient.client) GCommandsClient = { client: GCommandsClient }
-        if (typeof GCommandsClient.client !== 'object') return console.log(new Color('&d[GCommands EVENTS] &cNo discord.js client provided!',{json:false}).getText());
+/**
+ * GCommandsClient
+ * @type {GCommands}
+*/
+GEventLoader.GCommandsClient = GEvents.GEvents.GCommandsClient;
 
-        /**
-         * GCommandsClient
-         * @type {GCommands}
-        */
-        this.GCommandsClient = GCommandsClient;
+/**
+ * eventDir
+ * @type {String}
+ */
+GEventLoader.eventDir = GEvents.GEvents.eventDir;
 
-        /**
-         * eventDir
-         * @type {String}
-        */
-        this.eventDir = this.GCommandsClient.eventDir ? this.GCommandsClient.eventDir : options.eventDir;
+/**
+ * client
+ * @type {Client}
+ */
+GEventLoader.client = GEvents.GEvents.client;
 
-        /**
-         * client
-         * @type {Client}
-        */
-        this.client = GCommandsClient.client;
+/**
+ * gevents
+ * @type {Collection}
+ */
+GEventLoader.client.gevents = GEvents.GEvents.gevents;
 
-        /**
-         * gevents
-         * @type {Collection}
-        */
-        this.client.gevents = new Collection();
 
-        if(!this.eventDir) return;
-        this.__loadEventFiles();
-    }
+/**
+ * Internal method to loadEventsFiles
+ * @returns {void}
+ * @private
+*/
+GEventLoader.__loadEventFiles() = GEvents.GEvents.__loadEventFiles;
 
-    /**
-     * Internal method to loadEventsFiles
-     * @returns {void}
-     * @private
-    */
-    async __loadEventFiles() {
-        await fs.readdirSync(`${__dirname}/../../../../${this.eventDir}`).forEach(async(dir) => {
-            let file;
-            let fileName = dir.split('.').reverse()[1]
-            let fileType = dir.split('.').reverse()[0]
-            if(fileType == 'js' || fileType == 'ts') {
-                try {
-                    let finalFile;
-
-                    file = await require(`../../../../${this.eventDir}${dir}`);
-                    if (isClass(file)) {
-                        finalFile = new file(this.client)
-                        if(!(finalFile instanceof Event)) return console.log(new Color(`&d[GEvents] &cEvent ${fileName} doesnt belong in Events.`).getText())
-                    } else finalFile = file;
-
-                    this.client.gevents.set(finalFile.name, finalFile);
-                    this.GCommandsClient.emit(Events.LOG, new Color('&d[GEvents] &aLoaded (File): &e➜   &3' + fileName, {json:false}).getText());
-                } catch(e) {
-                    this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GEvents Debug] '+e).getText());
-                    this.GCommandsClient.emit(Events.LOG, new Color('&d[GEvents] &cCan\'t load ' + fileName).getText());
-                }
-            } else {
-                fs.readdirSync(`${this.eventDir}${dir}`).forEach(async(eventFile) => {
-                    let file2;
-                    let fileName2 = eventFile.split('.').reverse()[1];
-                    try {
-                        let finalFile2;
-
-                        file2 = await require(`../../../../${this.eventDir}${dir}/${eventFile}`);
-                        if (isClass(file)) {
-                            finalFile2 = new file2(this.client)
-                            if(!(finalFile2 instanceof Event)) return console.log(new Color(`&d[GEvents] &cEvent ${fileName2} doesnt belong in Events.`).getText());
-                        } else finalFile2 = file2;
-
-                        this.client.gevents.set(finalFile2.name, finalFile2);
-                        this.GCommandsClient.emit(Events.LOG, new Color('&d[GEvents] &aLoaded (File): &e➜   &3' + fileName2, {json:false}).getText());
-                    } catch(e) {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GEvents Debug] '+e).getText());
-                        this.GCommandsClient.emit(Events.LOG, new Color('&d[GEvents] &cCan\'t load ' + fileName2).getText());
-                    }
-                })
-            }
-        })
-
-        await this.__loadEvents()
-    }
-
-    /**
-     * Internal method to loadEvents
-     * @returns {void}
-     * @private
-    */
-    async __loadEvents() {
-        this.client.gevents.forEach(event => {
-            if(event.name == 'ready') return event.run(this.client);
-
-            if(event.ws) {
-                if(event.once) this.client.ws.once(event.name, (...args) => event.run(this.client, ...args));
-                else this.client.ws.on(event.name, (...args) => event.run(this.client, ...args));
-            } else {
-                if(event.once) this.client.once(event.name, (...args) => event.run(this.client, ...args));
-                else this.client.on(event.name, (...args) => event.run(this.client, ...args));
-            }
-        })
-    }
-}
+/**
+ * Internal method to loadEvents
+ * @returns {void}
+ * @private
+*/
+GEventLoader.__loadEvents() = GEvents.GEvents.__loadEvents;
 
 module.exports = GEventLoader;

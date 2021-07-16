@@ -123,6 +123,12 @@ class Command {
         this.category = resolveString(options.category);
     }
 
+    /**
+     * run function
+     * @param {Object} options 
+     * @param {Array} arrayArgs 
+     * @param {Array | Object} objectArgs 
+     */
     async run({client, interaction, member, message, guild, channel, respond, edit}, arrayArgs, objectArgs) {
         return console.log(new Color(`&d[GCommands] &cCommand ${this.name} doesn't provide a run method!`).getText())
     }

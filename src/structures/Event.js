@@ -1,38 +1,34 @@
-const { resolveString } = require('../util/util');
+// ONLY FOR DOCS
+const GEvents = require("@gcommands/events")
 
 /**
  * The Event class
  */
-class Event {
+class Event extends null {}
 
-    /**
-     * Creates new Event instance
-     * @param {Client} client
-     * @param {Object} options 
-    */
-    constructor(client, options = {}) {
-        /**
-         * Name
-         * @type {String}
-         */
-        this.name = resolveString(options.name);
+/**
+ * Name
+ * @type {String}
+ */
+this.name = GEvents.Event.name;
 
-        /**
-         * once
-         * @type {Boolean}
-         */
-         this.once = Boolean(options.once) || false;
+/**
+ * once
+ * @type {Boolean}
+ */
+this.once = GEvents.Event.once;
 
-        /**
-         * ws
-         * @type {Boolean}
-         */
-         this.ws = Boolean(options.ws) || false;
-    }
+/**
+ * ws
+ * @type {Boolean}
+ */
+this.ws = GEvents.Event.ws;
 
-    async run(client, ...args) {
-        return console.log(new Color(`&d[GEvents] &cEvent ${this.name} doesn't provide a run method!`).getText())
-    }
-}
+/**
+ * run function
+ * @param {Client} 
+ * @param {String}
+ */
+this.run = GEvents.Event.run
 
 module.exports = Event;
