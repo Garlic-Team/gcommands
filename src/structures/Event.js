@@ -29,6 +29,6 @@ Event.ws = GEvents.Event.ws;
  * @param {Client} 
  * @param {String}
  */
-Event.run = GEvents.Event.run;
-
+Event.run = () => GEvents.Event.run;
+ 
 module.exports = Event;
