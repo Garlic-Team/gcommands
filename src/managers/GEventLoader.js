@@ -36,13 +36,13 @@ GEventLoader.client.gevents = GEvents.GEvents.gevents;
  * @returns {void}
  * @private
 */
-GEventLoader.__loadEventFiles() = GEvents.GEvents.__loadEventFiles;
+GEventLoader.__loadEventFiles = () => GEvents.GEvents.__loadEventFiles;
 
 /**
  * Internal method to loadEvents
  * @returns {void}
  * @private
 */
-GEventLoader.__loadEvents() = GEvents.GEvents.__loadEvents;
+GEventLoader.__loadEvents = () => GEvents.GEvents.__loadEvents;
 
 module.exports = GEventLoader;
