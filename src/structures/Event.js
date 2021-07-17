@@ -1,5 +1,5 @@
 // ONLY FOR DOCS
-const GEvents = require("@gcommands/events")
+const GEvents = require('@gcommands/events')
 
 /**
  * The Event class

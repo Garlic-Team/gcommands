@@ -1,5 +1,5 @@
 const { MessageEmbed, MessageAttachment, DataResolver, Util } = require('discord.js');
-const { browser } = require("discord.js").Constants;
+const { browser } = require('discord.js').Constants;
 
 /**
  * The GPayload class
