@@ -80,9 +80,11 @@ class GPayload {
             finalFiles.push(...this.options.attachments);
         }
 
-        for (const embed of this.data.embeds) {
-          if (embed.files) {
-            finalFiles.push(...embed.files);
+        if(this.data.embeds) {
+          for (const embed of this.data.embeds) {
+            if (embed.files) {
+              finalFiles.push(...embed.files);
+            }
           }
         }
     
