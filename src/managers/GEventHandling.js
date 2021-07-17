@@ -265,17 +265,17 @@ class GEventHandling {
                     if(inhibitReturn == false) return;
 
                     let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
-                    let cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.member.user.id, commandos)
+                    let cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos)
                     if(cooldown.cooldown) return interaction.reply.send(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
 
                     if(commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage])
 
                     if(commandos.userOnly) {
                         if(typeof commandos.userOnly == 'object') {
-                            let users = commandos.userOnly.some(v => interaction.member.user.id == v)
+                            let users = commandos.userOnly.some(v => interaction.user.id == v)
                             if(!users) return;
                         } else {
-                            if(interaction.member.user.id !== commandos.userOnly) return;
+                            if(interaction.author.id !== commandos.userOnly) return;
                         }
                     }
 
@@ -300,7 +300,7 @@ class GEventHandling {
                     if(commandos.userRequiredPermissions) {
                         if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
-                        if(!this.client.guilds.cache.get(interaction.guild.id).members.cache.get(interaction.member.user.id).permissions.has(commandos.userRequiredPermissions)) return interaction.reply.send({content:this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true})
+                        if(!interaction.member.permissions.has(commandos.userRequiredPermissions)) return interaction.reply.send({content:this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true})
                     }
 
                     if((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
