@@ -49,14 +49,14 @@ class GPayload {
         let type = typeof this.options;
         if(type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options }
 
-        this.options.inlineReply = this.options.inlineReply == undefined ? true : false;
+        this.options.inlineReply = this.options.inlineReply == undefined ? true : this.options.inlineReply;
 
         if(this.options.content && typeof this.options.content == 'object') {
             this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
             this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : [];
         } else this.data.content = this.options.content || null
 
-        this.data.allowedMentions = this.options.allowedMentions ? this.options.allowedMentions : { parse: [], repliedUser: true }
+        this.data.allowed_mentions = this.options.allowedMentions ? this.options.allowedMentions : { parse: [], repliedUser: true }
         this.data.flags = this.options.ephemeral ? 64 : null
 
         if(this.options.components) this.data.components =!Array.isArray(this.options.components) ? [this.options.components] : this.options.components
