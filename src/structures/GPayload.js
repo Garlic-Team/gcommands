@@ -1,4 +1,5 @@
 const { MessageEmbed, MessageAttachment, DataResolver, Util } = require('discord.js');
+const { browser } = require("discord.js").Constants;
 
 /**
  * The GPayload class
@@ -61,6 +62,7 @@ class GPayload {
         if(this.options.components) this.data.components =!Array.isArray(this.options.components) ? [this.options.components] : this.options.components
         if(this.options.embeds) this.data.embeds = !Array.isArray(this.options.embeds) ? [this.options.embeds] : this.options.embeds
         if(this.options.attachments) this.options.attachments = !Array.isArray(this.options.attachments) ? [this.options.attachments] : this.options.attachments
+        if(this.options.files) this.options.files = !Array.isArray(this.options.files) ? [this.options.files] : this.options.files
 
         if(this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
 
