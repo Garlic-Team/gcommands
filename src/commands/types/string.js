@@ -13,8 +13,8 @@ class StringArgumentType extends ArgumentType {
     }
 
 	validate(argument, message) {
-		if(argument.oneOf && !argument.oneOf.includes(message.content.toLowerCase())) {
-			return `Please enter one of the following options: ${argument.oneOf.map(opt => `\`${opt}\``).join(', ')}`;
+		if(argument.choices && !argument.choices.some(ch => ch.value == message.content.toLowerCase())) {
+			return `Please enter one of the following options: ${argument.oneOf.map(opt => `\`${opt.name}\``).join(', ')}`;
 		}
 	}
 }

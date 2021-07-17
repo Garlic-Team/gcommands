@@ -47,10 +47,10 @@ class Argument {
         this.prompt = argument.prompt || `Please define argument ${argument.name}`;
 
         /**
-         * oneOf
-         * @type {Array}
+         * choices
+         * @type {Object}
         */
-        this.oneOf = argument.oneOf;
+        this.choices = argument.choices;
 
         return this;
     }
