@@ -57,19 +57,18 @@ class GEventHandling {
             let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : (await message.guild.getCommandPrefix()).filter(p => message.content.startsWith(p))
             if(prefix.length === 0) return;
 
+
             if (this.GCommandsClient.caseSensitivePrefixes && !message.content.toLowerCase().startsWith(prefix[0].toLowerCase())) return;
             else if (!message.content.startsWith(prefix[0])) return;
         
-            const args = message.content.slice(prefix.length).trim().split(/ +/g);
-            const cmd = this.GCommandsClient.caseSensitiveCommands ? args.shift().toLowerCase() : args.shift();
-            
+            const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
+
             if (cmd.length === 0) return;
     
             try {
-                let commandos = this.client.gcommands.get(cmd);
-                if(!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(cmd));
-                if(!commandos) return;
-                if(String(commandos.slash) == 'true') return;
+                let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
+                if(!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
+                if(!commandos || String(commandos.slash) == 'true') return;
 
                 let member = message.member, guild = message.guild, channel = message.channel
                 let botMessageInhibit;
@@ -239,15 +238,11 @@ class GEventHandling {
         if((this.client.slash) || (this.client.slash == 'both')) {
             this.client.ws.on('INTERACTION_CREATE', async (int) => {
                 let interaction = new GInteraction(this.client, int)
-
                 if(interaction.type !== 2) return;
+
                 try {
-                    let commandos = this.client.gcommands.get(interaction.interaction.name);
-                    if(!commandos) return;
-                    if(commandos.slash == false || commandos.slash == 'false') return;
-                    if (!this.client.cooldowns.has(commandos.name)) {
-                        this.client.cooldowns.set(commandos.name, new Collection());
-                    }
+                    let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.interaction.name.toLowerCase() : interaction.interaction.name);
+                    if(!commandos || String(commandos.slash) == 'true') return;
 
                     let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                         interaction, 
@@ -418,6 +413,7 @@ class GEventHandling {
     */
     getSlashArgsObject(options) {
         let args = {};
+
         for (let o of options) {
           if (o.type == 1) args[o.name] = this.getSlashArgsObject(o.options || []);
           else if (o.type == 2) args[o.name] = this.getSlashArgsObject(o.options || []); 
@@ -425,6 +421,7 @@ class GEventHandling {
               args[o.name] = o.value;
           }
         }
+        
         return args;
     }
 }
