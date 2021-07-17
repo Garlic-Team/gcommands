@@ -242,7 +242,7 @@ class GEventHandling {
 
                 try {
                     let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.interaction.name.toLowerCase() : interaction.interaction.name);
-                    if(!commandos || String(commandos.slash) == 'true') return;
+                    if(!commandos || String(commandos.slash) == 'false') return;
 
                     let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                         interaction, 
