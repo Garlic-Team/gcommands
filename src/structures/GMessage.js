@@ -10,7 +10,7 @@ module.exports = Object.defineProperties(Message.prototype, {
     */
     edit: {
         value: async function(result) {
-            let GPayloadResult = GPayload.create(this.channel, result)
+            let GPayloadResult = await GPayload.create(this.channel, result)
                 .resolveData();
 
             if(result.edited == false) {
@@ -46,7 +46,7 @@ module.exports = Object.defineProperties(Message.prototype, {
     */
     update: {
         value: async function(result) {
-            let GPayloadResult = GPayload.create(this.channel, result)
+            let GPayloadResult = await GPayload.create(this.channel, result)
                 .resolveData();
             
             return this.client.api.channels(this.channel.id).messages[this.id].patch({
@@ -65,7 +65,7 @@ module.exports = Object.defineProperties(Message.prototype, {
     */
     send: {
         value: async function(result) {
-            let GPayloadResult = GPayload.create(this.channel, result)
+            let GPayloadResult = await GPayload.create(this.channel, result)
                 .resolveData()
                 .resolveFiles();
 

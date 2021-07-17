@@ -6,7 +6,7 @@ const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
 module.exports = Object.defineProperties(DMChannel.prototype, {
     send: {
         value: async function(result) {
-            let GPayloadResult = GPayload.create(this, result)
+            let GPayloadResult = await GPayload.create(this, result)
                 .resolveData()
                 .resolveFiles();
 
