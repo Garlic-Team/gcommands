@@ -289,6 +289,7 @@ declare module 'gcommands' {
     public description: string;
     public cooldown: string;
     public expectedArgs: String | Array;
+    public args: Array;
     public minArgs: number;
     public clientRequiredPermissions: String | Array;
     public userRequiredPermissions: String | Array;

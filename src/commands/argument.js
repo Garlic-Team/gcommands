@@ -47,7 +47,7 @@ class Argument {
         this.prompt = argument.prompt || `Please define argument ${argument.name}`;
 
         /**
-         * prompt
+         * oneOf
          * @type {Array}
         */
         this.oneOf = argument.oneOf;
