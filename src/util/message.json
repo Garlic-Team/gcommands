@@ -108,5 +108,16 @@
         "slovak": "Argument `{argument}` musí obsahovať {type}.",
         "turkish": "`{argument}` bağımsız değişkeni bir {type} içermelidir.",
         "polish": "Argument `{argument}` musi zawierać {type}."
+    },
+    "ARGS_CHOICES": {
+        "english": "Please enter one of the following options: {choices}.",
+        "spanish": "Por favor, introduzca una de las siguientes opciones: {choices}.",
+        "portuguese": "Por favor, introduza uma das seguintes opções: {choices}.",
+        "russian": "Пожалуйста, введите один из следующих вариантов: {choices}.",
+        "german": "Bitte geben Sie eine der folgenden Optionen ein: {choices}.",
+        "czech": "Zadejte jednu z následujících možností: {choices}.",
+        "slovak": "Zadajte jednu z nasledujúcich možností: {choices}.",
+        "turkish": "Lütfen aşağıdaki seçeneklerden birini girin: {choices}.",
+        "polish": "Proszę wprowadzić jedną z poniższych opcji: {choices}."
     }
 }

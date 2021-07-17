@@ -12,10 +12,10 @@ class StringArgumentType extends ArgumentType {
         super(client, 'string')
     }
 
-	validate(argument, message) {
-		if(argument.choices && !argument.choices.some(ch => ch.value == message.content.toLowerCase())) {
-			return `Please enter one of the following options: ${argument.choices.map(opt => `\`${opt.name}\``).join(', ')}`;
-		}
+	async validate(argument, message) {
+        const guildLanguage = await message.guild.getLanguage();
+
+		if(argument.choices && !argument.choices.some(ch => ch.value == message.content.toLowerCase())) return this.client.languageFile.ARGS_CHOICES[guildLanguage].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', '))
 	}
 }
 
