@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageAttachment } = require('discord.js');
+const { MessageEmbed, MessageAttachment, DataResolver, Util } = require('discord.js');
 
 /**
  * The GPayload class
@@ -71,27 +71,62 @@ class GPayload {
      * Resolves files.
      * @returns {GPayload}
      */
-    resolveFiles() {
+    async resolveFiles() {
         if (this.files) return this;
 
-        let finalFiles = [];
-        if(typeof this.options == 'object' && (this.options.attachments || this.options.files)) {
-            let attachments = this.options.attachments || this.options.files
-
-            if(!Array.isArray(attachments)) attachments = [attachments]
-            attachments.forEach(file => {
-                finalFiles.push({
-                    attachment: file.attachment,
-                    name: file.name,
-                    file: file.attachment
-                })
-            })
+        const finalFiles = [];
+        if(this.options.files) this.options.attachments = this.options.files;
+        if (this.options.attachments) {
+            finalFiles.push(...this.options.attachments);
         }
 
-        this.files = finalFiles;
+        for (const embed of this.data.embeds) {
+          if (embed.files) {
+            finalFiles.push(...embed.files);
+          }
+        }
+    
+        this.files = await Promise.all(finalFiles.map(f => this.constructor.resolveFile(f)));
         return this;
     }
 
+    /**
+     * Resolves a single file into an object sendable to the API.
+     * from djs
+     * @param {BufferResolvable|Stream|FileOptions|MessageAttachment} fileLike Something that could be resolved to a file
+     * @returns {Object}
+     */
+    static async resolveFile(fileLike) {
+        let attachment;
+        let name;
+    
+        const findName = thing => {
+          if (typeof thing === 'string') {
+            return Util.basename(thing);
+          }
+    
+          if (thing.path) {
+            return Util.basename(thing.path);
+          }
+    
+          return 'file.jpg';
+        };
+    
+        const ownAttachment =
+          typeof fileLike === 'string' ||
+          fileLike instanceof (browser ? ArrayBuffer : Buffer) ||
+          typeof fileLike.pipe === 'function';
+        if (ownAttachment) {
+          attachment = fileLike;
+          name = findName(attachment);
+        } else {
+          attachment = fileLike.attachment;
+          name = fileLike.name || findName(attachment);
+        }
+    
+        const resource = await DataResolver.resolveFile(attachment);
+        return { attachment, name, file: resource };
+    }
 
     /**
      * Creates a `GPayload` from user-level arguments.
