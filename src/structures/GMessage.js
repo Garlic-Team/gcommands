@@ -1,434 +1,123 @@
-const { APIMessage, Structures, Message } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector')
-const updater = require("../util/updater")
+const { Message } = require('discord.js');
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
+const GPayload = require('./GPayload');
+const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
 
-if(!updater.checkDjsVersion("13")) {
-    module.exports = Structures.extend("Message", Message => {
-        /**
-         * The MessageStructure structure
-         * @extends Message
-        */
-        class GCommandsMessage extends Message {
-            constructor(...args) {
-                super(...args)
-            }
-    
-            /**
-             * Method to make buttons
-             * @param {String} content
-             * @param {Object} options
-             * @returns {Promise}
-            */
-            async buttons(content, options) {
-                var embed = null;
-                if(typeof content == "object") {
-                    embed = content;
-                    content = "\u200B"
-                }
-    
-    
-                if(!options.allowedMentions) {
-                    options.allowedMentions = { parse: [] };
-                }
-    
-                if(options.components) {
-                    if(!Array.isArray(options.components)) options.components = [options.components];
-                    options.components = options.components;
-                }
-                if(options.embeds) {
-                    if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
-                    options.embeds = options.embeds;
-                }
-    
-                let finalFiles = [];
-                if(options.attachments) {
-                    if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
-                    options.attachments.forEach(file => {
-                        finalFiles.push({
-                            attachment: file.attachment,
-                            name: file.name,
-                            file: file.attachment
-                        })
-                    })
-                }
-    
-                if(options.inlineReply) {
-                    options.message_reference = {
-                        message_id: this.channel.lastMessageID
-                    }
-                }
-
-                return this.client.api.channels[this.channel.id].messages.post({
-                    data: {
-                        allowed_mentions: options.allowedMentions,
-                        content: content,
-                        components: options.components,
-                        options,
-                        embed: embed || null
-                    },
-                    files: finalFiles
-                })
-                .then(d => this.client.actions.MessageCreate.handle(d).message);
-            }
-    
-            /**
-             * Method to buttonsEdit
-             * @param {String} content
-             * @param {Object} options
-             * @returns {Promise}
-            */
-            async buttonsEdit(msgID, content, options) {
-                var embed = null;
-                if(typeof content == "object") {
-                    embed = content;
-                    content = "\u200B"
-                }
-    
-                if(!options.allowedMentions) {
-                    options.allowedMentions = { parse: [] };
-                }
-    
-                if(options.components) {
-                    if(!Array.isArray(options.components)) options.components = [options.components];
-                    options.components = options.components;
-                }
-                if(options.embeds) {
-                    if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
-                    options.embeds = options.embeds;
-                }
-    
-                let finalFiles = [];
-                if(options.attachments) {
-                    if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
-                    options.attachments.forEach(file => {
-                        finalFiles.push({
-                            attachment: file.attachment,
-                            name: file.name,
-                            file: file.attachment
-                        })
-                    })
-                }
-    
-                return this.client.api.channels[this.channel.id].messages[msgID].patch({
-                    data: {
-                        allowed_mentions: options.allowedMentions,
-                        content: content,
-                        components: options.components,
-                        options,
-                        embed: embed || null
-                    },
-                    files: finalFiles
-                })
-                .then(d => this.client.actions.MessageCreate.handle(d).message);
-            }
-    
-            /**
-             * Method to edit message
-             * @param {Object} options 
-            */
-            async edit(result) {
-                if (typeof result == "object") {
-                    var finalData = [];
-    
-                    if(result.components && !Array.isArray(result.components)) result.components = [result.components];
-                    if(result.embeds && !Array.isArray(result.embeds)) result.embeds = [result.embeds]
-    
-                    if(typeof result == "object" && !result.content) result.embeds = [result]
-                    if(typeof result.content == "object") {
-                        result.embeds = [result.content]
-                        result.content = "\u200B"
-                    }
-    
-                    if(result.edited == false) {
-                        return this.client.api.channels(this.channel.id).messages[this.id].patch({
-                            data: {
-                                type: 7,
-                                data: {
-                                    content: result.content,
-                                    components: result.components,
-                                    embeds: result.embeds
-                                },
-                            },
-                        }).then(d => this.client.actions.MessageCreate.handle(d).message);
-                    }
-    
-                    let finalFiles = [];
-                    if(typeof result == "object" && result.attachments) {
-                        if(!Array.isArray(result.attachments)) result.attachments = [result.attachments]
-                        result.attachments.forEach(file => {
-                            finalFiles.push({
-                                attachment: file.attachment,
-                                name: file.name,
-                                file: file.attachment
-                            })
-                        })
-                    }
-    
-                    return this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
-                        data: {
-                            content: result.content,
-                            components: result.components || [],
-                            embeds: result.embeds || []
-                        },
-                        files: finalFiles
-                    })
-                } else {
-                    return this.client.api.channels(this.channel.id).messages[this.id].patch({ data: {
-                        content: result,
-                    }})
-                }
-            }
-    
-            /**
-             * Method to update message
-             * @param {Object} options 
-            */
-            async update(result) {
-                if (typeof result == "object") {
-                    var finalData = [];
-    
-                    if(result.components && !Array.isArray(result.components)) result.components = [result.components];
-                    if(result.embeds && !Array.isArray(result.embeds)) result.embeds = [result.embeds]
-    
-                    if(typeof result == "object" && !result.content) result.embeds = [result]
-                    if(typeof result.content == "object") {
-                        result.embeds = [result.content]
-                        result.content = "\u200B"
-                    }
-    
-                    return this.client.api.channels(this.channel.id).messages[this.id].patch({
-                        data: {
-                            type: 7,
-                            data: {
-                                content: result.content,
-                                components: result.components,
-                                embeds: result.embeds
-                            },
-                        },
-                    }).then(d => this.client.actions.MessageCreate.handle(d).message);
-                } else {
-                    return this.client.api.channels(this.channel.id).messages[this.id].patch({
-                        data: {
-                            type: 7,
-                            data: {
-                                content: result,
-                            }
-                        }
-                    })
-                }
-            }
-    
-            /**
-             * Method to inlineReply
-             * @param {String} content
-             * @param {Object} options
-             * @returns {Promise}
-            */
-            async inlineReply(content, options) {
-                const mentionRepliedUser = typeof ((options || content || {}).allowedMentions || {}).repliedUser === "undefined" ? true : ((options || content).allowedMentions).repliedUser;
-                delete ((options || content || {}).allowedMentions || {}).repliedUser;
-    
-                const apiMessage = content instanceof APIMessage ? content.resolveData() : APIMessage.create(this.channel, content, options).resolveData();
-                Object.assign(apiMessage.data, { message_reference: { message_id: this.id } });
-    
-                if (!apiMessage.data.allowed_mentions || Object.keys(apiMessage.data.allowed_mentions).length === 0)
-                apiMessage.data.allowed_mentions = { parse: ["users", "roles", "everyone"] };
-                if (typeof apiMessage.data.allowed_mentions.replied_user === "undefined")
-                Object.assign(apiMessage.data.allowed_mentions, { replied_user: mentionRepliedUser });
-    
-                if (Array.isArray(apiMessage.data.content)) {
-                    return Promise.all(apiMessage.split().map(x => {
-                        x.data.allowed_mentions = apiMessage.data.allowed_mentions;
-                        return x;
-                    }).map(this.inlineReply.bind(this)));
-                }
-    
-                const { data, files } = await apiMessage.resolveFiles();
-                return this.client.api.channels[this.channel.id].messages
-                    .post({ data, files })
-                    .then(d => this.client.actions.MessageCreate.handle(d).message);
-            }
-    
-            createButtonCollector(filter, options = {}) {
-                if(updater.checkDjsVersion("13")) return new ButtonCollectorV13(this, filter, options);
-                else return new ButtonCollectorV12(this, filter, options);
-            }
-        
-            awaitButtons(filter, options = {}) {
-                return new Promise((resolve, reject) => {
-                    const collector = this.createButtonCollector(this, filter, options);
-                    collector.once('end', (buttons, reason) => {
-                        if (options.errors && options.errors.includes(reason)) {
-                            reject(buttons);
-                        } else {
-                            resolve(buttons);
-                        }
-                    });
-                })
-            }
-    
-            createSelectMenuCollector(filter, options = {}) {
-                if(updater.checkDjsVersion("13")) return new SelectMenuCollectorV13(this, filter, options);
-                else return new SelectMenuCollectorV12(this, filter, options);
-            }
-        
-            awaitSelectMenus(filter, options = {}) {
-                return new Promise((resolve, reject) => {
-                    const collector = this.createSelectMenuCollector(this, filter, options);
-                    collector.once('end', (buttons, reason) => {
-                        if (options.errors && options.errors.includes(reason)) {
-                            reject(buttons);
-                        } else {
-                            resolve(buttons);
-                        }
-                    });
-                })
-            }
-        }
-    
-        return GCommandsMessage;
-    })
-} else module.exports = {
+module.exports = Object.defineProperties(Message.prototype, {
     /**
-     * Method to make buttons
-     * @param {String} content
-     * @param {Object} options
-     * @returns {Promise}
+     * Method to edit message
+     * @param {Object} options 
     */
-    buttons: async function(content, options) {
-        this.client = options.client, this.channel = options.channel
-        var embed = null;
-        if(typeof content == "object") {
-            embed = content;
-            content = "\u200B"
-        }
+    edit: {
+        value: async function(result) {
+            let GPayloadResult = await GPayload.create(this.channel, result)
+                .resolveData();
 
-
-        if(!options.allowedMentions) {
-            options.allowedMentions = { parse: [] };
-        }
-
-        if(options.components) {
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-        }
-        if(options.embeds) {
-            if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
-            options.embeds = options.embeds;
-        }
-
-        let finalFiles = [];
-        if(options.attachments) {
-            if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
-            options.attachments.forEach(file => {
-                finalFiles.push({
-                    attachment: file.attachment,
-                    name: file.name,
-                    file: file.attachment
-                })
-            })
-        }
-
-        if(options.inlineReply) {
-            options.message_reference = {
-                message_id: this.channel.lastMessageID
+            if(result.edited == false) {
+                return this.client.api.channels(this.channel.id).messages[this.id].patch({
+                    data: {
+                        type: 7,
+                        data: GPayloadResult.data
+                    },
+                }).then(d => this.client.actions.MessageCreate.handle(d).message);
             }
-        }
 
-        return this.client.api.channels[this.channel.id].messages.post({
-            data: {
-                allowed_mentions: options.allowedMentions,
-                content: content,
-                components: options.components,
-                options,
-                embed: embed || null
-            },
-            files: finalFiles
-        })
-        .then(d => this.client.actions.MessageCreate.handle(d).message);
+            let apiMessage = (await this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
+                data: GPayloadResult.data
+            }))
+
+            if(typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
+            if(apiMessage) {
+                apiMessage.client = this.client ? this.client : client;
+                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+                apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
+            }
+
+            return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
+        }
     },
 
     /**
-     * Method to buttonsEdit
-     * @param {String} content
-     * @param {Object} options
-     * @returns {Promise}
+     * Method to update message
+     * @param {Object} options 
     */
-    buttonsEdit: async function(msgID, content, options) {
-        this.client = options.client, this.channel = options.channel
-        var embed = null;
-        if(typeof content == "object") {
-            embed = content;
-            content = "\u200B"
+    update: {
+        value: async function(result) {
+            let GPayloadResult = await GPayload.create(this.channel, result)
+                .resolveData();
+            
+            return this.client.api.channels(this.channel.id).messages[this.id].patch({
+                data: {
+                    type: 7,
+                    data: GPayloadResult.data
+                },
+            }).then(d => this.client.actions.MessageCreate.handle(d).message);
         }
-
-        if(!options.allowedMentions) {
-            options.allowedMentions = { parse: [] };
-        }
-
-        if(options.components) {
-            if(!Array.isArray(options.components)) options.components = [options.components];
-            options.components = options.components;
-        }
-        if(options.embeds) {
-            if(!Array.isArray(options.embeds)) options.embeds = [options.embeds];
-            options.embeds = options.embeds;
-        }
-
-        let finalFiles = [];
-        if(options.attachments) {
-            if(!Array.isArray(options.attachments)) options.attachments = [options.attachments]
-            options.attachments.forEach(file => {
-                finalFiles.push({
-                    attachment: file.attachment,
-                    name: file.name,
-                    file: file.attachment
-                })
-            })
-        }
-
-        return this.client.api.channels[this.channel.id].messages[msgID].patch({
-            data: {
-                allowed_mentions: options.allowedMentions,
-                content: content,
-                components: options.components,
-                options,
-                embed: embed || null
-            },
-            files: finalFiles
-        })
-        .then(d => this.client.actions.MessageCreate.handle(d).message);
     },
 
     /**
-     * Method to inlineReply
-     * @param {String} content
-     * @param {Object} options
+     * Method to send
+     * @param {Object} result
      * @returns {Promise}
     */
-    inlineReply: async function(content, options) {
-        this.client = options.client, this.channel = options.channel
-        const mentionRepliedUser = typeof ((options || content || {}).allowedMentions || {}).repliedUser === "undefined" ? true : ((options || content).allowedMentions).repliedUser;
-        delete ((options || content || {}).allowedMentions || {}).repliedUser;
+    send: {
+        value: async function(result) {
+            let GPayloadResult = await GPayload.create(this.channel, result)
+                .resolveData()
+                .resolveFiles();
 
-        const apiMessage = content instanceof APIMessage ? content.resolveData() : APIMessage.create(this.channel, content, options).resolveData();
-        Object.assign(apiMessage.data, { message_reference: { message_id: this.id } });
-
-        if (!apiMessage.data.allowed_mentions || Object.keys(apiMessage.data.allowed_mentions).length === 0)
-        apiMessage.data.allowed_mentions = { parse: ["users", "roles", "everyone"] };
-        if (typeof apiMessage.data.allowed_mentions.replied_user === "undefined")
-        Object.assign(apiMessage.data.allowed_mentions, { replied_user: mentionRepliedUser });
-
-        if (Array.isArray(apiMessage.data.content)) {
-            return Promise.all(apiMessage.split().map(x => {
-                x.data.allowed_mentions = apiMessage.data.allowed_mentions;
-                return x;
-            }).map(this.inlineReply.bind(this)));
-        }
-
-        const { data, files } = await apiMessage.resolveFiles();
-        return this.client.api.channels[this.channel.id].messages
-            .post({ data, files })
+            return this.client.api.channels[this.channel.id].messages.post({
+                data: GPayloadResult.data,
+                files: GPayloadResult.files
+            })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
+        }
+    },
+
+    createButtonCollector: {
+        value: function(filter, options = {}) {
+            if(ifDjsV13) return new ButtonCollectorV13(this, filter, options);
+            else return new ButtonCollectorV12(this, filter, options);
+        }
+    },
+
+    awaitButtons: {
+        value: async function(filter, options = {}) {
+            return new Promise((resolve, reject) => {
+                const collector = this.client.dispatcher.createButtonCollector(this, filter, options);
+                collector.once('end', (buttons, reason) => {
+                    if (options.errors && options.errors.includes(reason)) {
+                        reject(buttons);
+                    } else {
+                        resolve(buttons);
+                    }
+                });
+            })
+        }
+    },
+
+    createSelectMenuCollector: {
+        value: function(filter, options = {}) {
+            if(ifDjsV13) return new SelectMenuCollectorV13(this, filter, options);
+            else return new SelectMenuCollectorV12(this, filter, options);
+        }
+    },
+
+    awaitSelectMenus: {
+        value: async function(filter, options = {}) {
+            return new Promise((resolve, reject) => {
+                const collector = this.client.dispatcher.createSelectMenuCollector(this, filter, options);
+                collector.once('end', (buttons, reason) => {
+                    if (options.errors && options.errors.includes(reason)) {
+                        reject(buttons);
+                    } else {
+                        resolve(buttons);
+                    }
+                });
+            })
+        }
     }
-};
+});

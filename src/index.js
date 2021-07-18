@@ -2,37 +2,37 @@
 
 module.exports = {
     // Root classes
-    GCommandsBase: require("./base/GCommandsBase"),
-    GCommands: require("./base/GCommands.js"),
-    GEvents: require("./base/GEvents"),
-    GCommandsDispatcher: require("./base/GCommandsDispatcher"),
+    GCommandsBase: require('./base/GCommandsBase'),
+    GCommands: require('./base/GCommands.js'),
+    GEventLoader: require('@gcommands/events').GEventLoader,
+    GCommandsDispatcher: require('./base/GCommandsDispatcher'),
 
     // Loaders
-    GEventLoader: require("./managers/GEventLoader"),
-    GCommandLoader: require("./managers/GCommandLoader"),
-    GDatabaseLoader: require("./managers/GDatabaseLoader"),
+    GEventHandling: require('./managers/GEventHandling'),
+    GCommandLoader: require('./managers/GCommandLoader'),
+    GDatabaseLoader: require('./managers/GDatabaseLoader'),
 
     // Structures
-    GCommandsGuild: require("./structures/GGuild"),
-    GCommandsMessage: require("./structures/GMessage"),
-    GNewsChannel: require("./structures/NewsChannel"),
-    GTextChannel: require("./structures/TextChannel"),
-    GDMChannel: require("./structures/DMChannel"),
-    MessageButton: require("./structures/MessageButton"),
-    MessageActionRow: require("./structures/MessageActionRow"),
-    MessageSelectMenu: require("./structures/MessageSelectMenu"),
-    MessageSelectMenuOption: require("./structures/MessageSelectMenuOption"),
-
-    ButtonCollectorV12: require("./structures/v13/ButtonCollector"),
-    ButtonCollectorV13: require("./structures/v12/ButtonCollector"),
-
-    SelectMenuCollectorV12: require("./structures/v13/SelectMenuCollector"),
-    SelectMenuCollectorV13: require("./structures/v12/SelectMenuCollector"),
+    GMessage: require('./structures/GMessage'),
+    GNewsChannel: require('./structures/NewsChannel'),
+    GTextChannel: require('./structures/TextChannel'),
+    GDMChannel: require('./structures/DMChannel'),
+    MessageButton: require('./structures/MessageButton'),
+    MessageActionRow: require('./structures/MessageActionRow'),
+    MessageSelectMenu: require('./structures/MessageSelectMenu'),
+    MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'),
+    Command: require('./commands/base'),
+    Event: require('@gcommands/events').Event,
+    GPayload: require('./structures/GPayload'),
+    ButtonCollectorV12: require('./structures/v13/ButtonCollector'),
+    ButtonCollectorV13: require('./structures/v12/ButtonCollector'),
+    SelectMenuCollectorV12: require('./structures/v13/SelectMenuCollector'),
+    SelectMenuCollectorV13: require('./structures/v12/SelectMenuCollector'),
 
     // Other
-    Color: require("./structures/Color"),
-    Util: require("./util/util"),
-    SlashCommand: {
+    Color: require('./structures/Color'),
+    Util: require('./util/util'),
+    ArgumentType: {
         SUB_COMMAND: 1,
         SUB_COMMAND_GROUP: 2,
         STRING: 3,
@@ -44,13 +44,13 @@ module.exports = {
         MENTIONABLE: 9
     },
     ButtonTypes: {
-        blurple: "blurple",
-        gray: "gray",
-        grey: "gray",
-        green: "green",
-        red: "red",
-        url: "url"
+        blurple: 'blurple',
+        gray: 'gray',
+        grey: 'gray',
+        green: 'green',
+        red: 'red',
+        url: 'url'
     },
 
-    version: require("../package.json").version
+    version: require('../package.json').version
 }

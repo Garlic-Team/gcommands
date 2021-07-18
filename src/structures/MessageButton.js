@@ -1,6 +1,6 @@
 /* From discord-buttons edited */
-const { resolveString } = require("../util/util");
-const Color = require("../structures/Color")
+const { resolveString, parseEmoji } = require('../util/util');
+const Color = require('./Color')
 const styles = {
     'blurple': 1,
     'gray': 2,
@@ -28,17 +28,50 @@ class MessageButton {
         this.setup(data);
     }
 
+    /**
+     * Setup
+     * @param {Object} data 
+     * @returns {MessageButton}
+     * @private
+     */
     setup(data) {
+
+        /**
+         * style
+         * @type {String} 
+        */
         this.style = 'style' in data ? this.resolveStyle(resolveString(data.style)) : null;
+
+        /**
+         * label
+         * @type {String} 
+        */
         this.label = 'label' in data ? resolveString(data.label) : null;
+
+        /**
+         * disabled
+         * @type {Boolean} 
+        */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
         if (this.style === 5) {
+            /**
+             * url
+             * @type {String} 
+            */
             this.url = 'url' in data ? resolveString(data.url) : null;
         } else {
+            /**
+             * customId
+             * @type {String} 
+            */
             this.custom_id = 'id' in data ? resolveString(data.id): null;
         }
 
+        /**
+         * type
+         * @type {Number} 
+        */
         this.type = 2;
 
         return this.toJSON();
@@ -67,7 +100,7 @@ class MessageButton {
      * @param {String} emoji  
     */
     setEmoji(emoji) {
-        this.emoji = this.parseEmoji(`${emoji}`);
+        this.emoji = parseEmoji(`${emoji}`);
         return this;
     }
 
@@ -115,24 +148,22 @@ class MessageButton {
     }
 
     resolveStyle(style) {
-
-        if (!style || style === undefined || style === null) return console.log(new Color("&d[GCommands] &cAn invalid button styles was provided").getText())
+        if (!style || style === undefined || style === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText())
     
-        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color("&d[GCommands] &cAn invalid button styles was provided").getText())
+        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText())
     
         return styles[style] || style;
     }
     
     resolveButton(data) {
+        if (!data.style) return console.log(new Color('&d[GCommands] &cPlease provide button style').getText())
     
-        if (!data.style) return console.log(new Color("&d[GCommands] &cPlease provide button style").getText())
-    
-        if (!data.label) return console.log(new Color("&d[GCommands] &cPlease provide button label").getText())
+        if (!data.label) return console.log(new Color('&d[GCommands] &cPlease provide button label').getText())
     
         if (data.style === 5) {
-            if (!data.url) return console.log(new Color("&d[GCommands] &cYou provided url style, you must provide an URL").getText())
+            if (!data.url) return console.log(new Color('&d[GCommands] &cYou provided url style, you must provide an URL').getText())
         } else {
-            if (!data.custom_id) return console.log(new Color("&d[GCommands] &cPlease provide button id").getText())
+            if (!data.custom_id) return console.log(new Color('&d[GCommands] &cPlease provide button id').getText())
         }
     
         return {
@@ -143,14 +174,6 @@ class MessageButton {
             custom_id: data.custom_id,
             type: 2
         }
-    }
-    
-    parseEmoji(text) {
-        if (text.includes('%')) text = decodeURIComponent(text);
-        if (!text.includes(':')) return { animated: false, name: text, id: null };
-        const m = text.match(/<?(?:(a):)?(\w{2,32}):(\d{17,19})?>?/);
-        if (!m) return null;
-        return { animated: Boolean(m[1]), name: m[2], id: m[3] || null };
     }
 }
 

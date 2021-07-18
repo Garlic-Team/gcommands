@@ -1,14 +1,32 @@
-const { Collector } = require("discord.js");
+const { Collector } = require('discord.js');
 const Collection = require('discord.js').Collection;
 const { Events } = require('discord.js').Constants;
 
-class SelectMenuCollector extends Collector {
+/**
+ * Collects menus on a message.
+ * Will automatically stop if the channel (`'channelDelete'`), guild (`'guildDelete'`) or (`'messageDelete'`) are deleted.
+ * @extends {Collector}
+ */
+ class SelectMenuCollector extends Collector {
+  /**
+   * @param {Message} message
+   * @param {CollectorOptions} options The options to be applied to this collector
+   * @emits SelectMenuCollector#selectMenu
+   */
   constructor(message, filter, options = {}) {
     super(message.client, filter, options);
     this.message = message;
 
+    /**
+     * users
+     * @type {Collection}
+     */
     this.users = new Collection();
 
+    /**
+     * total
+     * @type {Number}
+     */
     this.total = 0;
 
     this.empty = this.empty.bind(this);
@@ -36,16 +54,28 @@ class SelectMenuCollector extends Collector {
     });
   }
 
+  /**
+   * Handles a menu for possible collection.
+   * @param {GInteraction} menu
+   * @returns {GInteraction}
+   * @private
+   */
   collect(menu) {
     if(this.message.unstable) return SelectMenuCollector.key(menu)
     if (menu.message.id !== this.message.id) return null;
     return SelectMenuCollector.key(menu);
   }
 
+  /**
+   * @returns {null}
+   */
   dispose() {
     return null;
   }
 
+  /**
+   * Empties this menu collector.
+   */
   empty() {
     this.total = 0;
     this.collected.clear();
@@ -53,6 +83,11 @@ class SelectMenuCollector extends Collector {
     this.checkEnd();
   }
 
+  /**
+   * The reason this collector has ended with, or null if it hasn't ended yet
+   * @type {?string}
+   * @readonly
+   */
   endReason() {
     if (this.options.max && this.total >= this.options.max) return 'limit';
     if (this.options.maxEmojis && this.collected.size >= this.options.maxEmojis) return 'emojiLimit';
@@ -60,26 +95,49 @@ class SelectMenuCollector extends Collector {
     return null;
   }
 
-  _handleMessageDeletion(message) {
+  /**
+   * Handles checking if the message has been deleted, and if so, stops the collector with the reason 'messageDelete'.
+   * @private
+   * @param {Guild} message The message that was deleted
+   * @returns {void}
+   */
+   _handleMessageDeletion(message) {
     if (message.id === this.message.id) {
       this.stop('messageDelete');
     }
   }
 
+  /**
+   * Handles checking if the channel has been deleted, and if so, stops the collector with the reason 'channelDelete'.
+   * @private
+   * @param {Guild} channel The channel that was deleted
+   * @returns {void}
+   */
   _handleChannelDeletion(channel) {
     if (channel.id === this.message.channel.id) {
       this.stop('channelDelete');
     }
   }
 
+  /**
+   * Handles checking if the guild has been deleted, and if so, stops the collector with the reason 'guildDelete'.
+   * @private
+   * @param {Guild} guild The guild that was deleted
+   * @returns {void}
+   */
   _handleGuildDeletion(guild) {
     if (this.message.guild && guild.id === this.message.guild.id) {
       this.stop('guildDelete');
     }
   }
 
+  /**
+   * Gets the collector key for a menu.
+   * @param {MessageSelectMenu} menu The menu to get the key for
+   * @returns {Snowflake|string}
+   */
   static key(menu) {
-    return menu.selectMenuId;
+    return menu.id;
   }
 }
 

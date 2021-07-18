@@ -1,4 +1,4 @@
-import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User } from 'discord.js';
+import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, MembershipStates } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish';
@@ -104,34 +104,21 @@ declare module 'discord.js' {
 }
 
 declare module 'gcommands' {
-  export class GCommandsGuild extends Guild {
-    public prefix: string;
-    public language: string;
-
-    public getCommandPrefix(cache?: boolean): string;
-    public getLanguage(cache?: boolean): string;
-
-    public setCommandPrefix(prefix: string): void;
-    public setLanguage(language: GuildLanguageTypes): void;
-  }
-
-  export class InteractionEvent {
-    constructor(client: Client, data: object)
-    public selectMenuId: string;
-    public valueId: string;
-    public values: array;
-    public id: string;
-    public version: number;
+  export class GInteraction {
+    public type: number;
     public token: number;
-    public discordID: number;
-    public applicationID: number;
+    public discordId: number;
+    public version: number;
+    public applicationId: number;
     public guild: Guild;
-    public channel: Channel;
-    public clicker: {
-      member: GuildMember;
-      user: User;
+    public channel: TextChannel | NewsChannel | DMChannel;
+    public author: User;
+    public member: GuildMember;
+    public interaction: {
+      name: string;
+      id: number;
+      options: Array;
     }
-    public message: Message;
     public replied: boolean;
     public deffered: boolean;
 
@@ -143,6 +130,19 @@ declare module 'gcommands' {
       send(result: Object): void;
       edit(result: Object): void;
     }
+  }
+
+  export class InteractionEvent extends GInteraction {
+    constructor(client: Client, data: object)
+
+    public values: array;
+    public id: string;
+    public clicker: {
+      member: GuildMember;
+      user: User;
+    }
+    
+    public message: Message;
   }
 
   export class Color {
@@ -203,13 +203,13 @@ declare module 'gcommands' {
     public type: number;
     public disabled: boolean;
 
-    public setStyle(style: MessageButtonStyle): this;
-    public setLabel(label: string): this;
-    public setEmoji(emoji: string): this;
-    public setURL(url: string): this;
-    public setDisabled(disabled: boolean): this;
-    public setID(id: number): this;
-    public toJSON(): this;
+    public setStyle(style: MessageButtonStyle): MessageButton;
+    public setLabel(label: string): MessageButton;
+    public setEmoji(emoji: string): MessageButton;
+    public setURL(url: string): MessageButton;
+    public setDisabled(disabled: boolean): MessageButton;
+    public setID(id: number): MessageButton;
+    public toJSON(): MessageButton;
   }
 
   export class MessageSelectMenu {
@@ -220,14 +220,15 @@ declare module 'gcommands' {
     public custom_id: string;
     public options: object;
 
-    public setPlaceholder(placeholder: string): this;
-    public setMaxValues(max: number): this;
-    public setMinValues(min: number): this;
-    public setID(id: number): this;
+    public setPlaceholder(placeholder: string): tMessageSelectMenuhis;
+    public setMaxValues(max: number): MessageSelectMenu;
+    public setMinValues(min: number): MessageSelectMenu;
+    public setID(id: number): MessageSelectMenu;
+    public setDisabled(disabled: boolean): MessageSelectMenu;
     public addOption(option: MessageSelectMenuOption)
     public addOptions(...options: MessageSelectMenuOption[])
     public removeOptions(index: number, deleteCount: number, ...options: MessageSelectMenuOption[])
-    public toJSON(): this;
+    public toJSON(): MessageSelectMenu;
   }
 
   export class MessageSelectMenuOption {
@@ -239,12 +240,12 @@ declare module 'gcommands' {
     public emoji: object;
     public default: boolean;
 
-    public setLabel(label: string): this;
-    public setValue(value: string): this;
-    public setDescription(value: string): this;
-    public setEmoji(emoji: string): this;
-    public setDefault(disabled: boolean): this;
-    public toJSON(): this;
+    public setLabel(label: string): MessageSelectMenuOption;
+    public setValue(value: string): MessageSelectMenuOption;
+    public setDescription(value: string): MessageSelectMenuOption;
+    public setEmoji(emoji: string): MessageSelectMenuOption;
+    public setDefault(disabled: boolean): MessageSelectMenuOption;
+    public toJSON(): MessageSelectMenuOption;
   }
 
   export class GCommandsDispatcher {
@@ -281,6 +282,53 @@ declare module 'gcommands' {
     ): this;
   }
 
+  export class Command {
+    constructor(client: Client, options: CommandOptions)
+
+    public name: string;
+    public description: string;
+    public cooldown: string;
+    public expectedArgs: String | Array;
+    public args: Array;
+    public minArgs: number;
+    public clientRequiredPermissions: String | Array;
+    public userRequiredPermissions: String | Array;
+    public userRequiredRoles: String | Array;
+    public userOnly: Snowflake | Array;
+    public channelOnly: Snowflake | Array;
+    public channelTextOnly: Boolean;
+    public channelNewsOnly: Boolean;
+    public guildOnly: Snowflake | String;
+    public nsfw: boolean;
+    public aliases: Array;
+    public category: string;
+
+    public run(options: CommandRunOptions, args: Array, args2: Object | Array): void;
+  }
+
+  export class Event {
+    constructor(client: Client, options: EventOptions)
+
+    public name: string;
+    public once: boolean;
+    public ws: boolean;
+
+    public run(client: Client, ...args): void;
+  }
+
+  export class GPayload {
+    constructor(channel: TextChannel | NewsChannel | DMChannel, options: String | GPayloadOptions)
+
+    public channel: TextChannel | NewsChannel | DMChannel;
+    public options: GPayloadOptions;
+    public data: GPayloadOptions;
+    public files: GPayloadFiles;
+
+    public create(channel: TextChannel | NewsChannel | DMChannel, options: String | GPayloadOptions): GPayload;
+    public resolveData(): GPayload;
+    public resolveFiles(): GPayload;
+  }
+
   interface GEvents {
     debug: [string];
     log: [string];
@@ -292,20 +340,39 @@ declare module 'gcommands' {
     language: GuildLanguageTypes;
     unkownCommandMessage?: boolean;
     slash: {
-    slash: string | boolean;
-    prefix: string;
-    }
+      slash: string | boolean;
+      prefix?: string;
+    },
+    caseSensitiveCommands?: boolean;
+    caseSensitivePrefixes?: boolean;
     defaultCooldown?: string;
     database?: string;
   }
 
-  interface RespondOptions {
+  interface CommandRunOptions {
+    client: Client;
+    interaction: Object;
+    member: GuildMember;
+    message: Message;
+    guild: Guild;
+    channel: TextChannel | NewsChannel;
+    
+    respond(options: string | GPayloadOptions): void;
+    edit(options: string | GPayloadOptions): void;
+  }
+
+  interface GPayloadOptions {
     content: [string | MessageEmbed];
     embeds?: [MessageEmbed];
     components?: [MessageActionRow];
     attachments?: [MessageAttachment | MessageAttachment[]];
     ephemeral?: [boolean];
     allowedMentions?: [object];
+  }
+
+  interface GPayloadFiles {
+    files?: [MessageAttachment | MessageAttachment[]];
+    attachments?: [MessageAttachment | MessageAttachment[]];
   }
 
   interface MessageEditAndUpdateOptions {
@@ -315,5 +382,26 @@ declare module 'gcommands' {
     components?: MessageActionRow | MessageActionRow[],
     attachments?: MessageAttachment | MessageAttachment[],
     allowedMentions?: object
+  }
+
+  interface CommandOptions {
+    name: string;
+    description: string;
+    cooldown?: string;
+    expectedArgs?: string;
+    minArgs?: number;
+    userRequiredPermissions?: Array | String;
+    userRequiredRoles?: Array | String;
+    clientRequiredPermissions?: Array | String;
+    userOnly?: Array | Snowflake;
+    channelOnly?: Array | Snowflake;
+    guildOnly?: Array | Snowflake;
+    nsfw?: boolean;
+    aliases?: Array;
+  }
+
+  interface EventOptions {
+    name: string;
+    once: boolean;
   }
 }

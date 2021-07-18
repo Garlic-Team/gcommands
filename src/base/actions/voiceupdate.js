@@ -1,5 +1,5 @@
 module.exports = (client) => {
-    client.on("voiceStateUpdate", async(oldState, newState) => {
+    client.on('voiceStateUpdate', async(oldState, newState) => {
         const oldMember = oldState.member;
         const newMember = newState.member;
 
@@ -26,7 +26,7 @@ module.exports = (client) => {
         }
 
         if (!oldState.mute && newState.mute) {
-            var muteType = newState.selfMute ? 'self-muted' : 'server-muted';
+            let muteType = newState.selfMute ? 'self-muted' : 'server-muted';
             client.emit('voiceChannelMute',
                 newMember,
                 muteType
@@ -34,7 +34,7 @@ module.exports = (client) => {
         }
 
         if (oldState.mute && !newState.mute) {
-            var muteType = oldState.selfMute ? 'self-muted' : 'server-muted';
+            let muteType = oldState.selfMute ? 'self-muted' : 'server-muted';
             client.emit('voiceChannelUnmute',
                 newMember,
                 muteType
@@ -42,7 +42,7 @@ module.exports = (client) => {
         }
 
         if (!oldState.deaf && newState.deaf) {
-            var deafType = newState.selfDeaf ? 'self-deafed' : 'server-v';
+            let deafType = newState.selfDeaf ? 'self-deafed' : 'server-v';
             client.emit('voiceChannelDeaf',
                 newMember,
                 deafType
@@ -50,7 +50,7 @@ module.exports = (client) => {
         }
 
         if (oldState.deaf && !newState.deaf) {
-            var deafType = oldState.selfDeaf ? 'self-deafed' : 'server-v';
+            let deafType = oldState.selfDeaf ? 'self-deafed' : 'server-v';
             client.emit('voiceChannelUndeaf',
                 newMember,
                 deafType

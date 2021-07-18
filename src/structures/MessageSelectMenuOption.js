@@ -1,4 +1,4 @@
-const { resolveString } = require("../util/util");
+const { resolveString, parseEmoji } = require('../util/util');
 
 /**
  * The MessageSelectMenuOption class
@@ -13,8 +13,42 @@ class MessageSelectMenuOption {
         this.setup(data);
     }
 
+    /**
+     * Setup
+     * @param {Object} data 
+     * @returns {MessageButton}
+     * @private
+     */
     setup(data) {
+        /**
+         * label
+         * @type {String} 
+        */
         this.label = 'label' in data ? resolveString(data.label) : null;
+
+        /**
+         * value
+         * @type {String} 
+        */
+        this.value = 'value' in data ? resolveString(data.value) : null;
+
+        /**
+         * description
+         * @type {String} 
+        */
+        this.description = 'description' in data ? resolveString(data.description) : null;
+
+        /**
+         * emoji
+         * @type {String} 
+        */
+        this.emoji = 'emoji' in data ? parseEmoji(data.emoji) : null;
+
+        /**
+         * default
+         * @type {Boolean} 
+        */
+        this.default = 'default' in data ? Boolean(data.default) : false;
 
         return this.toJSON();
     }
@@ -51,7 +85,7 @@ class MessageSelectMenuOption {
      * @param {String} emoji  
     */
     setEmoji(emoji) {
-        this.emoji = this.parseEmoji(`${emoji}`);
+        this.emoji = parseEmoji(`${emoji}`);
         return this;
     }
 
@@ -76,14 +110,6 @@ class MessageSelectMenuOption {
             emoji: this.emoji,
             default: this.default
         }
-    }
-
-    parseEmoji(text) {
-        if (text.includes('%')) text = decodeURIComponent(text);
-        if (!text.includes(':')) return { animated: false, name: text, id: null };
-        const m = text.match(/<?(?:(a):)?(\w{2,32}):(\d{17,19})?>?/);
-        if (!m) return null;
-        return { animated: Boolean(m[1]), name: m[2], id: m[3] || null };
     }
 }
 

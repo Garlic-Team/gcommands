@@ -1,5 +1,5 @@
 module.exports = (client) => {
-    client.on("roleUpdate", async(oldRole, newRole) => {
+    client.on('roleUpdate', async(oldRole, newRole) => {
         if (oldRole.rawPosition !== newRole.rawPosition) {
             client.emit('rolePositionUpdate',
                 newRole,

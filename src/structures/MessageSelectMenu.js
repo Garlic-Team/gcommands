@@ -1,5 +1,5 @@
-const { resolveString } = require("../util/util");
-const Color = require("../structures/Color")
+const { resolveString } = require('../util/util');
+const Color = require('./Color')
 
 /**
  * The MessageSelectMenu class
@@ -10,14 +10,61 @@ class MessageSelectMenu {
      * Creates new MessageSelectMenu instance
      * @param {Object} data 
     */
-    constructor(data = {}) {
+     constructor(data = {}) {
+
+        /**
+         * type
+         * @type {Number} 
+        */
+        this.type = 3;
+
+        /**
+         * options
+         * @type {Array} 
+        */
         this.options = [];
 
         this.setup(data);
     }
 
-    setup(data) {
-        this.type = 3;
+    /**
+     * Setup
+     * @param {Object} data 
+     * @returns {MessageSelectMenu}
+     * @private
+     */
+     setup(data) {
+        /**
+         * placeholder
+         * @type {String} 
+        */
+        this.placeholder = 'placeholder' in data ? resolveString(data.placeholder) : null;
+
+        /**
+         * maxValues
+         * @type {number} 
+        */
+        this.max_values = 'max_values' in data ? Number(data.max_values) : 1;
+
+        /**
+         * minValues
+         * @type {number} 
+        */
+        this.min_values = 'min_values' in data ? Number(data.min_values) : 1;
+
+        /**
+         * id
+         * @type {String} 
+        */
+        this.id = 'id' in data ? resolveString(data.id) : null;
+
+        this.options = 'options' in data ? Array(data.options) : [];
+
+        /**
+         * disabled
+         * @type {Boolean} 
+        */
+        this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
         return this.toJSON();
     }
@@ -59,21 +106,30 @@ class MessageSelectMenu {
     }
 
     /**
+     * Method to setDisabled
+     * @param {String} boolean 
+    */
+    setDisabled(boolean = true) {
+        this.disabled = Boolean(boolean);
+        return this;
+    }
+
+    /**
      * Method to addOption
-     * @param {MessageSelectOption} MessageSelectOption 
+     * @param {MessageSelectMenuOption} MessageSelectMenuOption 
     */
     addOption(option) {
-        if(typeof option != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        if(typeof option !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText())
         this.options.push(option)
         return this;
     }
 
     /**
      * Method to addOptions
-     * @param {MessageSelectOption[]} MessageSelectOptions 
+     * @param {MessageSelectMenuOption[]} MessageSelectMenuOption 
     */
     addOptions(...options) {
-        if(typeof options != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        if(typeof options !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText())
         this.options.push(...options.flat(Infinity).map((o) => o));
         return this;
     }
@@ -82,10 +138,10 @@ class MessageSelectMenu {
      * Method to removeOptions
      * @param {Number} index
      * @param {Number} deleteCount
-     * @param {MessageSelectOption[]} MessageSelectOptions 
+     * @param {MessageSelectMenuOption[]} MessageSelectMenuOption[] 
     */
     removeOptions(index, deleteCount, ...options) {
-        if(typeof options != "object") return console.log(new Color("&d[GCommands] &cNeed provide MessageSelectOption!").getText())
+        if(typeof options !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText())
         this.components.splice(index, deleteCount, ...options.flat(Infinity).map((o) => o));
         return this;
     }
@@ -99,8 +155,9 @@ class MessageSelectMenu {
             type: 3,
             min_values: this.min_values,
             max_values: this.max_values || this.options.length,
-            placeholder: this.placeholder || "",
+            placeholder: this.placeholder || '',
             custom_id: this.custom_id,
+            disabled: this.disabled,
             options: this.options
         }
     }

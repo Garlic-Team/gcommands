@@ -1,21 +1,37 @@
-const { Collector, Collection } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require("../structures/Color")
-const updater = require("../util/updater");
-const ms = require("ms");
+const { Collector, Collection, User, Team } = require('discord.js');
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require('../structures/Color')
+const ifDjsV13 = require('../util/updater').checkDjsVersion('13');
+const ms = require('ms');
 
 /**
  * The GCommansDispatcher class
  */
 class GCommandsDispatcher {
+    /**
+     * The GCommansDispatcher class
+     * @param {Client} client - Discord.js Client
+     */
     constructor(client) {
 
         /**
-         * GCommandsDispatcher options
-         * @property {Object} client
+         * client
+         * @type {Client} client
         */
         this.client = client;
+
+        /**
+         * Inhibitors
+         * @type {Set}
+        */
         this.client.inhibitors = new Set();
+
+        /**
+         * Cooldowns
+         * @type {Collection}
+        */
         this.client.cooldowns = new Collection();
+
+        this.fetchClientApplication();
     }
 
     /**
@@ -39,24 +55,24 @@ class GCommandsDispatcher {
      * @returns {String}
     */
     async getGuildPrefix(guildId, cache = true) {
-        if(!this.client.database) return this.client.prefix;
-        if(cache) return this.client.guilds.cache.get(guildId).prefix ? this.client.guilds.cache.get(guildId).prefix : this.client.prefix;
+        if(!this.client.database) return this.client.prefixes;
+        if(cache) return this.client.guilds.cache.get(guildId).prefix ? this.client.guilds.cache.get(guildId).prefix : this.client.prefixes;
 
         let guildData = await this.client.database.get(`guild_${guildId}`)
-        return guildData ? guildData.prefix : this.client.prefix
+        return guildData ? guildData.prefix : this.client.prefixes
     }
 
     /**
      * Internal method to getCooldown
      * @returns {String}
     */
-     async getCooldown(guildId, userId, command) {
-        if(!command.cooldown) return { cooldown: false } ;
+    async getCooldown(guildId, userId, command) {
+        if(this.client.application.owners.some(user => user.id == userId)) return { cooldown: false };
         let now = Date.now();
 
         let cooldown;
-        if(typeof command.cooldown == "object") cooldown = command.cooldown ? ms(command.cooldown.cooldown) : 0;
-        else cooldown = command.cooldown ? ms(command.cooldown) : 0;
+        if(typeof command.cooldown == 'object') cooldown = command.cooldown ? ms(command.cooldown.cooldown) : ms(this.client.defaultCooldown);
+        else cooldown = command.cooldown ? ms(command.cooldown) : ms(this.client.defaultCooldown);
 
         if(cooldown < 1800000 || !this.client.database) {
             if (!this.client.cooldowns.has(command.name)) {
@@ -64,14 +80,13 @@ class GCommandsDispatcher {
             }
 
             const timestamps = this.client.cooldowns.get(command.name);
-            const cooldownAmount = cooldown ? cooldown : ms(this.client.defaultCooldown);
             
             if (timestamps.has(userId)) {
                 if (timestamps.has(userId)) {
-                    const expirationTime = timestamps.get(userId) + cooldownAmount;
+                    const expirationTime = timestamps.get(userId) + cooldown;
                 
                     if (now < expirationTime) {
-                        if(typeof command.cooldown == "object" && command.cooldown.agressive) {
+                        if(typeof command.cooldown == 'object' && command.cooldown.agressive) {
                             this.client.cooldowns.set(command.name, new Collection());
                             return { cooldown: true, wait: ms(cooldown) }
                         }
@@ -84,10 +99,11 @@ class GCommandsDispatcher {
             }
 
             timestamps.set(userId, now);
-            setTimeout(() => timestamps.delete(userId), cooldownAmount);
+            setTimeout(() => timestamps.delete(userId), cooldown);
+            return { cooldown:false }
         }
 
-        if(!this.client.database) return 0;
+        if(!this.client.database || !command.cooldown) return { cooldown: false };
 
         let guildData = await this.client.database.get(`guild_${guildId}`) || {}
         if(!guildData.users) guildData.users = {}
@@ -103,7 +119,7 @@ class GCommandsDispatcher {
         }
 
         if(now < userInfo) {
-            if(typeof command.cooldown == "object" && command.cooldown.agressive) {
+            if(typeof command.cooldown == 'object' && command.cooldown.agressive) {
                 guildData.users[userId][command.name] = ms(command.cooldown) + now
     
                 userInfo = guildData.users[userId][command.name]
@@ -149,12 +165,28 @@ class GCommandsDispatcher {
      * @param {Object} command
      * @returns {boolean}
     */
-     async getGuildLanguage(guildId, cache = true) {
+    async getGuildLanguage(guildId, cache = true) {
         if(!this.client.database) return this.client.language;
         if(cache) return this.client.guilds.cache.get(guildId).language ? this.client.guilds.cache.get(guildId).language : this.client.language;
 
         let guildData = await this.client.database.get(`guild_${guildId}`)
         return guildData ? guildData.language : this.client.language
+    }
+
+    /**
+     * Internal method to fetchClientApplication
+     * @private
+     * @returns {Array}
+    */
+    async fetchClientApplication() {
+        if(!ifDjsV13) this.client.application = await this.client.fetchApplication()
+        if(this.client.application.owner == null) return this.client.application.owners = [];
+        
+        if(this.client.application.owner instanceof Team) {
+            this.client.application.owners = this.client.application.owner.members.array().map(teamMember => teamMember.user)
+        } else this.client.application.owners = [this.client.application.owner]
+
+        return this.client.application.owners;
     }
 
     /**
@@ -185,7 +217,7 @@ class GCommandsDispatcher {
      * @returns {Collector}
     */
     createButtonCollector(msg, filter, options = {}) {
-        if(updater.checkDjsVersion("13")) return new ButtonCollectorV13(msg, filter, options);
+        if(ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
         else return new ButtonCollectorV12(msg, filter, options);
     }
 
@@ -215,7 +247,7 @@ class GCommandsDispatcher {
      * @returns {Collector}
     */
     createSelectMenuCollector(msg, filter, options = {}) {
-        if(updater.checkDjsVersion("13")) return new SelectMenuCollectorV13(msg, filter, options);
+        if(ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
         else return new SelectMenuCollectorV12(msg, filter, options);
     }
 
