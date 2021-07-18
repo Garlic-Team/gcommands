@@ -1,6 +1,6 @@
 {
   "name": "gcommands",
-  "version": "5.2.3-dev",
+  "version": "5.2.3",
   "description": "Powerful and flexible command handler that can do everything!",
   "main": "src/index.js",
   "types": "./typings/index.d.ts",
