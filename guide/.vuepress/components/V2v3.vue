@@ -1,7 +1,8 @@
 <template>
 	<div v-if="showNotice" class="oldversion-notice">
 		<!--You currently have version 3.x selected, which means you see new features. <a href="#" @click.prevent="dismiss">[Dismiss]</a>-->
-		We no longer provide support, maintain bug fixes or new features for v3 of gcommands. <a href="/guide/additional/fromv3tov4">Please update your bot to version 4.</a>
+		It's possible that you can't see the whole guide now.
+		We no longer provide support, maintain bug fixes or new features for v4 of gcommands. <a href="/guide/additional/fromv4tov5">Please update your bot to version 5.</a>
 	</div>
 </template>
 
@@ -18,7 +19,7 @@ export default {
 	},
 	computed: {
 		showNotice() {
-			return semver.satisfies(semver.coerce('3.x'), this.selectedBranch) && (!this.hideUntil || Date.now() > parseInt(this.hideUntil));
+			return semver.satisfies(semver.coerce('4.x'), this.selectedBranch) && (!this.hideUntil || Date.now() > parseInt(this.hideUntil));
 		},
 	},
 	mounted() {

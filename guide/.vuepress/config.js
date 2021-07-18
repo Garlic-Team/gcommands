@@ -1,7 +1,7 @@
 module.exports = {
     title: 'GCommands',
     description: 'Open source slash/normal command handler',
-    base: "/guide/",
+    base: "/",
 
     head: [
         ['link', { rel: 'icon', href: '/gcommands.png' }],
@@ -45,9 +45,15 @@ module.exports = {
             collapsable: false,
             children: [
               'beginner/basicbot',
-              'beginner/arguments',
               'beginner/database',
               'beginner/additionalfeatures'
+            ]
+          },
+          {
+            title: 'Arguments',
+            collapsable: false,
+            children: [
+              'arguments/usingargsincmd'
             ]
           },
           {
@@ -64,6 +70,7 @@ module.exports = {
             title: 'Additionals',
             collapsable: false,
             children: [
+              'additional/fromv4tov5',
               'additional/fromv3tov4',
               'additional/fromv2tov3'
             ]
