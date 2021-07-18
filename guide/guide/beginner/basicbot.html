@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     
-    <link rel="preload" href="/guide/assets/css/0.styles.da657ab5.css" as="style"><link rel="preload" href="/guide/assets/js/app.53690c87.js" as="script"><link rel="preload" href="/guide/assets/js/3.f7ed0a8d.js" as="script"><link rel="preload" href="/guide/assets/js/7.2c136378.js" as="script"><link rel="preload" href="/guide/assets/js/8.50edc5a0.js" as="script"><link rel="preload" href="/guide/assets/js/20.45e815b9.js" as="script"><link rel="preload" href="/guide/assets/js/9.9587f0e7.js" as="script"><link rel="preload" href="/guide/assets/js/10.ac61dcff.js" as="script"><link rel="preload" href="/guide/assets/js/5.06ebcacf.js" as="script"><link rel="preload" href="/guide/assets/js/6.d39e98a7.js" as="script"><link rel="prefetch" href="/guide/assets/js/1.7db387b5.js"><link rel="prefetch" href="/guide/assets/js/11.12369d80.js"><link rel="prefetch" href="/guide/assets/js/12.656a918a.js"><link rel="prefetch" href="/guide/assets/js/13.5eeebd6d.js"><link rel="prefetch" href="/guide/assets/js/14.8262cf8a.js"><link rel="prefetch" href="/guide/assets/js/15.253dba63.js"><link rel="prefetch" href="/guide/assets/js/16.b32501fa.js"><link rel="prefetch" href="/guide/assets/js/17.a48be50a.js"><link rel="prefetch" href="/guide/assets/js/18.44b0e598.js"><link rel="prefetch" href="/guide/assets/js/19.7737d6d6.js"><link rel="prefetch" href="/guide/assets/js/21.6e4dc67c.js"><link rel="prefetch" href="/guide/assets/js/22.895b161a.js"><link rel="prefetch" href="/guide/assets/js/23.f1affc64.js"><link rel="prefetch" href="/guide/assets/js/24.fc1f199f.js"><link rel="prefetch" href="/guide/assets/js/25.d8656c8e.js"><link rel="prefetch" href="/guide/assets/js/26.a7a53623.js"><link rel="prefetch" href="/guide/assets/js/27.c60d89ca.js"><link rel="prefetch" href="/guide/assets/js/4.cd80b1c5.js">
+    <link rel="preload" href="/guide/assets/css/0.styles.da657ab5.css" as="style"><link rel="preload" href="/guide/assets/js/app.776e279a.js" as="script"><link rel="preload" href="/guide/assets/js/3.f7ed0a8d.js" as="script"><link rel="preload" href="/guide/assets/js/7.2c136378.js" as="script"><link rel="preload" href="/guide/assets/js/8.50edc5a0.js" as="script"><link rel="preload" href="/guide/assets/js/22.558089db.js" as="script"><link rel="preload" href="/guide/assets/js/9.9587f0e7.js" as="script"><link rel="preload" href="/guide/assets/js/10.ac61dcff.js" as="script"><link rel="preload" href="/guide/assets/js/5.06ebcacf.js" as="script"><link rel="preload" href="/guide/assets/js/6.d39e98a7.js" as="script"><link rel="prefetch" href="/guide/assets/js/1.7db387b5.js"><link rel="prefetch" href="/guide/assets/js/11.d4df9943.js"><link rel="prefetch" href="/guide/assets/js/12.656a918a.js"><link rel="prefetch" href="/guide/assets/js/13.5eeebd6d.js"><link rel="prefetch" href="/guide/assets/js/14.8262cf8a.js"><link rel="prefetch" href="/guide/assets/js/15.34ecb353.js"><link rel="prefetch" href="/guide/assets/js/16.b32501fa.js"><link rel="prefetch" href="/guide/assets/js/17.7f3bffa8.js"><link rel="prefetch" href="/guide/assets/js/18.a29835b9.js"><link rel="prefetch" href="/guide/assets/js/19.aafc4fba.js"><link rel="prefetch" href="/guide/assets/js/20.196ed8b3.js"><link rel="prefetch" href="/guide/assets/js/21.40ffc0c1.js"><link rel="prefetch" href="/guide/assets/js/23.60c3a155.js"><link rel="prefetch" href="/guide/assets/js/24.89748099.js"><link rel="prefetch" href="/guide/assets/js/25.936ff1c5.js"><link rel="prefetch" href="/guide/assets/js/26.c6ca992f.js"><link rel="prefetch" href="/guide/assets/js/27.73d81b3b.js"><link rel="prefetch" href="/guide/assets/js/28.f8c2bad2.js"><link rel="prefetch" href="/guide/assets/js/29.cb7a6dfd.js"><link rel="prefetch" href="/guide/assets/js/4.cd80b1c5.js">
     <link rel="stylesheet" href="/guide/assets/css/0.styles.da657ab5.css">
   </head>
   <body>
@@ -50,66 +50,6 @@ Create a file with custom name example index.js</p></span> <span style="display:
 <span class="token keyword">const</span> client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Discord<span class="token punctuation">.</span>Client</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 client<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&quot;ready&quot;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
-    <span class="token keyword">new</span> <span class="token class-name">GCommands</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-        cmdDir<span class="token operator">:</span> <span class="token string">&quot;commands&quot;</span><span class="token punctuation">,</span>
-        eventDir<span class="token operator">:</span> <span class="token string">&quot;events&quot;</span><span class="token punctuation">,</span>
-        slash<span class="token operator">:</span> <span class="token punctuation">{</span>
-           slash<span class="token operator">:</span> <span class="token string">'both'</span><span class="token punctuation">,</span>
-           prefix<span class="token operator">:</span> <span class="token string">'.'</span>
-        <span class="token punctuation">}</span><span class="token punctuation">,</span>
-        cooldown<span class="token operator">:</span> <span class="token punctuation">{</span>
-            message<span class="token operator">:</span> <span class="token string">&quot;Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.&quot;</span><span class="token punctuation">,</span>
-            <span class="token keyword">default</span><span class="token operator">:</span> <span class="token number">3</span>
-        <span class="token punctuation">}</span><span class="token punctuation">,</span>
-        database<span class="token operator">:</span> <span class="token punctuation">{</span>
-            type<span class="token operator">:</span> <span class="token string">&quot;mongodb&quot;</span><span class="token punctuation">,</span> <span class="token comment">//sqlite, mongodb, mariadb</span>
-            url<span class="token operator">:</span> <span class="token string">&quot;mongodb+srv://&quot;</span><span class="token punctuation">,</span> <span class="token comment">// if you want mongodb</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span>
-    
-    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Ready&quot;</span><span class="token punctuation">)</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span>
-
-client<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token string">&quot;Bot token here&quot;</span><span class="token punctuation">)</span>
-</code></pre></div></span> <span style="display:none;"><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> <span class="token punctuation">{</span> GCommands <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&quot;gcommands&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> Discord <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&quot;discord.js&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">const</span> client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Discord<span class="token punctuation">.</span>Client</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-client<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&quot;ready&quot;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
-    <span class="token keyword">new</span> <span class="token class-name">GCommands</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-        cmdDir<span class="token operator">:</span> <span class="token string">&quot;commands/&quot;</span><span class="token punctuation">,</span>
-        eventDir<span class="token operator">:</span> <span class="token string">&quot;events/&quot;</span><span class="token punctuation">,</span>
-        slash<span class="token operator">:</span> <span class="token punctuation">{</span>
-           slash<span class="token operator">:</span> <span class="token string">'both'</span><span class="token punctuation">,</span>
-           prefix<span class="token operator">:</span> <span class="token string">'.'</span>
-        <span class="token punctuation">}</span><span class="token punctuation">,</span>
-        defaultCooldown<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
-        database<span class="token operator">:</span> <span class="token punctuation">{</span>
-            type<span class="token operator">:</span> <span class="token string">&quot;mongodb&quot;</span><span class="token punctuation">,</span> <span class="token comment">//sqlite, mongodb, mariadb</span>
-            url<span class="token operator">:</span> <span class="token string">&quot;mongodb+srv://&quot;</span><span class="token punctuation">,</span> <span class="token comment">// if you want mongodb</span>
-
-             <span class="token comment">// if you want mariadb</span>
-            host<span class="token operator">:</span> <span class="token string">&quot;ip&quot;</span><span class="token punctuation">,</span>
-            username<span class="token operator">:</span> <span class="token string">&quot;username&quot;</span><span class="token punctuation">,</span>
-            password<span class="token operator">:</span> <span class="token string">&quot;password&quot;</span><span class="token punctuation">,</span>
-            databaseName<span class="token operator">:</span> <span class="token string">&quot;db name&quot;</span><span class="token punctuation">,</span>
-            port<span class="token operator">:</span> <span class="token string">&quot;port&quot;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span>
-    
-    GCommandsClient<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&quot;log&quot;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">log</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>log<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
-
-    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Ready&quot;</span><span class="token punctuation">)</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span>
-
-client<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token string">&quot;Bot token here&quot;</span><span class="token punctuation">)</span>
-</code></pre></div></span> <span style="display:block;"><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> <span class="token punctuation">{</span> GCommands <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&quot;gcommands&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> Discord <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&quot;discord.js&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">const</span> client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Discord<span class="token punctuation">.</span>Client</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-client<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">&quot;ready&quot;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> GCommandsClient <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">GCommands</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> <span class="token punctuation">{</span>
         cmdDir<span class="token operator">:</span> <span class="token string">&quot;commands/&quot;</span><span class="token punctuation">,</span>
         eventDir<span class="token operator">:</span> <span class="token string">&quot;events/&quot;</span><span class="token punctuation">,</span>
@@ -136,49 +76,34 @@ client<span class="token punctuation">.</span><span class="token function">on</s
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
 
 client<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token string">&quot;Bot token here&quot;</span><span class="token punctuation">)</span>
-</code></pre></div></span> <span style="display:block;"><div class="custom-block tip"><p class="custom-block-title">TIP</p> <p>Use <code>node index.js</code> in terminal to start bot!</p></div></span> <span style="display:none;"><div class="custom-block tip"><p class="custom-block-title">TIP</p> <p>Terminal üzerinden <code>node index.js</code> kodunu kullanarak botunu başlatabilirsin!</p></div></span> <h2 id="command-handler"><a href="#command-handler" class="header-anchor">#</a> Command Handler</h2> <p><span style="display:inline-block;">Create the folder you specified as <code>cmdDir</code>. For example, <code>commands</code> then create <code>ping.js</code> file.</span> <span style="display:none;">Daha önce <code>cmdDir</code>'e belirlemiş olduğun klasörün içerisine komutları yazabiliriz. Örnek vermek gerekirse: yeni bir <code>komut</code> oluşturalım. Dosya ismini de <code>ping.js</code> koyalım.</span></p> <span style="display:none;"><div class="language-js extra-class"><pre class="language-js"><code>module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
-    name<span class="token operator">:</span> <span class="token string">&quot;ping&quot;</span><span class="token punctuation">,</span>
-    description<span class="token operator">:</span> <span class="token string">&quot;Check bot ping&quot;</span><span class="token punctuation">,</span>
-    <span class="token function-variable function">run</span><span class="token operator">:</span> <span class="token keyword">async</span><span class="token punctuation">(</span><span class="token parameter">client<span class="token punctuation">,</span> slash<span class="token punctuation">,</span> message</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+</code></pre></div></span> <span style="display:block;"><div class="custom-block tip"><p class="custom-block-title">TIP</p> <p>Use <code>node index.js</code> in terminal to start bot!</p></div></span> <span style="display:none;"><div class="custom-block tip"><p class="custom-block-title">TIP</p> <p>Terminal üzerinden <code>node index.js</code> kodunu kullanarak botunu başlatabilirsin!</p></div></span> <h2 id="command-handler"><a href="#command-handler" class="header-anchor">#</a> Command Handler</h2> <p><span style="display:inline-block;">Create the folder you specified as <code>cmdDir</code>. For example, <code>commands</code> then create <code>ping.js</code> file.</span> <span style="display:none;">Daha önce <code>cmdDir</code>'e belirlemiş olduğun klasörün içerisine komutları yazabiliriz. Örnek vermek gerekirse: yeni bir <code>komut</code> oluşturalım. Dosya ismini de <code>ping.js</code> koyalım.</span></p> <span style="display:none;"><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> <span class="token punctuation">{</span> Command <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&quot;gcommands&quot;</span><span class="token punctuation">)</span>
 
-        <span class="token comment">// if normal command</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            message<span class="token punctuation">.</span><span class="token function">inlineReply</span><span class="token punctuation">(</span><span class="token string">&quot;pong&quot;</span><span class="token punctuation">)</span>
-            <span class="token keyword">return</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token comment">// if slash</span>
-        <span class="token keyword">return</span> <span class="token string">&quot;pog&quot;</span><span class="token punctuation">;</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">Ping</span> <span class="token keyword">extends</span> <span class="token class-name">Command</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        name<span class="token operator">:</span> <span class="token string">&quot;ping&quot;</span><span class="token punctuation">,</span>
+        description<span class="token operator">:</span> <span class="token string">&quot;Check bot ping&quot;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</code></pre></div></span> <span style="display:none;"><div class="language-js extra-class"><pre class="language-js"><code>module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
-    name<span class="token operator">:</span> <span class="token string">&quot;ping&quot;</span><span class="token punctuation">,</span>
-    description<span class="token operator">:</span> <span class="token string">&quot;Check bot ping&quot;</span><span class="token punctuation">,</span>
-    <span class="token function-variable function">run</span><span class="token operator">:</span> <span class="token keyword">async</span><span class="token punctuation">(</span><span class="token parameter">client<span class="token punctuation">,</span> slash<span class="token punctuation">,</span> message</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
 
-        <span class="token comment">// if normal command</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            message<span class="token punctuation">.</span><span class="token function">inlineReply</span><span class="token punctuation">(</span><span class="token string">&quot;pong&quot;</span><span class="token punctuation">)</span>
-            <span class="token keyword">return</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token comment">// if slash</span>
-        <span class="token keyword">return</span> <span class="token string">&quot;pog&quot;</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</code></pre></div></span> <span style="display:block;"><div class="language-js extra-class"><pre class="language-js"><code>module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
-    name<span class="token operator">:</span> <span class="token string">&quot;ping&quot;</span><span class="token punctuation">,</span>
-    description<span class="token operator">:</span> <span class="token string">&quot;Check bot ping&quot;</span><span class="token punctuation">,</span>
-    <span class="token function-variable function">run</span><span class="token operator">:</span> <span class="token keyword">async</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span>respond<span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">async</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span>respond<span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token comment">// if slash and normal cmd</span>
         <span class="token comment">// Eğer normal veya eğik çizgi komutuysa</span>
         <span class="token function">respond</span><span class="token punctuation">(</span><span class="token string">&quot;pog&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
-</code></pre></div></span> <h2 id="event-handler"><a href="#event-handler" class="header-anchor">#</a> Event Handler</h2> <p><span style="display:inline-block;">Create the folder you specified as <code>eventDir</code>. For example, <code>events</code> then create <code>message.js</code> file.</span> <span style="display:none;">Daha önce <code>eventDir</code>'e belirlemiş olduğun klasörün içerisine eventleri yazabiliriz. Örnek vermek gerekirse: yeni bir <code>event</code> oluşturalım. Dosya ismini de <code>message.js</code> koyalım.</span></p> <div class="language-js extra-class"><pre class="language-js"><code>module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
-    name<span class="token operator">:</span> <span class="token string">&quot;message&quot;</span><span class="token punctuation">,</span>
-    once<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
-    <span class="token function-variable function">run</span><span class="token operator">:</span> <span class="token keyword">async</span><span class="token punctuation">(</span><span class="token parameter">client<span class="token punctuation">,</span> message</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+</code></pre></div></span> <h2 id="event-handler"><a href="#event-handler" class="header-anchor">#</a> Event Handler</h2> <p><span style="display:inline-block;">Create the folder you specified as <code>eventDir</code>. For example, <code>events</code> then create <code>message.js</code> file.</span> <span style="display:none;">Daha önce <code>eventDir</code>'e belirlemiş olduğun klasörün içerisine eventleri yazabiliriz. Örnek vermek gerekirse: yeni bir <code>event</code> oluşturalım. Dosya ismini de <code>message.js</code> koyalım.</span></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> <span class="token punctuation">{</span> Event <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&quot;gcommands&quot;</span><span class="token punctuation">)</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">Ping</span> <span class="token keyword">extends</span> <span class="token class-name">Event</span> <span class="token punctuation">{</span>
+    <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+            name<span class="token operator">:</span> <span class="token string">&quot;message&quot;</span><span class="token punctuation">,</span>
+            once<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+            ws<span class="token operator">:</span> <span class="token boolean">false</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">async</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token parameter">client<span class="token punctuation">,</span> message</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>message<span class="token punctuation">.</span>author<span class="token punctuation">.</span>tag<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> -&gt; </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>message<span class="token punctuation">.</span>content<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
@@ -191,6 +116,6 @@ client<span class="token punctuation">.</span><span class="token function">login
       </a>
       →
     </span></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
-    <script src="/guide/assets/js/app.53690c87.js" defer></script><script src="/guide/assets/js/3.f7ed0a8d.js" defer></script><script src="/guide/assets/js/7.2c136378.js" defer></script><script src="/guide/assets/js/8.50edc5a0.js" defer></script><script src="/guide/assets/js/20.45e815b9.js" defer></script><script src="/guide/assets/js/9.9587f0e7.js" defer></script><script src="/guide/assets/js/10.ac61dcff.js" defer></script><script src="/guide/assets/js/5.06ebcacf.js" defer></script><script src="/guide/assets/js/6.d39e98a7.js" defer></script>
+    <script src="/guide/assets/js/app.776e279a.js" defer></script><script src="/guide/assets/js/3.f7ed0a8d.js" defer></script><script src="/guide/assets/js/7.2c136378.js" defer></script><script src="/guide/assets/js/8.50edc5a0.js" defer></script><script src="/guide/assets/js/22.558089db.js" defer></script><script src="/guide/assets/js/9.9587f0e7.js" defer></script><script src="/guide/assets/js/10.ac61dcff.js" defer></script><script src="/guide/assets/js/5.06ebcacf.js" defer></script><script src="/guide/assets/js/6.d39e98a7.js" defer></script>
   </body>
 </html>
