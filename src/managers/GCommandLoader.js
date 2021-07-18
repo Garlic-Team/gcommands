@@ -51,7 +51,7 @@ class GCommandLoader {
 
                     file = await require(`../../../../${this.cmdDir}${dir}`);
                     if (isClass(file)) {
-                        finalFile = await new file(this.client)
+                        finalFile = new file(this.client)
                         if(!(finalFile instanceof Command)) return console.log(new Color(`&d[GCommands] &cComamnd ${fileName} doesnt belong in Commands.`).getText())
                     } else finalFile = file;
 
@@ -71,7 +71,7 @@ class GCommandLoader {
 
                         file2 = await require(`../../../../${this.cmdDir}${dir}/${cmdFile}`);
                         if (isClass(file2)) {
-                            finalFile2 = await new file2(this.client)
+                            finalFile2 = new file2(this.client)
                             if(!(finalFile2 instanceof Command)) return console.log(new Color(`&d[GCommands] &cComamnd ${finalFile2} doesnt belong in Commands.`).getText())
                         } else finalFile2 = file2;
 
