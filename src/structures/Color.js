@@ -78,6 +78,6 @@ class Color {
 
 		return `r: ${parseInt(get[1], 16)}, g: ${parseInt(get[2], 16)}, b: ${parseInt(get[3], 16)}`
 	}
-};
+}
 
 module.exports = Color;
