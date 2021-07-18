@@ -86,81 +86,7 @@ Hadi kodlama işine girişelim. Hala botlarla ilgili bir klasörün veya yapın 
 
 </language>
 
-<branch version="2.x">
-
-```js
-const { GCommands } = require("gcommands");
-const Discord = require("discord.js");
-
-const client = new Discord.Client();
-
-client.on("ready", () => {
-    new GCommands(client, {
-        cmdDir: "commands",
-        eventDir: "events",
-        slash: {
-           slash: 'both',
-           prefix: '.'
-        },
-        cooldown: {
-            message: "Please wait {cooldown} more second(s) before reusing the \`{cmdname}\` command.",
-            default: 3
-        },
-        database: {
-            type: "mongodb", //sqlite, mongodb, mariadb
-            url: "mongodb+srv://", // if you want mongodb
-        }
-    })
-    
-    console.log("Ready")
-})
-
-client.login("Bot token here")
-```
-
-</branch>
-
-<branch version="3.x">
-
-```js
-const { GCommands } = require("gcommands");
-const Discord = require("discord.js");
-
-const client = new Discord.Client();
-
-client.on("ready", () => {
-    new GCommands(client, {
-        cmdDir: "commands/",
-        eventDir: "events/",
-        slash: {
-           slash: 'both',
-           prefix: '.'
-        },
-        defaultCooldown: 3,
-        database: {
-            type: "mongodb", //sqlite, mongodb, mariadb
-            url: "mongodb+srv://", // if you want mongodb
-
-             // if you want mariadb
-            host: "ip",
-            username: "username",
-            password: "password",
-            databaseName: "db name",
-            port: "port"
-        }
-    })
-    
-    GCommandsClient.on("log", (log) => {console.log(log)})
-
-    console.log("Ready")
-})
-
-client.login("Bot token here")
-```
-
-</branch>
-
-<branch version="4.x">
+<branch version="5.x">
 
 ```js
 const { GCommands } = require("gcommands");
@@ -219,55 +145,20 @@ Terminal üzerinden `node index.js` kodunu kullanarak botunu başlatabilirsin!
 <language lang="en" inline=true>Create the folder you specified as `cmdDir`. For example, `commands` then create `ping.js` file.</language>
 <language lang="tk" inline=true>Daha önce `cmdDir`'e belirlemiş olduğun klasörün içerisine komutları yazabiliriz. Örnek vermek gerekirse: yeni bir `komut` oluşturalım. Dosya ismini de `ping.js` koyalım.</language>
 
-<branch version="2.x">
+<branch version="5.x">
 
 ```js
-module.exports = {
-    name: "ping",
-    description: "Check bot ping",
-    run: async(client, slash, message) => {
+const { Command } = require("gcommands")
 
-        // if normal command
-        if(message) {
-            message.inlineReply("pong")
-            return;
-        }
-
-        // if slash
-        return "pog";
+module.exports = class Ping extends Command {
+  constructor(...args) {
+    super(...args, {
+        name: "ping",
+        description: "Check bot ping"
+    })
   }
-};
-```
 
-</branch>
-<branch version="3.x">
-
-```js
-module.exports = {
-    name: "ping",
-    description: "Check bot ping",
-    run: async(client, slash, message) => {
-
-        // if normal command
-        if(message) {
-            message.inlineReply("pong")
-            return;
-        }
-
-        // if slash
-        return "pog";
-  }
-};
-```
-
-</branch>
-<branch version="4.x">
-
-```js
-module.exports = {
-    name: "ping",
-    description: "Check bot ping",
-    run: async({respond}) => {
+  async run({respond}) {
         // if slash and normal cmd
         // Eğer normal veya eğik çizgi komutuysa
         respond("pog");
@@ -283,10 +174,18 @@ module.exports = {
 <language lang="tk" inline=true>Daha önce `eventDir`'e belirlemiş olduğun klasörün içerisine eventleri yazabiliriz. Örnek vermek gerekirse: yeni bir `event` oluşturalım. Dosya ismini de `message.js` koyalım.</language>
 
 ```js
-module.exports = {
-    name: "message",
-    once: false,
-    run: async(client, message) => {
+const { Event } = require("gcommands")
+
+module.exports = class Ping extends Event {
+    constructor(...args) {
+        super(...args, {
+            name: "message",
+            once: false,
+            ws: false
+        })
+    }
+
+    async run(client, message) {
         console.log(`${message.author.tag} -> ${message.content}`)
     }
 };

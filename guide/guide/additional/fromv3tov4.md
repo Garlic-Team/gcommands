@@ -28,6 +28,7 @@ You can use `respond()` and `edit()` in normal/slash command!
 
 - cooldown: "5"
 + cooldown: "5s"
++ cooldown bypass for owners
 
 + array support for default/guild prefix
 + cached guild prefixes
@@ -40,6 +41,7 @@ You can use `respond()` and `edit()` in normal/slash command!
  * postgresql://user:pass@localhost:5432/dbname
  * mysql://user:pass@localhost:3306/dbname
 + dropdowns
++ typings
 ```
 
 #### Why respond/edit function?

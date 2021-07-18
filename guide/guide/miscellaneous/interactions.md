@@ -131,7 +131,6 @@ The following steps will work for both normal and slash command.
 
 ```js
 client.on("clickButton", (button) => {
-    console.log(button, button.id)
     const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
     const buttonRow = new MessageActionRow()
         .addComponent(buttonEdit)
@@ -150,12 +149,10 @@ client.on("clickButton", (button) => {
         components: buttonRow
     })
 
-    setTimeout(() => {
-        button.reply.edit({
-            content: "ab",
-            components: buttonRow
-        })
-    }, 2000)
+    button.reply.edit({
+        content: "ab",
+        components: buttonRow
+    })
 })
 ```
 
@@ -319,6 +316,7 @@ client.on("selectMenu", (menu) => {
     .setMaxValues(3) // not required
     .setMinValues(2)
     .setPlaceholder("hehe")
+    .setDisabled()
     .addOptions([
       dropdownOption, dropdownOption2, dropdownOption3
     ])

@@ -7,7 +7,7 @@ A: GCommands needs you to have [GUILD_MEMBERS](https://discord.com/developers/do
 A: Slash commands don't have [GCommandsMessage](https://gcommands.js.org/docs/#GCommandsMessage) (message object) so you have to use the [respond](https://gcommands.js.org/guide/beginner/additionalfeatures.html#slash-respond-edit) function you import in run functions. The advantage is that the  [respond](https://gcommands.js.org/guide/beginner/additionalfeatures.html#slash-respond-edit) function can also be used with normal commands, so you can easily make a slash+normal command. 
 
 ```js
-run: async({respond}) => {
+async run({respond}) {
     respond("hello")
 }
 ```
@@ -16,7 +16,7 @@ run: async({respond}) => {
 A: Just import the channel, member functions into respond and then you can simply use this. Member returns a [GuildMember](https://discord.js.org/#/docs/main/stable/class/GuildMember) object.
 
 ```js
-run: async({member, channel}) => {
+async run({member, channel}) {
     member.send("hello")
 }
 ```

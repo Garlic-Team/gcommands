@@ -17,22 +17,7 @@ GCommands sunucu öneklerini destekliyor. Yani sunucular botta hangi öneki kull
 ### How to get guild prefix?
 It's very simple! Just use this.
 
-<branch version="2.x">
-
-```js
-client.user.getGuildPrefix("id of guild")
-```
-
-</branch>
-<branch version="3.x">
-
-```js
-client.dispatcher.getGuildPrefix("id of guild")
-guild.getCommandPrefix()
-```
-
-</branch>
-<branch version="4.x">
+<branch version="5.x">
 
 ```js
 client.dispatcher.getGuildPrefix("id of guild/Sunucunun ID'si.")
@@ -44,22 +29,7 @@ guild.getCommandPrefix()
 ### How to set guild prefix?
 It's very simple! Just use this.
 
-<branch version="2.x">
-
-```js
-client.user.setGuildPrefix("prefix","guild id")
-```
-
-</branch>
-<branch version="3.x">
-
-```js
-client.dispatcher.setGuildPrefix("prefix","guild id")
-guild.setCommandPrefix("prefix")
-```
-
-</branch>
-<branch version="4.x">
+<branch version="5.x">
 
 ```js
 client.dispatcher.setGuildPrefix("guild id/Sunucu ID'si","prefix/ön ek")
@@ -80,7 +50,7 @@ If you still haven't done your database setup, it's easy! Just head to [Database
 ### How to get guild language?
 It's very simple! Just use this.
 
-<branch version="4.x">
+<branch version="5.x">
 
 ```js
 client.dispatcher.getGuildLanguage("id of guild/Sunucunun ID'si.")
@@ -92,7 +62,7 @@ guild.getLanguage()
 ### How to set guild language?
 It's very simple! Just use this.
 
-<branch version="4.x">
+<branch version="5.x">
 
 ```js
 client.dispatcher.setGuildLanguage("guild id/Sunucu ID'si", "language")
