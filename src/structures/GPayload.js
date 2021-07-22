@@ -49,7 +49,7 @@ class GPayload {
         let type = typeof this.options;
         if(type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options }
 
-        this.options.inlineReply = this.options.inlineReply == undefined ? true : this.options.inlineReply;
+        this.options.inlineReply = this.options.inlineReply == undefined ? false : this.options.inlineReply;
 
         if(this.options.content && typeof this.options.content == 'object') {
             this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];

@@ -101,7 +101,7 @@ class Argument {
         if(argument.type == 6) return new UserArgumentType(client, argument);
         if(argument.type == 7) return new ChannelArgumentType(client, argument);
         if(argument.type == 8) return new RoleArgumentType(client, argument);
-        else return new StringArgumentType(client, argument);
+        else return { type: "invalid" };
     }
 }
 
