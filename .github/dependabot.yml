@@ -12,5 +12,8 @@ updates:
       - "update: npm"
     schedule:
       interval: "daily"
+
     pull-request-branch-name:
       separator: "-"
+
+
