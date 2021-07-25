@@ -28,7 +28,7 @@ class GCommandLoader {
 
         /**
          * cmdDir
-         * @type {String}
+         * @type {string}
         */
         this.cmdDir = this.GCommandsClient.cmdDir;
 

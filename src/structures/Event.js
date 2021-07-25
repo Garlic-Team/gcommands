@@ -8,7 +8,7 @@ class Event extends null {}
 
 /**
  * Name
- * @type {String}
+ * @type {string}
  */
 Event.name = GEvents.Event.name;
 

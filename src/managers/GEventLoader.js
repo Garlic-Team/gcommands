@@ -14,7 +14,7 @@ GEventLoader.GCommandsClient = GEvents.GEvents.GCommandsClient;
 
 /**
  * eventDir
- * @type {String}
+ * @type {string}
  */
 GEventLoader.eventDir = GEvents.GEvents.eventDir;
 

@@ -15,7 +15,7 @@ class ArgumentType {
 
         /**
          * type
-         * @type {String}
+         * @type {string}
         */
         this.type = type;
 

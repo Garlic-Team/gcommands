@@ -48,13 +48,13 @@ class GCommands extends GCommandsBase {
 
         /**
          * CmdDir
-         * @type {String}
+         * @type {string}
         */
         this.cmdDir = options.cmdDir;
 
         /**
          * EventDir
-         * @type {String}
+         * @type {string}
          * @default undefined
         */
         this.eventDir = options.eventDir;
@@ -114,14 +114,14 @@ class GCommands extends GCommandsBase {
 
         /**
          * Prefix
-         * @type {String}
+         * @type {string}
          * @default undefined
          */
         this.prefix = !Array.isArray(options.slash.prefix) ? [options.slash.prefix] : options.slash.prefix;
 
         /**
          * Slash
-         * @type {String}
+         * @type {string}
          * @default false
          */
         this.slash = options.slash.slash ? options.slash.slash : false;
@@ -148,16 +148,22 @@ class GCommands extends GCommandsBase {
         
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 
-        setTimeout(() => { this.loadSys() }, 1000)
+        this.loadSys();
         GUpdater.__updater();
     }
 
     async loadSys() {
-        require('../structures/GMessage'); require('../structures/GGuild'); require('../structures/DMChannel'); require('../structures/NewsChannel'); require('../structures/TextChannel');
-        new GDatabaseLoader(this.GCommandsClient)
-        new GEventHandling(this.GCommandsClient)
-        new GEventLoader(this.GCommandsClient)
-        new GCommandLoader(this.GCommandsClient)
+        new (require('../structures/GMessage')); 
+        new (require('../structures/GGuild')); 
+
+        require('../structures/DMChannel'); require('../structures/NewsChannel'); require('../structures/TextChannel');
+
+        setTimeout(() => {
+            new GDatabaseLoader(this.GCommandsClient)
+            new GEventHandling(this.GCommandsClient)
+            new GEventLoader(this.GCommandsClient)
+            new GCommandLoader(this.GCommandsClient)
+        }, 1000)
     };
 }
 

@@ -24,7 +24,7 @@ class InteractionEvent extends GInteraction {
 
         /**
          * selectMenuId
-         * @type {String}
+         * @type {string}
          * @deprecated
          */
         this.selectMenuId = data.data.values ? data.data.custom_id : undefined;

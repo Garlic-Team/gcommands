@@ -14,7 +14,7 @@ class Color {
 
         /**
          * text
-         * @type {String}
+         * @type {string}
         */
 		this.text = resolveString(text);
 
