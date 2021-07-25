@@ -403,5 +403,6 @@ declare module 'gcommands' {
   interface EventOptions {
     name: string;
     once: boolean;
+    ws: boolean;
   }
 }

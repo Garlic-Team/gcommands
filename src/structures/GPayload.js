@@ -64,7 +64,8 @@ class GPayload {
         if(this.options.attachments) this.options.attachments = !Array.isArray(this.options.attachments) ? [this.options.attachments] : this.options.attachments
         if(this.options.files) this.options.files = !Array.isArray(this.options.files) ? [this.options.files] : this.options.files
 
-        if(this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
+        if(this.options.inlineReply && typeof this.options.inlineReply == "string") this.data.message_reference = { message_id: this.options.inlineReply }
+        else if(typeof this.options.inlineReply == "boolean" && this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
 
         return this;
     }
