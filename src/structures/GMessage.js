@@ -10,11 +10,6 @@ const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
 class GMessage {
     constructor() {
         Object.defineProperties(Message.prototype, {
-            /**
-             * Edit a message.
-             * @param {string|GPayloadOptions} result
-             * @returns {Message}
-             */
             edit: {
                 value: async function(result) {
                     let GPayloadResult = await GPayload.create(this.channel, result)
@@ -47,11 +42,6 @@ class GMessage {
                 }
             },
         
-            /**
-             * Update a message.
-             * @param {string|GPayloadOptions} result
-             * @returns {Message}
-             */
             update: {
                 value: async function(result) {
                     let GPayloadResult = await GPayload.create(this.channel, result)
@@ -66,11 +56,6 @@ class GMessage {
                 }
             },
         
-            /**
-             * Send a message.
-             * @param {string|GPayloadOptions} result
-             * @returns {Message}
-             */
             send: {
                 value: async function(result) {
                     let GPayloadResult = await GPayload.create(this.channel, result)
@@ -85,12 +70,6 @@ class GMessage {
                 }
             },
         
-            /**
-             * Method to createButtonCollector
-             * @param {Function} filter 
-             * @param {CollectorOptions} options
-             * @returns {Collector}
-             */
             createButtonCollector: {
                 value: function(filter, options = {}) {
                     if(ifDjsV13) return new ButtonCollectorV13(this, filter, options);
@@ -98,12 +77,6 @@ class GMessage {
                 }
             },
         
-            /**
-             * Method to awaitButtons
-             * @param {Function} filter 
-             * @param {CollectorOptions} options
-             * @returns {Collector}
-             */
             awaitButtons: {
                 value: async function(filter, options = {}) {
                     return new Promise((resolve, reject) => {
@@ -119,12 +92,6 @@ class GMessage {
                 }
             },
         
-            /**
-             * Method to createSelectMenuCollector
-             * @param {Function} filter 
-             * @param {CollectorOptions} options
-             * @returns {Collector}
-             */
             createSelectMenuCollector: {
                 value: function(filter, options = {}) {
                     if(ifDjsV13) return new SelectMenuCollectorV13(this, filter, options);
@@ -132,12 +99,6 @@ class GMessage {
                 }
             },
         
-            /**
-             * Method to awaitSelectMenus
-             * @param {Function} filter 
-             * @param {CollectorOptions} options
-             * @returns {Collector}
-             */
             awaitSelectMenus: {
                 value: async function(filter, options = {}) {
                     return new Promise((resolve, reject) => {
@@ -154,6 +115,60 @@ class GMessage {
             }
         });
     }
+
+
+    /**
+     * Edit a message.
+     * @param {string|GPayloadOptions} result
+     * @returns {Message}
+     */
+    edit() {}
+
+    /**
+     * Update a message.
+     * @param {string|GPayloadOptions} result
+     * @returns {Message}
+     */
+    update() {}
+
+    /**
+     * Send a message.
+     * @param {string|GPayloadOptions} result
+     * @returns {Message}
+     */
+    send() {}
+
+    /**
+     * Method to createButtonCollector
+     * @param {Function} filter 
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+     */
+    createButtonCollector() {}
+
+    /**
+     * Method to awaitButtons
+     * @param {Function} filter 
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+     */
+    awaitButtons() {}
+
+    /**
+     * Method to createSelectMenuCollector
+     * @param {Function} filter 
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+     */
+    createSelectMenuCollector() {}
+
+    /**
+     * Method to awaitSelectMenus
+     * @param {Function} filter 
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+     */
+    awaitSelectMenus() {}
 }
 
 module.exports = GMessage;
