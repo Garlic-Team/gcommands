@@ -180,6 +180,7 @@ class GInteraction {
         /**
          * Method to replySend
          * @param {Object} options 
+         * @memberof reply
         */
         let _send = async(result) => {
             this.replied = true;
@@ -189,6 +190,7 @@ class GInteraction {
         /**
          * Method to replyEdit
          * @param {Object} options 
+         * @memberof reply
         */
          let _edit = async(result) => {
             if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
@@ -198,6 +200,7 @@ class GInteraction {
         /**
          * Method to replyUpdate
          * @param {Object} options 
+         * @memberof reply
         */
          let _update = async(result) => {
             if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
@@ -206,7 +209,8 @@ class GInteraction {
 
         /**
          * Method to replyFetch
-         * @param {Object} options 
+         * @param {Object} options
+         * @memberof reply 
         */
         let _fetch = async() => {
             if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())

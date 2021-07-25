@@ -2,8 +2,17 @@ const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonC
 const GPayload = require('./GPayload');
 const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
 
+/**
+ * The TextChannelBase
+ */
 module.exports = {
     send: {
+
+        /**
+         * Send a message.
+         * @param {string|GPayloadOptions} result
+         * @returns {Message}
+         */
         value: async function(result) {
             let GPayloadResult = await GPayload.create(this, result)
                 .resolveData()

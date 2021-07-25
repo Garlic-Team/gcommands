@@ -14,3 +14,15 @@ exports.Events = {
     DEBUG: 'debug',
     LOG: 'log'
 }
+
+/**
+ * The GPayloadOptions
+ * @property {String} content
+ * @property {MessageEmbed} embeds
+ * @property {MessageActionRow} components
+ * @property {MessageAttachment} attachments
+ * @property {Boolean} ephemeral
+ * @property {Object} allowedMentions
+ * @property {(String | Boolean)} inlineReply
+ * @typedef {(string | Object)} GPayloadOptions
+*/

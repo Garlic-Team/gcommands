@@ -73,12 +73,6 @@ class GEventHandling {
                 let botMessageInhibit;
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                     message, member, guild, channel,
-                    /**
-                     * Respond
-                     * @type {Interface}
-                     * @param {RespondOptions} result 
-                     * @returns {Object}
-                    */
                      respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
@@ -198,12 +192,6 @@ class GEventHandling {
                 let botMessage;
                 commandos.run({
                     client, bot, message, member, guild, channel,
-                    /**
-                     * Respond
-                     * @type {Interface}
-                     * @param {RespondOptions} result 
-                     * @returns {Object}
-                    */
                     respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
@@ -307,32 +295,20 @@ class GEventHandling {
                     }
 
                     try {
-                        /**
-                         * Return system for slash
-                         * @name ReturnSystem
-                         * @param {DiscordClient} client
-                         * @param {Object} interaction
-                         * @example 
-                         *  return {
-                         *      content: 'hi',
-                         *      ephemeral: true,
-                         *      allowedMentions: { parse: [], repliedUser: true }
-                         *  }
-                         */
-
                         const client = this.client, bot = this.client
                         commandos.run({
                             client, bot, interaction,
                             member: interaction.member,
                             author: interaction.user,
                             guild: interaction.guild, 
-                            channel: interaction.channel,                          
+                            channel: interaction.channel,   
+
                             /**
                              * Respond
-                             * @type {Interface}
-                             * @param {RespondOptions} result 
-                             * @returns {Object}
-                            */
+                             * @param {string|GPayloadOptions} result
+                             * @returns {Message}
+                             * @memberof GEventHandling
+                             */
                             respond: async(result) => {
                                 return interaction.reply.send(result);
                             },

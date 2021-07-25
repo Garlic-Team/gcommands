@@ -1,5 +1,4 @@
 const axios = require('axios')
-const { writeFileSync, readFileSync } = require('fs')
 const { version } = require('discord.js');
 
 module.exports = {

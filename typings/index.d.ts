@@ -368,6 +368,7 @@ declare module 'gcommands' {
     attachments?: [MessageAttachment | MessageAttachment[]];
     ephemeral?: [boolean];
     allowedMentions?: [object];
+    inlineReply?: [boolean | string]
   }
 
   interface GPayloadFiles {
