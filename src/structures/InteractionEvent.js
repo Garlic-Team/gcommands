@@ -55,7 +55,7 @@ class InteractionEvent extends GInteraction {
         this.clicker = {
             member: this.member,
             user: this.author,
-            id: data.guild_id ? data.member.user.id : data.member.user.id,
+            id: data.user.id,
         };
 
         /**
