@@ -55,6 +55,7 @@ declare module 'discord.js' {
   interface ClientEvents {
     selectMenu: [InteractionEvent];
     clickButton: [InteractionEvent];
+    GInteraction: [GGinteraction | InteractionEvent];
     commandPrefixChange: [Guild, string];
 
     guildLanguageChange: [Guild, string];

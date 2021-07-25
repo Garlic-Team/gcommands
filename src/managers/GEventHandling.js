@@ -1,8 +1,6 @@
-const {Collection} = require('discord.js');
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const Color = require('../structures/Color'), { Events } = require('../util/Constants');
-const GInteraction = require('../structures/GInteraction');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13'), { inhibit, interactionRefactor } = require('../util/util')
 
 /**
@@ -224,8 +222,7 @@ class GEventHandling {
     */
     async slashEvent() {
         if((this.client.slash) || (this.client.slash == 'both')) {
-            this.client.ws.on('INTERACTION_CREATE', async (int) => {
-                let interaction = new GInteraction(this.client, int)
+            this.client.on('GInteraction', async (interaction) => {
                 if(interaction.type !== 2) return;
 
                 try {
