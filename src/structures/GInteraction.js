@@ -115,7 +115,7 @@ class GInteraction {
      * @private 
     */
     __isInteraction() {
-        let raw = interactionRefactor(this.client, data);
+        let raw = interactionRefactor(this.client, data, true);
         this.isCommand = async() => raw.c;
         this.isButton = async() => raw.b;
         this.isSelectMenu = async() => raw.m;
