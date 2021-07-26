@@ -27,7 +27,7 @@ module.exports = {
     },
 
     createButtonCollector: {
-        value: async function (msg, filter, options = {}) {
+        value: function (msg, filter, options = {}) {
             if(ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
             else return new ButtonCollectorV12(msg, filter, options);
         }
@@ -49,7 +49,7 @@ module.exports = {
     },
 
     createSelectMenuCollector: {
-        value: async function(msg, filter, options = {}) {
+        value: function(msg, filter, options = {}) {
             if(ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
             else return new SelectMenuCollectorV12(msg, filter, options);
         }
