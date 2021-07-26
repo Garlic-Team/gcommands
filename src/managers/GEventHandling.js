@@ -65,6 +65,7 @@ class GEventHandling {
             try {
                 let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
                 if(!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
+
                 if(!commandos || String(commandos.slash) == 'true') return;
 
                 let member = message.member, guild = message.guild, channel = message.channel
@@ -232,7 +233,7 @@ class GEventHandling {
                     let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                         interaction, 
                         member: interaction.member,
-                        author: interaction.user,
+                        author: interaction.author,
                         guild: interaction.guild, 
                         channel: interaction.channel,
                         respond: async(result) => {
@@ -252,7 +253,7 @@ class GEventHandling {
 
                     if(commandos.userOnly) {
                         if(typeof commandos.userOnly == 'object') {
-                            let users = commandos.userOnly.some(v => interaction.user.id == v)
+                            let users = commandos.userOnly.some(v => interaction.author.id == v)
                             if(!users) return;
                         } else {
                             if(interaction.author.id !== commandos.userOnly) return;
@@ -296,7 +297,7 @@ class GEventHandling {
                         commandos.run({
                             client, bot, interaction,
                             member: interaction.member,
-                            author: interaction.user,
+                            author: interaction.author,
                             guild: interaction.guild, 
                             channel: interaction.channel,   
 

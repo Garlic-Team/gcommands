@@ -114,7 +114,7 @@ class Command {
          * aliases
          * @type {Array}
          */
-        this.aliases = Array(options.aliases);
+        this.aliases = Array.isArray(options.aliases) ? options.aliases : Array(options.aliases);
 
         /**
          * category
