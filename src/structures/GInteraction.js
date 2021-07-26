@@ -104,7 +104,7 @@ class GInteraction {
           */
         this.deferred = false;
 
-        interactionRefactor();
+        interactionRefactor(this.client, data);
         
         return this;
     }
