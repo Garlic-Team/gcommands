@@ -2,6 +2,7 @@ const { Message } = require('discord.js');
 const Color = require('../structures/Color');
 const GPayload = require('./GPayload');
 const axios = require('axios');
+const { interactionRefactor } = require('../util/util');
 
 /**
  * The GInteraction class
@@ -103,6 +104,8 @@ class GInteraction {
           */
         this.deferred = false;
 
+        interactionRefactor();
+        
         return this;
     }
 

@@ -1,4 +1,3 @@
-const { interactionRefactor } = require('../util/util');
 const { Message } = require('discord.js')
 const GInteraction = require('./GInteraction');
 
@@ -14,7 +13,6 @@ class InteractionEvent extends GInteraction {
     */
     constructor(client, data) {
         super(client, data)
-        this.functions = interactionRefactor(client, data);
 
         /**
          * componentType
