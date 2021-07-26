@@ -100,14 +100,14 @@ class GCommandLoader {
 
         keys.forEach(async (cmdname) => {
             this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands] &3Creating slash command (&e'+cmdname+'&3)').getText());
-            let options = [];
             const cmd = this.client.gcommands.get(cmdname)
             if(String(cmd.slash) == 'false') return;
 
             if(!cmd.name) return console.log(new Color('&d[GCommands] &cParameter name is required! ('+cmdname+')',{json:false}).getText());
             if(!cmd.description) return console.log(new Color('&d[GCommands] &cParameter description is required! ('+cmdname+')',{json:false}).getText());
 
-            if(cmd.expectedArgs) cmd.args = cmd.expectedArgs
+            let options = [];
+            if(cmd.expectedArgs) cmd.args = cmd.expectedArgs;
             if (cmd.args) {
                 if(typeof cmd.args == 'object') {
                     cmd.args.forEach(option => {
@@ -141,65 +141,62 @@ class GCommandLoader {
                     }
                 }
             }
-            try {
-                let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
-        
-                if(cmd.guildOnly) url = `https://discord.com/api/v8/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
-                let cmdd = {
-                    name: cmd.name.toLowerCase(),
-                    description: cmd.description,
-                    options: options || []
-                }
+            let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
+    
+            if(cmd.guildOnly) url = `https://discord.com/api/v8/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
-                let config = {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bot ${this.client.token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    data: JSON.stringify(cmdd), 
-                    url,
-                }
+            let cmdd = {
+                name: cmd.name.toLowerCase(),
+                description: cmd.description,
+                options: options || []
+            }
 
-                axios(config).then((response) => {
-                    this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded: &e➜   &3' + cmd.name, {json:false}).getText());
-                })
-                .catch((error) => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status == 429 ? '&aWait &e' + ms(error.response.data['retry_after'] * 1000) : ''} &c${error} &e(${cmd.name})`, {json:false}).getText());
+            let config = {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bot ${this.client.token}`,
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(cmdd), 
+                url,
+            }
 
-                    if(error.response) {
-                        if(error.response.status == 429) {
-                            setTimeout(() => {
-                                this.__tryAgain(cmd, config)
-                            }, (error.response.data['retry_after']) * 1000)
-                        } else {
-                            try {
-                                this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                    '&a----------------------',
-                                    '  &d[GCommands Debug] &3',
-                                    '&aCode: &b' + error.response.data.code,
-                                    '&aMessage: &b' + error.response.data.message,
-                                    ' ',
-                                    '&b' + error.response.data.errors.guild_id._errors[0].code,
-                                    '&b' + rror.response.data.errors.guild_id._errors[0].message,
-                                    '&a----------------------'
-                                ]).getText())
-                            } catch(e) {
-                                this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                    '&a----------------------',
-                                    '  &d[GCommands Debug] &3',
-                                    '&aCode: &b' + error.response.data.code,
-                                    '&aMessage: &b' + error.response.data.message,
-                                    '&a----------------------'
-                                ]).getText())
-                            }  
-                        }
+            axios(config).then((response) => {
+                this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded: &e➜   &3' + cmd.name, {json:false}).getText());
+            })
+            .catch((error) => {
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status == 429 ? '&aWait &e' + ms(error.response.data['retry_after'] * 1000) : ''} &c${error} &e(${cmd.name})`, {json:false}).getText());
+
+                if(error.response) {
+                    if(error.response.status == 429) {
+                        setTimeout(() => {
+                            this.__tryAgain(cmd, config)
+                        }, (error.response.data['retry_after']) * 1000)
+                    } else {
+                        try {
+                            this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                '&a----------------------',
+                                '  &d[GCommands Debug] &3',
+                                '&aCode: &b' + error.response.data.code,
+                                '&aMessage: &b' + error.response.data.message,
+                                ' ',
+                                '&b' + error.response.data.errors.guild_id._errors[0].code,
+                                '&b' + rror.response.data.errors.guild_id._errors[0].message,
+                                '&a----------------------'
+                            ]).getText())
+                        } catch(e) {
+                            this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                '&a----------------------',
+                                '  &d[GCommands Debug] &3',
+                                '&aCode: &b' + error.response.data.code,
+                                '&aMessage: &b' + error.response.data.message,
+                                '&a----------------------'
+                            ]).getText())
+                        }  
                     }
-                })
-            } catch(e) {
-                this.GCommandsClient.emit(Events.DEBUG, e)
-            }  
+                }
+            })
         })
     }
 

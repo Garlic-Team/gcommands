@@ -16,3 +16,4 @@ docs/
 
 # NPM ignore
 jsdoc.json
+.github

@@ -94,7 +94,7 @@ class Command {
 
         /**
          * guildOnly
-         * @type {Snowflake}
+         * @type {Snowflake | Array}
          */
         this.guildOnly = options.guildOnly;    
 
