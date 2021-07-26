@@ -62,9 +62,9 @@ class Util {
             is.menu = true;
         }
 
-        interaction.isCommand = async() => is.command;
-        interaction.isButton = async() => is.button;
-        interaction.isSelectMenu = async() => is.menu;
+        interaction.isCommand = () => is.command;
+        interaction.isButton = () => is.button;
+        interaction.isSelectMenu = () => is.menu;
         if(!raw) return interaction;
         else return { c: is.command, b: is.button, m: is.menu }
     }

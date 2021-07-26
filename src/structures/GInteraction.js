@@ -117,9 +117,9 @@ class GInteraction {
     */
     __isInteraction(data) {
         let raw = interactionRefactor(this.client, data, true);
-        this.isCommand = async() => raw.c;
-        this.isButton = async() => raw.b;
-        this.isSelectMenu = async() => raw.m;
+        this.isCommand = () => raw.c;
+        this.isButton = () => raw.b;
+        this.isSelectMenu = () => raw.m;
     }
 
     /**
