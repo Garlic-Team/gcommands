@@ -313,7 +313,7 @@ class GEventHandling {
                             edit: async(result) => {
                                 return interaction.reply.edit(result);
                             }
-                        }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
+                        }, this.getSlashArgs(interaction.interaction.options || []), this.getSlashArgsObject(interaction.interaction.options || []))
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3' + e).getText())
                     }
