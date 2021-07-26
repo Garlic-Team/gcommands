@@ -25,3 +25,4 @@ jobs:
         publish_dir: ./docs
         publish_branch: docs
         destination_dir: ./docs/
+        keep_files: true
