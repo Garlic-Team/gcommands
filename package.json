@@ -30,7 +30,8 @@
     "url": "https://github.com/Garlic-Team/GCommands/issues"
   },
   "scripts": {
-    "docs:build": "docgen --source src --custom docs/index.yml --output docs/main.json",
+    "docs:devbuild": "docgen --source src --custom docs/index.yml --output docs/dev.json",
+    "docs:build": "docgen --source src --custom docs/index.yml --output docs/dev.json",
     "docs:test": "docgen --source src"
   },
   "engines": {
