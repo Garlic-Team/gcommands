@@ -104,9 +104,21 @@ class GInteraction {
           */
         this.deferred = false;
 
-        interactionRefactor(this.client, data);
+        this.__isInteraction();
         
         return this;
+    }
+
+    /**
+     * Method to isInteraction
+     * @returns {void}
+     * @private 
+    */
+    __isInteraction() {
+        let raw = interactionRefactor(this.client, data);
+        this.isCommand = async() => raw.c;
+        this.isButton = async() => raw.b;
+        this.isSelectMenu = async() => raw.m;
     }
 
     /**

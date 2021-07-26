@@ -43,7 +43,7 @@ class Util {
      * @param {GInteraction} interaction
      * @returns {Object}
     */
-    static interactionRefactor(client, interaction) {
+    static interactionRefactor(client, interaction, raw = false) {
         let is = {
             button: false,
             menu: false,
@@ -65,7 +65,8 @@ class Util {
         interaction.isCommand = async() => is.command;
         interaction.isButton = async() => is.button;
         interaction.isSelectMenu = async() => is.menu;
-        return interaction;
+        if(!raw) return interaction;
+        else return { c: is.command, b: is.button, m: is.menu }
     }
 
     /**
