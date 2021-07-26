@@ -1,36 +1,41 @@
-module.exports = {
+const { version } = require('discord.js');
+
+/**
+ * The Util class
+ */
+class Util {
     /**
      * Internal method to resolveString
      * @param {String | Array} data
      * @returns {String}
     */
-    resolveString(data) {
+    static resolveString(data) {
         if (typeof data === 'string') return data;
         if (Array.isArray(data)) return data.join('\n');
         return String(data);
-    },
+    }
 
     /**
      * Internal method to msToSeconds
      * @param {Number} ms
      * @returns {number}
     */
-    msToSeconds(ms) {
+    static msToSeconds(ms) {
         let seconds = ms / 1000;
         return seconds;
-    },
+    }
 
     /**
      * Internal method to parseEmoji
      * @param {String} text
      * @returns {Object}
     */
-    parseEmoji(text) {
+    static parseEmoji(text) {
         if (text.includes('%')) text = decodeURIComponent(text);
         if (!text.includes(':')) return { animated: false, name: text, id: null };
         const match = text.match(/<?(?:(a):)?(\w{2,32}):(\d{17,19})?>?/);
         return match && { animated: Boolean(match[1]), name: match[2], id: match[3] || null };
-    },
+    }
 
     /**
      * Internal method to interactionRefactor
@@ -38,7 +43,7 @@ module.exports = {
      * @param {GInteraction} interaction
      * @returns {Object}
     */
-    interactionRefactor(client, interaction) {
+    static interactionRefactor(client, interaction, raw = false) {
         let is = {
             button: false,
             menu: false,
@@ -57,11 +62,12 @@ module.exports = {
             is.menu = true;
         }
 
-        interaction.isCommand = async() => is.command;
-        interaction.isButton = async() => is.button;
-        interaction.isSelectMenu = async() => is.menu;
-        return interaction;
-    },
+        interaction.isCommand = () => is.command;
+        interaction.isButton = () => is.button;
+        interaction.isSelectMenu = () => is.menu;
+        if(!raw) return interaction;
+        else return { c: is.command, b: is.button, m: is.menu }
+    }
 
     /**
      * Internal method to inhivit
@@ -70,22 +76,75 @@ module.exports = {
      * @param {Function} data
      * @returns {object}
     */
-    inhibit(client, interaction, data) {
+    static inhibit(client, interaction, data) {
 		for(const inhibitor of client.inhibitors) {
 			let inhibit = inhibitor(interaction, data);
 			return inhibit;
 		}
 		return null;
-    },
+    }
 
     /**
      * Internal method to isClass
      * @param {File} input
      * @returns {boolean}
     */
-	isClass(input) {
+	static isClass(input) {
 		return typeof input === 'function' &&
         typeof input.prototype === 'object' &&
         input.toString().substring(0, 5) === 'class';
 	}
+
+    /**
+     * Internal method to deleteCmd
+     * @param {Client} client
+     * @param {Number} commandId
+     * @private
+    */
+    static async __deleteCmd(client, commandId, guildId = undefined) {
+        try {
+            const app = client.api.applications(client.user.id)
+            if(guildId) {
+                app.guilds(guildId)
+            }
+
+            await app.commands(commandId).delete()
+        } catch(e) {return;}
+    }
+
+    /**
+     * Internal method to getAllCmds
+     * @param {Client} client
+     * @param {Number} guildId
+     * @private
+    */
+    static async __getAllCommands(client, guildId = undefined) {
+        try {
+            const app = client.api.applications(client.user.id)
+            if(guildId) {
+                app.guilds(guildId)
+            }
+
+            return await app.commands.get()
+        } catch(e) {
+            return undefined;
+        }
+    }
+
+    /**
+     * Internal method to checkDjsVersion
+     * @param {Number} needVer
+     * @returns {Boolean}
+     * @private
+    */
+    static checkDjsVersion(needVer) {
+        let ver = parseInt(version.split('')[0] + version.split('')[1]);
+        if(ver == parseInt(needVer)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
+
+module.exports = Util;

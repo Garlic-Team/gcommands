@@ -22,7 +22,7 @@ npm install Garlic-Team/GCommands#dev
 yarn install Garlic-Team/GCommands#dev
 ```
 
-If you're updating from 4.x to 5.x, check https://gcommands.js.org/guide/additional/fromv4tov5.html
+If you're updating from 4.x to 5.x, check https://gcommands.js.org/guide/guide/additional/fromv4tov5.html
 
 ### 📜 | Setup
 ```js

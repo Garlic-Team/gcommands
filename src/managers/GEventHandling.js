@@ -1,9 +1,7 @@
-const {Collection} = require('discord.js');
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const Color = require('../structures/Color'), { Events } = require('../util/Constants');
-const GInteraction = require('../structures/GInteraction');
-const ifDjsV13 = require('../util/updater').checkDjsVersion('13'), { inhibit, interactionRefactor } = require('../util/util')
+const ifDjsV13 = require('../util/util').checkDjsVersion('13'), { inhibit, interactionRefactor } = require('../util/util')
 
 /**
  * The GEventHandling class
@@ -57,7 +55,6 @@ class GEventHandling {
             let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : (await message.guild.getCommandPrefix()).filter(p => message.content.startsWith(p))
             if(prefix.length === 0) return;
 
-
             if (this.GCommandsClient.caseSensitivePrefixes && !message.content.toLowerCase().startsWith(prefix[0].toLowerCase())) return;
             else if (!message.content.startsWith(prefix[0])) return;
         
@@ -68,18 +65,13 @@ class GEventHandling {
             try {
                 let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
                 if(!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
+
                 if(!commandos || String(commandos.slash) == 'true') return;
 
                 let member = message.member, guild = message.guild, channel = message.channel
                 let botMessageInhibit;
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                     message, member, guild, channel,
-                    /**
-                     * Respond
-                     * @type {Interface}
-                     * @param {RespondOptions} result 
-                     * @returns {Object}
-                    */
                      respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
@@ -199,12 +191,6 @@ class GEventHandling {
                 let botMessage;
                 commandos.run({
                     client, bot, message, member, guild, channel,
-                    /**
-                     * Respond
-                     * @type {Interface}
-                     * @param {RespondOptions} result 
-                     * @returns {Object}
-                    */
                     respond: async(options = undefined) => {
                         if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
@@ -237,8 +223,7 @@ class GEventHandling {
     */
     async slashEvent() {
         if((this.client.slash) || (this.client.slash == 'both')) {
-            this.client.ws.on('INTERACTION_CREATE', async (int) => {
-                let interaction = new GInteraction(this.client, int)
+            this.client.on('GInteraction', async (interaction) => {
                 if(interaction.type !== 2) return;
 
                 try {
@@ -248,7 +233,7 @@ class GEventHandling {
                     let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
                         interaction, 
                         member: interaction.member,
-                        author: interaction.user,
+                        author: interaction.author,
                         guild: interaction.guild, 
                         channel: interaction.channel,
                         respond: async(result) => {
@@ -268,7 +253,7 @@ class GEventHandling {
 
                     if(commandos.userOnly) {
                         if(typeof commandos.userOnly == 'object') {
-                            let users = commandos.userOnly.some(v => interaction.user.id == v)
+                            let users = commandos.userOnly.some(v => interaction.author.id == v)
                             if(!users) return;
                         } else {
                             if(interaction.author.id !== commandos.userOnly) return;
@@ -308,39 +293,27 @@ class GEventHandling {
                     }
 
                     try {
-                        /**
-                         * Return system for slash
-                         * @name ReturnSystem
-                         * @param {DiscordClient} client
-                         * @param {Object} interaction
-                         * @example 
-                         *  return {
-                         *      content: 'hi',
-                         *      ephemeral: true,
-                         *      allowedMentions: { parse: [], repliedUser: true }
-                         *  }
-                         */
-
                         const client = this.client, bot = this.client
                         commandos.run({
                             client, bot, interaction,
                             member: interaction.member,
-                            author: interaction.user,
+                            author: interaction.author,
                             guild: interaction.guild, 
-                            channel: interaction.channel,                          
+                            channel: interaction.channel,   
+
                             /**
                              * Respond
-                             * @type {Interface}
-                             * @param {RespondOptions} result 
-                             * @returns {Object}
-                            */
+                             * @param {string|GPayloadOptions} result
+                             * @returns {Message}
+                             * @memberof GEventHandling
+                             */
                             respond: async(result) => {
                                 return interaction.reply.send(result);
                             },
                             edit: async(result) => {
                                 return interaction.reply.edit(result);
                             }
-                        }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
+                        }, this.getSlashArgs(interaction.interaction.options || []), this.getSlashArgsObject(interaction.interaction.options || []))
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3' + e).getText())
                     }

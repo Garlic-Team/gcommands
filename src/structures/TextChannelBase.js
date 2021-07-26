@@ -1,9 +1,18 @@
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector')
 const GPayload = require('./GPayload');
-const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
+const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
 
+/**
+ * The TextChannelBase
+ */
 module.exports = {
     send: {
+
+        /**
+         * Send a message.
+         * @param {string|GPayloadOptions} result
+         * @returns {Message}
+         */
         value: async function(result) {
             let GPayloadResult = await GPayload.create(this, result)
                 .resolveData()
@@ -18,7 +27,7 @@ module.exports = {
     },
 
     createButtonCollector: {
-        value: async function (msg, filter, options = {}) {
+        value: function (msg, filter, options = {}) {
             if(ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
             else return new ButtonCollectorV12(msg, filter, options);
         }
@@ -40,7 +49,7 @@ module.exports = {
     },
 
     createSelectMenuCollector: {
-        value: async function(msg, filter, options = {}) {
+        value: function(msg, filter, options = {}) {
             if(ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
             else return new SelectMenuCollectorV12(msg, filter, options);
         }

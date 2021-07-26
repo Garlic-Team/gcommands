@@ -38,13 +38,13 @@ class MessageButton {
 
         /**
          * style
-         * @type {String} 
+         * @type {string} 
         */
         this.style = 'style' in data ? this.resolveStyle(resolveString(data.style)) : null;
 
         /**
          * label
-         * @type {String} 
+         * @type {string} 
         */
         this.label = 'label' in data ? resolveString(data.label) : null;
 
@@ -57,13 +57,13 @@ class MessageButton {
         if (this.style === 5) {
             /**
              * url
-             * @type {String} 
+             * @type {string} 
             */
             this.url = 'url' in data ? resolveString(data.url) : null;
         } else {
             /**
              * customId
-             * @type {String} 
+             * @type {string} 
             */
             this.custom_id = 'id' in data ? resolveString(data.id): null;
         }

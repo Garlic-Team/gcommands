@@ -22,25 +22,25 @@ class MessageSelectMenuOption {
     setup(data) {
         /**
          * label
-         * @type {String} 
+         * @type {string} 
         */
         this.label = 'label' in data ? resolveString(data.label) : null;
 
         /**
          * value
-         * @type {String} 
+         * @type {string} 
         */
         this.value = 'value' in data ? resolveString(data.value) : null;
 
         /**
          * description
-         * @type {String} 
+         * @type {string} 
         */
         this.description = 'description' in data ? resolveString(data.description) : null;
 
         /**
          * emoji
-         * @type {String} 
+         * @type {string} 
         */
         this.emoji = 'emoji' in data ? parseEmoji(data.emoji) : null;
 

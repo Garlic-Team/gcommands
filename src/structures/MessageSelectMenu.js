@@ -36,7 +36,7 @@ class MessageSelectMenu {
      setup(data) {
         /**
          * placeholder
-         * @type {String} 
+         * @type {string} 
         */
         this.placeholder = 'placeholder' in data ? resolveString(data.placeholder) : null;
 
@@ -54,7 +54,7 @@ class MessageSelectMenu {
 
         /**
          * id
-         * @type {String} 
+         * @type {string} 
         */
         this.id = 'id' in data ? resolveString(data.id) : null;
 

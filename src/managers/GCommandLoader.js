@@ -1,8 +1,8 @@
-const cmdUtils = require('../util/cmdUtils'), Color = require('../structures/Color'), { Events } = require('../util/Constants')
+const Color = require('../structures/Color'), { Events } = require('../util/Constants')
 const axios = require('axios');
 const fs = require('fs');
 const ms = require('ms');
-const { isClass } = require('../util/util');
+const { isClass, __deleteCmd, __getAllCommands } = require('../util/util');
 const Command = require('../commands/base');
 
 /**
@@ -28,7 +28,7 @@ class GCommandLoader {
 
         /**
          * cmdDir
-         * @type {String}
+         * @type {string}
         */
         this.cmdDir = this.GCommandsClient.cmdDir;
 
@@ -232,10 +232,10 @@ class GCommandLoader {
     */
      async __deleteAllGlobalCmds() {
         try {
-            let allcmds = await cmdUtils.__getAllCommands(this.client);
+            let allcmds = await __getAllCommands(this.client);
             if(String(this.client.slash) == 'false') {
                 allcmds.forEach(cmd => {
-                    cmdUtils.__deleteCmd(this.client, cmd.id)
+                    __deleteCmd(this.client, cmd.id)
                 })
             }
 
@@ -248,7 +248,7 @@ class GCommandLoader {
                 if(this.client.gcommands.get(cmdname).slash == false || this.client.gcommands.get(cmdname).slash == 'false') {
                     allcmds.forEach(cmd => {
                         if(cmd.name == cmdname) {
-                            cmdUtils.__deleteCmd(this.client, cmd.id)
+                            __deleteCmd(this.client, cmd.id)
                         }
                     })
                 }
@@ -258,7 +258,7 @@ class GCommandLoader {
                 let f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
 
                 if(!f) {
-                    cmdUtils.__deleteCmd(this.client, cmd.id)
+                    __deleteCmd(this.client, cmd.id)
                 }
             })
         } catch(e) {
@@ -276,12 +276,12 @@ class GCommandLoader {
     async __deleteAllGuildCmds() {
         try {
             this.client.guilds.cache.forEach(async(guild) => {
-                let allcmds = await cmdUtils.__getAllCommands(this.client, guild.id);
+                let allcmds = await __getAllCommands(this.client, guild.id);
                 if(!allcmds) return;
 
                 if(!this.client.slash) {
                     allcmds.forEach(cmd => {
-                        cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)
+                        __deleteCmd(this.client, cmd.id, guild.id)
                     })
                 }
 
@@ -294,7 +294,7 @@ class GCommandLoader {
                     if(command.slash == false || command.slash == 'false') {
                         allcmds.forEach(cmd => {
                             if(cmd.name == cmdname) {
-                                cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)
+                                __deleteCmd(this.client, cmd.id, guild.id)
                             }
                         })
                     }
@@ -304,7 +304,7 @@ class GCommandLoader {
                     let f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
 
                     if(!f) {
-                        cmdUtils.__deleteCmd(this.client, cmd.id, guild.id)
+                        __deleteCmd(this.client, cmd.id, guild.id)
                     }
                 })
             })

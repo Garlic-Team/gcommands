@@ -24,7 +24,7 @@ class Argument {
 
         /**
          * name
-         * @type {String}
+         * @type {string}
         */
         this.name = argument.name;
 
@@ -36,13 +36,13 @@ class Argument {
 
         /**
          * type
-         * @type {String}
+         * @type {string}
         */
         this.type = this.determineArgument(client, argument).type;
 
         /**
          * prompt
-         * @type {String}
+         * @type {string}
         */
         this.prompt = argument.prompt || `Please define argument ${argument.name}`;
 

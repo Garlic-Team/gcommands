@@ -55,6 +55,7 @@ declare module 'discord.js' {
   interface ClientEvents {
     selectMenu: [InteractionEvent];
     clickButton: [InteractionEvent];
+    GInteraction: [GGinteraction | InteractionEvent];
     commandPrefixChange: [Guild, string];
 
     guildLanguageChange: [Guild, string];
@@ -368,6 +369,7 @@ declare module 'gcommands' {
     attachments?: [MessageAttachment | MessageAttachment[]];
     ephemeral?: [boolean];
     allowedMentions?: [object];
+    inlineReply?: [boolean | string]
   }
 
   interface GPayloadFiles {
@@ -403,5 +405,6 @@ declare module 'gcommands' {
   interface EventOptions {
     name: string;
     once: boolean;
+    ws: boolean;
   }
 }

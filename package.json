@@ -1,11 +1,11 @@
 {
   "name": "gcommands",
-  "version": "5.2.4",
+  "version": "5.2.5",
   "description": "Powerful and flexible command handler that can do everything!",
   "main": "src/index.js",
   "types": "./typings/index.d.ts",
   "dependencies": {
-    "@gcommands/events": "^1.0.3",
+    "@gcommands/events": "^1.0.6",
     "axios": "^0.21.1",
     "ms": "^2.1.3"
   },
@@ -30,6 +30,7 @@
     "url": "https://github.com/Garlic-Team/GCommands/issues"
   },
   "scripts": {
+    "docs:devbuild": "docgen --source src --custom docs/index.yml --output docs/dev.json",
     "docs:build": "docgen --source src --custom docs/index.yml --output docs/main.json",
     "docs:test": "docgen --source src"
   },

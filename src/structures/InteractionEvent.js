@@ -1,4 +1,3 @@
-const { interactionRefactor } = require('../util/util');
 const { Message } = require('discord.js')
 const GInteraction = require('./GInteraction');
 
@@ -14,7 +13,6 @@ class InteractionEvent extends GInteraction {
     */
     constructor(client, data) {
         super(client, data)
-        this.functions = interactionRefactor(client, data);
 
         /**
          * componentType
@@ -24,7 +22,7 @@ class InteractionEvent extends GInteraction {
 
         /**
          * selectMenuId
-         * @type {String}
+         * @type {string}
          * @deprecated
          */
         this.selectMenuId = data.data.values ? data.data.custom_id : undefined;
@@ -55,7 +53,7 @@ class InteractionEvent extends GInteraction {
         this.clicker = {
             member: this.member,
             user: this.author,
-            id: data.guild_id ? data.member.user.id : data.member.user.id,
+            id: this.author.id,
         };
 
         /**

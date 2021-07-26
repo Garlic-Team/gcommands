@@ -15,19 +15,19 @@ class Command {
     constructor(client, options = {}) {
         /**
          * Name
-         * @type {String}
+         * @type {string}
          */
         this.name = resolveString(options.name);
 
         /**
          * Description
-         * @type {String}
+         * @type {string}
          */
         this.description = resolveString(options.description);
 
         /**
          * Cooldown
-         * @type {String}
+         * @type {string}
          */
         this.cooldown = resolveString(options.cooldown);
 
@@ -114,18 +114,18 @@ class Command {
          * aliases
          * @type {Array}
          */
-        this.aliases = Array(options.aliases);
+        this.aliases = Array.isArray(options.aliases) ? options.aliases : Array(options.aliases);
 
         /**
          * category
-         * @type {String}
+         * @type {string}
          */
         this.category = resolveString(options.category);
     }
 
     /**
      * run function
-     * @param {Object} options 
+     * @param {CommandRunOptions} options 
      * @param {Array} arrayArgs 
      * @param {Array | Object} objectArgs 
      */

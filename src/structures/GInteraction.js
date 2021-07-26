@@ -2,6 +2,7 @@ const { Message } = require('discord.js');
 const Color = require('../structures/Color');
 const GPayload = require('./GPayload');
 const axios = require('axios');
+const { interactionRefactor } = require('../util/util');
 
 /**
  * The GInteraction class
@@ -103,7 +104,22 @@ class GInteraction {
           */
         this.deferred = false;
 
+        this.__isInteraction(data);
+        
         return this;
+    }
+
+    /**
+     * Method to isInteraction
+     * @param {Object} data
+     * @returns {void}
+     * @private 
+    */
+    __isInteraction(data) {
+        let raw = interactionRefactor(this.client, data, true);
+        this.isCommand = () => raw.c;
+        this.isButton = () => raw.b;
+        this.isSelectMenu = () => raw.m;
     }
 
     /**
@@ -180,6 +196,7 @@ class GInteraction {
         /**
          * Method to replySend
          * @param {Object} options 
+         * @memberof reply
         */
         let _send = async(result) => {
             this.replied = true;
@@ -189,6 +206,7 @@ class GInteraction {
         /**
          * Method to replyEdit
          * @param {Object} options 
+         * @memberof reply
         */
          let _edit = async(result) => {
             if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
@@ -198,6 +216,7 @@ class GInteraction {
         /**
          * Method to replyUpdate
          * @param {Object} options 
+         * @memberof reply
         */
          let _update = async(result) => {
             if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
@@ -206,7 +225,8 @@ class GInteraction {
 
         /**
          * Method to replyFetch
-         * @param {Object} options 
+         * @param {Object} options
+         * @memberof reply 
         */
         let _fetch = async() => {
             if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())

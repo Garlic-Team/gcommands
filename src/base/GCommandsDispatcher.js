@@ -1,6 +1,6 @@
 const { Collector, Collection, User, Team } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require('../structures/Color')
-const ifDjsV13 = require('../util/updater').checkDjsVersion('13');
+const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 const ms = require('ms');
 
 /**
@@ -23,19 +23,24 @@ class GCommandsDispatcher {
          * Inhibitors
          * @type {Set}
         */
-        this.client.inhibitors = new Set();
+        this.inhibitors = new Set();
 
         /**
          * Cooldowns
          * @type {Collection}
         */
-        this.client.cooldowns = new Collection();
+        this.cooldowns = new Collection();
+
+        this.client.inhibitors = this.inhibitors;
+        this.client.cooldowns = this.cooldowns;
 
         this.fetchClientApplication();
     }
 
     /**
      * Internal method to setGuildPrefix
+     * @param {Snowflake} guildId
+     * @param {string} lang
      * @returns {boolean}
     */
     async setGuildPrefix(guildId, prefix) {
@@ -52,6 +57,8 @@ class GCommandsDispatcher {
 
     /**
      * Internal method to getGuildPrefix
+     * @param {Snowflake} guildId
+     * @param {Boolean} cache
      * @returns {String}
     */
     async getGuildPrefix(guildId, cache = true) {
@@ -64,6 +71,9 @@ class GCommandsDispatcher {
 
     /**
      * Internal method to getCooldown
+     * @param {Snowflake} guildId
+     * @param {Snowflake} userId
+     * @param {Command} command
      * @returns {String}
     */
     async getCooldown(guildId, userId, command) {
@@ -142,8 +152,7 @@ class GCommandsDispatcher {
     /**
      * Internal method to setGuildLanguage
      * @param {Snowflake} guildId
-     * @param {Snowflake} userId
-     * @param {Object} command
+     * @param {string} lang
      * @returns {boolean}
     */
     async setGuildLanguage(guildId, lang) {
@@ -161,8 +170,7 @@ class GCommandsDispatcher {
     /**
      * Internal method to getGuildLanguage
      * @param {Snowflake} guildId
-     * @param {Snowflake} userId
-     * @param {Object} command
+     * @param {Boolean} cache
      * @returns {boolean}
     */
     async getGuildLanguage(guildId, cache = true) {
@@ -190,8 +198,8 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to addInhibitor
-     * @param {Function} inhibitor
+     * Method to addInhibitor
+     * @param {Inhibitor} inhibitor
      * @returns {boolean}
     */
     addInhibitor(inhibitor) {
@@ -202,7 +210,8 @@ class GCommandsDispatcher {
 	}
 
     /**
-     * Internal method to removeInhibitor
+     * Method to removeInhibitor
+     * @param {Inhibitor} inhibitor
      * @returns {Set}
     */
     removeInhibitor(inhibitor) {
@@ -211,9 +220,10 @@ class GCommandsDispatcher {
 	}
 
     /**
-     * Internal method to createButtonCollector
+     * Method to createButtonCollector
+     * @param {Message} msg
      * @param {Function} filter 
-     * @param {Object} options
+     * @param {CollectorOptions} options
      * @returns {Collector}
     */
     createButtonCollector(msg, filter, options = {}) {
@@ -222,9 +232,10 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to createButtonCollector
+     * Method to awaitButtons
+     * @param {Message} msg
      * @param {Function} filter 
-     * @param {Object} options
+     * @param {CollectorOptions} options
      * @returns {Collector}
     */
     awaitButtons(msg, filter, options = {}) {
@@ -241,9 +252,10 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to createSelectMenuCollector
+     * Method to createSelectMenuCollector
+     * @param {Message} msg
      * @param {Function} filter 
-     * @param {Object} options
+     * @param {CollectorOptions} options
      * @returns {Collector}
     */
     createSelectMenuCollector(msg, filter, options = {}) {
@@ -252,9 +264,10 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to createButtonCollector
+     * Method to awaitSelectMenus
+     * @param {Message} msg
      * @param {Function} filter 
-     * @param {Object} options
+     * @param {CollectorOptions} options
      * @returns {Collector}
     */
     awaitSelectMenus(msg, filter, options = {}) {

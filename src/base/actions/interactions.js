@@ -1,10 +1,15 @@
+const GInteraction = require('../../structures/GInteraction');
 const InteractionEvent = require('../../structures/InteractionEvent');
 const { inhibit, interactionRefactor } = require('../../util/util')
 
 module.exports = (client) => {
     client.ws.on('INTERACTION_CREATE', async(data) => {
-        if (!data.message) return;
-        
+        if(data.type == 2) {
+            let interaction = new GInteraction(client, data)
+            client.emit('GInteraction', interaction)
+            return;
+        }
+
         if(data.data.component_type) {
             const interaction = new InteractionEvent(client, data)
 
@@ -23,7 +28,7 @@ module.exports = (client) => {
             if(inhibitReturn == false) return;
 
             client.emit(data.data.component_type == 3 ? `selectMenu` : `clickButton`, interaction)
-            client.emit('interaction', interaction)
+            client.emit('GInteraction', interaction)
         }
     });
 }
