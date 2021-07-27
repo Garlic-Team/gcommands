@@ -68,59 +68,68 @@ const { MessageButton, MessageActionRow } = require("gcommands")
 
 const button = new MessageButton()
   .setStyle("red")
-  .setLabel("pog")
-  .setID("redbutton")
+  .setLabel("Red")
+  .setID("red_button")
   .setDisabled()
   .setEmoji("💚") // or .setEmoji("<:name:id>"), not required
   .toJSON()
 
-const buttonEdited = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").toJSON()
-const buttonURL = new MessageButton().setStyle("url").setLabel("po").setURL("https://thedevelopers.tk").toJSON()
+const buttonSe = new MessageButton().setStyle("gray").setLabel("Secondary").setID("secondary_button").toJSON()
+const buttonURL = new MessageButton().setStyle("url").setLabel("Link").setURL("https://gcommands.js.org").toJSON()
 
 const buttonRow = new MessageActionRow()
     .addComponent(button)
     .addComponent(buttonURL)
 
 const buttonRow2 = new MessageActionRow()
-    .addComponent(buttonEdited)
+    .addComponent(buttonSe)
 
 respond({
   content: "hi with buttons",
-  components: buttonRow, // 1 button
-  components: [buttonRow, buttonRow2] // 2 rows
-})
-
-edit({
-  content: "hello",
-  components: buttonRow, // 1 button
-  components: [buttonRow, buttonRow2] // 2 rows
+  components: [buttonRow, buttonRow2]
 })
 ```
+
+<div is="discord-messages">
+    <dis-messages>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="hyro" :command="true">button</discord-interaction>
+            </template>
+          hi with buttons
+          <template #actions>
+            <discord-buttons>
+              <discord-button type="danger">Red</discord-button>
+              <discord-button type="link" url="https://gcommands.js.org">Link</discord-button>
+            </discord-buttons>
+            <discord-buttons>
+              <discord-button type="secondary">Secondary</discord-button>
+            </discord-buttons>
+          </template>
+        </dis-message>
+    </dis-messages>
+</div>
 
 #### Sending buttons to other channel/dm
 ```js
 let msg = await channel.send({
   content: "hi with buttons",
-  components: buttonRow, // 1 button
   components: [buttonRow, buttonRow2] // 2 rows
 })
 
 msg.edit({
   content: "hello",
-  components: buttonRow, // 1 button
   components: [buttonRow, buttonRow2] // 2 rows
 })
 
 // dm
 let msg = await member.send({
   content: "hi with buttons",
-  components: buttonRow, // 1 button
   components: [buttonRow, buttonRow2] // 2 rows
 })
 
 msg.edit({
   content: "hello",
-  components: buttonRow, // 1 button
   components: [buttonRow, buttonRow2] // 2 rows
 })
 ```
@@ -131,30 +140,54 @@ The following steps will work for both normal and slash command.
 
 ```js
 client.on("clickButton", (button) => {
-    const buttonEdit = new MessageButton().setStyle("gray").setLabel("poag").setID("redbutton").setDisabled().toJSON()
+    const buttonEdit = new MessageButton().setStyle("gray").setLabel("Secondary").setID("secondary_button").setDisabled();
     const buttonRow = new MessageActionRow()
         .addComponent(buttonEdit)
 
     button.message.edit({
       autoDefer: true, // if false use button.defer()
       content: "hi",
-      components: buttonRow, // 1 button
-      components: [buttonRow, buttonRow2] // 2 rows
-      edited: false // show (edited)
+      components: [buttonRow]
     })
 
     // new message (reply)
     button.reply.send({
         content: "a",
-        components: buttonRow
+        components: [buttonRow]
     })
 
-    button.reply.edit({
-        content: "ab",
-        components: buttonRow
-    })
+    setTimeout(() => {
+      // edit reply
+      button.reply.edit({
+          content: "ab",
+          components: [buttonRow]
+      })
+    }, 4000)
 })
 ```
+
+<div is="discord-messages">
+    <dis-messages>
+        <dis-message profile="gcommands">
+          hi
+          <template #actions>
+            <discord-buttons>
+              <discord-button type="secondary" :disabled="true">Secondary</discord-button>
+            </discord-buttons>
+          </template>
+        </dis-message>
+    </dis-messages>
+    <dis-messages>
+        <dis-message profile="gcommands">
+          a
+          <template #actions>
+            <discord-buttons>
+              <discord-button type="secondary" :disabled="true">Secondary</discord-button>
+            </discord-buttons>
+          </template>
+        </dis-message>
+    </dis-messages>
+</div>
 
 ### Collectors
 ```js
@@ -246,14 +279,7 @@ const actionRow = new MessageActionRow()
     .addComponent(dropdown)
 
 respond({
-  content: "hi with buttons",
-  components: actionRow, // 1 button
-  components: [actionRow, actionRow] // 2 rows
-})
-
-edit({
-  content: "hello",
-  components: actionRow, // 1 button
+  content: "hi with menus",
   components: [actionRow, actionRow] // 2 rows
 })
 ```
@@ -262,26 +288,22 @@ edit({
 ```js
 let msg = await channel.send({
   content: "hi with menu",
-  components: actionRow, // 1 button
   components: [actionRow, actionRow] // 2 rows
 })
 
 msg.edit({
   content: "hello",
-  components: actionRow, // 1 button
   components: [actionRow, actionRow] // 2 rows
 })
 
 // dm
 let msg = await member.send({
   content: "hi with menu",
-  components: actionRow, // 1 button
   components: [actionRow, actionRow] // 2 rows
 })
 
 msg.edit({
   content: "hello",
-  components: actionRow, // 1 button
   components: [actionRow, actionRow] // 2 rows
 })
 ```
