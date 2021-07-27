@@ -20,3 +20,17 @@ client.dispatcher.addInhibitor((interaction, {message, member, guild, channel, r
     }
 })
 ```
+
+<div is="discord-messages">
+    <dis-messages :ephemeral="true">
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="hyro" 
+                :command="true"
+                :ephemeral="true"
+                >meme</discord-interaction>
+            </template>
+            blacklited
+        </dis-message>
+    </dis-messages>
+</div>
