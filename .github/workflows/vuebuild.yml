@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@main
       
     - name: Download
-      run: npm i
+      run: npm i vue-discord-message@5.2.0 vuepress-theme-yuu@3.0.1 vuepress@1.8.2
 
     - name: Build
       run: npm run build
