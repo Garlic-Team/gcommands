@@ -101,6 +101,7 @@ class GCommandLoader {
         keys.forEach(async (cmdname) => {
             this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands] &3Creating slash command (&e'+cmdname+'&3)').getText());
             const cmd = this.client.gcommands.get(cmdname)
+
             if(String(cmd.slash) == 'false') return;
 
             if(!cmd.name) return console.log(new Color('&d[GCommands] &cParameter name is required! ('+cmdname+')',{json:false}).getText());

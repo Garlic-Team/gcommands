@@ -40,7 +40,7 @@ class MessageButton {
          * style
          * @type {string} 
         */
-        this.style = 'style' in data ? this.resolveStyle(resolveString(data.style)) : null;
+        this.style = 'style' in data ? this.resolveStyle(resolveString(data.style.toLowerCase())) : null;
 
         /**
          * label
@@ -82,7 +82,7 @@ class MessageButton {
      * @param {String} style 
     */
     setStyle(style) {
-        this.style = this.resolveStyle(resolveString(style.toLocaleLowerCase()));
+        this.style = this.resolveStyle(resolveString(style.toLowerCase()));
         return this;
     }
 
