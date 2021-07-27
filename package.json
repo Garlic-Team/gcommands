@@ -14,7 +14,7 @@
     "vuepress": "^1.8.2"
   },
   "dependencies": {
-    "vue-discord-message": "^5.0.3",
+    "vue-discord-message": "^5.0.2",
     "vuepress-theme-yuu": "^3.0.1"
   }
 }
