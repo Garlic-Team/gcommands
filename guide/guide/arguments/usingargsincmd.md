@@ -43,6 +43,31 @@ module.exports = class SayCommand extends Command {
 }
 ```
 
+<div is="discord-messages">
+    <discord-messages>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="hyro" :command="true">say hello</discord-interaction>
+            </template>
+            hello
+        </dis-message>
+    </discord-messages>
+    <discord-messages>
+            <dis-message profile="izboxo">
+            .say
+        </dis-message>
+        <dis-message profile="gcommands">
+            What do you want to send?
+        </dis-message>
+        <dis-message profile="izboxo">
+            hello
+        </dis-message>
+        <dis-message profile="gcommands">
+            hello
+        </dis-message>
+    </discord-messages>
+</div>
+
 ::: tip
 If you want to know more about how the `args` object works for `SUB_COMMAND` and `SUB_COMMAND_GROUP` you can take a look [here](https://discord.com/developers/docs/interactions/slash-commands#example-walkthrough).
 :::
