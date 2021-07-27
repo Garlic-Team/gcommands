@@ -166,6 +166,25 @@ module.exports = class Ping extends Command {
 };
 ```
 
+<div is="discord-messages">
+    <dis-messages>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="hyro" :command="true">ping</discord-interaction>
+            </template>
+            pong
+        </dis-message>
+    </dis-messages>
+    <dis-messages>
+        <dis-message profile="izboxo">
+            .ping
+        </dis-message>
+        <dis-message profile="gcommands">
+            pong
+        </dis-message>
+    </dis-messages>
+</div>
+    
 </branch>
 
 ## Event Handler
