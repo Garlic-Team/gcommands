@@ -10,7 +10,7 @@ export default ({ Vue }) => {
         profiles: {
             gcommands: {
                 author: 'GCommands',
-                avatar: '/gcommands.png',
+                avatar: 'https://gcommands.js.org/guide/gcommands.png',
                 roleColor: '#e67e22',
                 bot: true
             },
