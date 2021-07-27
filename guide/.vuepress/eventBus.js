@@ -1,10 +1,5 @@
 import Vue from 'vue';
 import VueDiscordMessage from 'vue-discord-message';
-import DiscordInteraction from './components/DiscordInteraction.vue';
-import DisMessage from './components/DisMessage.vue';
-import DisMessages from './components/DisMessages.vue';
-import DiscordButton from './components/DiscordButton.vue';
-import DiscordButtons from './components/DiscordButtons.vue';
 export default new Vue();
 
 Vue.use(VueDiscordMessage, {
@@ -27,8 +22,3 @@ Vue.use(VueDiscordMessage, {
         }
     },
 });
-Vue.component(componentNames['dis-messages'] || 'dis-messages', DisMessages);
-Vue.component(componentNames['discord-interaction'] || 'discord-interaction', DiscordInteraction);
-Vue.component(componentNames['dis-message'] || 'dis-message', DisMessage);
-Vue.component(componentNames['discord-button'] || 'discord-button', DiscordButton);
-Vue.component(componentNames['discord-buttons'] || 'discord-buttons', DiscordButtons);
