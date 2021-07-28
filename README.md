@@ -8,6 +8,11 @@
   <p>
     <a href="https://www.npmjs.com/package/gcommands"><img src="https://nodei.co/npm/gcommands.png?downloads=true&stars=true" alt="NPM Banner"></a>
   </p>
+  <p>
+    <a href="https://ko-fi.com/H2H05FNRL"><img src="https://garlic-team.github.io/GarMod/sources/support-ko-fi.svg" height="30" /></a>
+    <a href="https://github.com/Garlic-Team/GCommands"><img src="https://garlic-team.github.io/GarMod/sources/open-source.svg" height="30" /></a>
+    <img src="https://forthebadge.com/images/badges/made-with-javascript.svg" height="30" />
+  </p>
 </div>
 
 ---

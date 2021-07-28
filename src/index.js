@@ -32,25 +32,8 @@ module.exports = {
     // Other
     Color: require('./structures/Color'),
     Util: require('./util/util'),
-    ArgumentType: {
-        SUB_COMMAND: 1,
-        SUB_COMMAND_GROUP: 2,
-        STRING: 3,
-        INTEGER: 4,
-        BOOLEAN: 5,
-        USER: 6,
-        CHANNEL: 7,
-        ROLE: 8,
-        MENTIONABLE: 9
-    },
-    ButtonTypes: {
-        blurple: 'blurple',
-        gray: 'gray',
-        grey: 'gray',
-        green: 'green',
-        red: 'red',
-        url: 'url'
-    },
+    ArgumentType: require('./util/Constants').ArgumentType,
+    ButtonType: require('./util/Constants').ButtonType,
 
     version: require('../package.json').version
 }

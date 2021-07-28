@@ -1,3 +1,3 @@
 const { TextChannel } = require('discord.js');
 
-module.exports = Object.defineProperties(TextChannel.prototype, require("./TextChannelBase"));
+module.exports = Object.defineProperties(TextChannel.prototype, require('./TextChannelBase'));

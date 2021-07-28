@@ -163,7 +163,7 @@ class GEventHandling {
 
                 for(let i in commandos.args) {
                     let arg = new Argument(this.client, commandos.args[i]);
-                    if(arg.type == "invalid") continue;
+                    if(arg.type == 'invalid') continue;
 
                     if(args[i]) {
                         let argInvalid = await arg.argument.validate(arg, {content: args[i], guild: message.guild})

@@ -84,13 +84,13 @@ class Command {
          * channelTextOnly
          * @type {Boolean}
          */
-        this.channelTextOnly = Boolean(options.channelTextOnly);
+        this.channelTextOnly = options.channelTextOnly ? Boolean(options.channelTextOnly) : null;
 
         /**
          * channelNewsOnly
          * @type {Boolean}
          */
-         this.channelNewsOnly = Boolean(options.channelNewsOnly);
+         this.channelNewsOnly = options.channelNewsOnly ? Boolean(options.channelNewsOnly) : null;
 
         /**
          * guildOnly
@@ -102,13 +102,13 @@ class Command {
          * nsfw
          * @type {Boolean}
          */
-        this.nsfw = Boolean(options.nfsw);
+        this.nsfw = options.nfsw ? Boolean(options.nfsw) : null;
 
         /**
          * slash
          * @type {Boolean}
          */
-        this.slash = Boolean(options.slash);
+        this.slash = options.slash ? Boolean(options.slash) : null;
 
         /**
          * aliases
