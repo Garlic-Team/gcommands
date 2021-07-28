@@ -84,7 +84,7 @@ class GInteraction {
 
         /**
          * interaction
-         * @type {Object}
+         * @type {GInteractionInteraction}
          */
         this.interaction = {
             name: data.data.name,

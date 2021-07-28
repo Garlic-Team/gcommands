@@ -115,11 +115,7 @@ declare module 'gcommands' {
     public channel: TextChannel | NewsChannel | DMChannel;
     public author: User;
     public member: GuildMember;
-    public interaction: {
-      name: string;
-      id: number;
-      options: Array;
-    }
+    public interaction: GInteractionInteraction;
     public replied: boolean;
     public deffered: boolean;
 
@@ -138,10 +134,7 @@ declare module 'gcommands' {
 
     public values: array;
     public id: string;
-    public clicker: {
-      member: GuildMember;
-      user: User;
-    }
+    public clicker: InteractionEventClicker;
     
     public message: Message;
   }
@@ -333,6 +326,18 @@ declare module 'gcommands' {
   interface GEvents {
     debug: [string];
     log: [string];
+  }
+
+  interface GInteractionInteraction {
+    name: string;
+    options: Array,
+    id: number;
+  }
+
+  interface InteractionEventClicker {
+    member: GuildMember;
+    user: User;
+    id: Snowflake;
   }
 
   interface GCommandsOptions {

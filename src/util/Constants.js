@@ -94,3 +94,19 @@ exports.ArgumentType = {
  * @property {GPayloadOptions} edit
  * @typedef {(Object)} Inhibitor
  */
+
+/**
+ * The InteractionEventClicker
+ * 
+ * @property {GuildMember} member
+ * @property {User} user
+ * @property {Snowflake} id
+ */
+
+/**
+ * The GInteractionInteraction
+ * 
+ * @property {string} name
+ * @property {Array} options
+ * @property {number} id
+ */

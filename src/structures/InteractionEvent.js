@@ -48,7 +48,7 @@ class InteractionEvent extends GInteraction {
 
         /**
          * clicker
-         * @type {GuildMember | User | Number}
+         * @type {InteractionEventClicker}
          */
         this.clicker = {
             member: this.member,
