@@ -1,10 +1,11 @@
-const ms = require('ms');
 const StringArgumentType = require('./types/string');
 const IntegerArgumentType = require('./types/integer');
 const BooleanArgumentType = require('./types/boolean');
 const ChannelArgumentType = require('./types/channel');
 const UserArgumentType = require('./types/user');
 const RoleArgumentType = require('./types/role');
+const NumberArgumentType = require('./types/number');
+const MentionableArgumentType = require('./types/mentionable');
 
 /**
  * The Argument class
@@ -101,6 +102,8 @@ class Argument {
         if(argument.type == 6) return new UserArgumentType(client, argument);
         if(argument.type == 7) return new ChannelArgumentType(client, argument);
         if(argument.type == 8) return new RoleArgumentType(client, argument);
+        if(argument.type == 9) return new MentionableArgumentType(client, argument);
+        if(argument.type == 10) return new NumberArgumentType(client, argument);
         else return { type: 'invalid' };
     }
 }

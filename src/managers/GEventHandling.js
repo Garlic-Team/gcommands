@@ -165,11 +165,18 @@ class GEventHandling {
                     let arg = new Argument(this.client, commandos.args[i]);
                     if(arg.type == 'invalid') continue;
 
+                    let validArg = async(message, prompt) => {
+                        let final = await arg.obtain(message, prompt);
+                        if(!final.valid) return validArg(message, prompt)
+
+                        return final;
+                    }
+
                     if(args[i]) {
-                        let argInvalid = await arg.argument.validate(arg, {content: args[i], guild: message.guild})
+                        let argInvalid = await arg.argument.validate(arg, {content: args[i], guild: message.guild});
                         if(argInvalid) {
-                            let argInput = await arg.obtain(message, argInvalid)
-                            if(!argInput.valid) argInput = await arg.obtain(message, argInput.prompt);
+                            let argInput = await arg.obtain(message, argInvalid);
+                            if(!argInput.valid) argInput = await validArg(message, argInput.prompt);
         
                             if(argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                             args[i] = argInput.content;
@@ -178,8 +185,8 @@ class GEventHandling {
                         continue;
                     }
 
-                    let argInput = await arg.obtain(message)
-                    if(!argInput.valid) argInput = await arg.obtain(message, argInput.prompt);
+                    let argInput = await arg.obtain(message);
+                    if(!argInput.valid) argInput = await validArg(message, argInput.prompt);
 
                     if(argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                     args[i] = argInput.content;

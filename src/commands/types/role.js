@@ -25,8 +25,8 @@ class RoleArgumentType extends ArgumentType {
 
 		if(!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'role')
 
-		let user = message.guild.roles.cache.get(matches[1]);
-		if(!user) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'role')
+		let role = message.guild.roles.cache.get(matches[1]);
+		if(!role) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'role')
 	}
 }
 
