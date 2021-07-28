@@ -11,9 +11,10 @@
 */
 
 /**
- * Enum for Events
- * @readonly
- * @enum {string}
+ * Events
+ * * DEBUG
+ * * LOG
+ * @type {Object}
  */
 exports.Events = {
     DEBUG: 'debug',
@@ -21,9 +22,18 @@ exports.Events = {
 }
 
 /**
- * Enum for ArgumentType
- * @readonly
- * @enum {number}
+ * ArgumentType
+ * * SUB_COMMAND
+ * * SUB_COMMAND_GROUP
+ * * STRING
+ * * INTEGER
+ * * BOOLEAN
+ * * USER
+ * * CHANNEL
+ * * ROLE
+ * * MENTIONABLE
+ * * NUMBER
+ * @type {Object}
  */
 exports.ArgumentType = {
     SUB_COMMAND: 1,
@@ -39,9 +49,18 @@ exports.ArgumentType = {
 }
 
 /**
- * Enum for ButtonType
- * @readonly
- * @enum {number}
+ * ButtonType
+ * * blurple
+ * * gray
+ * * grey
+ * * green
+ * * red
+ * * url
+ * * primary
+ * * secondary
+ * * danger
+ * * link
+ * @type {Object}
  */
  exports.ButtonType = {
     blurple: 'blurple',
@@ -101,6 +120,7 @@ exports.ArgumentType = {
  * @property {GuildMember} member
  * @property {User} user
  * @property {Snowflake} id
+ * @typedef {(Object)} InteractionEventClicker
  */
 
 /**
@@ -109,4 +129,5 @@ exports.ArgumentType = {
  * @property {string} name
  * @property {Array} options
  * @property {number} id
+ * @typedef {(Object)} GInteractionInteraction
  */
