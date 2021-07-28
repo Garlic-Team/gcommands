@@ -98,19 +98,19 @@ class GCommands extends GCommandsBase {
          * gcategories
          * @type {Array}
          */
-        this.client.gcategories = fs.readdirSync(`./${this.cmdDir}`)
+        this.gcategories = fs.readdirSync(`./${this.cmdDir}`)
 
         /**
          * gcommands
          * @type {Collection}
          */
-        this.client.gcommands = new Collection();
+        this.gcommands = new Collection();
 
         /**
          * galiases
          * @type {Collection}
          */
-        this.client.galiases = new Collection();
+        this.galiases = new Collection();
 
         /**
          * Prefix
@@ -140,6 +140,9 @@ class GCommands extends GCommandsBase {
         this.client.slash = this.slash;
         this.client.defaultCooldown = this.defaultCooldown;
         this.client.autoTyping = this.autoTyping ? msToSeconds(ms(this.autoTyping)) : null;
+        this.client.gcategories = this.gcategories;
+        this.client.galiases = this.galiases;
+        this.client.gcommands = this.gcommands;
 
         process.on('uncaughtException', (error) => {
             this.emit(Events.LOG, new Color('&d[GCommands Errors] &eHandled: &a' + error + ` ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
