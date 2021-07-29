@@ -35,6 +35,14 @@ class Color {
 			.replace(/&3/g,  '\x1b[36m')
 			.replace(/&f/g,  '\x1b[37m')
 			.replace(/&8/g,  '\x1b[90m')
+			.replace(/&h/g,  '\x1b[91m')
+			.replace(/&9/g,  '\x1b[92m')
+			.replace(/&4/g,  '\x1b[93m')
+			.replace(/&2/g,  '\x1b[94m')
+			.replace(/&6/g,  '\x1b[95m')
+			.replace(/&7/g,  '\x1b[96m')
+			.replace(/&i/g,  '\x1b[97m')
+		
 			.replace(/&g0/g, '\x1b[40m')
 			.replace(/&C/g,  '\x1b[41m')
 			.replace(/&A/g,  '\x1b[42m')
@@ -43,14 +51,21 @@ class Color {
 			.replace(/&D/g,  '\x1b[45m')
 			.replace(/&g3/g, '\x1b[46m')
 			.replace(/&F/g,  '\x1b[47m')
-			.replace(/&g8/g, '\x1b[100m')
+			.replace(/&g8/g,'\x1b[100m')
+			.replace(/&H/g,  '\x1b[101m')
+			.replace(/&g9/g, '\x1b[102m')
+			.replace(/&g4/g,  '\x1b[103m')
+			.replace(/&g2/g,  '\x1b[104m')
+			.replace(/&g6/g,  '\x1b[105m')
+			.replace(/&g7/g,  '\x1b[106m')
+			.replace(/&I/g,  '\x1b[107m')
 
 			// OTHER
-			.replace(/&r/g, '\x1b[0m')
-			.replace(/&l/g, '\x1b[1m')
-			.replace(/&n/g, '\x1b[4m')
-			.replace(/&k/g, '\x1b[5m')
-			.replace(/&p/g, '\x1b[7m')
+			.replace(/&r/g,  '\x1b[0m')
+			.replace(/&l/g,  '\x1b[1m')
+			.replace(/&n/g,  '\x1b[4m')
+			.replace(/&k/g,  '\x1b[5m')
+			.replace(/&p/g,  '\x1b[7m')
 	}
 
 
