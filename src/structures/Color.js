@@ -26,6 +26,7 @@ class Color {
 
         this.text = this.text
 			// COLORS
+			.replace(/&0/g, '\x1b[30m')
 			.replace(/&c/g, '\x1b[31m')
 			.replace(/&a/g, '\x1b[32m')
 			.replace(/&e/g, '\x1b[33m')
@@ -33,10 +34,13 @@ class Color {
 			.replace(/&d/g, '\x1b[35m')
 			.replace(/&3/g, '\x1b[36m')
 			.replace(/&f/g, '\x1b[37m')
+			.replace(/&8/g, '\x1b[90m')
 
 			// OTHER
 			.replace(/&r/g, '\x1b[0m')
+			.replace(/&l/g, '\x1b[1m')
 			.replace(/&n/g, '\x1b[4m')
+			.replace(/&k/g, '\x1b[5m')
 			.replace(/&p/g, '\x1b[7m')
 	}
 
