@@ -35,6 +35,12 @@ class Color {
 			.replace(/&3/g, '\x1b[36m')
 			.replace(/&f/g, '\x1b[37m')
 			.replace(/&8/g, '\x1b[90m')
+			.replace(/&C/g, '\x1b[41m')
+			.replace(/&A/g, '\x1b[42m')
+			.replace(/&E/g, '\x1b[43m')
+			.replace(/&B/g, '\x1b[44m')
+			.replace(/&D/g, '\x1b[45m')
+			.replace(/&F/g, '\x1b[47m')
 
 			// OTHER
 			.replace(/&r/g, '\x1b[0m')
