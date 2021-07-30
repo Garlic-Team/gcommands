@@ -98,12 +98,6 @@ class GInteraction {
          */
         this.replied = false;
 
-         /**
-          * deferred
-          * @type {boolean}
-          */
-        this.deferred = false;
-
         this.__isInteraction(data);
         
         return this;
@@ -127,7 +121,7 @@ class GInteraction {
      * @param {Boolean} ephemeral 
     */
     async defer(ephemeral) {
-        if (this.deferred || this.replied) return console.log(new Color('&d[GCommands] &cThis button already has a reply').getText());
+        if (this.replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
         await this.client.api.interactions(this.discordId, this.token).callback.post({
             data: {
                 type: 6,
@@ -136,7 +130,7 @@ class GInteraction {
                 },
             },
         });
-        this.deferred = true;
+        this.replied = true;
     }
 
     /**
@@ -144,7 +138,7 @@ class GInteraction {
      * @param {Boolean} ephemeral 
     */
     async think(ephemeral) {
-        if (this.deferred || this.replied) return console.log(new Color('&d[GCommands] &cThis button already has a reply').getText());
+        if (this.replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
         await this.client.api.interactions(this.discordId, this.token).callback.post({
             data: {
                 type: 5,
@@ -153,7 +147,7 @@ class GInteraction {
                 },
             },
         });
-        this.deferred = true;
+        this.replied = true;
     }
 
     /**

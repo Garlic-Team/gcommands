@@ -131,3 +131,25 @@ exports.ArgumentType = {
  * @property {number} id
  * @typedef {(Object)} GInteractionInteraction
  */
+
+/**
+ * The CommandOptions
+ * 
+ * @property {string} name
+ * @property {string} description
+ * @property {string} cooldown
+ * @property {string} category
+ * @property {Array} args
+ * @property {Array} aliases
+ * @property {string | Array} userRequiredPermissions
+ * @property {string | Array} userRequiredRoles
+ * @property {string | Array} clientRequiredPermissions
+ * @property {Snowflake | Array} userOnly
+ * @property {Snowflake | Array} channelOnly
+ * @property {Snowflake} guildOnly
+ * @property {boolean} channelTextOnly
+ * @property {boolean} channelNewsOnly
+ * @property {boolean} nsfw
+ * @property {boolean} slash
+ * @typedef {(Object)} CommandOptions
+ */

@@ -10,7 +10,7 @@ class Command {
     /**
      * Creates new Command instance
      * @param {Client} client
-     * @param {Object} options 
+     * @param {CommandOptions} options 
     */
     constructor(client, options = {}) {
         /**
@@ -47,6 +47,7 @@ class Command {
         /**
          * minArgs
          * @type {Number}
+         * @deprecated use args
          */
         this.minArgs = Number(options.minArgs);
 
