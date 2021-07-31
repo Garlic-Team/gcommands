@@ -2,7 +2,8 @@ const { Message } = require('discord.js');
 const Color = require('../structures/Color');
 const GPayload = require('./GPayload');
 const axios = require('axios');
-const { interactionRefactor } = require('../util/util');
+const { interactionRefactor, checkDjsVersion } = require('../util/util');
+const ifDjsV13 = checkDjsVersion(13)
 
 /**
  * The GInteraction class
@@ -74,13 +75,13 @@ class GInteraction {
          * author
          * @type {User}
          */
-        this.author = this.client.users._add(data.user || data.member.user);
+        this.author = ifDjsV13 ? this.client.users._add(data.user || data.member.user) : this.client.users.add(data.user || data.member.user);
 
         /**
          * member
          * @type {GuildMember | null}
          */
-        this.member = data.guild_id ? this.guild.members._add(data.member) || data.member : null;
+        this.member = data.guild_id ? ifDjsV13 ? this.guild.members._add(data.member) || data.member : this.guild.members.add(data.member) || data.member : null;
 
         /**
          * interaction
