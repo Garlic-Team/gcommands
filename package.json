@@ -34,7 +34,7 @@
     "url": "https://github.com/Garlic-Team/GCommands/issues"
   },
   "scripts": {
-    "eslint:start": "eslint src",
+    "test": "eslint src",
     "docs:devbuild": "docgen --source src --custom docs/index.yml --output docs/dev.json",
     "docs:build": "docgen --source src --custom docs/index.yml --output docs/main.json",
     "docs:test": "docgen --source src"
