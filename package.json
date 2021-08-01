@@ -11,7 +11,11 @@
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.10.0",
-    "@types/node": "^16.3.3"
+    "@types/node": "^16.3.3",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.4.0"
   },
   "repository": {
     "type": "git",
@@ -30,6 +34,7 @@
     "url": "https://github.com/Garlic-Team/GCommands/issues"
   },
   "scripts": {
+    "eslint:start": "eslint src",
     "docs:devbuild": "docgen --source src --custom docs/index.yml --output docs/dev.json",
     "docs:build": "docgen --source src --custom docs/index.yml --output docs/main.json",
     "docs:test": "docgen --source src"
