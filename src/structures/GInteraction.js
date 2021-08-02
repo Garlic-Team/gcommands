@@ -303,7 +303,7 @@ class GInteraction {
 
         if (typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
         if (apiMessage) {
-            apiMessage.client = this.client ? this.client : client;
+            apiMessage.client = this.client;
             apiMessage.createButtonCollector = function createButtonCollector(filter, options) { return this.client.dispatcher.createButtonCollector(apiMessage, filter, options) };
             apiMessage.awaitButtons = function awaitButtons(filter, options) { return this.client.dispatcher.awaitButtons(apiMessage, filter, options) };
             apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) { return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options) };
