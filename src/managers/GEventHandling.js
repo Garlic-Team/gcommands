@@ -214,11 +214,6 @@ class GEventHandling {
                 }, args, args)
             } catch(e) {
                 this.GCommandsClient.emit(Events.DEBUG, e);
-
-                if(!this.GCommandsClient.unkownCommandMessage) return;
-                if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace('{COMMAND}',cmd));
-                }
             }
         }
     }
@@ -328,18 +323,6 @@ class GEventHandling {
                     this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + interaction.member.user.id + '&3 used &a' + interaction.interaction.name).getText())
                 }catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, e);
-
-                    if(!this.unkownCommandMessage) return;
-                    if(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage]) {
-                        this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                            data: {
-                                type: 4,
-                                data: {
-                                    content: this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace('{COMMAND}',interaction.data.name)
-                                }
-                            }
-                        });
-                    }
                 }
             })
         }
