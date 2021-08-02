@@ -277,7 +277,7 @@ class GInteraction {
             apiMessage.awaitButtons = function awaitButtons(filter, options) { return this.client.dispatcher.awaitButtons(apiMessage, filter, options) };
             apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) { return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options) };
             apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) { return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options) };
-            apiMessage.delete = function deleteMsg() { return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete() };
+            apiMessage.delete = function deleteMsg() { return this.client.api.webhooks(this.client.user.id, this.token).messages[apiMessageMsg.id].delete() };
         }
 
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
@@ -308,7 +308,7 @@ class GInteraction {
             apiMessage.awaitButtons = function awaitButtons(filter, options) { return this.client.dispatcher.awaitButtons(apiMessage, filter, options) };
             apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) { return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options) };
             apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) { return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options) };
-            apiMessage.delete = function deleteMsg() { return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete() };
+            apiMessage.delete = function deleteMsg() { return this.client.api.webhooks(this.client.user.id, this.token).messages[apiMessageMsg.id].delete() };
         }
 
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
