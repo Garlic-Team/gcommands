@@ -344,7 +344,6 @@ declare module 'gcommands' {
     cmdDir: string;
     eventDir?: string;
     language: GuildLanguageTypes;
-    unkownCommandMessage?: boolean;
     slash: {
       slash: string | boolean;
       prefix?: string;
