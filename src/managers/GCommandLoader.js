@@ -109,39 +109,7 @@ class GCommandLoader {
 
             let options = [];
             if(cmd.expectedArgs) cmd.args = cmd.expectedArgs;
-            if (cmd.args) {
-                if(typeof cmd.args == 'object') {
-                    cmd.args.forEach(option => {
-                        options.push({
-                            name: option.name,
-                            description: option.description,
-                            type: option.choices ? 3 : parseInt(option.type),
-                            required: option.required ? option.required : false,
-                            choices: option.choices ? option.choices : [],
-                            options: option.options ? option.options : []
-                        })
-                    })
-                } else {
-                    let split = cmd.args
-                    .substring(1, cmd.args.length - 1)
-                    .split(/[>\]] [<\[]/)
-            
-                    for (let a = 0; a < split.length; ++a) {
-                        let item = split[a];
-                        let option = item.replace(/ /g, '-').split(':')[0] ? item.replace(/ /g, '-').split(':')[0] : item.replace(/ /g, '-');
-                        let optionType = item.replace(/ /g, '-').split(':')[1] ? item.replace(/ /g, '-').split(':')[1] : 3;
-                        let optionDescription = item.replace(/ /g, '-').split(':')[2] ? item.replace(/ /g, '-').split(':')[2] : item;
-                        if(optionType == 1 || optionType == 2) optionType = 3
-
-                        options.push({
-                            name: option,
-                            description: optionDescription || option,
-                            type: parseInt(optionType) || 3,
-                            required: a < cmd.minArgs,
-                        })
-                    }
-                }
-            }
+            if (cmd.args) options = cmd.args;
 
             let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
     
