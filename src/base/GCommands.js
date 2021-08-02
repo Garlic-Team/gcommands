@@ -61,13 +61,6 @@ class GCommands extends GCommandsBase {
         this.client.discordjsversion = version;
 
         /**
-         * unkownCommandMessage
-         * @type {Boolean}
-         * @default false
-        */
-        this.unkownCommandMessage = options.unkownCommandMessage;
-
-        /**
          * AutoTyping
          * @type {Boolean}
          * @default false
