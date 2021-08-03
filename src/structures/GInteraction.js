@@ -227,16 +227,7 @@ class GInteraction {
             if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
 
-            if (apiMessage) {
-                apiMessage.client = this.client;
-                apiMessage.createButtonCollector = function createButtonCollector(filter, options) { return this.client.dispatcher.createButtonCollector(apiMessage, filter, options) };
-                apiMessage.awaitButtons = function awaitButtons(filter, options) { return this.client.dispatcher.awaitButtons(apiMessage, filter, options) };
-                apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) { return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options) };
-                apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) { return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options) };
-                apiMessage.delete = function deleteMsg() { return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete() };
-            }
-
-            return new Message(this.client, data.message, this.channel)
+            return new Message(this.client, apiMessage, this.channel)
         }
 
         return {
@@ -272,7 +263,7 @@ class GInteraction {
         if (typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
         if (apiMessage) {
             apiMessage = apiMessageMsg;
-            apiMessage.client = this.client ? this.client : client;
+            apiMessage.client = this.client;
             apiMessage.createButtonCollector = function createButtonCollector(filter, options) { return this.client.dispatcher.createButtonCollector(apiMessage, filter, options) };
             apiMessage.awaitButtons = function awaitButtons(filter, options) { return this.client.dispatcher.awaitButtons(apiMessage, filter, options) };
             apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) { return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options) };
