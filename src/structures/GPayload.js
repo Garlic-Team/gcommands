@@ -9,7 +9,7 @@ class GPayload {
     /**
      * Creates new GPayload instance
      * @param {TextChannel | NewsChannel | DMChannel} channel
-     * @param {options} data 
+     * @param {string|GPayloadOptions} options 
     */
     constructor(channel, options) {
         /**

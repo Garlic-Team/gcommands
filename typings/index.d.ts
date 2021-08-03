@@ -296,6 +296,7 @@ declare module 'gcommands' {
     public nsfw: boolean;
     public aliases: Array;
     public category: string;
+    public usage: string;
 
     public run(options: CommandRunOptions, args: Array, args2: Object | Array): void;
   }
@@ -404,6 +405,8 @@ declare module 'gcommands' {
     guildOnly?: Array | Snowflake;
     nsfw?: boolean;
     aliases?: Array;
+    category?: string;
+    usage?: string;
   }
 
   interface EventOptions {

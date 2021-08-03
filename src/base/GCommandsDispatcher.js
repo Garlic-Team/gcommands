@@ -1,4 +1,4 @@
-const { Collector, Collection, User, Team } = require('discord.js');
+const { Collection, Team } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'), Color = require('../structures/Color')
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 const ms = require('ms');

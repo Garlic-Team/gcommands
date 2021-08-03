@@ -1,4 +1,3 @@
-const { Snowflake } = require('discord.js');
 const { resolveString } = require('../util/util');
 const Color = require('../structures/Color');
 
@@ -122,6 +121,12 @@ class Command {
          * @type {string}
          */
         this.category = resolveString(options.category);
+
+        /**
+         * usage
+         * @type {string}
+         */
+        this.usage = resolveString(options.usage);
     }
 
     /**
@@ -130,7 +135,7 @@ class Command {
      * @param {Array} arrayArgs 
      * @param {Array | Object} objectArgs 
      */
-    async run({client, interaction, member, message, guild, channel, respond, edit}, arrayArgs, objectArgs) {
+    async run(options, arrayArgs, objectArgs) { // eslint-disable-line no-unused-vars, require-await
         return console.log(new Color(`&d[GCommands] &cCommand ${this.name} doesn't provide a run method!`).getText())
     }
 }
