@@ -131,7 +131,7 @@ class GCommandLoader {
                 url,
             }
 
-            axios(config).then((response) => {
+            axios(config).then(() => {
                 this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded: &e➜   &3' + cmd.name, {json:false}).getText());
             })
             .catch((error) => {
@@ -151,7 +151,7 @@ class GCommandLoader {
                                 '&aMessage: &b' + error.response.data.message,
                                 ' ',
                                 '&b' + error.response.data.errors.guild_id._errors[0].code,
-                                '&b' + rror.response.data.errors.guild_id._errors[0].message,
+                                '&b' + error.response.data.errors.guild_id._errors[0].message,
                                 '&a----------------------'
                             ]).getText())
                         } catch(e) {
@@ -175,7 +175,7 @@ class GCommandLoader {
      * @private
     */
     async __tryAgain(cmd, config) {
-        axios(config).then((response) => {
+        axios(config).then(() => {
             this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded: &e➜   &3' + cmd.name, {json:false}).getText());
         })
         .catch((error) => {
