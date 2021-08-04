@@ -22,7 +22,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Deprecate old versions
-        run: npm deprecate gcommands@"~5.2.6-dev"
+        run: npm deprecate gcommands@"~5.2.6-dev" "no longer supported"
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
