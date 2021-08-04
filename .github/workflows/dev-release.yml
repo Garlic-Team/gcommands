@@ -21,11 +21,6 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
 
-      - name: Deprecate old versions
-        run: npm deprecate gcommands@"~5.2.6-dev" "no longer supported"
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
-
       - name: publish
         run: |
           npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)
