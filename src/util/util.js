@@ -1,4 +1,5 @@
 const { version } = require('discord.js');
+let _allSlashCommands;
 
 /**
  * The Util class
@@ -113,19 +114,24 @@ class Util {
     }
 
     /**
-     * Internal method to getAllCmds
+     * Internal method to getAllCommands
      * @param {Client} client
      * @param {Number} guildId
      * @private
     */
     static async __getAllCommands(client, guildId = undefined) {
+        if(_allSlashCommands && !guildId) return _allSlashCommands;
+
         try {
             const app = client.api.applications(client.user.id)
             if(guildId) {
                 app.guilds(guildId)
             }
 
-            return await app.commands.get()
+            const cmds = await app.commands.get();
+
+            _allSlashCommands = cmds;
+            return cmds;
         } catch(e) {
             return undefined;
         }

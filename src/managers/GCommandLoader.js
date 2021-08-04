@@ -32,94 +32,73 @@ class GCommandLoader {
         */
         this.cmdDir = this.GCommandsClient.cmdDir;
 
-        this.__loadCommands()
+        this.__loadCommandFiles();
     }
 
     /**
-     * Internal method to loadCommands
+     * Internal method to loadCommandFiles
      * @returns {void}
      * @private
      */
-     async __loadCommands() {
-        await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`).forEach(async(dir) => {
-            let file;
-            let fileName = dir.split('.').reverse()[1]
-            let fileType = dir.split('.').reverse()[0]
-            if(fileType == 'js' || fileType == 'ts') {
-                try {
-                    let finalFile;
+     async __loadCommandFiles() {
+        for await(let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`))) {
+            const fileName = file.split('.').reverse()[1]
+            const fileType = file.split('.').reverse()[0]
 
-                    file = await require(`../../../../${this.cmdDir}${dir}`);
-                    if (isClass(file)) {
-                        finalFile = await new file(this.client)
-                        if(!(finalFile instanceof Command)) return console.log(new Color(`&d[GCommands] &cComamnd ${fileName} doesnt belong in Commands.`).getText())
-                    } else finalFile = file;
+            if(!['js','ts'].includes(fileType)) { this.__loadCommandCategoryFiles(file); continue; };
 
-                    if (finalFile && finalFile.aliases && Array.isArray(finalFile.aliases)) finalFile.aliases.forEach(alias => this.client.galiases.set(alias, finalFile.name));
-                    this.client.gcommands.set(finalFile.name, finalFile);
-                    this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded (File): &e➜   &3' + fileName, {json:false}).getText());
-                } catch(e) {
-                    this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &e('+fileName+') &3'+e).getText());
-                    this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &cCan\'t load ' + fileName).getText());
-                }
-            } else {
-                fs.readdirSync(`${this.cmdDir}${dir}`).forEach(async(cmdFile) => {
-                    let file2;
-                    let fileName2 = cmdFile.split('.').reverse()[1]
-                    try {
-                        let finalFile2;
-
-                        file2 = await require(`../../../../${this.cmdDir}${dir}/${cmdFile}`);
-                        if (isClass(file2)) {
-                            finalFile2 = await new file2(this.client)
-                            if(!(finalFile2 instanceof Command)) return console.log(new Color(`&d[GCommands] &cComamnd ${finalFile2} doesnt belong in Commands.`).getText())
-                        } else finalFile2 = file2;
-
-                        if (finalFile2.aliases && Array.isArray(finalFile2.aliases)) finalFile2.aliases.forEach(alias => this.client.galiases.set(alias, finalFile2.name));
-                        this.client.gcommands.set(finalFile2.name, finalFile2);
-                        this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded (File): &e➜   &3' + fileName2, {json:false}).getText());
-                    } catch(e) {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &e('+fileName2+') &3'+e).getText());
-                        this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &cCan\'t load ' + fileName2).getText());
-                    }
-                })
+            file = await require(`../../../../${this.cmdDir}${file}`);
+            if(isClass(file)) {
+                file = await new file(this.client);
+                if(!(file instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${fileName} doesnt belong in Commands.`).getText());
             }
-        })
 
-        await this.__deleteAllGlobalCmds();
+            this.client.gcommands.set(file.name, file);
+            if(file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
+            this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded (File): &e➜   &3' + fileName, {json:false}).getText());
+        }
+
+        this.__loadSlashCommands();
     }
 
     /**
-     * Internal method to createCommands
+     * Internal method to loadCommandCategoryFiles
      * @returns {void}
      * @private
      */
-    async __createCommands() {
-        this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands] &3Creating slash commands...').getText())
+    async __loadCommandCategoryFiles(categoryFolder) {
+        for(let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}${categoryFolder}`))) {
+            const fileName = file.split('.').reverse()[1]
+
+            file = await require(`../../../../${this.cmdDir}${categoryFolder}/${file}`);
+            if(isClass(file)) {
+                file = await new file(this.client);
+                if(!(file instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${fileName} doesnt belong in Commands.`).getText());
+            }
+
+            this.client.gcommands.set(file.name, file);
+            if(file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
+            this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded (File): &e➜   &3' + fileName, {json:false}).getText());
+        }
+    }
+
+    /**
+     * Internal method to loadSlashCommands
+     * @returns {void}
+     * @private
+     */
+    async __loadSlashCommands() {
         let keys = Array.from(this.client.gcommands.keys());
+        this.__deleteNonExistCommands(keys);
 
-        keys.forEach(async (cmdname) => {
-            this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands] &3Creating slash command (&e'+cmdname+'&3)').getText());
-            const cmd = this.client.gcommands.get(cmdname)
-
+        for(const commandName of keys) {
+            const cmd = this.client.gcommands.get(commandName);
             if(String(cmd.slash) == 'false') return;
 
-            if(!cmd.name) return console.log(new Color('&d[GCommands] &cParameter name is required! ('+cmdname+')',{json:false}).getText());
-            if(!cmd.description) return console.log(new Color('&d[GCommands] &cParameter description is required! ('+cmdname+')',{json:false}).getText());
-
-            let options = [];
             if(cmd.expectedArgs) cmd.args = cmd.expectedArgs;
-            if (cmd.args) options = cmd.args;
 
             let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
-    
             if(cmd.guildOnly) url = `https://discord.com/api/v8/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
-
-            let cmdd = {
-                name: cmd.name.toLowerCase(),
-                description: cmd.description,
-                options: options || []
-            }
 
             let config = {
                 method: 'POST',
@@ -127,7 +106,11 @@ class GCommandLoader {
                     Authorization: `Bot ${this.client.token}`,
                     'Content-Type': 'application/json'
                 },
-                data: JSON.stringify(cmdd), 
+                data: JSON.stringify({
+                    name: cmd.name,
+                    description: cmd.description,
+                    options: cmd.args || []
+                }), 
                 url,
             }
 
@@ -143,30 +126,17 @@ class GCommandLoader {
                             this.__tryAgain(cmd, config)
                         }, (error.response.data['retry_after']) * 1000)
                     } else {
-                        try {
-                            this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                '&a----------------------',
-                                '  &d[GCommands Debug] &3',
-                                '&aCode: &b' + error.response.data.code,
-                                '&aMessage: &b' + error.response.data.message,
-                                ' ',
-                                '&b' + error.response.data.errors.guild_id._errors[0].code,
-                                '&b' + error.response.data.errors.guild_id._errors[0].message,
-                                '&a----------------------'
-                            ]).getText())
-                        } catch(e) {
-                            this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                '&a----------------------',
-                                '  &d[GCommands Debug] &3',
-                                '&aCode: &b' + error.response.data.code,
-                                '&aMessage: &b' + error.response.data.message,
-                                '&a----------------------'
-                            ]).getText())
-                        }  
+                        this.GCommandsClient.emit(Events.DEBUG, new Color([
+                            '&a----------------------',
+                            '  &d[GCommands Debug] &3',
+                            '&aCode: &b' + error.response.data.code,
+                            '&aMessage: &b' + error.response.data.message,
+                            '&a----------------------'
+                        ]).getText()) 
                     }
                 }
             })
-        })
+        }
     }
 
     /**
@@ -191,99 +161,24 @@ class GCommandLoader {
         })
     }
 
-    /**
-     * Internal method to deleteAllGlobalCmds
-     * @returns {void}
-     * @private
-    */
-     async __deleteAllGlobalCmds() {
-        try {
-            let allcmds = await __getAllCommands(this.client);
-            if(String(this.client.slash) == 'false') {
-                allcmds.forEach(cmd => {
-                    __deleteCmd(this.client, cmd.id)
-                })
-            }
-
-            let nowCMDS = [];
-
-            let keys = Array.from(this.client.gcommands.keys());
-            keys.forEach(cmdname => {
-                nowCMDS.push(cmdname)
-
-                if(this.client.gcommands.get(cmdname).slash == false || this.client.gcommands.get(cmdname).slash == 'false') {
-                    allcmds.forEach(cmd => {
-                        if(cmd.name == cmdname) {
-                            __deleteCmd(this.client, cmd.id)
-                        }
-                    })
-                }
-            })
-
-            allcmds.forEach(cmd => {
-                let f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
-
-                if(!f) {
-                    __deleteCmd(this.client, cmd.id)
-                }
-            })
-        } catch(e) {
-            return;
-        }
-
-        this.__deleteAllGuildCmds()
-    }
 
     /**
-     * Internal method to deleteAllGuildCmds
+     * Internal method to deleteNonExistCommands
      * @returns {void}
      * @private
-    */
-    async __deleteAllGuildCmds() {
-        try {
-            this.client.guilds.cache.forEach(async(guild) => {
-                let allcmds = await __getAllCommands(this.client, guild.id);
-                if(!allcmds) return;
+     */
+    async __deleteNonExistCommands(commandFiles) {
+        let allSlashCommands = await __getAllCommands(this.client);
+        if(!allSlashCommands || allSlashCommands.length < 0) return;
 
-                if(!this.client.slash) {
-                    allcmds.forEach(cmd => {
-                        __deleteCmd(this.client, cmd.id, guild.id)
-                    })
-                }
+        if(String(this.client.slash) == 'false') allSlashCommands.forEach(cmd => __deleteCmd(this.client, cmd.id));
 
-                let nowCMDS = [];
-                let keys = Array.from(this.client.gcommands.keys());
-                keys.forEach(cmdname => {
-                    nowCMDS.push(cmdname)
-                    let command = this.client.gcommands.get(cmdname);
-
-                    if(command.slash == false || command.slash == 'false') {
-                        allcmds.forEach(cmd => {
-                            if(cmd.name == cmdname) {
-                                __deleteCmd(this.client, cmd.id, guild.id)
-                            }
-                        })
-                    }
-                })
-
-                allcmds.forEach(cmd => {
-                    let f = nowCMDS.some(v => cmd.name.toLowerCase().includes(v.toLowerCase()))
-
-                    if(!f) {
-                        __deleteCmd(this.client, cmd.id, guild.id)
-                    }
-                })
-            })
-
-            console.log(new Color('&d[GCommands TIP] &3Are guild commands not deleted when you delete them? Use this site for remove &ehttps://gcommands-slash-gui.netlify.app/').getText())
-            if((this.client.slash) || (this.client.slash == 'both')) {
-                this.__createCommands();
-            }
-        } catch(e) {
-            if((this.client.slash) || (this.client.slash == 'both')) {
-                this.__createCommands();
-            }
+        for(let slashCmd of allSlashCommands) {
+            if(!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
+            if(this.client.gcommands.get(slashCmd.name) && String(this.client.gcommands.get(slashCmd.name).slash) == 'false') __deleteCmd(this.client, slashCmd.id);
         }
+
+        console.log(new Color('&d[GCommands TIP] &3Are guild commands not deleted when you delete them? Use this site for remove &ehttps://gcommands-slash-gui.netlify.app/').getText())
     }
 }
 
