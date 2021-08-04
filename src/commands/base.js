@@ -102,7 +102,7 @@ class Command {
          * nsfw
          * @type {Boolean}
          */
-        this.nsfw = options.nfsw ? Boolean(options.nfsw) : null;
+        this.nsfw = options.nsfw ? Boolean(options.nsfw) : null;
 
         /**
          * slash

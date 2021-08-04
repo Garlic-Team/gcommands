@@ -92,12 +92,6 @@ class GEventHandling {
                 let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos)
                 if(cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
 
-                if(commandos.nsfw) {
-                    if(!message.channel.nsfw) {
-                        return ifDjsV13 ? message.inlineReply(this.client.languageFile.NSFW[guildLanguage]) : message.reply(this.client.languageFile.NSFW[guildLanguage]);
-                    }
-                }
-
                 if(commandos.guildOnly) {
                     if(message.guild.id !== commandos.guildOnly) return;
                 } 
@@ -120,6 +114,7 @@ class GEventHandling {
                     }
                 }
 
+                if(commandos.nsfw && !message.channel.nsfw) return message.send(this.client.languageFile.NSFW[guildLanguage]);
                 if(commandos.channelTextOnly && message.channel.type != 'text') return message.send(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage])
                 if(commandos.channelNewsOnly && message.channel.type != 'news') return message.send(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage])
 
@@ -271,6 +266,8 @@ class GEventHandling {
                         }
                     }
 
+                    console.log(commandos.nsfw, interaction.channel.nsfw)
+                    if(commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send({content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true});
                     if(commandos.channelTextOnly && interaction.channel.type != 'text') return interaction.reply.send({content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true})
                     if(commandos.channelNewsOnly && interaction.channel.type != 'news') return interaction.reply.send({content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true})
 
