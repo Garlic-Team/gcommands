@@ -40,14 +40,14 @@ class GCommandsDispatcher {
     /**
      * Internal method to setGuildPrefix
      * @param {Snowflake} guildId
-     * @param {string} lang
+     * @param {string|Array} prefix
      * @returns {boolean}
     */
     async setGuildPrefix(guildId, prefix) {
         if(!this.client.database) return false;
 
         let guildData = await this.client.database.get(`guild_${guildId}`) || {}
-        guildData.prefix = prefix
+        guildData.prefix = !Array.isArray(prefix) ? Array(prefix) : prefix;
 
         this.client.database.set(`guild_${guildId}`, guildData)
         this.client.guilds.cache.get(guildId).prefix = guildData.prefix;
@@ -59,11 +59,13 @@ class GCommandsDispatcher {
      * Internal method to getGuildPrefix
      * @param {Snowflake} guildId
      * @param {Boolean} cache
-     * @returns {String}
+     * @returns {string}
     */
     async getGuildPrefix(guildId, cache = true) {
         if(!this.client.database) return this.client.prefixes;
-        if(cache) return this.client.guilds.cache.get(guildId).prefix ? this.client.guilds.cache.get(guildId).prefix : this.client.prefixes;
+
+        let guild = this.client.guilds.cache.get(guildId);
+        if(cache) return guild.prefix ? !Array.isArray(guild.prefix) ? Array(guild.prefix) : guild.prefix : this.client.prefixes;
 
         let guildData = await this.client.database.get(`guild_${guildId}`)
         return guildData ? guildData.prefix : this.client.prefixes
