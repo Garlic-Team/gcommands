@@ -57,6 +57,8 @@ declare module 'discord.js' {
     clickButton: [InteractionEvent];
     GInteraction: [GGinteraction | InteractionEvent];
     commandPrefixChange: [Guild, string];
+    log: [string];
+    debug: [string];
 
     guildLanguageChange: [Guild, string];
     guildBoostLevelUp: [Guild, Number, Number];

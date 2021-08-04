@@ -76,6 +76,40 @@ exports.ArgumentType = {
 }
 
 /**
+ * The GCommandsOptions
+ * @property {string} cmdDir
+ * @property {string} eventDir
+ * @property {GCommandsOptionsLanguage} language
+ * @property {GCommandsOptionsSlash} Slash
+ * @property {boolean} caseSensitiveCommands
+ * @property {boolean} caseSensitivePrefixes
+ * @property {string} defaultCooldown
+ * @property {string} database
+ * @typedef {(object)} GCommandsOptions
+ */
+
+/**
+ * The GCommandsOptionsLanguage
+ * * english
+ * * spanish
+ * * portuguese
+ * * russian
+ * * german
+ * * czech
+ * * slovak
+ * * turkish
+ * * polish
+ * @typedef {(string)} GCommandsOptionsLanguage
+ */
+
+/**
+ * The GCommandsOptionsSlash
+ * @property {boolean|string} slash
+ * @property {string} prefix
+ * @typedef {(object)} GCommandsOptionsSlash
+ */
+
+/**
  * The GPayloadOptions
  * @property {string} content
  * @property {MessageEmbed} embeds

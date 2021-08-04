@@ -1,23 +1,20 @@
 const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsBase = require('./GCommandsBase'), GCommandsDispatcher = require('./GCommandsDispatcher'), { GEvents: GEventLoader } = require('@gcommands/events'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), {msToSeconds} = require('../util/util');
-const { Collection } = require('discord.js');
+const { Collection, Client } = require('discord.js');
 const fs = require('fs');
 const ms = require('ms');
 
 /**
- * The main GCommands class
- * @extends GCommandsBase
+ * The main GCommandsClient class
+ * @extends Client
  */
-class GCommands extends GCommandsBase {
+class GCommandsClient extends Client {
     /**
-     * The GCommands class
-     * @param {Client} client - Discord.js Client
-     * @param {GCommandsOptions} options - Options (cmdDir, eventDir etc)
+     * The GCommandsClient class
+     * @param {GCommandsOptions} options - Options (Discord.js client options, GCommandOptions)
      */
-    constructor(client, options = {}) {
-        super(client, options)
+    constructor(options = {}) {
+        super(options);
 
-        if (typeof client !== 'object') return console.log(new Color('&d[GCommands] &cNo discord.js client provided!',{json:false}).getText());
-        if (!Object.keys(options).length) return console.log(new Color('&d[GCommands] &cNo default options provided!',{json:false}).getText());
         if(!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{json:false}).getText());
         if(!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))',{json:false}).getText());
 
@@ -26,12 +23,7 @@ class GCommands extends GCommandsBase {
          * @type {GCommands}
         */
         this.GCommandsClient = this;
-
-        /**
-         * client
-         * @type {Client}
-        */
-        this.client = client;
+        this.GCommandsClient.client = this;
 
         /**
          * caseSensitiveCommands
@@ -65,7 +57,7 @@ class GCommands extends GCommandsBase {
          * @type {Boolean}
          * @default false
         */
-        this.autoTyping = options.autoTyping;
+        this.autoTyping = options.autoTyping ? msToSeconds(ms(options.autoTyping)) : null;
 
         /**
          * ownLanguageFile
@@ -126,25 +118,12 @@ class GCommands extends GCommandsBase {
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
 
-        this.client.language = this.language;
-        this.client.languageFile = this.languageFile;
-        this.client.database = this.database
-        this.client.prefixes = this.prefix;
-        this.client.slash = this.slash;
-        this.client.defaultCooldown = this.defaultCooldown;
-        this.client.autoTyping = this.autoTyping ? msToSeconds(ms(this.autoTyping)) : null;
-        this.client.gcategories = this.gcategories;
-        this.client.galiases = this.galiases;
-        this.client.gcommands = this.gcommands;
-
         process.on('uncaughtException', (error) => {
             this.emit(Events.LOG, new Color('&d[GCommands Errors] &eHandled: &a' + error + ` ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
             setTimeout(() => {this.emit(Events.DEBUG, error)}, 1000)
         });
-
-        process.emitWarning("GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.")
         
-        this.client.dispatcher = new GCommandsDispatcher(this.client);
+        this.dispatcher = new GCommandsDispatcher(this);
 
         this.loadSys();
         GUpdater.__updater();
@@ -165,4 +144,4 @@ class GCommands extends GCommandsBase {
     };
 }
 
-module.exports = GCommands;
+module.exports = GCommandsClient;
