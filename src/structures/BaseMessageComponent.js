@@ -30,19 +30,19 @@ class BaseMessageComponent {
 
         switch (type) {
             case MessageComponentTypes.ACTION_ROW:
-                const MessageActionRow = require('./MessageActionRow');
+                const MessageActionRow = require('./MessageActionRow'); // eslint-disable-line no-case-declarations
                 component = new MessageActionRow(data);
                 break;
             case MessageComponentTypes.BUTTON:
-                const MessageButton = require('./MessageButton');
+                const MessageButton = require('./MessageButton'); // eslint-disable-line no-case-declarations
                 component = new MessageButton(data);
                 break;
             case MessageComponentTypes.SELECT_MENU:
-                const MessageSelectMenu = require('./MessageSelectMenu');
+                const MessageSelectMenu = require('./MessageSelectMenu'); // eslint-disable-line no-case-declarations
                 component = new MessageSelectMenu(data);
                 break;
             case 'SELECT_MENU_OPTION':
-                const MessageSelectMenuOption = require('./MessageSelectMenuOption');
+                const MessageSelectMenuOption = require('./MessageSelectMenuOption'); // eslint-disable-line no-case-declarations
                 component = new MessageSelectMenuOption(data);
                 break;
         }
