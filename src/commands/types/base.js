@@ -10,11 +10,11 @@ class ArgumentType {
      * @param {String} type
      */
     constructor(client, type) {
-        if(!client) return console.log(new Color('&d[GCommands Args] &cNo discord.js client provided!').getText());
-        if(!type) return console.log(new Color('&d[GCommands Args] &cNo argument provided!').getText());
+        if (!client) return console.log(new Color('&d[GCommands Args] &cNo discord.js client provided!').getText());
+        if (!type) return console.log(new Color('&d[GCommands Args] &cNo argument provided!').getText());
 
         /**
-         * type
+         * Type
          * @type {string}
         */
         this.type = type;
@@ -28,7 +28,7 @@ class ArgumentType {
      * @param {Message|Object}
      */
     validate(argument, message) { // eslint-disable-line no-unused-vars, require-await
-        return console.log(new Color('&d[GCommands Args] &cArgument doesnt have provided validate() method'))
+        return console.log(new Color('&d[GCommands Args] &cArgument doesnt have provided validate() method'));
     }
 }
 

@@ -19,7 +19,7 @@
 exports.Events = {
     DEBUG: 'debug',
     LOG: 'log'
-}
+};
 
 /**
  * ArgumentType
@@ -46,7 +46,7 @@ exports.ArgumentType = {
     ROLE: 8,
     MENTIONABLE: 9,
     NUMBER: 10
-}
+};
 
 /**
  * ButtonType
@@ -73,7 +73,7 @@ exports.ArgumentType = {
     secondary: 'gray',
     danger: 'red',
     link: 'url'
-}
+};
 
 /**
  * The type of an {@link Interaction} object:
@@ -165,7 +165,7 @@ function createEnum(keys) {
 /**
  * The Inhibitor
  * <info>You can see <a href='https://gcommands.js.org/guide/guide/miscellaneous/inhibitor.html'>guide</a> to get a better idea of how inhibitors work.</info>
- * 
+ *
  * @property {GInteraction} interaction
  * @property {Message} message
  * @property {GuildMember} member
@@ -178,7 +178,7 @@ function createEnum(keys) {
 
 /**
  * The InteractionEventClicker
- * 
+ *
  * @property {GuildMember} member
  * @property {User} user
  * @property {Snowflake} id
@@ -187,7 +187,7 @@ function createEnum(keys) {
 
 /**
  * The GInteractionInteraction
- * 
+ *
  * @property {string} name
  * @property {Array} options
  * @property {number} id
@@ -196,7 +196,7 @@ function createEnum(keys) {
 
 /**
  * The CommandOptions
- * 
+ *
  * @property {string} name
  * @property {string} description
  * @property {string} cooldown

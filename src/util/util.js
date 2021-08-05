@@ -46,31 +46,21 @@ class Util {
      * @returns {Object}
     */
     static interactionRefactor(client, interaction) {
-        interaction.inGuild = () => {
-            return Boolean(this.guild && this.member);
-        }
+        interaction.inGuild = () => Boolean(this.guild && this.member);
 
-        interaction.isCommand = () => {
-            return InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND;
-        }
+        interaction.isCommand = () => InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND;
 
-        interaction.isMessageComponent = () => {
-            return InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT;
-        }
+        interaction.isMessageComponent = () => InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT;
 
-        interaction.isButton = () => {
-            return (
+        interaction.isButton = () => (
             InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
             MessageComponentTypes[interaction.componentType] === MessageComponentTypes.BUTTON
             );
-        }
 
-        interaction.isSelectMenu = () => {
-            return (
+        interaction.isSelectMenu = () => (
             InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
             MessageComponentTypes[interaction.componentType] === MessageComponentTypes.SELECT_MENU
             );
-        }
     }
 
     /**
@@ -81,12 +71,12 @@ class Util {
     static channelTypeRefactor(channel) {
         let finalResult;
 
-        if(channel instanceof TextChannel) finalResult = "text";
-        if(channel instanceof NewsChannel) finalResult = "news";
-        if(channel instanceof DMChannel) finalResult = "dm";
-        if(channel.type == "GUILD_NEWS_THREAD") finalResult = "thread";
-        if(channel.type == "GUILD_PUBLIC_THREAD") finalResult = "thread";
-        if(channel.type == "GUILD_PRIVATE_THREAD") finalResult = "thread";
+        if (channel instanceof TextChannel) finalResult = "text";
+        if (channel instanceof NewsChannel) finalResult = "news";
+        if (channel instanceof DMChannel) finalResult = "dm";
+        if (channel.type == "GUILD_NEWS_THREAD") finalResult = "thread";
+        if (channel.type == "GUILD_PUBLIC_THREAD") finalResult = "thread";
+        if (channel.type == "GUILD_PRIVATE_THREAD") finalResult = "thread";
 
         return finalResult;
     }
@@ -99,7 +89,7 @@ class Util {
      * @returns {object}
     */
     static inhibit(client, interaction, data) {
-		for(const inhibitor of client.inhibitors) {
+		for (const inhibitor of client.inhibitors) {
 			let inhibit = inhibitor(interaction, data);
 			return inhibit;
 		}
@@ -125,13 +115,13 @@ class Util {
     */
     static async __deleteCmd(client, commandId, guildId = undefined) {
         try {
-            const app = client.api.applications(client.user.id)
-            if(guildId) {
-                app.guilds(guildId)
+            const app = client.api.applications(client.user.id);
+            if (guildId) {
+                app.guilds(guildId);
             }
 
-            await app.commands(commandId).delete()
-        } catch(e) {return;}
+            await app.commands(commandId).delete();
+        } catch (e) {}
     }
 
     /**
@@ -141,19 +131,19 @@ class Util {
      * @private
     */
     static async __getAllCommands(client, guildId = undefined) {
-        if(_allSlashCommands && !guildId) return _allSlashCommands;
+        if (_allSlashCommands && !guildId) return _allSlashCommands;
 
         try {
-            const app = client.api.applications(client.user.id)
-            if(guildId) {
-                app.guilds(guildId)
+            const app = client.api.applications(client.user.id);
+            if (guildId) {
+                app.guilds(guildId);
             }
 
             const cmds = await app.commands.get();
 
             _allSlashCommands = cmds;
             return cmds;
-        } catch(e) {
+        } catch (e) {
             return undefined;
         }
     }
@@ -166,7 +156,7 @@ class Util {
     */
     static checkDjsVersion(needVer) {
         let ver = parseInt(version.split('')[0] + version.split('')[1]);
-        if(ver == parseInt(needVer)) {
+        if (ver == parseInt(needVer)) {
             return true;
         } else {
             return false;

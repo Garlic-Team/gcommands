@@ -10,10 +10,10 @@ class UserArgumentType extends ArgumentType {
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'user')
+        super(client, 'user');
 
         /**
-         * client
+         * Client
          * @type {Client}
         */
 		this.client = client;
@@ -23,10 +23,10 @@ class UserArgumentType extends ArgumentType {
 		const matches = message.content.match(/([0-9]+)/);
 		const guildLanguage = await message.guild.getLanguage();
 
-		if(!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'user')
+		if (!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'user');
 
 		let user = this.client.users.cache.get(matches[1]);
-		if(!user) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'user')
+		if (!user) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'user');
 	}
 }
 
