@@ -1,21 +1,18 @@
 const Color = require('../structures/Color');
+const { MessageComponentTypes } = require('../util/Constants');
+const BaseMessageComponent = require('./BaseMessageComponent');
 
 /**
  * The MessageActionRow class
  */
-class MessageActionRow {
+class MessageActionRow extends BaseMessageComponent {
 
     /**
      * Creates new MessageActionRow instance
      * @param {Array} data 
     */
     constructor(data = {}) {
-
-        /**
-         * type
-         * @type {Number} 
-        */
-        this.type = 1;
+        super({ type: 'ACTION_ROW' })
 
         /**
          * components
@@ -33,7 +30,7 @@ class MessageActionRow {
      * @private
      */
     setup(data) {
-        this.components = 'components' in data ? Array(data.components) : [];
+        this.components = 'components' in data ? data.components.map(c => BaseMessageComponent.create(c)) : [];
 
         return this.toJSON();
     }
@@ -76,7 +73,7 @@ class MessageActionRow {
     */
     toJSON() {
         return {
-            type: 1,
+            type: MessageComponentTypes.ACTION_ROW,
             components: this.components
         }
     }

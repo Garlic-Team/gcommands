@@ -1,5 +1,6 @@
 const { Message } = require('discord.js');
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
+const BaseMessageComponent = require('./BaseMessageComponent');
 const GPayload = require('./GPayload');
 const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
 
@@ -10,6 +11,17 @@ const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
 class GMessage {
     constructor() {
         Object.defineProperties(Message.prototype, {
+            _patch: {
+                value: function(data) {
+                    if (data.components && Array.isArray(data.components) && data.components.length > 0) {
+                      this.components = data.components.map((c) => BaseMessageComponent.create(c));
+                    } else {
+                      this.components = [];
+                    }
+                    return this;
+                } 
+            },
+
             edit: {
                 value: async function(result) {
                     let GPayloadResult = await GPayload.create(this.channel, result)

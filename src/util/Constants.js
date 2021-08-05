@@ -76,11 +76,39 @@ exports.ArgumentType = {
 }
 
 /**
+ * The type of an {@link Interaction} object:
+ * * PING
+ * * APPLICATION_COMMAND
+ * * MESSAGE_COMPONENT
+ * @typedef {string} GInteractionType
+ */
+ exports.InteractionTypes = createEnum([null, 'PING', 'APPLICATION_COMMAND', 'MESSAGE_COMPONENT']);
+
+/**
+ * The type of a message component
+ * * ACTION_ROW
+ * * BUTTON
+ * * SELECT_MENU
+ * @typedef {string} MessageComponentType
+ */
+ exports.MessageComponentTypes = createEnum([null, 'ACTION_ROW', 'BUTTON', 'SELECT_MENU']);
+
+function createEnum(keys) {
+    const obj = {};
+    for (const [index, key] of keys.entries()) {
+        if (key === null) continue;
+        obj[key] = index;
+        obj[index] = key;
+    }
+    return obj;
+}
+
+/**
  * The GCommandsOptions
  * @property {string} cmdDir
  * @property {string} eventDir
  * @property {GCommandsOptionsLanguage} language
- * @property {GCommandsOptionsSlash} Slash
+ * @property {GCommandsOptionsSlash} slash
  * @property {boolean} caseSensitiveCommands
  * @property {boolean} caseSensitivePrefixes
  * @property {string} defaultCooldown

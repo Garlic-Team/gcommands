@@ -1,4 +1,5 @@
 const { Message } = require('discord.js');
+const { MessageComponentTypes } = require('../util/Constants');
 const GInteraction = require('./GInteraction');
 
 /**
@@ -18,21 +19,7 @@ class MessageComponentInteraction extends GInteraction {
          * componentType
          * @type {Number}
          */
-        this.componentType = data.data.component_type
-
-        /**
-         * selectMenuId
-         * @type {string}
-         * @deprecated
-         */
-        this.selectMenuId = data.data.values ? data.data.custom_id : undefined;
-
-        /**
-         * valueId
-         * @type {Array}
-         * @deprecated
-         */
-        this.valueId = data.data.values ? data.data.values : undefined;
+        this.componentType = MessageComponentTypes[data.data.component_type];
 
         /**
          * id
@@ -45,7 +32,7 @@ class MessageComponentInteraction extends GInteraction {
          * customId
          * @type {Number}
          */
-         this.customId = data.data.custom_id;
+        this.customId = data.data.custom_id;
 
         /**
          * clicker
@@ -74,7 +61,7 @@ class MessageComponentInteraction extends GInteraction {
     return (
       this.message.components
         .flatMap(row => row.components)
-        .find(component => (component.customId ?? component.custom_id) === this.customId) ?? null
+        .find(component => (component.customId || component.custom_id) === this.customId) || null
     );
   }
 }

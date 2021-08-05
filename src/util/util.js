@@ -1,4 +1,5 @@
 const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
+const { InteractionTypes, MessageComponentTypes } = require('./Constants');
 let _allSlashCommands;
 
 /**
@@ -44,32 +45,32 @@ class Util {
      * @param {GInteraction} interaction
      * @returns {Object}
     */
-    static interactionRefactor(client, interaction, raw = false) {
-        let is = {
-            button: false,
-            menu: false,
-            command: false,
+    static interactionRefactor(client, interaction) {
+        interaction.inGuild = () => {
+            return Boolean(this.guild && this.member);
         }
 
-        if(!interaction.data) interaction.data = interaction;
-
-        if(interaction.data.name && client.gcommands.get(interaction.data.name)) {
-            is.command = true;
+        interaction.isCommand = () => {
+            return InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND;
         }
 
-        if(interaction.componentType == 2) {
-            is.button = true;
+        interaction.isMessageComponent = () => {
+            return InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT;
         }
 
-        if(interaction.componentType == 3) {
-            is.menu = true;
+        interaction.isButton = () => {
+            return (
+            InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
+            MessageComponentTypes[interaction.componentType] === MessageComponentTypes.BUTTON
+            );
         }
 
-        interaction.isCommand = () => is.command;
-        interaction.isButton = () => is.button;
-        interaction.isSelectMenu = () => is.menu;
-        if(!raw) return interaction;
-        else return { c: is.command, b: is.button, m: is.menu }
+        interaction.isSelectMenu = () => {
+            return (
+            InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
+            MessageComponentTypes[interaction.componentType] === MessageComponentTypes.SELECT_MENU
+            );
+        }
     }
 
     /**

@@ -1,22 +1,19 @@
+const { MessageComponentTypes } = require('../util/Constants');
 const { resolveString } = require('../util/util');
+const BaseMessageComponent = require('./BaseMessageComponent');
 const Color = require('./Color')
 
 /**
  * The MessageSelectMenu class
  */
-class MessageSelectMenu {
+class MessageSelectMenu extends BaseMessageComponent {
 
     /**
      * Creates new MessageSelectMenu instance
      * @param {Object} data 
     */
      constructor(data = {}) {
-
-        /**
-         * type
-         * @type {Number} 
-        */
-        this.type = 3;
+        super({ type: 'SELECT_MENU' })
 
         /**
          * options
@@ -53,10 +50,10 @@ class MessageSelectMenu {
         this.min_values = 'min_values' in data ? Number(data.min_values) : 1;
 
         /**
-         * id
+         * customId
          * @type {string} 
         */
-        this.id = 'id' in data ? resolveString(data.id) : null;
+        this.customId = data.custom_id || data.customId || null;
 
         this.options = 'options' in data ? Array(data.options) : [];
 
@@ -99,9 +96,19 @@ class MessageSelectMenu {
     /**
      * Method to setID
      * @param {String} id 
+     * @deprecated
     */
     setID(id) {
-        this.custom_id = this.style === 5 ? null : resolveString(id);
+        this.customId = this.style === 5 ? null : resolveString(id);
+        return this;
+    }
+
+    /**
+     * Method to setCustomId
+     * @param {string} id 
+    */
+    setCustomId(id) {
+        this.customId = this.style === 5 ? null : resolveString(id);
         return this;
     }
 
@@ -152,11 +159,11 @@ class MessageSelectMenu {
     */
     toJSON() {
         return {
-            type: 3,
+            type: MessageComponentTypes.SELECT_MENU,
             min_values: this.min_values,
             max_values: this.max_values || this.options.length,
             placeholder: this.placeholder || '',
-            custom_id: this.custom_id,
+            custom_id: this.customId,
             disabled: this.disabled,
             options: this.options
         }

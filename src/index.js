@@ -33,6 +33,7 @@ module.exports = {
     CommandInteraction: require('./structures/CommandInteraction'),
     SelectMenuInteraction: require('./structures/SelectMenuInteraction'),
     MessageComponentInteraction: require('./structures/MessageComponentInteraction'),
+    BaseMessageComponent: require('./structures/BaseMessageComponent'),
 
     // Other
     Color: require('./structures/Color'),

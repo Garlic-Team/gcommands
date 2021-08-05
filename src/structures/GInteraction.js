@@ -1,8 +1,9 @@
-const { Message } = require('discord.js');
+const { Message, SnowflakeUtil } = require('discord.js');
 const Color = require('../structures/Color');
 const GPayload = require('./GPayload');
 const axios = require('axios');
-const { interactionRefactor, checkDjsVersion } = require('../util/util');
+const { checkDjsVersion } = require('../util/util');
+const { InteractionTypes, MessageComponentTypes } = require('../util/Constants');
 const ifDjsV13 = checkDjsVersion(13)
 
 /**
@@ -25,9 +26,9 @@ class GInteraction {
 
         /**
          * type
-         * @type {number}
+         * @type {GInteractionType}
          */
-        this.type = data.type;
+        this.type = InteractionTypes[data.type];
 
         /**
          * token
@@ -66,12 +67,6 @@ class GInteraction {
         this.channel = data.guild_id ? this.guild.channels.cache.get(data.channel_id) : client.channels.cache.get(data.channel_id)
 
         /**
-         * createdTimestamp
-         * @type {Number}
-         */
-        this.createdTimestamp = Date.now();
-
-        /**
          * author
          * @type {User}
          */
@@ -89,22 +84,71 @@ class GInteraction {
          */
         this.replied = false;
 
-        this.__isInteraction(data);
-
         return this;
     }
 
     /**
-     * Method to isInteraction
-     * @param {Object} data
-     * @returns {void}
-     * @private 
-    */
-    __isInteraction(data) {
-        let raw = interactionRefactor(this.client, data, true);
-        this.isCommand = () => raw.c;
-        this.isButton = () => raw.b;
-        this.isSelectMenu = () => raw.m;
+     * The timestamp the interaction was created at
+     * @type {number}
+     * @readonly
+     */
+    get createdTimestamp() {
+        return SnowflakeUtil.deconstruct(this.id).timestamp;
+    }
+
+    /**
+     * The time the interaction was created at
+     * @type {Date}
+     * @readonly
+     */
+    get createdAt() {
+        return new Date(this.createdTimestamp);
+    }
+
+    /**
+     * Indicates whether this interaction is received from a guild.
+     * @returns {boolean}
+     */
+    inGuild() {
+        return Boolean(this.guild && this.member);
+    }
+
+    /**
+     * Indicates whether this interaction is a {@link CommandInteraction}.
+     * @returns {boolean}
+     */
+    isCommand() {
+        return InteractionTypes[this.type] === InteractionTypes.APPLICATION_COMMAND;
+    }
+
+    /**
+     * Indicates whether this interaction is a {@link MessageComponentInteraction}.
+     * @returns {boolean}
+     */
+    isMessageComponent() {
+        return InteractionTypes[this.type] === InteractionTypes.MESSAGE_COMPONENT;
+    }
+
+    /**
+     * Indicates whether this interaction is a {@link ButtonInteraction}.
+     * @returns {boolean}
+     */
+    isButton() {
+        return (
+        InteractionTypes[this.type] === InteractionTypes.MESSAGE_COMPONENT &&
+        MessageComponentTypes[this.componentType] === MessageComponentTypes.BUTTON
+        );
+    }
+
+    /**
+     * Indicates whether this interaction is a {@link SelectMenuInteraction}.
+     * @returns {boolean}
+     */
+    isSelectMenu() {
+        return (
+        InteractionTypes[this.type] === InteractionTypes.MESSAGE_COMPONENT &&
+        MessageComponentTypes[this.componentType] === MessageComponentTypes.SELECT_MENU
+        );
     }
 
     /**

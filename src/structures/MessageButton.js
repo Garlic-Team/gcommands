@@ -1,5 +1,7 @@
 /* From discord-buttons edited */
 const { resolveString, parseEmoji } = require('../util/util');
+const { MessageComponentTypes } = require('../util/Constants');
+const BaseMessageComponent = require('./BaseMessageComponent');
 const Color = require('./Color')
 const styles = {
     'blurple': 1,
@@ -18,13 +20,15 @@ const styles = {
 /**
  * The MessageButton class
  */
-class MessageButton {
+class MessageButton extends BaseMessageComponent {
 
     /**
      * Creates new MessageButton instance
      * @param {Object} data 
     */
     constructor(data = {}) {
+        super({ type: 'BUTTON' })
+
         this.setup(data);
     }
 
@@ -40,7 +44,7 @@ class MessageButton {
          * style
          * @type {string} 
         */
-        this.style = 'style' in data ? this.resolveStyle(resolveString(data.style.toLowerCase())) : null;
+        this.style = 'style' in data ? data.style : null;
 
         /**
          * label
@@ -65,14 +69,8 @@ class MessageButton {
              * customId
              * @type {string} 
             */
-            this.custom_id = 'id' in data ? resolveString(data.id): null;
+            this.customId = data.custom_id || data.customId || null;
         }
-
-        /**
-         * type
-         * @type {Number} 
-        */
-        this.type = 2;
 
         return this.toJSON();
     }
@@ -124,10 +122,20 @@ class MessageButton {
 
     /**
      * Method to setID
-     * @param {String} id 
+     * @param {string} id 
+     * @deprecated
     */
     setID(id) {
-        this.custom_id = this.style === 5 ? null : resolveString(id);
+        this.customId = this.style === 5 ? null : resolveString(id);
+        return this;
+    }
+
+    /**
+     * Method to setCustomId
+     * @param {string} id 
+    */
+    setCustomId(id) {
+        this.customId = this.style === 5 ? null : resolveString(id);
         return this;
     }
 
@@ -137,12 +145,12 @@ class MessageButton {
     */
     toJSON() {
         return {
-            type: 2,
+            type: MessageComponentTypes.BUTTON,
             style: this.style,
             label: this.label,
             disabled: this.disabled,
             url: this.url,
-            custom_id: this.custom_id,
+            custom_id: this.customId,
             emoji: this.emoji
         }
     }
@@ -153,27 +161,6 @@ class MessageButton {
         if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText())
     
         return styles[style] || style;
-    }
-    
-    resolveButton(data) {
-        if (!data.style) return console.log(new Color('&d[GCommands] &cPlease provide button style').getText())
-    
-        if (!data.label) return console.log(new Color('&d[GCommands] &cPlease provide button label').getText())
-    
-        if (data.style === 5) {
-            if (!data.url) return console.log(new Color('&d[GCommands] &cYou provided url style, you must provide an URL').getText())
-        } else {
-            if (!data.custom_id) return console.log(new Color('&d[GCommands] &cPlease provide button id').getText())
-        }
-    
-        return {
-            style: data.style,
-            label: data.label,
-            disabled: Boolean(data.disabled),
-            url: data.url,
-            custom_id: data.custom_id,
-            type: 2
-        }
     }
 }
 
