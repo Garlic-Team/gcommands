@@ -1,4 +1,4 @@
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector')
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
 const GPayload = require('./GPayload');
 const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
 
@@ -27,8 +27,8 @@ module.exports = {
     },
 
     createButtonCollector: {
-        value: function (msg, filter, options = {}) {
-            if(ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
+        value: function(msg, filter, options = {}) {
+            if (ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
             else return new ButtonCollectorV12(msg, filter, options);
         }
     },
@@ -44,13 +44,13 @@ module.exports = {
                         resolve(buttons);
                     }
                 });
-            })
+            });
         }
     },
 
     createSelectMenuCollector: {
         value: function(msg, filter, options = {}) {
-            if(ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
+            if (ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
             else return new SelectMenuCollectorV12(msg, filter, options);
         }
     },
@@ -66,7 +66,7 @@ module.exports = {
                         resolve(buttons);
                     }
                 });
-            })
+            });
         }
     }
-}
+};

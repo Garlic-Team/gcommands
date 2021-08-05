@@ -7,7 +7,6 @@ class GDatabaseLoader {
      * @param {GCommands} GCommandsClient
     */
     constructor(GCommandsClient) {
-
         /**
          * GCommandsClient
          * @type {GCommands}
@@ -15,12 +14,12 @@ class GDatabaseLoader {
         this.GCommandsClient = GCommandsClient;
 
         /**
-         * client
+         * Client
          * @type {Client}
         */
         this.client = this.GCommandsClient.client;
-        
-        this.__loadDB()
+
+        this.__loadDB();
     }
 
     /**
@@ -30,10 +29,9 @@ class GDatabaseLoader {
      */
     __loadDB() {
         let dbType = this.GCommandsClient.database;
-        if(!dbType) this.client.database = undefined;
-        else { 
+        if (!dbType) { this.client.database = undefined; } else {
             const Keyv = require('keyv');
-            this.client.database = new Keyv(dbType)
+            this.client.database = new Keyv(dbType);
         }
     }
 }

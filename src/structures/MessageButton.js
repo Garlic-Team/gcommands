@@ -2,7 +2,7 @@
 const { resolveString, parseEmoji } = require('../util/util');
 const { MessageComponentTypes } = require('../util/Constants');
 const BaseMessageComponent = require('./BaseMessageComponent');
-const Color = require('./Color')
+const Color = require('./Color');
 const styles = {
     'blurple': 1,
     'gray': 2,
@@ -21,53 +21,51 @@ const styles = {
  * The MessageButton class
  */
 class MessageButton extends BaseMessageComponent {
-
     /**
      * Creates new MessageButton instance
-     * @param {Object} data 
+     * @param {Object} data
     */
     constructor(data = {}) {
-        super({ type: 'BUTTON' })
+        super({ type: 'BUTTON' });
 
         this.setup(data);
     }
 
     /**
      * Setup
-     * @param {Object} data 
+     * @param {Object} data
      * @returns {MessageButton}
      * @private
      */
     setup(data) {
-
         /**
-         * style
-         * @type {string} 
+         * Style
+         * @type {string}
         */
         this.style = 'style' in data ? data.style : null;
 
         /**
-         * label
-         * @type {string} 
+         * Label
+         * @type {string}
         */
         this.label = 'label' in data ? resolveString(data.label) : null;
 
         /**
-         * disabled
-         * @type {Boolean} 
+         * Disabled
+         * @type {Boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
         if (this.style === 5) {
             /**
-             * url
-             * @type {string} 
+             * Url
+             * @type {string}
             */
             this.url = 'url' in data ? resolveString(data.url) : null;
         } else {
             /**
-             * customId
-             * @type {string} 
+             * CustomId
+             * @type {string}
             */
             this.customId = data.custom_id || data.customId || null;
         }
@@ -77,7 +75,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setStyle
-     * @param {String} style 
+     * @param {String} style
     */
     setStyle(style) {
         this.style = this.resolveStyle(resolveString(style.toLowerCase()));
@@ -86,7 +84,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setLabel
-     * @param {String} label 
+     * @param {String} label
     */
     setLabel(label) {
         this.label = resolveString(label);
@@ -95,7 +93,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setEmoji
-     * @param {String} emoji  
+     * @param {String} emoji
     */
     setEmoji(emoji) {
         this.emoji = parseEmoji(`${emoji}`);
@@ -104,7 +102,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setDisabled
-     * @param {String} boolean 
+     * @param {String} boolean
     */
     setDisabled(boolean = true) {
         this.disabled = Boolean(boolean);
@@ -113,7 +111,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setURL
-     * @param {String} url 
+     * @param {String} url
     */
     setURL(url) {
         this.url = resolveString(url);
@@ -122,7 +120,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setID
-     * @param {string} id 
+     * @param {string} id
      * @deprecated
     */
     setID(id) {
@@ -132,7 +130,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setCustomId
-     * @param {string} id 
+     * @param {string} id
     */
     setCustomId(id) {
         this.customId = this.style === 5 ? null : resolveString(id);
@@ -152,14 +150,14 @@ class MessageButton extends BaseMessageComponent {
             url: this.url,
             custom_id: this.url ? null : this.customId,
             emoji: this.emoji
-        }
+        };
     }
 
     resolveStyle(style) {
-        if (!style || style === undefined || style === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText())
-    
-        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText())
-    
+        if (!style || style === undefined || style === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText());
+
+        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText());
+
         return styles[style] || style;
     }
 }
