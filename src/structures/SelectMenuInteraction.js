@@ -1,5 +1,3 @@
-const { Message } = require('discord.js')
-const GInteraction = require('./GInteraction');
 const MessageComponentInteraction = require('./MessageComponentInteraction');
 
 /**
