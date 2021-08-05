@@ -31,33 +31,21 @@ If you're updating from 4.x to 5.x, check https://gcommands.js.org/guide/guide/a
 
 ### 📜 | Setup
 ```js
-const { Client } = require("discord.js")
-const { GCommands } = require("gcommands")
-const client = Client();
+const { GCommandsClient } = require("gcommands")
+const client = GCommandsClient({
+   cmdDir: "commands/",
+   eventDir: "events/",
+   language: "english",
+   unkownCommandMessage: false,
+   slash: {
+      slash: "both",
+      prefix: "."
+   },
+   database: "url"
+});
 
-client.on("ready", () => {
-    const gc = new GCommands(client, {
-        cmdDir: "commands/",
-        eventDir: "events/",
-        language: "english",
-        unkownCommandMessage: false,
-        slash: {
-            slash: "both",
-            prefix: "."
-        },
-        database: "url"
-        /* DB SUPPORT
-         * redis://user:pass@localhost:6379
-         * mongodb://user:pass@localhost:27017/dbname
-         * sqlite://path/to/database.sqlite
-         * postgresql://user:pass@localhost:5432/dbname
-         * mysql://user:pass@localhost:3306/dbname
-        */
-    })
-
-    gc.on("debug", (debug)=>{console.log(debug)})
-    gc.on("log", (log)=>{console.log(log)})
-})
+client
+   .on("log", console.log)
 
 client.login("bot token")
 ```
