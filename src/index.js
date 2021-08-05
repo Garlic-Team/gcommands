@@ -42,4 +42,4 @@ module.exports = {
     ButtonType: require('./util/Constants').ButtonType,
 
     version: require('../package.json').version
-}
+};

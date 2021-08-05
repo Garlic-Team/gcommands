@@ -18,13 +18,13 @@ const { Events } = require('discord.js').Constants;
     this.message = message;
 
     /**
-     * users
+     * Users
      * @type {Collection}
      */
     this.users = new Collection();
 
     /**
-     * total
+     * Total
      * @type {Number}
      */
     this.total = 0;
@@ -48,7 +48,7 @@ const { Events } = require('discord.js').Constants;
       this.client.decrementMaxListeners();
     });
 
-    this.on('collect', (menu) => {
+    this.on('collect', menu => {
       this.total++;
       this.users.set(menu.clicker.user.id, menu.clicker.user);
     });
@@ -61,7 +61,7 @@ const { Events } = require('discord.js').Constants;
    * @private
    */
   collect(menu) {
-    if(this.message.unstable) return SelectMenuCollector.key(menu)
+    if (this.message.unstable) return SelectMenuCollector.key(menu);
     if (menu.message.id !== this.message.id) return null;
     return SelectMenuCollector.key(menu);
   }

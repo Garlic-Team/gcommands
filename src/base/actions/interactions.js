@@ -3,16 +3,16 @@ const ButtonInteraction = require('../../structures/ButtonInteraction');
 const SelectMenuInteraction = require('../../structures/SelectMenuInteraction');
 const { interactionRefactor, inhibit } = require('../../util/util');
 
-module.exports = (client) => {
-    client.ws.on('INTERACTION_CREATE', async(data) => {
+module.exports = client => {
+    client.ws.on('INTERACTION_CREATE', async data => {
         let InteractionType;
-        switch(data.type) {
-            case 2: 
+        switch (data.type) {
+            case 2:
                 InteractionType = CommandInteraction;
                 break;
             case 3:
-                switch(data.data.component_type) {
-                    case 2: 
+                switch (data.data.component_type) {
+                    case 2:
                         InteractionType = ButtonInteraction;
                         break;
                     case 3:
@@ -23,23 +23,19 @@ module.exports = (client) => {
 
         const interaction = new InteractionType(client, data);
 
-        client.emit('GInteraction', interaction)
-        if(data.data.component_type) {
-            let member = interaction.clicker.member, guild = interaction.guild, channel = interaction.channel
+        client.emit('GInteraction', interaction);
+        if (data.data.component_type) {
+            let member = interaction.clicker.member, guild = interaction.guild, channel = interaction.channel;
             let inhibitReturn = await inhibit(client, interactionRefactor(client, interaction), {
                 interaction, member,
-                guild: guild, 
+                guild: guild,
                 channel: channel,
-                respond: async(result) => {
-                    return interaction.slashRespond(result)
-                },
-                edit: async(result, update = false) => {
-                    return interaction.slashEdit(result, update);
-                }
-            })
-            if(inhibitReturn == false) return;
+                respond: async result => interaction.slashRespond(result),
+                edit: async (result, update = false) => interaction.slashEdit(result, update)
+            });
+            if (inhibitReturn == false) return;
 
-            client.emit(data.data.component_type == 3 ? `selectMenu` : `clickButton`, interaction)
+            client.emit(data.data.component_type == 3 ? `selectMenu` : `clickButton`, interaction);
         }
     });
-}
+};

@@ -23,47 +23,47 @@ class GMessage {
                         this.system = null;
                         this.type = null;
                     }
-                
+
                     if ('content' in data) {
                         this.content = data.content;
                     } else if (typeof this.content !== 'string') {
                         this.content = null;
                     }
-                
+
                     if ('author' in data) {
                         this.author = ifDjsV13 ? this.client.users._add(data.author, !data.webhook_id) : this.client.users.add(data.author, !data.webhook_id);
                     } else if (!this.author) {
                         this.author = null;
                     }
-                
+
                     if ('pinned' in data) {
                         this.pinned = Boolean(data.pinned);
                     } else if (typeof this.pinned !== 'boolean') {
                         this.pinned = null;
                     }
-                
+
                     if ('tts' in data) {
                         this.tts = data.tts;
                     } else if (typeof this.tts !== 'boolean') {
                         this.tts = null;
                     }
-                
+
                     if (!partial) {
                         this.nonce = 'nonce' in data ? data.nonce : null;
                     }
-                
+
                     if ('embeds' in data || !partial) {
                         this.embeds = data.embeds.map(e => new MessageEmbed(e, true)) || [];
                     } else {
                         this.embeds = this.embeds.slice();
                     }
-                
+
                     if ('components' in data || !partial) {
                         this.components = data.components.map(c => BaseMessageComponent.create(c, this.client)) || [];
                     } else {
                         this.components = this.components.slice();
                     }
-                
+
                     if ('attachments' in data || !partial) {
                         this.attachments = new Collection();
                         if (data.attachments) {
@@ -74,24 +74,24 @@ class GMessage {
                     } else {
                         this.attachments = new Collection(this.attachemnts);
                     }
-                
+
                     if ('sticker_items' in data || 'stickers' in data || !partial && ifDjsV13) {
-                        const { Sticker } = require("discord.js")
+                        const { Sticker } = require("discord.js");
                         this.stickers = new Collection(
                             (data.sticker_items ?? data.stickers)?.map(s => [s.id, new Sticker(this.client, s)]),
                         );
                     } else {
                         this.stickers = new Collection(this.stickers);
                     }
-                
+
                     if (!partial) {
                         this.createdTimestamp = SnowflakeUtil.deconstruct(this.id).timestamp;
                     }
-                
+
                     if ('edited_timestamp' in data || !partial) {
                         this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp).getTime() : null;
                     }
-                
+
                     if ('reactions' in data || !partial) {
                         this.reactions = new ReactionManager(this);
                         if (data.reactions?.length > 0) {
@@ -100,7 +100,7 @@ class GMessage {
                             }
                         }
                     }
-                
+
                     if (!partial) {
                         this.mentions = new MessageMentions(
                             this,
@@ -120,19 +120,19 @@ class GMessage {
                             data.referenced_message?.author ?? this.mentions.repliedUser,
                         );
                     }
-                
+
                     if ('webhook_id' in data || !partial) {
                         this.webhookId = data.webhook_id ?? null;
                     }
-                
+
                     if ('application' in data || !partial) {
                         this.groupActivityApplication = data.application ? new ClientApplication(this.client, data.application) : null;
                     }
-                
+
                     if ('application_id' in data || !partial) {
                         this.applicationId = data.application_id ?? null;
                     }
-                
+
                     if ('activity' in data || !partial) {
                         this.activity = data.activity
                             ? {
@@ -149,14 +149,14 @@ class GMessage {
                     } else if (data.member && this.guild && this.author) {
                         ifDjsV13 ? this.guild.members._add(Object.assign(data.member, { user: this.author })) : this.guild.members.add(Object.assign(data.member, { user: this.author }));
                     }
-                
+
                     if ('flags' in data || !partial) {
                         this.flags = new MessageFlags(data.flags).freeze();
                     } else {
                         this.flags = new MessageFlags(this.flags).freeze();
                     }
-                
-                
+
+
                     if ('message_reference' in data || !partial) {
                         this.reference = data.message_reference
                             ? {
@@ -166,11 +166,11 @@ class GMessage {
                             }
                             : null;
                     }
-                
+
                     if (data.referenced_message) {
                         ifDjsV13 ? this.channel.messages._add(data.referenced_message) : this.channel.messages.add(data.referenced_message);
                     }
-                
+
                     if (data.interaction) {
                         this.interaction = {
                             id: data.interaction.id,
@@ -188,8 +188,8 @@ class GMessage {
                 value: async function(result) {
                     let GPayloadResult = await GPayload.create(this.channel, result)
                         .resolveData();
-        
-                    if(result.edited == false) {
+
+                    if (result.edited == false) {
                         return this.client.api.channels(this.channel.id).messages[this.id].patch({
                             data: {
                                 type: 7,
@@ -197,20 +197,20 @@ class GMessage {
                             },
                         }).then(d => this.client.actions.MessageCreate.handle(d).message);
                     }
-        
+
                     let apiMessage = (await this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
                         data: GPayloadResult.data
                     }));
-        
+
                     return new Message(this.client, apiMessage, this.channel);
                 }
             },
-        
+
             update: {
                 value: async function(result) {
                     let GPayloadResult = await GPayload.create(this.channel, result)
                         .resolveData();
-                    
+
                     return this.client.api.channels(this.channel.id).messages[this.id].patch({
                         data: {
                             type: 7,
@@ -219,13 +219,13 @@ class GMessage {
                     }).then(d => this.client.actions.MessageCreate.handle(d).message);
                 }
             },
-        
+
             send: {
                 value: async function(result) {
                     let GPayloadResult = await GPayload.create(this.channel, result)
                         .resolveData()
                         .resolveFiles();
-        
+
                     return this.client.api.channels[this.channel.id].messages.post({
                         data: GPayloadResult.data,
                         files: GPayloadResult.files
@@ -233,14 +233,14 @@ class GMessage {
                     .then(d => this.client.actions.MessageCreate.handle(d).message);
                 }
             },
-        
+
             createButtonCollector: {
                 value: function(filter, options = {}) {
-                    if(ifDjsV13) return new ButtonCollectorV13(this, filter, options);
+                    if (ifDjsV13) return new ButtonCollectorV13(this, filter, options);
                     else return new ButtonCollectorV12(this, filter, options);
                 }
             },
-        
+
             awaitButtons: {
                 value: async function(filter, options = {}) {
                     return new Promise((resolve, reject) => {
@@ -252,17 +252,17 @@ class GMessage {
                                 resolve(buttons);
                             }
                         });
-                    })
+                    });
                 }
             },
-        
+
             createSelectMenuCollector: {
                 value: function(filter, options = {}) {
-                    if(ifDjsV13) return new SelectMenuCollectorV13(this, filter, options);
+                    if (ifDjsV13) return new SelectMenuCollectorV13(this, filter, options);
                     else return new SelectMenuCollectorV12(this, filter, options);
                 }
             },
-        
+
             awaitSelectMenus: {
                 value: async function(filter, options = {}) {
                     return new Promise((resolve, reject) => {
@@ -274,7 +274,7 @@ class GMessage {
                                 resolve(buttons);
                             }
                         });
-                    })
+                    });
                 }
             }
         });
@@ -304,7 +304,7 @@ class GMessage {
 
     /**
      * Method to createButtonCollector
-     * @param {Function} filter 
+     * @param {Function} filter
      * @param {CollectorOptions} options
      * @returns {Collector}
      */
@@ -312,7 +312,7 @@ class GMessage {
 
     /**
      * Method to awaitButtons
-     * @param {Function} filter 
+     * @param {Function} filter
      * @param {CollectorOptions} options
      * @returns {Collector}
      */
@@ -320,7 +320,7 @@ class GMessage {
 
     /**
      * Method to createSelectMenuCollector
-     * @param {Function} filter 
+     * @param {Function} filter
      * @param {CollectorOptions} options
      * @returns {Collector}
      */
@@ -328,7 +328,7 @@ class GMessage {
 
     /**
      * Method to awaitSelectMenus
-     * @param {Function} filter 
+     * @param {Function} filter
      * @param {CollectorOptions} options
      * @returns {Collector}
      */

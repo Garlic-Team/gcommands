@@ -1,21 +1,21 @@
 const { default: axios } = require('axios');
 
-module.exports = (client) => {
-    client.on('guildMemberUpdate', async(oldMember, newMember) => {
-        if(oldMember.premiumSince && newMember.premiumSince) {
+module.exports = client => {
+    client.on('guildMemberUpdate', async (oldMember, newMember) => {
+        if (oldMember.premiumSince && newMember.premiumSince) {
             client.emit('guildMemberBoost',
                 newMember,
                 oldMember.premiumSince,
                 newMember.premiumSince
-            )
+            );
         }
 
-        if(oldMember.premiumSince && !newMember.premiumSince) {
+        if (oldMember.premiumSince && !newMember.premiumSince) {
             client.emit('guildMemberUnboost',
                 newMember,
                 oldMember.premiumSince,
                 newMember.premiumSince
-            )
+            );
         }
 
         if (oldMember.nickname !== newMember.nickname) {
@@ -26,8 +26,8 @@ module.exports = (client) => {
             );
         }
 
-        if((oldMember.nickname == newMember.nickname) && (newMember.lastMessageID == null) && (newMember.lastMessageChannelID == null) && (oldMember.premiumSince == newMember.premiumSince) && (oldMember._roles.length == 0) && (newMember._roles.length == 0)) {
-            let url = `https://discord.com/api/v9/guilds/${newMember.guild.id}/members/${newMember.user.id}`
+        if ((oldMember.nickname == newMember.nickname) && (newMember.lastMessageID == null) && (newMember.lastMessageChannelID == null) && (oldMember.premiumSince == newMember.premiumSince) && (oldMember._roles.length == 0) && (newMember._roles.length == 0)) {
+            let url = `https://discord.com/api/v9/guilds/${newMember.guild.id}/members/${newMember.user.id}`;
 
             let config = {
                 method: 'GET',
@@ -36,15 +36,15 @@ module.exports = (client) => {
                     'Content-Type': 'application/json'
                 },
                 url,
-            }
+            };
 
             let response = (await axios(config)).data;
-            
-            if(response.pending) return;
+
+            if (response.pending) return;
 
             client.emit('guildMemberAcceptShipScreening',
                 newMember
             );
         }
-    })
-}
+    });
+};

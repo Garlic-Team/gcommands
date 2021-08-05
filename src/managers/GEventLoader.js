@@ -1,5 +1,5 @@
 // ONLY FOR DOCS
-const GEvents = require('@gcommands/events')
+const GEvents = require('@gcommands/events');
 
 /**
  * The GEventLoader class
@@ -13,19 +13,19 @@ class GEventLoader extends null {}
 GEventLoader.GCommandsClient = GEvents.GEvents.GCommandsClient;
 
 /**
- * eventDir
+ * EventDir
  * @type {string}
  */
 GEventLoader.eventDir = GEvents.GEvents.eventDir;
 
 /**
- * client
+ * Client
  * @type {Client}
  */
 GEventLoader.client = GEvents.GEvents.client;
 
 /**
- * gevents
+ * Gevents
  * @type {Collection}
  */
 GEventLoader.client.gevents = GEvents.GEvents.gevents;

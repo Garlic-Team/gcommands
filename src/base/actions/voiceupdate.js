@@ -1,5 +1,5 @@
-module.exports = (client) => {
-    client.on('voiceStateUpdate', async(oldState, newState) => {
+module.exports = client => {
+    client.on('voiceStateUpdate', async (oldState, newState) => {
         const newMember = newState.member;
 
         if (!oldState.channel && newState.channel) {
@@ -69,5 +69,5 @@ module.exports = (client) => {
                 newState.channel
             );
         }
-    })
-}
+    });
+};
