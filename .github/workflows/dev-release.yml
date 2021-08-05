@@ -1,0 +1,31 @@
+name: "DEV Release"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */12 * * *'
+
+jobs:
+  release:
+    name: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+
+      - name: Deprecate old versions
+        run: npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)" "no longer supported" || true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: publish
+        run: |
+          npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)
+          npm publish --tag dev || true
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
