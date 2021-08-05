@@ -2,6 +2,7 @@ const { Message, ReactionManager, ClientApplication, MessageFlags, Collection, M
 const { MessageTypes } = require('discord.js').Constants;
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
 const BaseMessageComponent = require('./BaseMessageComponent');
+const { InteractionTypes } = require('../util/Constants')
 const GPayload = require('./GPayload');
 const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
 
