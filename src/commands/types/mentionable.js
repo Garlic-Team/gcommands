@@ -10,10 +10,10 @@ class MentionableArgumentType extends ArgumentType {
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'mentionable')
+        super(client, 'mentionable');
 
         /**
-         * client
+         * Client
          * @type {Client}
         */
 		this.client = client;
@@ -23,11 +23,11 @@ class MentionableArgumentType extends ArgumentType {
 		const matches = message.content.match(/([0-9]+)/);
 		const guildLanguage = await message.guild.getLanguage();
 
-		if(!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'mention')
+		if (!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'mention');
 
 		let role = message.guild.roles.cache.get(matches[1]);
 		let user = this.client.users.cache.get(matches[1]);
-		if((!user) && (!role)) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'mention')
+		if ((!user) && (!role)) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'mention');
 	}
 }
 

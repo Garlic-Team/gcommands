@@ -30,14 +30,14 @@ class ButtonCollector extends Collector {
       this.client.decrementMaxListeners();
     });
 
-    this.on('collect', (button) => {
+    this.on('collect', button => {
       this.total++;
       this.users.set(button.clicker.user.id, button.clicker.user);
     });
   }
 
   collect(button) {
-    if(this.message.unstable) return ButtonCollector.key(button)
+    if (this.message.unstable) return ButtonCollector.key(button);
     if (button.message.id !== this.message.id) return null;
     return ButtonCollector.key(button);
   }

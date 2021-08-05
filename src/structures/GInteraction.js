@@ -4,82 +4,80 @@ const GPayload = require('./GPayload');
 const axios = require('axios');
 const { checkDjsVersion } = require('../util/util');
 const { InteractionTypes, MessageComponentTypes } = require('../util/Constants');
-const ifDjsV13 = checkDjsVersion(13)
+const ifDjsV13 = checkDjsVersion(13);
 
 /**
  * The GInteraction class
  */
 class GInteraction {
-
     /**
      * Creates new GInteraction instance
      * @param {Client} client
-     * @param {Object} data 
+     * @param {Object} data
     */
     constructor(client, data) {
-
         /**
-         * client
+         * Client
          * @type {Client}
          */
         this.client = client;
 
         /**
-         * type
+         * Type
          * @type {GInteractionType}
          */
         this.type = InteractionTypes[data.type];
 
         /**
-         * token
+         * Token
          * @type {string}
          */
         this.token = data.token;
 
         /**
-         * discordId
+         * DiscordId
          * @type {number}
          */
         this.discordId = data.id;
 
         /**
-         * version
+         * Version
          * @type {number}
          */
         this.version = data.version;
 
         /**
-         * applicationId
+         * ApplicationId
          * @type {number}
          */
         this.applicationId = data.application_id;
 
         /**
-         * guild
+         * Guild
          * @type {Guild}
          */
         this.guild = data.guild_id ? this.client.guilds.cache.get(data.guild_id) : null;
 
         /**
-         * channel
+         * Channel
          * @type {TextChannel | NewsChannel | DMChannel}
          */
-        this.channel = data.guild_id ? this.guild.channels.cache.get(data.channel_id) : client.channels.cache.get(data.channel_id)
+        this.channel = data.guild_id ? this.guild.channels.cache.get(data.channel_id) : client.channels.cache.get(data.channel_id);
 
         /**
-         * author
+         * Author
          * @type {User}
          */
         this.author = ifDjsV13 ? this.client.users._add(data.user || data.member.user) : this.client.users.add(data.user || data.member.user);
 
         /**
-         * member
+         * Member
          * @type {GuildMember | null}
          */
         this.member = data.guild_id ? ifDjsV13 ? this.guild.members._add(data.member) || data.member : this.guild.members.add(data.member) || data.member : null;
 
         /**
-         * replied
+         * Replied
          * @type {boolean}
          */
         this.replied = false;
@@ -153,7 +151,7 @@ class GInteraction {
 
     /**
      * Method to defer
-     * @param {Boolean} ephemeral 
+     * @param {Boolean} ephemeral
     */
     async defer(ephemeral) {
         if (this.replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
@@ -170,7 +168,7 @@ class GInteraction {
 
     /**
      * Method to think
-     * @param {Boolean} ephemeral 
+     * @param {Boolean} ephemeral
     */
     async think(ephemeral) {
         if (this.replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
@@ -187,7 +185,7 @@ class GInteraction {
 
     /**
      * Method to edit
-     * @param {Object} options 
+     * @param {Object} options
     */
     async edit(result) {
         if (result.autoDefer == true) {
@@ -198,12 +196,12 @@ class GInteraction {
             });
         }
 
-        this.slashEdit(result)
+        this.slashEdit(result);
     }
 
     /**
      * Method to update
-     * @param {Object} options 
+     * @param {Object} options
     */
     async update(result) {
         if (result.autoDefer == true) {
@@ -214,7 +212,7 @@ class GInteraction {
             });
         }
 
-        this.slashEdit(result, true)
+        this.slashEdit(result, true);
     }
 
     /**
@@ -224,52 +222,52 @@ class GInteraction {
     get reply() {
         /**
          * Method to replySend
-         * @param {Object} options 
+         * @param {Object} options
          * @memberof reply
         */
-        let _send = async (result) => {
+        let _send = async result => {
             this.replied = true;
-            return this.slashRespond(result)
-        }
+            return this.slashRespond(result);
+        };
 
         /**
          * Method to replyEdit
-         * @param {Object} options 
+         * @param {Object} options
          * @memberof reply
         */
-        let _edit = async (result) => {
-            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
-            return this.slashEdit(result)
-        }
+        let _edit = async result => {
+            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
+            return this.slashEdit(result);
+        };
 
         /**
          * Method to replyUpdate
-         * @param {Object} options 
+         * @param {Object} options
          * @memberof reply
         */
-        let _update = async (result) => {
-            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
-            return this.slashEdit(result, true)
-        }
+        let _update = async result => {
+            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
+            return this.slashEdit(result, true);
+        };
 
         /**
          * Method to replyFetch
          * @param {Object} options
-         * @memberof reply 
+         * @memberof reply
         */
         let _fetch = async () => {
-            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
+            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
 
-            return new Message(this.client, apiMessage, this.channel)
-        }
+            return new Message(this.client, apiMessage, this.channel);
+        };
 
         return {
             send: _send,
             edit: _edit,
             update: _update,
             fetch: _fetch
-        }
+        };
     }
 
     async slashRespond(result) {
@@ -283,7 +281,7 @@ class GInteraction {
                 data: GPayloadResult.data
             },
             files: GPayloadResult.files
-        }))
+        }));
 
         let apiMessageMsg = {};
         try {
@@ -291,18 +289,18 @@ class GInteraction {
         } catch (e) {
             apiMessageMsg = {
                 id: undefined
-            }
+            };
         }
 
         if (typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
         if (apiMessage) {
             apiMessage = apiMessageMsg;
             apiMessage.client = this.client;
-            apiMessage.createButtonCollector = function createButtonCollector(filter, options) { return this.client.dispatcher.createButtonCollector(apiMessage, filter, options) };
-            apiMessage.awaitButtons = function awaitButtons(filter, options) { return this.client.dispatcher.awaitButtons(apiMessage, filter, options) };
-            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) { return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options) };
-            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) { return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options) };
-            apiMessage.delete = function deleteMsg() { return this.client.api.webhooks(this.client.user.id, this.token).messages[apiMessageMsg.id].delete() };
+            apiMessage.createButtonCollector = function createButtonCollector(filter, options) { return this.client.dispatcher.createButtonCollector(apiMessage, filter, options); };
+            apiMessage.awaitButtons = function awaitButtons(filter, options) { return this.client.dispatcher.awaitButtons(apiMessage, filter, options); };
+            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) { return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options); };
+            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) { return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options); };
+            apiMessage.delete = function deleteMsg() { return this.client.api.webhooks(this.client.user.id, this.token).messages[apiMessageMsg.id].delete(); };
         }
 
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
@@ -312,18 +310,18 @@ class GInteraction {
         let GPayloadResult = await GPayload.create(this.channel, result)
             .resolveData();
 
-        let apiMessage = {}
+        let apiMessage = {};
         if (update) {
             apiMessage = this.client.api.interactions(this.discordId, this.token).callback.post({
                 data: {
                     type: 7,
                     data: GPayloadResult.data
                 },
-            })
+            });
         } else {
             apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : '@original'].patch({
                 data: GPayloadResult.data
-            }))
+            }));
         }
 
         if (typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();

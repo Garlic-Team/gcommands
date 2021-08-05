@@ -4,22 +4,21 @@ const { MessageComponentTypes } = require('../util/Constants');
  * The BaseMessageComponent
  */
 class BaseMessageComponent {
-
     /**
      * Creates new BaseMessageComponent instance
-     * @param {Object} data 
+     * @param {Object} data
      */
     constructor(data) {
         /**
-         * type
+         * Type
          * @type {string}
          */
         this.type = MessageComponentTypes[data.type];
     }
 
     /**
-     * create
-     * @param {Object} data 
+     * Create
+     * @param {Object} data
      * @returns {MessageActionRow | MessageButton | MessageSelectMenu | MessageSelectMenuOption}
      */
     static create(data) {

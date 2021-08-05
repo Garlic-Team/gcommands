@@ -6,36 +6,35 @@ const GInteraction = require('./GInteraction');
  * The MessageComponentInteraction class
  */
 class MessageComponentInteraction extends GInteraction {
-
     /**
      * Creates new MessageComponentInteraction instance
      * @param {Client} client
-     * @param {Object} data 
+     * @param {Object} data
     */
     constructor(client, data) {
-        super(client, data)
+        super(client, data);
 
         /**
-         * componentType
+         * ComponentType
          * @type {Number}
          */
         this.componentType = MessageComponentTypes[data.data.component_type];
 
         /**
-         * id
+         * Id
          * @type {Number}
          * @deprecated
          */
         this.id = data.data.custom_id;
 
         /**
-         * customId
+         * CustomId
          * @type {Number}
          */
         this.customId = data.data.custom_id;
 
         /**
-         * clicker
+         * Clicker
          * @type {InteractionEventClicker}
          * @deprecated
          */
@@ -46,10 +45,10 @@ class MessageComponentInteraction extends GInteraction {
         };
 
         /**
-         * message
+         * Message
          * @type {GMessage}
          */
-        this.message = new Message(this.client, data.message, this.channel)
+        this.message = new Message(this.client, data.message, this.channel);
     }
 
   /**

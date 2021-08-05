@@ -18,37 +18,37 @@ class Argument {
      */
     constructor(client, argument) {
         /**
-         * client
+         * Client
          * @type {Client}
         */
         this.client = client;
 
         /**
-         * name
+         * Name
          * @type {string}
         */
         this.name = argument.name;
 
         /**
-         * argument
+         * Argument
          * @type {Argument}
         */
         this.argument = this.determineArgument(client, argument);
 
         /**
-         * type
+         * Type
          * @type {string}
         */
         this.type = this.determineArgument(client, argument).type;
 
         /**
-         * prompt
+         * Prompt
          * @type {string}
         */
         this.prompt = argument.prompt || `Please define argument ${argument.name}`;
 
         /**
-         * choices
+         * Choices
          * @type {Object}
         */
         this.choices = argument.choices;
@@ -62,22 +62,24 @@ class Argument {
      * @param {String}
      */
     async obtain(message, prompt = this.prompt) {
-        if(message.author.bot) return;
+        if (message.author.bot) return;
 
 		const wait = 30000;
 
-        message.reply(prompt)
+        message.reply(prompt);
         const responses = await message.channel.awaitMessages(msg => msg.author.id === message.author.id, {
             max: 1,
             time: wait
         });
-        if(responses.size == 0) return {
+        if (responses.size == 0) {
+ return {
             valid: true,
             timeLimit: true
-        }
+        };
+}
 
-        let valid = await this.argument.validate(this, responses.first())
-        if(valid) {
+        let valid = await this.argument.validate(this, responses.first());
+        if (valid) {
             return {
                 valid: false,
                 prompt: valid
@@ -96,14 +98,14 @@ class Argument {
      * @param {Argument}
      */
     determineArgument(client, argument) {
-        if(argument.type == 3) return new StringArgumentType(client, argument);
-        if(argument.type == 4) return new IntegerArgumentType(client, argument);
-        if(argument.type == 5) return new BooleanArgumentType(client, argument);
-        if(argument.type == 6) return new UserArgumentType(client, argument);
-        if(argument.type == 7) return new ChannelArgumentType(client, argument);
-        if(argument.type == 8) return new RoleArgumentType(client, argument);
-        if(argument.type == 9) return new MentionableArgumentType(client, argument);
-        if(argument.type == 10) return new NumberArgumentType(client, argument);
+        if (argument.type == 3) return new StringArgumentType(client, argument);
+        if (argument.type == 4) return new IntegerArgumentType(client, argument);
+        if (argument.type == 5) return new BooleanArgumentType(client, argument);
+        if (argument.type == 6) return new UserArgumentType(client, argument);
+        if (argument.type == 7) return new ChannelArgumentType(client, argument);
+        if (argument.type == 8) return new RoleArgumentType(client, argument);
+        if (argument.type == 9) return new MentionableArgumentType(client, argument);
+        if (argument.type == 10) return new NumberArgumentType(client, argument);
         else return { type: 'invalid' };
     }
 }
