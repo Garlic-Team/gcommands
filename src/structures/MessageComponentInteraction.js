@@ -1,4 +1,4 @@
-const { Message } = require('discord.js')
+const { Message } = require('discord.js');
 const GInteraction = require('./GInteraction');
 
 /**
@@ -37,8 +37,15 @@ class MessageComponentInteraction extends GInteraction {
         /**
          * id
          * @type {Number}
+         * @deprecated
          */
         this.id = data.data.custom_id;
+
+        /**
+         * customId
+         * @type {Number}
+         */
+         this.customId = data.data.custom_id;
 
         /**
          * clicker
@@ -57,6 +64,19 @@ class MessageComponentInteraction extends GInteraction {
          */
         this.message = new Message(this.client, data.message, this.channel)
     }
+
+  /**
+   * The component which was interacted with
+   * @type {MessageActionRow}
+   * @readonly
+   */
+   get component() {
+    return (
+      this.message.components
+        .flatMap(row => row.components)
+        .find(component => (component.customId ?? component.custom_id) === this.customId) ?? null
+    );
+  }
 }
 
 module.exports = MessageComponentInteraction;
