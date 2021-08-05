@@ -10,16 +10,16 @@ class BooleanArgumentType extends ArgumentType {
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'boolean')
+        super(client, 'boolean');
 
         /**
-         * client
+         * Client
          * @type {Client}
         */
 		this.client = client;
 
         /**
-         * answerSet
+         * AnswerSet
          * @type {Set}
         */
 		this.answerSet = new Set(['true', 't', 'yes', 'y', 'on', 'enable', 'enabled', 'false', 'f', 'no', 'n', 'off', 'disable', 'disabled']);
@@ -29,8 +29,8 @@ class BooleanArgumentType extends ArgumentType {
 		const b = message.content.toLowerCase();
 		const guildLanguage = await message.guild.getLanguage();
 
-		if(!this.answerSet.has(b)) {
-			return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'boolean')
+		if (!this.answerSet.has(b)) {
+			return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'boolean');
 		}
 	}
 }

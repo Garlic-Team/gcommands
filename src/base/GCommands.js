@@ -1,4 +1,4 @@
-const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsBase = require('./GCommandsBase'), GCommandsDispatcher = require('./GCommandsDispatcher'), { GEvents: GEventLoader } = require('@gcommands/events'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), {msToSeconds} = require('../util/util');
+const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsBase = require('./GCommandsBase'), GCommandsDispatcher = require('./GCommandsDispatcher'), { GEvents: GEventLoader } = require('@gcommands/events'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), { msToSeconds } = require('../util/util');
 const { Collection } = require('discord.js');
 const fs = require('fs');
 const ms = require('ms');
@@ -14,12 +14,12 @@ class GCommands extends GCommandsBase {
      * @param {GCommandsOptions} options - Options (cmdDir, eventDir etc)
      */
     constructor(client, options = {}) {
-        super(client, options)
+        super(client, options);
 
-        if (typeof client !== 'object') return console.log(new Color('&d[GCommands] &cNo discord.js client provided!',{json:false}).getText());
-        if (!Object.keys(options).length) return console.log(new Color('&d[GCommands] &cNo default options provided!',{json:false}).getText());
-        if(!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{json:false}).getText());
-        if(!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))',{json:false}).getText());
+        if (typeof client !== 'object') return console.log(new Color('&d[GCommands] &cNo discord.js client provided!',{ json: false }).getText());
+        if (!Object.keys(options).length) return console.log(new Color('&d[GCommands] &cNo default options provided!',{ json: false }).getText());
+        if (!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{ json: false }).getText());
+        if (!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))',{ json: false }).getText());
 
         /**
          * GCommandsClient
@@ -28,24 +28,24 @@ class GCommands extends GCommandsBase {
         this.GCommandsClient = this;
 
         /**
-         * client
+         * Client
          * @type {Client}
         */
         this.client = client;
 
         /**
-         * caseSensitiveCommands
+         * CaseSensitiveCommands
          * @type {Boolean}
          * @default true
         */
-        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true
+        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true;
 
         /**
-         * caseSensitivePrefixes
+         * CaseSensitivePrefixes
          * @type {Boolean}
          * @default true
         */
-        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true
+        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true;
 
         /**
          * CmdDir
@@ -68,39 +68,39 @@ class GCommands extends GCommandsBase {
         this.autoTyping = options.autoTyping;
 
         /**
-         * ownLanguageFile
+         * OwnLanguageFile
          * @type {Object}
         */
-        if(!options.ownLanguageFile) this.languageFile = require('../util/message.json');
+        if (!options.ownLanguageFile) this.languageFile = require('../util/message.json');
         else this.languageFile = options.ownLanguageFile;
 
         /**
-         * language
+         * Language
          * @type {Object} language
         */
         this.language = options.language;
 
         /**
-         * database
+         * Database
          * @type {Object} database
          * @default undefined
         */
         this.database = options.database;
 
         /**
-         * gcategories
+         * Gcategories
          * @type {Array}
          */
-        this.gcategories = fs.readdirSync(`./${this.cmdDir}`)
+        this.gcategories = fs.readdirSync(`./${this.cmdDir}`);
 
         /**
-         * gcommands
+         * Gcommands
          * @type {Collection}
          */
         this.gcommands = new Collection();
 
         /**
-         * galiases
+         * Galiases
          * @type {Collection}
          */
         this.galiases = new Collection();
@@ -120,7 +120,7 @@ class GCommands extends GCommandsBase {
         this.slash = options.slash.slash ? options.slash.slash : false;
 
         /**
-         * defaultCooldown
+         * DefaultCooldown
          * @type {Number}
          * @default 0
          */
@@ -128,7 +128,7 @@ class GCommands extends GCommandsBase {
 
         this.client.language = this.language;
         this.client.languageFile = this.languageFile;
-        this.client.database = this.database
+        this.client.database = this.database;
         this.client.prefixes = this.prefix;
         this.client.slash = this.slash;
         this.client.defaultCooldown = this.defaultCooldown;
@@ -137,13 +137,13 @@ class GCommands extends GCommandsBase {
         this.client.galiases = this.galiases;
         this.client.gcommands = this.gcommands;
 
-        process.on('uncaughtException', (error) => {
-            this.emit(Events.LOG, new Color('&d[GCommands Errors] &eHandled: &a' + error + ` ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
-            setTimeout(() => {this.emit(Events.DEBUG, error)}, 1000)
+        process.on('uncaughtException', error => {
+            this.emit(Events.LOG, new Color(`&d[GCommands Errors] &eHandled: &a${error} ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
+            setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
         });
 
-        process.emitWarning("GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.")
-        
+        process.emitWarning("GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.");
+
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 
         this.loadSys();
@@ -151,17 +151,17 @@ class GCommands extends GCommandsBase {
     }
 
     async loadSys() {
-        new (require('../structures/GMessage')); 
-        new (require('../structures/GGuild')); 
+        new (require('../structures/GMessage'));
+        new (require('../structures/GGuild'));
 
         require('../structures/DMChannel'); require('../structures/NewsChannel'); require('../structures/TextChannel');
 
         setTimeout(() => {
-            new GDatabaseLoader(this.GCommandsClient)
-            new GEventHandling(this.GCommandsClient)
-            new GEventLoader(this.GCommandsClient)
-            new GCommandLoader(this.GCommandsClient)
-        }, 1000)
+            new GDatabaseLoader(this.GCommandsClient);
+            new GEventHandling(this.GCommandsClient);
+            new GEventLoader(this.GCommandsClient);
+            new GCommandLoader(this.GCommandsClient);
+        }, 1000);
     };
 }
 

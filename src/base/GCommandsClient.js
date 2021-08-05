@@ -1,4 +1,4 @@
-const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsDispatcher = require('./GCommandsDispatcher'), { GEvents: GEventLoader } = require('@gcommands/events'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), {msToSeconds} = require('../util/util');
+const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsDispatcher = require('./GCommandsDispatcher'), { GEvents: GEventLoader } = require('@gcommands/events'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), { msToSeconds } = require('../util/util');
 const { Collection, Client } = require('discord.js');
 const fs = require('fs');
 const ms = require('ms');
@@ -15,8 +15,8 @@ class GCommandsClient extends Client {
     constructor(options = {}) {
         super(options);
 
-        if(!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{json:false}).getText());
-        if(!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))',{json:false}).getText());
+        if (!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{ json: false }).getText());
+        if (!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))',{ json: false }).getText());
 
         /**
          * GCommandsClient
@@ -26,18 +26,18 @@ class GCommandsClient extends Client {
         this.GCommandsClient.client = this;
 
         /**
-         * caseSensitiveCommands
+         * CaseSensitiveCommands
          * @type {Boolean}
          * @default true
         */
-        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true
+        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true;
 
         /**
-         * caseSensitivePrefixes
+         * CaseSensitivePrefixes
          * @type {Boolean}
          * @default true
         */
-        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true
+        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true;
 
         /**
          * CmdDir
@@ -60,39 +60,39 @@ class GCommandsClient extends Client {
         this.autoTyping = options.autoTyping ? msToSeconds(ms(options.autoTyping)) : null;
 
         /**
-         * ownLanguageFile
+         * OwnLanguageFile
          * @type {Object}
         */
-        if(!options.ownLanguageFile) this.languageFile = require('../util/message.json');
+        if (!options.ownLanguageFile) this.languageFile = require('../util/message.json');
         else this.languageFile = options.ownLanguageFile;
 
         /**
-         * language
+         * Language
          * @type {Object} language
         */
         this.language = options.language;
 
         /**
-         * database
+         * Database
          * @type {Object} database
          * @default undefined
         */
         this.database = options.database;
 
         /**
-         * gcategories
+         * Gcategories
          * @type {Array}
          */
-        this.gcategories = fs.readdirSync(`./${this.cmdDir}`)
+        this.gcategories = fs.readdirSync(`./${this.cmdDir}`);
 
         /**
-         * gcommands
+         * Gcommands
          * @type {Collection}
          */
         this.gcommands = new Collection();
 
         /**
-         * galiases
+         * Galiases
          * @type {Collection}
          */
         this.galiases = new Collection();
@@ -112,17 +112,17 @@ class GCommandsClient extends Client {
         this.slash = options.slash.slash ? options.slash.slash : false;
 
         /**
-         * defaultCooldown
+         * DefaultCooldown
          * @type {Number}
          * @default 0
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
 
-        process.on('uncaughtException', (error) => {
-            this.emit(Events.LOG, new Color('&d[GCommands Errors] &eHandled: &a' + error + ` ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
-            setTimeout(() => {this.emit(Events.DEBUG, error)}, 1000)
+        process.on('uncaughtException', error => {
+            this.emit(Events.LOG, new Color(`&d[GCommands Errors] &eHandled: &a${error} ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
+            setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
         });
-        
+
         this.dispatcher = new GCommandsDispatcher(this);
 
         this.loadSys();
@@ -130,17 +130,17 @@ class GCommandsClient extends Client {
     }
 
     async loadSys() {
-        new (require('../structures/GMessage')); 
-        new (require('../structures/GGuild')); 
+        new (require('../structures/GMessage'));
+        new (require('../structures/GGuild'));
 
         require('../structures/DMChannel'); require('../structures/NewsChannel'); require('../structures/TextChannel');
 
         setTimeout(() => {
-            new GDatabaseLoader(this.GCommandsClient)
-            new GEventHandling(this.GCommandsClient)
-            new GEventLoader(this.GCommandsClient)
-            new GCommandLoader(this.GCommandsClient)
-        }, 1000)
+            new GDatabaseLoader(this.GCommandsClient);
+            new GEventHandling(this.GCommandsClient);
+            new GEventLoader(this.GCommandsClient);
+            new GCommandLoader(this.GCommandsClient);
+        }, 1000);
     };
 }
 

@@ -5,11 +5,10 @@ const Color = require('../structures/Color');
  * The Command class
  */
 class Command {
-
     /**
      * Creates new Command instance
      * @param {Client} client
-     * @param {CommandOptions} options 
+     * @param {CommandOptions} options
     */
     constructor(client, options = {}) {
         /**
@@ -31,118 +30,118 @@ class Command {
         this.cooldown = resolveString(options.cooldown);
 
         /**
-         * expectedArgs
+         * ExpectedArgs
          * @type {String | Array}
          * @deprecated
          */
         this.expectedArgs = options.expectedArgs;
 
         /**
-         * args
+         * Args
          * @type {String | Array}
          */
         this.args = options.args;
 
         /**
-         * minArgs
+         * MinArgs
          * @type {Number}
          * @deprecated use args
          */
         this.minArgs = Number(options.minArgs);
 
         /**
-         * userRequiredPermissions
+         * UserRequiredPermissions
          * @type {String | Array}
          */
         this.userRequiredPermissions = options.userRequiredPermissions;
 
         /**
-         * userRequiredRoles
+         * UserRequiredRoles
          * @type {String | Array}
          */
         this.userRequiredRoles = options.userRequiredRoles;
 
         /**
-         * clientRequiredPermissions
+         * ClientRequiredPermissions
          * @type {String | Array}
          */
         this.clientRequiredPermissions = options.clientRequiredPermissions;
 
         /**
-         * userOnly
+         * UserOnly
          * @type {Snowflake | Array}
          */
         this.userOnly = options.userOnly;
 
         /**
-         * channelOnly
+         * ChannelOnly
          * @type {Snowflake | Array}
          */
         this.channelOnly = options.channelOnly;
 
         /**
-         * channelTextOnly
+         * ChannelTextOnly
          * @type {Boolean}
          */
         this.channelTextOnly = options.channelTextOnly ? Boolean(options.channelTextOnly) : null;
 
         /**
-         * channelNewsOnly
+         * ChannelNewsOnly
          * @type {Boolean}
          */
         this.channelNewsOnly = options.channelNewsOnly ? Boolean(options.channelNewsOnly) : null;
 
         /**
-         * channelThreadOnly
+         * ChannelThreadOnly
          * @type {Boolean}
          */
         this.channelThreadOnly = options.channelThreadOnly ? Boolean(options.channelThreadOnly) : null;
 
         /**
-         * guildOnly
+         * GuildOnly
          * @type {Snowflake | Array}
          */
-        this.guildOnly = options.guildOnly;    
+        this.guildOnly = options.guildOnly;
 
         /**
-         * nsfw
+         * Nsfw
          * @type {Boolean}
          */
         this.nsfw = options.nsfw ? Boolean(options.nsfw) : null;
 
         /**
-         * slash
+         * Slash
          * @type {Boolean}
          */
         this.slash = options.slash ? Boolean(options.slash) : null;
 
         /**
-         * aliases
+         * Aliases
          * @type {Array}
          */
         this.aliases = Array.isArray(options.aliases) ? options.aliases : Array(options.aliases);
 
         /**
-         * category
+         * Category
          * @type {string}
          */
         this.category = resolveString(options.category);
 
         /**
-         * usage
+         * Usage
          * @type {string}
          */
         this.usage = resolveString(options.usage);
     }
 
     /**
-     * run function
-     * @param {CommandRunOptions} options 
-     * @param {Array} arrayArgs 
-     * @param {Object} objectArgs 
+     * Run function
+     * @param {CommandRunOptions} options
+     * @param {Array} arrayArgs
+     * @param {Object} objectArgs
      */
     async run(options, arrayArgs, objectArgs) { // eslint-disable-line no-unused-vars, require-await
-        return console.log(new Color(`&d[GCommands] &cCommand ${this.name} doesn't provide a run method!`).getText())
+        return console.log(new Color(`&d[GCommands] &cCommand ${this.name} doesn't provide a run method!`).getText());
     }
 }
 

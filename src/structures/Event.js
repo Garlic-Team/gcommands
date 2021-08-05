@@ -1,5 +1,5 @@
 // ONLY FOR DOCS
-const GEvents = require('@gcommands/events')
+const GEvents = require('@gcommands/events');
 
 /**
  * The Event class
@@ -13,22 +13,22 @@ class Event extends null {}
 Event.name = GEvents.Event.name;
 
 /**
- * once
+ * Once
  * @type {Boolean}
  */
 Event.once = GEvents.Event.once;
 
 /**
- * ws
+ * Ws
  * @type {Boolean}
  */
 Event.ws = GEvents.Event.ws;
 
 /**
- * run function
- * @param {Client} 
+ * Run function
+ * @param {Client}
  * @param {String}
  */
 Event.run = () => GEvents.Event.run;
- 
+
 module.exports = Event;

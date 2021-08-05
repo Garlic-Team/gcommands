@@ -5,7 +5,7 @@ const EventEmitter = require('events');
 */
 class GCommandsBase extends EventEmitter {
     constructor() {
-        super()
+        super();
     }
 }
 
