@@ -1,18 +1,30 @@
-const GInteraction = require('../../structures/GInteraction');
-const InteractionEvent = require('../../structures/InteractionEvent');
-const { inhibit, interactionRefactor } = require('../../util/util')
+const CommandInteraction = require('../../structures/CommandInteraction');
+const ButtonInteraction = require('../../structures/ButtonInteraction');
+const SelectMenuInteraction = require('../../structures/SelectMenuInteraction');
+const { interactionRefactor, inhibit } = require('../../util/util');
 
 module.exports = (client) => {
     client.ws.on('INTERACTION_CREATE', async(data) => {
-        if(data.type == 2) {
-            let interaction = new GInteraction(client, data)
-            client.emit('GInteraction', interaction)
-            return;
+        let InteractionType;
+        switch(data.type) {
+            case 2: 
+                InteractionType = CommandInteraction;
+                break;
+            case 3:
+                switch(data.data.component_type) {
+                    case 2: 
+                        InteractionType = ButtonInteraction;
+                        break;
+                    case 3:
+                        InteractionType = SelectMenuInteraction;
+                        break;
+                }
         }
 
-        if(data.data.component_type) {
-            const interaction = new InteractionEvent(client, data)
+        const interaction = new InteractionType(client, data);
 
+        client.emit('GInteraction', interaction)
+        if(data.data.component_type) {
             let member = interaction.clicker.member, guild = interaction.guild, channel = interaction.channel
             let inhibitReturn = await inhibit(client, interactionRefactor(client, interaction), {
                 interaction, member,
@@ -28,7 +40,6 @@ module.exports = (client) => {
             if(inhibitReturn == false) return;
 
             client.emit(data.data.component_type == 3 ? `selectMenu` : `clickButton`, interaction)
-            client.emit('GInteraction', interaction)
         }
     });
 }

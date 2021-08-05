@@ -29,6 +29,10 @@ module.exports = {
     ButtonCollectorV13: require('./structures/v12/ButtonCollector'),
     SelectMenuCollectorV12: require('./structures/v13/SelectMenuCollector'),
     SelectMenuCollectorV13: require('./structures/v12/SelectMenuCollector'),
+    ButtonInteraction: require('./structures/ButtonInteraction'),
+    CommandInteraction: require('./structures/CommandInteraction'),
+    SelectMenuInteraction: require('./structures/SelectMenuInteraction'),
+    MessageComponentInteraction: require('./structures/MessageComponentInteraction'),
 
     // Other
     Color: require('./structures/Color'),

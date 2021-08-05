@@ -2,12 +2,12 @@ const { Message } = require('discord.js')
 const GInteraction = require('./GInteraction');
 
 /**
- * The InteractionEvent class
+ * The MessageComponentInteraction class
  */
-class InteractionEvent extends GInteraction {
+class MessageComponentInteraction extends GInteraction {
 
     /**
-     * Creates new InteractionEvent instance
+     * Creates new MessageComponentInteraction instance
      * @param {Client} client
      * @param {Object} data 
     */
@@ -41,14 +41,9 @@ class InteractionEvent extends GInteraction {
         this.id = data.data.custom_id;
 
         /**
-         * values
-         * @type {Array}
-         */
-        this.values = data.data.values ? data.data.values : undefined
-
-        /**
          * clicker
          * @type {InteractionEventClicker}
+         * @deprecated
          */
         this.clicker = {
             member: this.member,
@@ -64,4 +59,4 @@ class InteractionEvent extends GInteraction {
     }
 }
 
-module.exports = InteractionEvent;
+module.exports = MessageComponentInteraction;

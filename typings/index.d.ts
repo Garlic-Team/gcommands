@@ -117,9 +117,7 @@ declare module 'gcommands' {
     public channel: TextChannel | NewsChannel | DMChannel;
     public author: User;
     public member: GuildMember;
-    public interaction: GInteractionInteraction;
     public replied: boolean;
-    public deffered: boolean;
 
     public edit(options: Object): void;
     public defer(ephemeral: boolean): void;
@@ -131,14 +129,34 @@ declare module 'gcommands' {
     }
   }
 
-  export class InteractionEvent extends GInteraction {
+  export class ButtonInteraction extends GInteraction {
+    constructor(client: Client, data: object)
+
+    public id: string;
+    public clicker: InteractionEventClicker;
+    public componentType: number;
+    
+    public message: Message;
+  }
+
+  export class SelectMenuInteraction extends GInteraction {
     constructor(client: Client, data: object)
 
     public values: array;
     public id: string;
     public clicker: InteractionEventClicker;
+    public componentType: number;
     
     public message: Message;
+  }
+
+  export class CommandInteraction extends GInteraction {
+    constructor(client: Client, data: object)
+
+    public commandId: Snowflake;
+    public commandName: string;
+    public arrayArguments: Array;
+    public objectArguments: Object;
   }
 
   export class Color {
@@ -294,6 +312,7 @@ declare module 'gcommands' {
     public channelOnly: Snowflake | Array;
     public channelTextOnly: Boolean;
     public channelNewsOnly: Boolean;
+    public channelThreadOnly: Boolean;
     public guildOnly: Snowflake | String;
     public nsfw: boolean;
     public aliases: Array;
@@ -409,6 +428,9 @@ declare module 'gcommands' {
     aliases?: Array;
     category?: string;
     usage?: string;
+    channelTextOnly?: boolean;
+    channelNewsOnly?: boolean;
+    channelThreadOnly?: boolean;
   }
 
   interface EventOptions {

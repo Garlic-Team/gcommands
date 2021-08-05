@@ -1,4 +1,4 @@
-const { version } = require('discord.js');
+const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
 let _allSlashCommands;
 
 /**
@@ -51,7 +51,9 @@ class Util {
             command: false,
         }
 
-        if(interaction.name && client.gcommands.get(interaction.name)) {
+        if(!interaction.data) interaction.data = interaction;
+
+        if(interaction.data.name && client.gcommands.get(interaction.data.name)) {
             is.command = true;
         }
 
@@ -68,6 +70,24 @@ class Util {
         interaction.isSelectMenu = () => is.menu;
         if(!raw) return interaction;
         else return { c: is.command, b: is.button, m: is.menu }
+    }
+
+    /**
+     * Internal method to channelTypeRefactor
+     * @param {Channel} channel
+     * @returns {Object}
+    */
+    static channelTypeRefactor(channel) {
+        let finalResult;
+
+        if(channel instanceof TextChannel) finalResult = "text";
+        if(channel instanceof NewsChannel) finalResult = "news";
+        if(channel instanceof DMChannel) finalResult = "dm";
+        if(channel.type == "GUILD_NEWS_THREAD") finalResult = "thread";
+        if(channel.type == "GUILD_PUBLIC_THREAD") finalResult = "thread";
+        if(channel.type == "GUILD_PRIVATE_THREAD") finalResult = "thread";
+
+        return finalResult;
     }
 
     /**

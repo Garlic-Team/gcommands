@@ -23,8 +23,8 @@ npm install gcommands
 yarn install gcommands
 
 # Dev Build
-npm install Garlic-Team/GCommands#dev
-yarn install Garlic-Team/GCommands#dev
+npm install gcommands@dev
+yarn install gcommands@dev
 ```
 
 If you're updating from 4.x to 5.x, check https://gcommands.js.org/guide/guide/additional/fromv4tov5.html

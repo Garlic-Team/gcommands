@@ -84,16 +84,6 @@ class GInteraction {
         this.member = data.guild_id ? ifDjsV13 ? this.guild.members._add(data.member) || data.member : this.guild.members.add(data.member) || data.member : null;
 
         /**
-         * interaction
-         * @type {GInteractionInteraction}
-         */
-        this.interaction = {
-            name: data.data.name,
-            options: data.data.options,
-            id: data.data.id
-        }
-
-        /**
          * replied
          * @type {boolean}
          */

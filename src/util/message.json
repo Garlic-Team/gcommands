@@ -76,6 +76,17 @@
         "turkish": "Bu komutu sadece haber kanallarında çalıştırabilirsiniz.",
         "polish": "To polecenie można uruchomić tylko w kanałach informacyjnych."
     },
+    "CHANNEL_THREAD_ONLY": {
+        "english": "You can only run this command in news channels.",
+        "spanish": "Sólo puede ejecutar este comando en los canales de noticias.",
+        "portuguese": "Só se pode executar este comando em canais de notícias.",
+        "russian": "Эту команду можно выполнять только в новостных каналах.",
+        "german": "Sie können diesen Befehl nur in Nachrichtenkanälen ausführen.",
+        "czech": "Tento příkaz lze spustit pouze ve zpravodajských kanálech.",
+        "slovak": "Tento príkaz môžete spustiť len v spravodajských kanáloch.",
+        "turkish": "Bu komutu sadece haber kanallarında çalıştırabilirsiniz.",
+        "polish": "To polecenie można uruchomić tylko w kanałach informacyjnych."
+    },
     "NSFW": {
         "english": "You can only use this command in nsfw channel.",
         "spanish": "Sólo puede utilizar este comando en el canal nsfw.",

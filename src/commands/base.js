@@ -90,7 +90,13 @@ class Command {
          * channelNewsOnly
          * @type {Boolean}
          */
-         this.channelNewsOnly = options.channelNewsOnly ? Boolean(options.channelNewsOnly) : null;
+        this.channelNewsOnly = options.channelNewsOnly ? Boolean(options.channelNewsOnly) : null;
+
+        /**
+         * channelThreadOnly
+         * @type {Boolean}
+         */
+        this.channelThreadOnly = options.channelThreadOnly ? Boolean(options.channelThreadOnly) : null;
 
         /**
          * guildOnly
@@ -133,7 +139,7 @@ class Command {
      * run function
      * @param {CommandRunOptions} options 
      * @param {Array} arrayArgs 
-     * @param {Array | Object} objectArgs 
+     * @param {Object} objectArgs 
      */
     async run(options, arrayArgs, objectArgs) { // eslint-disable-line no-unused-vars, require-await
         return console.log(new Color(`&d[GCommands] &cCommand ${this.name} doesn't provide a run method!`).getText())

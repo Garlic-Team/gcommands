@@ -1,7 +1,7 @@
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const Color = require('../structures/Color'), { Events } = require('../util/Constants');
-const ifDjsV13 = require('../util/util').checkDjsVersion('13'), { inhibit, interactionRefactor } = require('../util/util')
+const ifDjsV13 = require('../util/util').checkDjsVersion('13'), { inhibit, interactionRefactor, channelTypeRefactor } = require('../util/util')
 
 /**
  * The GEventHandling class
@@ -114,9 +114,11 @@ class GEventHandling {
                     }
                 }
 
+                let channelType = channelTypeRefactor(message.channel);
                 if(commandos.nsfw && !message.channel.nsfw) return message.send(this.client.languageFile.NSFW[guildLanguage]);
-                if(commandos.channelTextOnly && message.channel.type != 'text') return message.send(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage])
-                if(commandos.channelNewsOnly && message.channel.type != 'news') return message.send(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage])
+                if(commandos.channelTextOnly && channelType != 'text') return message.send(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage])
+                if(commandos.channelNewsOnly && channelType != 'news') return message.send(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage])
+                if(commandos.channelThreadOnly && channelType != 'thread') return interaction.reply.send({content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true})
 
                 if(commandos.clientRequiredPermissions) {
                     if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
@@ -156,6 +158,7 @@ class GEventHandling {
                     }
                 }
 
+                let objectArgs = {};
                 for(let i in commandos.args) {
                     let arg = new Argument(this.client, commandos.args[i]);
                     if(arg.type == 'invalid') continue;
@@ -175,6 +178,7 @@ class GEventHandling {
         
                             if(argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                             args[i] = argInput.content;
+                            objectArgs[arg.name] = argInput.content;
                         }
     
                         continue;
@@ -185,6 +189,7 @@ class GEventHandling {
 
                     if(argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                     args[i] = argInput.content;
+                    objectArgs[arg.name] = argInput.content;
                 }
 
                 this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + message.author.id + '&3 used &a' + cmd).getText())
@@ -206,7 +211,7 @@ class GEventHandling {
                         if(!botMessage) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'))
                         return await botMessage.edit(options);
                     }
-                }, args, args)
+                }, args, objectArgs)
             } catch(e) {
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
@@ -221,10 +226,10 @@ class GEventHandling {
     async slashEvent() {
         if((this.client.slash) || (this.client.slash == 'both')) {
             this.client.on('GInteraction', async (interaction) => {
-                if(interaction.type !== 2) return;
+                if(!interaction.isCommand()) return;
 
                 try {
-                    let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.interaction.name.toLowerCase() : interaction.interaction.name);
+                    let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
                     if(!commandos || String(commandos.slash) == 'false') return;
 
                     let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
@@ -239,7 +244,7 @@ class GEventHandling {
                         edit: async(result) => {
                             return interaction.reply.edit(result);
                         }
-                    }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
+                    }, interaction.arrayArguments, interaction.objectArguments)
                     if(inhibitReturn == false) return;
 
                     let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
@@ -266,10 +271,12 @@ class GEventHandling {
                         }
                     }
 
-                    console.log(commandos.nsfw, interaction.channel.nsfw)
+                    let channelType = channelTypeRefactor(interaction.channel);
+
                     if(commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send({content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true});
-                    if(commandos.channelTextOnly && interaction.channel.type != 'text') return interaction.reply.send({content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true})
-                    if(commandos.channelNewsOnly && interaction.channel.type != 'news') return interaction.reply.send({content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true})
+                    if(commandos.channelTextOnly && channelType != 'text') return interaction.reply.send({content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true})
+                    if(commandos.channelNewsOnly && channelType != 'news') return interaction.reply.send({content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true})
+                    if(commandos.channelThreadOnly && channelType != 'thread') return interaction.reply.send({content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true})
 
                     if(commandos.clientRequiredPermissions) {
                         if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
@@ -312,12 +319,12 @@ class GEventHandling {
                             edit: async(result) => {
                                 return interaction.reply.edit(result);
                             }
-                        }, this.getSlashArgs(interaction.interaction.options || []), this.getSlashArgsObject(interaction.interaction.options || []))
+                        }, interaction.arrayArguments, interaction.objectArguments)
                     } catch(e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3' + e).getText())
                     }
                     
-                    this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + interaction.member.user.id + '&3 used &a' + interaction.interaction.name).getText())
+                    this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + interaction.member.user.id + '&3 used &a' + interaction.commandName).getText())
                 }catch(e) {
                     this.GCommandsClient.emit(Events.DEBUG, e);
                 }
@@ -334,56 +341,6 @@ class GEventHandling {
         await readdirSync(`${__dirname}/../base/actions/`).forEach(file => {
             require(`../base/actions/${file}`)(this.client)
         })
-    }
-
-    /**
-     * Internal method to getSlashArgs
-     * @returns {Array}
-     * @private
-    */
-    getSlashArgs(options) {
-        let args = [];
-  
-        let check = (option) => {
-          if (!option) return;
-          if (option.value) args.push(option.value);
-          else args.push(option.name);
-      
-          if (option.options) {
-            for (let o = 0; o < option.options.length; o++) {
-              check(option.options[o]);
-            }
-          }
-        }
-      
-        if (Array.isArray(options)) {
-          for (let o = 0; o < options.length; o++) {
-            check(options[o]);
-          }
-        } else {
-          check(options);
-        }
-      
-        return args;
-    }
-
-    /**
-     * Internal method to getSlashArgsObject
-     * @returns {object}
-     * @private
-    */
-    getSlashArgsObject(options) {
-        let args = {};
-
-        for (let o of options) {
-          if (o.type == 1) args[o.name] = this.getSlashArgsObject(o.options || []);
-          else if (o.type == 2) args[o.name] = this.getSlashArgsObject(o.options || []); 
-          else {
-              args[o.name] = o.value;
-          }
-        }
-        
-        return args;
     }
 }
 
