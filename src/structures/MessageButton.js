@@ -116,7 +116,7 @@ class MessageButton extends BaseMessageComponent {
      * @param {String} url 
     */
     setURL(url) {
-        this.url = this.style === 5 ? resolveString(url) : null;
+        this.url = resolveString(url);
         return this;
     }
 
@@ -146,11 +146,11 @@ class MessageButton extends BaseMessageComponent {
     toJSON() {
         return {
             type: MessageComponentTypes.BUTTON,
-            style: this.style,
+            style: this.url ? 5 : this.style,
             label: this.label,
             disabled: this.disabled,
             url: this.url,
-            custom_id: this.customId,
+            custom_id: this.url ? null : this.customId,
             emoji: this.emoji
         }
     }
