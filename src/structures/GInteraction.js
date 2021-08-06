@@ -17,61 +17,61 @@ class GInteraction {
     */
     constructor(client, data) {
         /**
-         * Client
+         * The d.js client
          * @type {Client}
          */
         this.client = client;
 
         /**
-         * Type
+         * The interaction's id
+         * @type {Snowflake}
+         */
+        this.id = data.id;
+
+        /**
+         * The interaction's type
          * @type {GInteractionType}
          */
         this.type = InteractionTypes[data.type];
 
         /**
-         * Token
+         * The interaction's token
          * @type {string}
          */
         this.token = data.token;
 
         /**
-         * DiscordId
-         * @type {number}
-         */
-        this.discordId = data.id;
-
-        /**
-         * Version
+         * The version
          * @type {number}
          */
         this.version = data.version;
 
         /**
-         * ApplicationId
+         * The application's id
          * @type {number}
          */
         this.applicationId = data.application_id;
 
         /**
-         * Guild
+         * The interaction's guild
          * @type {Guild}
          */
         this.guild = data.guild_id ? this.client.guilds.cache.get(data.guild_id) : null;
 
         /**
-         * Channel
+         * The interaction's channel
          * @type {TextChannel | NewsChannel | DMChannel | ThreadChannel}
          */
         this.channel = data.guild_id ? this.guild.channels.cache.get(data.channel_id) : client.channels.cache.get(data.channel_id);
 
         /**
-         * Author
+         * The interaction's author
          * @type {User}
          */
         this.author = ifDjsV13 ? this.client.users._add(data.user || data.member.user) : this.client.users.add(data.user || data.member.user);
 
         /**
-         * Member
+         * The interaction's member
          * @type {GuildMember | null}
          */
         this.member = data.guild_id ? ifDjsV13 ? this.guild.members._add(data.member) || data.member : this.guild.members.add(data.member) || data.member : null;
@@ -79,8 +79,9 @@ class GInteraction {
         /**
          * Replied
          * @type {boolean}
+         * @private
          */
-        this.replied = false;
+        this._replied = false;
 
         return this;
     }
@@ -154,8 +155,8 @@ class GInteraction {
      * @param {Boolean} ephemeral
     */
     async defer(ephemeral) {
-        if (this.replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
-        await this.client.api.interactions(this.discordId, this.token).callback.post({
+        if (this._replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
+        await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: 6,
                 data: {
@@ -163,7 +164,7 @@ class GInteraction {
                 },
             },
         });
-        this.replied = true;
+        this._replied = true;
     }
 
     /**
@@ -171,8 +172,8 @@ class GInteraction {
      * @param {Boolean} ephemeral
     */
     async think(ephemeral) {
-        if (this.replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
-        await this.client.api.interactions(this.discordId, this.token).callback.post({
+        if (this._replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
+        await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: 5,
                 data: {
@@ -180,7 +181,7 @@ class GInteraction {
                 },
             },
         });
-        this.replied = true;
+        this._replied = true;
     }
 
     /**
@@ -189,7 +190,7 @@ class GInteraction {
     */
     async edit(result) {
         if (result.autoDefer === true) {
-            await this.client.api.interactions(this.discordId, this.token).callback.post({
+            await this.client.api.interactions(this.id, this.token).callback.post({
                 data: {
                     type: 6,
                 },
@@ -205,7 +206,7 @@ class GInteraction {
     */
     async update(result) {
         if (result.autoDefer === true) {
-            await this.client.api.interactions(this.discordId, this.token).callback.post({
+            await this.client.api.interactions(this.id, this.token).callback.post({
                 data: {
                     type: 6,
                 },
@@ -226,7 +227,7 @@ class GInteraction {
          * @memberof reply
         */
         let _send = result => {
-            this.replied = true;
+            this._replied = true;
             return this.slashRespond(result);
         };
 
@@ -236,7 +237,7 @@ class GInteraction {
          * @memberof reply
         */
         let _edit = result => {
-            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
+            if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
             return this.slashEdit(result);
         };
 
@@ -246,7 +247,7 @@ class GInteraction {
          * @memberof reply
         */
         let _update = result => {
-            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
+            if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
             return this.slashEdit(result, true);
         };
 
@@ -256,7 +257,7 @@ class GInteraction {
          * @memberof reply
         */
         let _fetch = async () => {
-            if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
+            if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
 
             return new Message(this.client, apiMessage, this.channel);
@@ -275,7 +276,7 @@ class GInteraction {
             .resolveData()
             .resolveFiles();
 
-        let apiMessage = (await this.client.api.interactions(this.discordId, this.token).callback.post({
+        let apiMessage = (await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: result.thinking ? 5 : 4,
                 data: GPayloadResult.data
@@ -312,7 +313,7 @@ class GInteraction {
 
         let apiMessage = {};
         if (update) {
-            apiMessage = this.client.api.interactions(this.discordId, this.token).callback.post({
+            apiMessage = this.client.api.interactions(this.id, this.token).callback.post({
                 data: {
                     type: 7,
                     data: GPayloadResult.data

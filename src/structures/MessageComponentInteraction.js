@@ -16,26 +16,26 @@ class MessageComponentInteraction extends GInteraction {
         super(client, data);
 
         /**
-         * ComponentType
+         * The component's type
          * @type {Number}
          */
         this.componentType = MessageComponentTypes[data.data.component_type];
 
         /**
-         * Id
+         * The component's customId
          * @type {Number}
          * @deprecated
          */
         this.id = data.data.custom_id;
 
         /**
-         * CustomId
+         * The component's customId
          * @type {Number}
          */
         this.customId = data.data.custom_id;
 
         /**
-         * Clicker
+         * The component's clicker
          * @type {InteractionEventClicker}
          * @deprecated
          */
@@ -46,7 +46,7 @@ class MessageComponentInteraction extends GInteraction {
         };
 
         /**
-         * Message
+         * The component's message
          * @type {GMessage}
          */
         this.message = new Message(this.client, data.message, this.channel);

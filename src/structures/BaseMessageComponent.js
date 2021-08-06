@@ -10,7 +10,7 @@ class BaseMessageComponent {
      */
     constructor(data) {
         /**
-         * Type
+         * The component's type
          * @type {string}
          */
         this.type = MessageComponentTypes[data.type];

@@ -14,7 +14,7 @@ class SelectMenuInteraction extends MessageComponentInteraction {
         super(client, data);
 
         /**
-         * Values
+         * The SelectMenu's values
          * @type {Array}
          */
         this.values = data.data.values ? data.data.values : undefined;
