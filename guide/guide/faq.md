@@ -11,14 +11,14 @@ A: Simple.
 ```js
 {
   client,
-    bot, // alias of client
-    message, // only in message commands
-    member,
-    author,
-    guild,
-    interaction, // only in slash commands
-    channel,
-    respond,
-    edit;
+  bot, // alias of client
+  message, // only in message commands
+  member,
+  author,
+  guild,
+  interaction, // only in slash commands
+  channel,
+  respond,
+  edit
 }
 ```
