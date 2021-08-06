@@ -60,7 +60,7 @@ class GInteraction {
 
         /**
          * Channel
-         * @type {TextChannel | NewsChannel | DMChannel}
+         * @type {TextChannel | NewsChannel | DMChannel | ThreadChannel}
          */
         this.channel = data.guild_id ? this.guild.channels.cache.get(data.channel_id) : client.channels.cache.get(data.channel_id);
 
