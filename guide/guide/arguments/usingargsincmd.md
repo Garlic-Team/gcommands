@@ -30,6 +30,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "hug",
+      description: "Hugs someone!",
       slash: "both",
       cooldown: 2,
       args: [
@@ -89,6 +90,53 @@ module.exports = class extends Command {
         </dis-message>
         <dis-message profile="gcommands">
             **iZboxo#2828** hugs **Hyro#8938**, aww!
+        </dis-message>
+    </discord-messages>
+</div>
+
+or, an example with a `ping` command:
+
+```js
+const { Command } = require("gcommands");
+
+module.exports = class extends Command {
+  constructor(...args) {
+    super(...args, {
+      name: "ping",
+      description: "Checks the bot's latency",
+      slash: "both",
+      cooldown: 2,
+    });
+  }
+
+  run({ client, respond, interaction, message }, args) {
+    let ping =
+      Date.now() - (interaction ? interaction.createdAt : message.createdAt);
+    respond({
+      content: `**My Ping:** **\`${ping}ms\`**\n**WS Ping:** **\`${client.ws.ping}ms\`**`,
+      ephemeral: true,
+    });
+  }
+};
+```
+
+<div is="discord-messages">
+    <discord-messages>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="hyro" :command="true">ping</discord-interaction>
+            </template>
+            **My Ping:** **`100ms`**<br/>
+            **WS Ping:** **`15ms`**
+        </dis-message>
+    </discord-messages>
+    <discord-messages>
+        <dis-message profile="izboxo">
+            .ping
+        </dis-message>
+        <dis-message profile="gcommands">
+            **My Ping:** **`80ms`**<br/>
+            **WS Ping:** **`20ms`**
         </dis-message>
     </discord-messages>
 </div>
