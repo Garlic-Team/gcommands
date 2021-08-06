@@ -1,147 +1,323 @@
-const { MessageEmbed, MessageAttachment, DataResolver, Util } = require('discord.js');
-const { browser } = require('discord.js').Constants;
+const { Message } = require('discord.js');
+const Color = require('../structures/Color');
+const GPayload = require('./GPayload');
+const axios = require('axios');
+const { interactionRefactor } = require('../util/util');
 
 /**
- * The GPayload class
+ * The GInteraction class
  */
-class GPayload {
+class GInteraction {
 
     /**
-     * Creates new GPayload instance
-     * @param {TextChannel | NewsChannel | DMChannel | ThreadChannel} channel
-     * @param {options} data 
+     * Creates new GInteraction instance
+     * @param {Client} client
+     * @param {Object} data 
     */
-    constructor(channel, options) {
+    constructor(client, data) {
+
         /**
-         * Channel
+         * client
+         * @type {Client}
+         */
+        this.client = client;
+
+        /**
+         * type
+         * @type {number}
+         */
+        this.type = data.type;
+
+        /**
+         * token
+         * @type {string}
+         */
+        this.token = data.token;
+
+        /**
+         * discordId
+         * @type {number}
+         */
+        this.discordId = data.id;
+
+        /**
+         * version
+         * @type {number}
+         */
+        this.version = data.version;
+
+        /**
+         * applicationId
+         * @type {number}
+         */
+        this.applicationId = data.application_id;
+
+        /**
+         * guild
+         * @type {Guild}
+         */
+        this.guild = data.guild_id ? this.client.guilds.cache.get(data.guild_id) : null;
+
+        /**
+         * channel
          * @type {TextChannel | NewsChannel | DMChannel | ThreadChannel}
          */
-
-        this.channel = channel;
+        this.channel = data.guild_id ? this.guild.channels.cache.get(data.channel_id) : client.channels.cache.get(data.channel_id)
+        
+        /**
+         * createdTimestamp
+         * @type {Number}
+         */
+        this.createdTimestamp = Date.now();
 
         /**
-         * Options
-         * @type {string|GPayloadOptions}
+         * author
+         * @type {User}
          */
-        this.options = options;
+        this.author = this.client.users.cache.get(data.guild_id ? data.member.user.id : data.user.id);
 
         /**
-         * Data sendable to the API
-         * @type {GPayloadOptions}
+         * member
+         * @type {GuildMember | null}
          */
-        this.data = null;
+        this.member = data.guild_id ? this.guild.members.cache.get(data.member.user.id) : null;
 
         /**
-         * Files sendable to the API
-         * @type {?MessageFile[]}
+         * interaction
+         * @type {Object}
          */
-        this.files = null;
-    }
+        this.interaction = {
+            name: data.data.name,
+            options: data.data.options,
+            id: data.data.id
+        }
 
-    /**
-     * Resolves data.
-     * @returns {GPayload}
-     */
-    resolveData() {
-        if(this.data) return this;
-        else this.data = {};
+        /**
+         * replied
+         * @type {boolean}
+         */
+        this.replied = false;
 
-        let type = typeof this.options;
-        if(type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options }
+         /**
+          * deferred
+          * @type {boolean}
+          */
+        this.deferred = false;
 
-        this.options.inlineReply = this.options.inlineReply == undefined ? false : this.options.inlineReply;
-
-        if(this.options.content && typeof this.options.content == 'object') {
-            this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
-            this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : [];
-        } else this.data.content = this.options.content || null
-
-        this.data.allowed_mentions = this.options.allowedMentions ? this.options.allowedMentions : { parse: [], repliedUser: true }
-        this.data.flags = this.options.ephemeral ? 64 : null
-
-        if(this.options.components) this.data.components =!Array.isArray(this.options.components) ? [this.options.components] : this.options.components
-        if(this.options.embeds) this.data.embeds = !Array.isArray(this.options.embeds) ? [this.options.embeds] : this.options.embeds
-        if(this.options.attachments) this.options.attachments = !Array.isArray(this.options.attachments) ? [this.options.attachments] : this.options.attachments
-        if(this.options.files) this.options.files = !Array.isArray(this.options.files) ? [this.options.files] : this.options.files
-
-        if(this.options.inlineReply && typeof this.options.inlineReply == "string") this.data.message_reference = { message_id: this.options.inlineReply }
-        else if(typeof this.options.inlineReply == "boolean" && this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID }
-
+        this.__isInteraction(data);
+        
         return this;
     }
 
     /**
-     * Resolves files.
-     * @returns {GPayload}
-     */
-    async resolveFiles() {
-        if (this.files) return this;
+     * Method to isInteraction
+     * @param {Object} data
+     * @returns {void}
+     * @private 
+    */
+    __isInteraction(data) {
+        let raw = interactionRefactor(this.client, data, true);
+        this.isCommand = () => raw.c;
+        this.isButton = () => raw.b;
+        this.isSelectMenu = () => raw.m;
+    }
 
-        const finalFiles = [];
-        if(this.options.files) this.options.attachments = this.options.files;
-        if (this.options.attachments) {
-            finalFiles.push(...this.options.attachments);
+    /**
+     * Method to defer
+     * @param {Boolean} ephemeral 
+    */
+    async defer(ephemeral) {
+        if (this.deferred || this.replied) return console.log(new Color('&d[GCommands] &cThis button already has a reply').getText());
+        await this.client.api.interactions(this.discordId, this.token).callback.post({
+            data: {
+                type: 6,
+                data: {
+                    flags: ephemeral ? 1 << 6 : null,
+                },
+            },
+        });
+        this.deferred = true;
+    }
+
+    /**
+     * Method to think
+     * @param {Boolean} ephemeral 
+    */
+    async think(ephemeral) {
+        if (this.deferred || this.replied) return console.log(new Color('&d[GCommands] &cThis button already has a reply').getText());
+        await this.client.api.interactions(this.discordId, this.token).callback.post({
+            data: {
+                type: 5,
+                data: {
+                    flags: ephemeral ? 1 << 6 : null,
+                },
+            },
+        });
+        this.deferred = true;
+    }
+
+    /**
+     * Method to edit
+     * @param {Object} options 
+    */
+    async edit(result) {
+        if(result.autoDefer == true) {
+            await this.client.api.interactions(this.discordId, this.token).callback.post({
+                data: {
+                    type: 6,
+                },
+            });
         }
 
-        if(this.data.embeds) {
-          for (const embed of this.data.embeds) {
-            if (embed.files) {
-              finalFiles.push(...embed.files);
+        this.slashEdit(result)
+    }
+
+    /**
+     * Method to update
+     * @param {Object} options 
+    */
+    async update(result) {
+        if(result.autoDefer == true) {
+            await this.client.api.interactions(this.discordId, this.token).callback.post({
+                data: {
+                    type: 6,
+                },
+            });
+        }
+
+        this.slashEdit(result, true)
+    }
+
+    /**
+     * Method to reply
+     * @type {get}
+    */
+    get reply() {
+        /**
+         * Method to replySend
+         * @param {Object} options 
+         * @memberof reply
+        */
+        let _send = async(result) => {
+            this.replied = true;
+            return this.slashRespond(result)
+        }
+
+        /**
+         * Method to replyEdit
+         * @param {Object} options 
+         * @memberof reply
+        */
+         let _edit = async(result) => {
+            if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
+            return this.slashEdit(result)
+        }
+
+        /**
+         * Method to replyUpdate
+         * @param {Object} options 
+         * @memberof reply
+        */
+         let _update = async(result) => {
+            if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
+            return this.slashEdit(result, true)
+        }
+
+        /**
+         * Method to replyFetch
+         * @param {Object} options
+         * @memberof reply 
+        */
+        let _fetch = async() => {
+            if(!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText())
+            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
+
+            if(apiMessage) {
+                apiMessage.client = this.client;
+                apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+                apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+                apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+                apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+                apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessage.id].delete()};
             }
-          }
+
+            return new Message(this.client, data.message, this.channel)
         }
-    
-        this.files = await Promise.all(finalFiles.map(f => this.constructor.resolveFile(f)));
-        return this;
+
+        return {
+            send: _send,
+            edit: _edit,
+            update: _update,
+            fetch: _fetch
+        }
     }
 
-    /**
-     * Resolves a single file into an object sendable to the API.
-     * from djs
-     * @param {BufferResolvable|Stream|FileOptions|MessageAttachment} fileLike Something that could be resolved to a file
-     * @returns {Object}
-     */
-    static async resolveFile(fileLike) {
-        let attachment;
-        let name;
-    
-        const findName = thing => {
-          if (typeof thing === 'string') {
-            return Util.basename(thing);
-          }
-    
-          if (thing.path) {
-            return Util.basename(thing.path);
-          }
-    
-          return 'file.jpg';
-        };
-    
-        const ownAttachment =
-          typeof fileLike === 'string' ||
-          fileLike instanceof (browser ? ArrayBuffer : Buffer) ||
-          typeof fileLike.pipe === 'function';
-        if (ownAttachment) {
-          attachment = fileLike;
-          name = findName(attachment);
+    async slashRespond(result) {
+        let GPayloadResult = await GPayload.create(this.channel, result)
+            .resolveData()
+            .resolveFiles();
+
+        let apiMessage = (await this.client.api.interactions(this.discordId, this.token).callback.post({
+            data: {
+                type: result.thinking ? 5 : 4,
+                data: GPayloadResult.data
+            },
+            files: GPayloadResult.files
+        }))
+
+        let apiMessageMsg = {};
+        try {
+            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.token}/messages/@original`)).data;
+        } catch(e) {
+            apiMessageMsg = {
+                id: undefined
+            }
+        }
+
+        if(typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
+        if(apiMessage) {
+            apiMessage = apiMessageMsg;
+            apiMessage.client = this.client ? this.client : client;
+            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
+        }
+
+        return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
+    }
+
+    async slashEdit(result, update) {
+        let GPayloadResult = await GPayload.create(this.channel, result)
+            .resolveData();
+        
+        let apiMessage = {}
+        if(update) {
+            apiMessage = this.client.api.interactions(this.discordId, this.token).callback.post({
+                data: {
+                    type: 7,
+                    data: GPayloadResult.data
+                },
+            })
         } else {
-          attachment = fileLike.attachment;
-          name = fileLike.name || findName(attachment);
+            apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : '@original'].patch({
+                data: GPayloadResult.data
+            }))
         }
-    
-        const resource = await DataResolver.resolveFile(attachment);
-        return { attachment, name, file: resource };
-    }
 
-    /**
-     * Creates a `GPayload` from user-level arguments.
-     * @param {TextChannel | NewsChannel | DMChannel | ThreadChannel} channel
-     * @param {string|GPayloadOptions} options
-     * @returns {GPayload}
-     */
-    static create(channel, options) {
-        return new this(channel, options);
+        if(typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
+        if(apiMessage) {
+            apiMessage.client = this.client ? this.client : client;
+            apiMessage.createButtonCollector = function createButtonCollector(filter, options) {return this.client.dispatcher.createButtonCollector(apiMessage, filter, options)};
+            apiMessage.awaitButtons = function awaitButtons(filter, options) {return this.client.dispatcher.awaitButtons(apiMessage, filter, options)};
+            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) {return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options)};
+            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) {return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options)};
+            apiMessage.delete = function deleteMsg() {return this.client.api.webhooks(this.client.user.id, interaction.token).messages[apiMessageMsg.id].delete()};
+        }
+
+        return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 }
 
-module.exports = GPayload;
+module.exports = GInteraction;
