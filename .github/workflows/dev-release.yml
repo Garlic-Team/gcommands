@@ -20,7 +20,7 @@ jobs:
 
       - name: Deprecate old versions
         run: |
-          npm deprecate gcommands@5.2.5 ""
+          npm deprecate gcommands@"~5.2.5" ""
           npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)" "no longer supported" || true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
