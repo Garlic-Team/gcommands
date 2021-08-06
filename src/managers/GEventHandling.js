@@ -158,7 +158,7 @@ class GEventHandling {
                     let arg = new Argument(this.client, commandos.args[i]);
                     if (arg.type === 'invalid') continue;
 
-                    let validArg = async (prompt) => {
+                    let validArg = async prompt => {
                         let final = await arg.obtain(message, prompt);
                         if (!final.valid) return validArg(message, prompt);
 

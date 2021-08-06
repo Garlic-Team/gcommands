@@ -1,12 +1,12 @@
 const EventEmitter = require('events');
-const GCommandLoader = require('../managers/GCommandLoader'), 
-    Color = require('../structures/Color'), 
-    GCommandsDispatcher = require('./GCommandsDispatcher'), 
-    { GEvents: GEventLoader } = require('@gcommands/events'), 
+const GCommandLoader = require('../managers/GCommandLoader'),
+    Color = require('../structures/Color'),
+    GCommandsDispatcher = require('./GCommandsDispatcher'),
+    { GEvents: GEventLoader } = require('@gcommands/events'),
     GEventHandling = require('../managers/GEventHandling'),
-    GDatabaseLoader = require('../managers/GDatabaseLoader'), 
-    { Events } = require('../util/Constants'), 
-    GUpdater = require('../util/updater'), 
+    GDatabaseLoader = require('../managers/GDatabaseLoader'),
+    { Events } = require('../util/Constants'),
+    GUpdater = require('../util/updater'),
     { msToSeconds } = require('../util/util');
 
 const { Collection } = require('discord.js');
