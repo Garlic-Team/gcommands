@@ -71,12 +71,12 @@ class Util {
     static channelTypeRefactor(channel) {
         let finalResult;
 
-        if (channel instanceof TextChannel) finalResult = "text";
-        if (channel instanceof NewsChannel) finalResult = "news";
-        if (channel instanceof DMChannel) finalResult = "dm";
-        if (channel.type === "GUILD_NEWS_THREAD") finalResult = "thread";
-        if (channel.type === "GUILD_PUBLIC_THREAD") finalResult = "thread";
-        if (channel.type === "GUILD_PRIVATE_THREAD") finalResult = "thread";
+        if (channel instanceof TextChannel) finalResult = 'text';
+        if (channel instanceof NewsChannel) finalResult = 'news';
+        if (channel instanceof DMChannel) finalResult = 'dm';
+        if (channel.type === 'GUILD_NEWS_THREAD') finalResult = 'thread';
+        if (channel.type === 'GUILD_PUBLIC_THREAD') finalResult = 'thread';
+        if (channel.type === 'GUILD_PRIVATE_THREAD') finalResult = 'thread';
 
         return finalResult;
     }

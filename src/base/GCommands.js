@@ -142,7 +142,7 @@ class GCommands extends GCommandsBase {
             setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
         });
 
-        process.emitWarning("GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.");
+        process.emitWarning('GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.');
 
         this.client.dispatcher = new GCommandsDispatcher(this.client);
 

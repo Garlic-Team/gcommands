@@ -1,4 +1,4 @@
-const GInteraction = require("./GInteraction");
+const GInteraction = require('./GInteraction');
 
 class CommandInteraction extends GInteraction {
     constructor(client, data) {
