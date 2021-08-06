@@ -166,6 +166,7 @@ class GCommands extends EventEmitter {
         require('../structures/DMChannel');
         require('../structures/NewsChannel');
         require('../structures/TextChannel');
+        require('../structures/ThreadChannel');
 
         setTimeout(() => {
             new GDatabaseLoader(this.GCommandsClient);
