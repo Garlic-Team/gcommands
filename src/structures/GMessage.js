@@ -79,7 +79,7 @@ class GMessage {
                     if ('sticker_items' in data || 'stickers' in data || !partial && ifDjsV13) {
                         const { Sticker } = require('discord.js');
                         this.stickers = new Collection(
-                            (data.sticker_items ?? data.stickers)?.map(s => [s.id, new Sticker(this.client, s)]),
+                            (data.sticker_items || data.stickers).map(s => [s.id, new Sticker(this.client, s)]),
                         );
                     } else {
                         this.stickers = new Collection(this.stickers);
@@ -123,7 +123,7 @@ class GMessage {
                     }
 
                     if ('webhook_id' in data || !partial) {
-                        this.webhookId = data.webhook_id ?? null;
+                        this.webhookId = data.webhook_id || null;
                     }
 
                     if ('application' in data || !partial) {
@@ -131,7 +131,7 @@ class GMessage {
                     }
 
                     if ('application_id' in data || !partial) {
-                        this.applicationId = data.application_id ?? null;
+                        this.applicationId = data.application_id || null;
                     }
 
                     if ('activity' in data || !partial) {
