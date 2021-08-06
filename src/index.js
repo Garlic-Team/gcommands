@@ -17,6 +17,7 @@ module.exports = {
     GNewsChannel: require('./structures/NewsChannel'),
     GTextChannel: require('./structures/TextChannel'),
     GDMChannel: require('./structures/DMChannel'),
+    GThreadChannel: require('./structures/ThreadChannel'),
     MessageButton: require('./structures/MessageButton'),
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
