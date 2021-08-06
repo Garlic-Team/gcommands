@@ -147,8 +147,7 @@ function createEnum(keys) {
  * @property {Object} allowedMentions
  * @property {(string | Boolean)} inlineReply
  * @property {(string | Array)} stickers
- * @example
- * .send({
+ * @example .send({
  *  content: "hello",
  *  embeds: [embed],
  *  components: [actionRow],
