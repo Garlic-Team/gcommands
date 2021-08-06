@@ -5,6 +5,7 @@ const Color = require('./Color');
 
 /**
  * The MessageSelectMenu class
+ * @extends BaseMessageComponent
  */
 class MessageSelectMenu extends BaseMessageComponent {
     /**

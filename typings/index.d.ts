@@ -129,9 +129,7 @@ declare module 'gcommands' {
     }
   }
 
-  export class ButtonInteraction extends GInteraction {
-    constructor(client: Client, data: object)
-
+  export class MessageComponentInteraction extends GInteraction {
     public id: string;
     public clicker: InteractionEventClicker;
     public componentType: number;
@@ -139,15 +137,14 @@ declare module 'gcommands' {
     public message: Message;
   }
 
-  export class SelectMenuInteraction extends GInteraction {
+  export class ButtonInteraction extends MessageComponentInteraction {
+    constructor(client: Client, data: object)
+  }
+
+  export class SelectMenuInteraction extends MessageComponentInteraction {
     constructor(client: Client, data: object)
 
     public values: array;
-    public id: string;
-    public clicker: InteractionEventClicker;
-    public componentType: number;
-    
-    public message: Message;
   }
 
   export class CommandInteraction extends GInteraction {

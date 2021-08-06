@@ -4,6 +4,7 @@ const BaseMessageComponent = require('./BaseMessageComponent');
 
 /**
  * The MessageActionRow class
+ * @extends BaseMessageComponent
  */
 class MessageActionRow extends BaseMessageComponent {
     /**

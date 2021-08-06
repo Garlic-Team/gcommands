@@ -4,6 +4,7 @@ const GInteraction = require('./GInteraction');
 
 /**
  * The MessageComponentInteraction class
+ * @extends GInteraction
  */
 class MessageComponentInteraction extends GInteraction {
     /**

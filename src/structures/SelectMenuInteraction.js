@@ -2,6 +2,7 @@ const MessageComponentInteraction = require('./MessageComponentInteraction');
 
 /**
  * The SelectMenuInteraction class
+ * @extends MessageComponentInteraction
  */
 class SelectMenuInteraction extends MessageComponentInteraction {
     /**

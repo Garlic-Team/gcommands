@@ -19,6 +19,7 @@ const styles = {
 
 /**
  * The MessageButton class
+ * @extends BaseMessageComponent
  */
 class MessageButton extends BaseMessageComponent {
     /**
