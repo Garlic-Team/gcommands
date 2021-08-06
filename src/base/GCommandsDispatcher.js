@@ -194,6 +194,8 @@ class GCommandsDispatcher {
     */
     async fetchClientApplication() {
         if (!ifDjsV13) this.client.application = await this.client.fetchApplication();
+        else this.client.application = await this.client.application.fetch();
+        
         if (this.client.application.owner === null) {
             this.client.application.owners = [];
             return [];
