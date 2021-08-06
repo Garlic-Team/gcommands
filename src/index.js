@@ -2,9 +2,9 @@
 
 module.exports = {
     // Root classes
-    GCommandsBase: require('./base/GCommandsBase'),
     GCommands: require('./base/GCommands.js'),
-    GEventLoader: require('@gcommands/events').GEventLoader,
+    GCommandsClient: require('./base/GCommandsClient.js'),
+    GEventLoader: require('@gcommands/events').GEvents,
     GCommandsDispatcher: require('./base/GCommandsDispatcher'),
 
     // Loaders
@@ -17,6 +17,7 @@ module.exports = {
     GNewsChannel: require('./structures/NewsChannel'),
     GTextChannel: require('./structures/TextChannel'),
     GDMChannel: require('./structures/DMChannel'),
+    GThreadChannel: require('./structures/ThreadChannel'),
     MessageButton: require('./structures/MessageButton'),
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
@@ -28,29 +29,17 @@ module.exports = {
     ButtonCollectorV13: require('./structures/v12/ButtonCollector'),
     SelectMenuCollectorV12: require('./structures/v13/SelectMenuCollector'),
     SelectMenuCollectorV13: require('./structures/v12/SelectMenuCollector'),
+    ButtonInteraction: require('./structures/ButtonInteraction'),
+    CommandInteraction: require('./structures/CommandInteraction'),
+    SelectMenuInteraction: require('./structures/SelectMenuInteraction'),
+    MessageComponentInteraction: require('./structures/MessageComponentInteraction'),
+    BaseMessageComponent: require('./structures/BaseMessageComponent'),
 
     // Other
     Color: require('./structures/Color'),
     Util: require('./util/util'),
-    ArgumentType: {
-        SUB_COMMAND: 1,
-        SUB_COMMAND_GROUP: 2,
-        STRING: 3,
-        INTEGER: 4,
-        BOOLEAN: 5,
-        USER: 6,
-        CHANNEL: 7,
-        ROLE: 8,
-        MENTIONABLE: 9
-    },
-    ButtonTypes: {
-        blurple: 'blurple',
-        gray: 'gray',
-        grey: 'gray',
-        green: 'green',
-        red: 'red',
-        url: 'url'
-    },
+    ArgumentType: require('./util/Constants').ArgumentType,
+    ButtonType: require('./util/Constants').ButtonType,
 
     version: require('../package.json').version
-}
+};
