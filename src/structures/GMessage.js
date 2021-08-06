@@ -281,7 +281,7 @@ class GMessage {
         });
     }
 
-
+    /* eslint-disable no-empty-function */
     /**
      * Edit a message.
      * @param {string|GPayloadOptions} result

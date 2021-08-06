@@ -1,5 +1,5 @@
 module.exports = client => {
-    client.on('channelUpdate', async (oldChannel, newChannel) => {
+    client.on('channelUpdate', (oldChannel, newChannel) => {
         if (oldChannel.permissionOverwrites !== newChannel.permissionOverwrites) {
             client.emit('guildChannelPermissionsUpdate',
                 newChannel,

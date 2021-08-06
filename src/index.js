@@ -2,7 +2,6 @@
 
 module.exports = {
     // Root classes
-    GCommandsBase: require('./base/GCommandsBase'),
     GCommands: require('./base/GCommands.js'),
     GCommandsClient: require('./base/GCommandsClient.js'),
     GEventLoader: require('@gcommands/events').GEvents,

@@ -1,5 +1,5 @@
 module.exports = client => {
-    client.on('guildUpdate', async (oldGuild, newGuild) => {
+    client.on('guildUpdate', (oldGuild, newGuild) => {
         if (oldGuild.premiumTier < newGuild.premiumTier) {
             client.emit('guildBoostLevelUp',
                 newGuild,

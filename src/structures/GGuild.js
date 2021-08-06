@@ -8,22 +8,22 @@ const { Guild } = require('discord.js');
     constructor() {
         Object.defineProperties(Guild.prototype, {
             getCommandPrefix: {
-                value: async function(cache = true) {
+                value: function(cache = true) {
                     return this.client.dispatcher.getGuildPrefix(this.id, cache);
                 }
             },
             setCommandPrefix: {
-                value: async function(prefix) {
+                value: function(prefix) {
                     this.client.dispatcher.setGuildPrefix(this.id, prefix);
                     this.client.emit('commandPrefixChange', this, prefix);
                 }
             },
 
             getLanguage: {
-                value: async function(cache = true) { return this.client.dispatcher.getGuildLanguage(this.id, cache); }
+                value: function(cache = true) { return this.client.dispatcher.getGuildLanguage(this.id, cache); }
             },
             setLanguage: {
-                value: async function(lang) {
+                value: function(lang) {
                     this.client.dispatcher.setGuildLanguage(this.id, lang);
                     this.client.emit('guildLanguageChange', this, lang);
                 }
@@ -31,6 +31,7 @@ const { Guild } = require('discord.js');
         });
     }
 
+    /* eslint-disable no-empty-function */
     /**
      * Method to getCommandPrefix
      * @param {Boolean} cache

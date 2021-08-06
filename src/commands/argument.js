@@ -72,11 +72,11 @@ class Argument {
             time: wait
         });
         if (responses.size === 0) {
- return {
-            valid: true,
-            timeLimit: true
-        };
-}
+            return {
+                        valid: true,
+                        timeLimit: true
+            };
+        }
 
         let valid = await this.argument.validate(this, responses.first());
         if (valid) {

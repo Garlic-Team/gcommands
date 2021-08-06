@@ -73,8 +73,12 @@ class CommandInteraction extends GInteraction {
         let args = {};
 
         for (let o of options) {
-          if (o.type === 1) { args[o.name] = this.getSlashArgsObject(o.options || []); } else if (o.type === 2) { args[o.name] = this.getSlashArgsObject(o.options || []); } else {
-              args[o.name] = o.value;
+          if (o.type === 1) { 
+            args[o.name] = this.getSlashArgsObject(o.options || []); 
+          } else if (o.type === 2) {
+            args[o.name] = this.getSlashArgsObject(o.options || []); 
+          } else {
+            args[o.name] = o.value;
           }
         }
 

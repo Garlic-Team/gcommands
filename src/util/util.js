@@ -121,7 +121,9 @@ class Util {
             }
 
             await app.commands(commandId).delete();
-        } catch (e) {}
+        } catch (e) {
+            return null;
+        }
     }
 
     /**

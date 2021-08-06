@@ -1,13 +1,22 @@
-const GCommandLoader = require('../managers/GCommandLoader'), Color = require('../structures/Color'), GCommandsBase = require('./GCommandsBase'), GCommandsDispatcher = require('./GCommandsDispatcher'), { GEvents: GEventLoader } = require('@gcommands/events'), GEventHandling = require('../managers/GEventHandling'), GDatabaseLoader = require('../managers/GDatabaseLoader'), { Events } = require('../util/Constants'), GUpdater = require('../util/updater'), { msToSeconds } = require('../util/util');
+const EventEmitter = require('events');
+const GCommandLoader = require('../managers/GCommandLoader'), 
+    Color = require('../structures/Color'), 
+    GCommandsDispatcher = require('./GCommandsDispatcher'), 
+    { GEvents: GEventLoader } = require('@gcommands/events'), 
+    GEventHandling = require('../managers/GEventHandling'),
+    GDatabaseLoader = require('../managers/GDatabaseLoader'), 
+    { Events } = require('../util/Constants'), 
+    GUpdater = require('../util/updater'), 
+    { msToSeconds } = require('../util/util');
+
 const { Collection } = require('discord.js');
 const fs = require('fs');
 const ms = require('ms');
 
 /**
  * The main GCommands class
- * @extends GCommandsBase
  */
-class GCommands extends GCommandsBase {
+class GCommands extends EventEmitter {
     /**
      * The GCommands class
      * @param {Client} client - Discord.js Client

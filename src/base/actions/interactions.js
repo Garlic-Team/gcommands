@@ -4,7 +4,7 @@ const SelectMenuInteraction = require('../../structures/SelectMenuInteraction');
 const { interactionRefactor, inhibit } = require('../../util/util');
 
 module.exports = client => {
-    client.ws.on('INTERACTION_CREATE', async data => {
+    client.ws.on('INTERACTION_CREATE', async (data) => {
         let InteractionType;
         switch (data.type) {
             case 2:
@@ -30,8 +30,8 @@ module.exports = client => {
                 interaction, member,
                 guild: guild,
                 channel: channel,
-                respond: async result => interaction.slashRespond(result),
-                edit: async (result, update = false) => interaction.slashEdit(result, update)
+                respond: result => interaction.slashRespond(result),
+                edit: (result, update = false) => interaction.slashEdit(result, update)
             });
             if (inhibitReturn === false) return;
 

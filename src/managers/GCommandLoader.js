@@ -45,7 +45,10 @@ class GCommandLoader {
             const fileName = file.split('.').reverse()[1]
             const fileType = file.split('.').reverse()[0]
 
-            if(!['js','ts'].includes(fileType)) { this.__loadCommandCategoryFiles(file); continue; };
+            if(!['js','ts'].includes(fileType)) {
+                this.__loadCommandCategoryFiles(file); 
+                continue;
+            }
 
             file = await require(`../../../../${this.cmdDir}${file}`);
             if(isClass(file)) {
@@ -87,7 +90,7 @@ class GCommandLoader {
      * @returns {void}
      * @private
      */
-    async __loadSlashCommands() {
+    __loadSlashCommands() {
         let keys = Array.from(this.client.gcommands.keys());
         this.__deleteNonExistCommands(keys);
 
@@ -144,7 +147,7 @@ class GCommandLoader {
      * @returns {void}
      * @private
     */
-    async __tryAgain(cmd, config) {
+    __tryAgain(cmd, config) {
         axios(config).then(() => {
             this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded: &e➜   &3' + cmd.name, {json:false}).getText());
         })

@@ -1,5 +1,5 @@
 module.exports = client => {
-    client.on('userUpdate', async (oldUser, newUser) => {
+    client.on('userUpdate', (oldUser, newUser) => {
         if (oldUser.displayAvatarURL() !== newUser.displayAvatarURL()) {
             client.emit('userAvatarUpdate',
                 newUser,

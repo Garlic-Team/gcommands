@@ -34,13 +34,13 @@ class GEventHandling {
      * @returns {void}
      * @private
     */
-    async messageEvent() {
+    messageEvent() {
         if ((this.client.slash === false) || (this.client.slash === 'both')) {
-            this.client.on('message', async message => {
+            this.client.on('message', message => {
                 messageEventUse(message);
             });
 
-            this.client.on('messageUpdate', async (oldMessage, newMessage) => {
+            this.client.on('messageUpdate', (oldMessage, newMessage) => {
                 if (oldMessage.content === newMessage.content || oldMessage.embeds === newMessage.embeds) return;
                 messageEventUse(newMessage);
             });
@@ -158,7 +158,7 @@ class GEventHandling {
                     let arg = new Argument(this.client, commandos.args[i]);
                     if (arg.type === 'invalid') continue;
 
-                    let validArg = async (message, prompt) => {
+                    let validArg = async (prompt) => {
                         let final = await arg.obtain(message, prompt);
                         if (!final.valid) return validArg(message, prompt);
 
@@ -169,7 +169,7 @@ class GEventHandling {
                         let argInvalid = await arg.argument.validate(arg, { content: args[i], guild: message.guild });
                         if (argInvalid) {
                             let argInput = await arg.obtain(message, argInvalid);
-                            if (!argInput.valid) argInput = await validArg(message, argInput.prompt);
+                            if (!argInput.valid) argInput = await validArg(argInput.prompt);
 
                             if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                             args[i] = argInput.content;
@@ -180,7 +180,7 @@ class GEventHandling {
                     }
 
                     let argInput = await arg.obtain(message);
-                    if (!argInput.valid) argInput = await validArg(message, argInput.prompt);
+                    if (!argInput.valid) argInput = await validArg(argInput.prompt);
 
                     if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                     args[i] = argInput.content;
@@ -233,8 +233,8 @@ class GEventHandling {
                         author: interaction.author,
                         guild: interaction.guild,
                         channel: interaction.channel,
-                        respond: async result => interaction.reply.send(result),
-                        edit: async result => interaction.reply.edit(result)
+                        respond: result => interaction.reply.send(result),
+                        edit: result => interaction.reply.edit(result)
                     }, interaction.arrayArguments, interaction.objectArguments);
                     if (inhibitReturn === false) return;
 
@@ -300,8 +300,8 @@ class GEventHandling {
                              * @returns {Message}
                              * @memberof GEventHandling
                              */
-                            respond: async result => interaction.reply.send(result),
-                            edit: async result => interaction.reply.edit(result)
+                            respond: result => interaction.reply.send(result),
+                            edit: result => interaction.reply.edit(result)
                         }, interaction.arrayArguments, interaction.objectArguments);
                     } catch (e) {
                         this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3${e}`).getText());
