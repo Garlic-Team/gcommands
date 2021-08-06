@@ -1,4 +1,4 @@
-import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, MembershipStates } from 'discord.js';
+import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish';
@@ -73,7 +73,7 @@ declare module 'discord.js' {
     guildMaximumMembersUpdate: [Guild, Number, Number];
     guildPartnerUpdate: [Guild, Boolean, Boolean];
     guildVerifyUpdate: [Guild, Boolean, Boolean];
-    
+
     voiceChannelJoin: [Channel, VoiceState];
     voiceChannelLeave: [Channel, VoiceState];
     voiceChannelSwitch: [Channel, Channel, VoiceState];
@@ -114,7 +114,7 @@ declare module 'gcommands' {
     public version: number;
     public applicationId: number;
     public guild: Guild;
-    public channel: TextChannel | NewsChannel | DMChannel;
+    public channel: TextChannel | NewsChannel | DMChannel | ThreadChannel;
     public author: User;
     public member: GuildMember;
     public replied: boolean;
@@ -133,7 +133,7 @@ declare module 'gcommands' {
     public id: string;
     public clicker: InteractionEventClicker;
     public componentType: number;
-    
+
     public message: Message;
   }
 
@@ -330,14 +330,14 @@ declare module 'gcommands' {
   }
 
   export class GPayload {
-    constructor(channel: TextChannel | NewsChannel | DMChannel, options: String | GPayloadOptions)
+    constructor(channel: TextChannel | NewsChannel | DMChannel | ThreadChannel, options: String | GPayloadOptions)
 
-    public channel: TextChannel | NewsChannel | DMChannel;
+    public channel: TextChannel | NewsChannel | DMChannel | ThreadChannel;
     public options: GPayloadOptions;
     public data: GPayloadOptions;
     public files: GPayloadFiles;
 
-    public create(channel: TextChannel | NewsChannel | DMChannel, options: String | GPayloadOptions): GPayload;
+    public create(channel: TextChannel | NewsChannel | DMChannel | ThreadChannel, options: String | GPayloadOptions): GPayload;
     public resolveData(): GPayload;
     public resolveFiles(): GPayload;
   }
@@ -380,7 +380,7 @@ declare module 'gcommands' {
     message: Message;
     guild: Guild;
     channel: TextChannel | NewsChannel;
-    
+
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;
   }
