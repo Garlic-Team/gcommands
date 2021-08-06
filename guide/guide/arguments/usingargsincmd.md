@@ -1,87 +1,220 @@
-# Using arguments in commands
-Arguments in commands can make a lot of things easier for you. They can also be useful if you want to do a command such as `!/ban @user`.
+# Using arguments in Commands
 
-##  String arguments
-A `string` argument is simply the text after the command name and prefix.  
-For the example from the `!/say Hello` command, argument 0 will be `Hello`.  
-This system also works for the slash and normal command.
+Arguments in commands can make a lot of things easier for you. They can be used for ban/kick commands, or even for giving people a hug!
+
+## All Argument Types
+
+```js
+const { ArgumentType } = require("gcommands");
+ArgumentType.NUMBER; // 10
+ArgumentType.MENTIONABLE; // 9
+ArgumentType.ROLE; // 8
+ArgumentType.CHANNEL; // 7
+ArgumentType.USER; // 6
+ArgumentType.BOOLEAN; // 5
+ArgumentType.INTEGER; // 4
+ArgumentType.STRING; // 3
+ArgumentType.SUB_COMMAND_GROUP; // 2 | only for slash commands
+ArgumentType.SUB_COMMAND; // 1 | only for slash commands
+```
+
+## Basic Arguments
+
+Basic arguments (string, int, number, boolean, member, etc.) are used for more simpler commands.
+Here's an example with a `hug @user` command:
 
 ```js
 const { Command, ArgumentType } = require("gcommands");
 
-module.exports = class SayCommand extends Command {
-    constructor(...args) {
-        super(...args, {
-            name: "say",
-            aliases: ["send"],
-            userRequiredPermissions: "MANAGE_MESSAGES",
-            args: [
-                {
-                    name: "text",
-                    type: ArgumentType.STRING,
-                    description: "text", // only for slash 
-                    prompt: "What do you want to send?", // only for normal
-                    choices: [
-                        {
-                            name: "embed",
-                            value: "embed"
-                        },
-                        {
-                            name: "link",
-                            value: "link"
-                        }
-                    ]
-                    required: true // only slash
-                }
-            ]
-        })
-    }
+module.exports = class extends Command {
+  constructor(...args) {
+    super(...args, {
+      name: "hug",
+      slash: "both",
+      cooldown: 2,
+      args: [
+        {
+          name: "user",
+          type: ArgumentType.USER,
+          description: "The user to hug!",
+          prompt: "Who do you want to hug?",
+          required: true,
+        },
+      ],
+    });
+  }
 
-    async run({client, respond}, args) {
-        respond(args.join(" "))
-    }
-}
+  run({ author, client, respond }, args) {
+    // Fetch the mentioned user
+    let user = args[0]
+      ? args[0].match(/[0-9]+/g)
+        ? client.users.cache.get(args[0].match(/[0-9]+/g)[1]) || author
+        : author
+      : author;
+
+    // If the user didn't mention anyone/mentioned themselves
+    if (user.id === author.id)
+      return respond({ content: `**${user.tag}** needs a hug!` });
+
+    // If everything works
+    respond({ content: `**${author.tag}** hugs **${user.tag}**, aww!` });
+  }
+};
 ```
 
 <div is="discord-messages">
     <discord-messages>
         <dis-message profile="gcommands">
             <template #interactions>
-                <discord-interaction profile="hyro" :command="true">say hello</discord-interaction>
+                <discord-interaction profile="hyro" :command="true">hug</discord-interaction>
             </template>
-            hello
+            **Hyro#8938** needs a hug!
+        </dis-message>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="hyro" :command="true">hug <mention profile="izboxo">@iZboxo</mention></discord-interaction>
+            </template>
+            **Hyro#8938** hugs **iZboxo#2828**, aww!
         </dis-message>
     </discord-messages>
     <discord-messages>
-            <dis-message profile="izboxo">
-            .say
+        <dis-message profile="izboxo">
+            .hug
         </dis-message>
         <dis-message profile="gcommands">
-            What do you want to send?
+            Who do you want to hug?
         </dis-message>
         <dis-message profile="izboxo">
-            hello
+            <mention profile="hyro">@Hyro</mention>
         </dis-message>
         <dis-message profile="gcommands">
-            hello
+            **iZboxo#2828** hugs **Hyro#8938**, aww!
+        </dis-message>
+    </discord-messages>
+</div>
+
+## Advanced Arguments
+
+Advanced arguments (sub command, string.choices, sub command group, etc.) are used for more advanced commands.
+Here's an example with a `bake {muffin/cookie} {amount}` command:
+
+```js
+const { ArgumentType, Command } = require("gcommands");
+const wait = require("util").promisify(setTimeout);
+
+module.exports = class extends Command {
+  constructor(...args) {
+    super(...args, {
+      name: "bake",
+      description: "Bakes a product!",
+      slash: "both",
+      cooldown: 2,
+      args: [
+        {
+          name: "product",
+          type: ArgumentType.STRING,
+          description: "The product to bake!",
+          prompt: `What would you like to bake? (muffin/cookie)`,
+          choices: [
+            {
+              name: "Chocolate Chip Cookie",
+              value: "cookie",
+            },
+            {
+              name: "Chocolate Muffin",
+              value: "muffin",
+            },
+          ],
+          required: true,
+        },
+        {
+          name: "amount",
+          type: ArgumentType.INTEGER, // Integer only allows full numbers
+          description:
+            "The amount of products to bake! You can only bake a maximum of 25 products at once",
+          prompt:
+            "How many products would you like to bake? You can only bake a maximum of 25 products at once",
+          required: true,
+        },
+      ],
+    });
+  }
+
+  async run({ member, respond, edit }, args) {
+    // Cap the amount
+    args[1] =
+      parseInt(args[1]) > 25
+        ? 25
+        : parseInt(args[1]) < 0
+        ? 0
+        : parseInt(args[1]);
+
+    // Format the user's choices
+    let product = `${args[1]} Delicious ${
+      args[0][0].toUpperCase() + args[0].slice(1).toLowerCase()
+    }${args[1] === 1 ? "" : "s"}`;
+
+    // Send the response
+    let m = await respond({
+      content: `You decide to bake ${product}. You put it in the oven and wait...`,
+    });
+    // Wait for the product to "cook"
+    await wait(Math.floor(Math.random() * (5000 - 3000)) + 3000);
+
+    // Decide if the product is burnt (50% chance)
+    let isBurnt = Math.random() < 0.5;
+
+    // Add a response
+    if (isBurnt)
+      m.content += `\n\nOh no! Your ${product} ${
+        args[1] === 1 ? "was" : "were"
+      } left in the oven for too long and burnt! Try again.`;
+    else
+      m.content += `\n\nYou successfully bake your ${product} and give ${
+        args[1] === 1 ? "it" : "them"
+      } to your friends. They like it!`;
+
+    // Edit the message
+    await edit({ content: m.content });
+  }
+};
+```
+
+<div is="discord-messages">
+    <discord-messages>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="izboxo" :command="true">bake Chocolate Chip Cookie 15</discord-interaction>
+            </template>
+            You decide to bake 15 Delicious Cookies. You put it in the oven and wait...<br/>
+            <br/>Oh no! Your 15 Delicious Cookies were left in the oven for too long and burnt! Try again.
+        </dis-message>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="izboxo" :command="true">bake Chocolate Muffin 1</discord-interaction>
+            </template>
+            You decide to bake 1 Delicious Cookie. You put it in the oven and wait...<br/>
+            <br/>You successfully bake your 1 Delicious Cookie and give it to your friends. They love it! 
+        </dis-message>
+    </discord-messages>
+    <discord-messages>
+        <dis-message profile="hyro">
+            .bake cookie 30
+        </dis-message>
+        <dis-message profile="gcommands">
+            You decide to bake 25 Delicious Cookies. You put them in the oven and wait...<br/>
+            <br/>Oh no! Your 25 Delicious Cookies were left in the oven for too long and burnt! Try again.
+        </dis-message>
+        <dis-message profile="hyro">
+            .bake muffin 1
+        </dis-message>
+        <dis-message profile="gcommands">
+            You decide to bake 1 Delicious Cookie. You put them in the oven and wait...<br/>
+            <br/>You successfully bake your 1 Delicious Cookie and give it to your friends. They love it! 
         </dis-message>
     </discord-messages>
 </div>
 
 ::: tip
-If you want to know more about how the `args` object works for `SUB_COMMAND` and `SUB_COMMAND_GROUP` you can take a look [here](https://discord.com/developers/docs/interactions/slash-commands#example-walkthrough).
+If you want to know how to use `SUB_COMMAND` and `SUB_COMMAND_GROUP` argument types, go [here](https://discord.com/developers/docs/interactions/slash-commands#example-walkthrough)
 :::
-
-## All types of arguments:
-```js
-const { ArgumentType } = require("gcommands")
-ArgumentType.STRING
-ArgumentType.INTEGER
-ArgumentType.BOOLEAN
-ArgumentType.USER
-ArgumentType.CHANNEL
-ArgumentType.ROLE
-ArgumentType.MENTIONABLE // only for slash
-ArgumentType.SUB_COMMAND_GROUP // only for slash
-ArgumentType.SUB_COMMAND // only for slash
-```
