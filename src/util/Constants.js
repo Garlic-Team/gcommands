@@ -146,6 +146,18 @@ function createEnum(keys) {
  * @property {Boolean} ephemeral
  * @property {Object} allowedMentions
  * @property {(string | Boolean)} inlineReply
+ * @property {(string | Array)} stickers
+ * @example 
+ * .send({
+ *  content: "hello",
+ *  embeds: [embed],
+ *  components: [actionRow],
+ *  attachments: [myMessageAttachment],
+ *  ephemeral: false,
+ *  allowedMentions: { parse: ["users","roles","everyone"] },
+ *  inlineReply: true,
+ *  stickers: ["sticker id"]
+ * })
  * @typedef {(string | Object)} GPayloadOptions
 */
 
@@ -196,7 +208,8 @@ function createEnum(keys) {
 
 /**
  * The CommandOptions
- *
+ * <info>`channelThreadOnly` is only for d.js v13</info>
+ * 
  * @property {string} name
  * @property {string} description
  * @property {string} cooldown
@@ -211,6 +224,7 @@ function createEnum(keys) {
  * @property {Snowflake} guildOnly
  * @property {boolean} channelTextOnly
  * @property {boolean} channelNewsOnly
+ * @property {boolean} channelThreadOnly
  * @property {boolean} nsfw
  * @property {boolean} slash
  * @typedef {(Object)} CommandOptions
