@@ -69,13 +69,13 @@ module.exports = class extends Command {
             <template #interactions>
                 <discord-interaction profile="hyro" :command="true">hug</discord-interaction>
             </template>
-            **Hyro#8938** needs a hug!
+            <b>Hyro#8938</b> needs a hug!
         </dis-message>
         <dis-message profile="gcommands">
             <template #interactions>
-                <discord-interaction profile="hyro" :command="true">hug <mention profile="izboxo">@iZboxo</mention></discord-interaction>
+                <discord-interaction profile="hyro" :command="true">hug <mention profile="izboxo">iZboxo</mention></discord-interaction>
             </template>
-            **Hyro#8938** hugs **iZboxo#2828**, aww!
+            <b>Hyro#8938</b> hugs <b>iZboxo#2828</b>, aww!
         </dis-message>
     </discord-messages>
     <discord-messages>
@@ -86,10 +86,10 @@ module.exports = class extends Command {
             Who do you want to hug?
         </dis-message>
         <dis-message profile="izboxo">
-            <mention profile="hyro">@Hyro</mention>
+            <mention profile="hyro">Hyro</mention>
         </dis-message>
         <dis-message profile="gcommands">
-            **iZboxo#2828** hugs **Hyro#8938**, aww!
+            <b>iZboxo#2828</b> hugs <b>Hyro#8938</b>, aww!
         </dis-message>
     </discord-messages>
 </div>
@@ -126,8 +126,8 @@ module.exports = class extends Command {
             <template #interactions>
                 <discord-interaction profile="hyro" :command="true">ping</discord-interaction>
             </template>
-            **My Ping:** **`100ms`**<br/>
-            **WS Ping:** **`15ms`**
+            <b>My Ping:</b> <b><code>100ms</code></b><br/>
+            <b>WS Ping:</b> <b><code>15ms</code></b>
         </dis-message>
     </discord-messages>
     <discord-messages>
@@ -135,8 +135,8 @@ module.exports = class extends Command {
             .ping
         </dis-message>
         <dis-message profile="gcommands">
-            **My Ping:** **`80ms`**<br/>
-            **WS Ping:** **`20ms`**
+            <b>My Ping:</b> <b><code>84ms</code></b><br/>
+            <b>WS Ping:</b> <b><code>20ms</code></b>
         </dis-message>
     </discord-messages>
 </div>
@@ -198,9 +198,8 @@ module.exports = class extends Command {
         : parseInt(args[1]);
 
     // Format the user's choices
-    let product = `${args[1]} Delicious ${
-      args[0][0].toUpperCase() + args[0].slice(1).toLowerCase()
-    }${args[1] === 1 ? "" : "s"}`;
+    let product = `${args[1]} Delicious ${args[0][0].toUpperCase() +
+      args[0].slice(1).toLowerCase()}${args[1] === 1 ? "" : "s"}`;
 
     // Send the response
     let m = await respond({
