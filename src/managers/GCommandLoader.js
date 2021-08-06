@@ -100,8 +100,8 @@ class GCommandLoader {
 
             if(cmd.expectedArgs) cmd.args = cmd.expectedArgs;
 
-            let url = `https://discord.com/api/v8/applications/${this.client.user.id}/commands`;
-            if(cmd.guildOnly) url = `https://discord.com/api/v8/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
+            let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
+            if(cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
             let config = {
                 method: 'POST',
