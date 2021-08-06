@@ -33,9 +33,9 @@ module.exports = client => {
                 respond: async result => interaction.slashRespond(result),
                 edit: async (result, update = false) => interaction.slashEdit(result, update)
             });
-            if (inhibitReturn == false) return;
+            if (inhibitReturn === false) return;
 
-            client.emit(data.data.component_type == 3 ? `selectMenu` : `clickButton`, interaction);
+            client.emit(data.data.component_type === 3 ? `selectMenu` : `clickButton`, interaction);
         }
     });
 };

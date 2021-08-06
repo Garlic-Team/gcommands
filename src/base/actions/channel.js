@@ -8,7 +8,7 @@ module.exports = client => {
             );
         }
 
-        if (oldChannel.type == 'text' && oldChannel.topic !== newChannel.topic) {
+        if (oldChannel.type === 'text' && oldChannel.topic !== newChannel.topic) {
             client.emit('guildChannelTopicUpdate',
                 newChannel,
                 oldChannel.topic,
@@ -16,7 +16,7 @@ module.exports = client => {
             );
         }
 
-        if (oldChannel.type == 'text' && oldChannel.nsfw !== newChannel.nsfw) {
+        if (oldChannel.type === 'text' && oldChannel.nsfw !== newChannel.nsfw) {
             client.emit('guildChannelNSFWUpdate',
                 newChannel,
                 oldChannel.nsfw,
@@ -32,7 +32,7 @@ module.exports = client => {
             );
         }
 
-        if (oldChannel.type == 'voice' && oldChannel.userLimit !== newChannel.userLimit) {
+        if (oldChannel.type === 'voice' && oldChannel.userLimit !== newChannel.userLimit) {
             client.emit('guildChannelUserLimitUpdate',
                 newChannel,
                 oldChannel.userLimit,
@@ -40,7 +40,7 @@ module.exports = client => {
             );
         }
 
-        if (oldChannel.type == 'voice' && oldChannel.bitrate !== newChannel.bitrate) {
+        if (oldChannel.type === 'voice' && oldChannel.bitrate !== newChannel.bitrate) {
             client.emit('guildChannelBitrateUpdate',
                 newChannel,
                 oldChannel.bitrate,

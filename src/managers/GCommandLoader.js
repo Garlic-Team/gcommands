@@ -93,7 +93,7 @@ class GCommandLoader {
 
         for(const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if(String(cmd.slash) == 'false') return;
+            if(String(cmd.slash) === 'false') return;
 
             if(cmd.expectedArgs) cmd.args = cmd.expectedArgs;
 
@@ -118,10 +118,10 @@ class GCommandLoader {
                 this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded: &e➜   &3' + cmd.name, {json:false}).getText());
             })
             .catch((error) => {
-                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status == 429 ? '&aWait &e' + ms(error.response.data['retry_after'] * 1000) : ''} &c${error} &e(${cmd.name})`, {json:false}).getText());
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? '&aWait &e' + ms(error.response.data['retry_after'] * 1000) : ''} &c${error} &e(${cmd.name})`, {json:false}).getText());
 
                 if(error.response) {
-                    if(error.response.status == 429) {
+                    if(error.response.status === 429) {
                         setTimeout(() => {
                             this.__tryAgain(cmd, config)
                         }, (error.response.data['retry_after']) * 1000)
@@ -149,10 +149,10 @@ class GCommandLoader {
             this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded: &e➜   &3' + cmd.name, {json:false}).getText());
         })
         .catch((error) => {
-            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status == 429 ? '&aWait &e' + ms(error.response.data['retry_after'] * 1000) : ''} &c${error} &e(${cmd.name})`, {json:false}).getText());
+            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? '&aWait &e' + ms(error.response.data['retry_after'] * 1000) : ''} &c${error} &e(${cmd.name})`, {json:false}).getText());
             
             if(error.response) {
-                if(error.response.status == 429) {
+                if(error.response.status === 429) {
                     setTimeout(() => {
                         this.__tryAgain(cmd, config)
                     }, (error.response.data['retry_after']) * 1000)
@@ -171,11 +171,11 @@ class GCommandLoader {
         let allSlashCommands = await __getAllCommands(this.client);
         if(!allSlashCommands || allSlashCommands.length < 0) return;
 
-        if(String(this.client.slash) == 'false') allSlashCommands.forEach(cmd => __deleteCmd(this.client, cmd.id));
+        if(String(this.client.slash) === 'false') allSlashCommands.forEach(cmd => __deleteCmd(this.client, cmd.id));
 
         for(let slashCmd of allSlashCommands) {
             if(!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
-            if(this.client.gcommands.get(slashCmd.name) && String(this.client.gcommands.get(slashCmd.name).slash) == 'false') __deleteCmd(this.client, slashCmd.id);
+            if(this.client.gcommands.get(slashCmd.name) && String(this.client.gcommands.get(slashCmd.name).slash) === 'false') __deleteCmd(this.client, slashCmd.id);
         }
 
         console.log(new Color('&d[GCommands TIP] &3Are guild commands not deleted when you delete them? Use this site for remove &ehttps://gcommands-slash-gui.netlify.app/').getText())

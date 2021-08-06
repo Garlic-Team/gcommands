@@ -188,7 +188,7 @@ class GInteraction {
      * @param {Object} options
     */
     async edit(result) {
-        if (result.autoDefer == true) {
+        if (result.autoDefer === true) {
             await this.client.api.interactions(this.discordId, this.token).callback.post({
                 data: {
                     type: 6,
@@ -204,7 +204,7 @@ class GInteraction {
      * @param {Object} options
     */
     async update(result) {
-        if (result.autoDefer == true) {
+        if (result.autoDefer === true) {
             await this.client.api.interactions(this.discordId, this.token).callback.post({
                 data: {
                     type: 6,

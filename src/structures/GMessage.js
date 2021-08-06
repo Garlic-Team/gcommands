@@ -190,7 +190,7 @@ class GMessage {
                     let GPayloadResult = await GPayload.create(this.channel, result)
                         .resolveData();
 
-                    if (result.edited == false) {
+                    if (result.edited === false) {
                         return this.client.api.channels(this.channel.id).messages[this.id].patch({
                             data: {
                                 type: 7,

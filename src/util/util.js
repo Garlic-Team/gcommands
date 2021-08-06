@@ -74,9 +74,9 @@ class Util {
         if (channel instanceof TextChannel) finalResult = "text";
         if (channel instanceof NewsChannel) finalResult = "news";
         if (channel instanceof DMChannel) finalResult = "dm";
-        if (channel.type == "GUILD_NEWS_THREAD") finalResult = "thread";
-        if (channel.type == "GUILD_PUBLIC_THREAD") finalResult = "thread";
-        if (channel.type == "GUILD_PRIVATE_THREAD") finalResult = "thread";
+        if (channel.type === "GUILD_NEWS_THREAD") finalResult = "thread";
+        if (channel.type === "GUILD_PUBLIC_THREAD") finalResult = "thread";
+        if (channel.type === "GUILD_PRIVATE_THREAD") finalResult = "thread";
 
         return finalResult;
     }
@@ -156,7 +156,7 @@ class Util {
     */
     static checkDjsVersion(needVer) {
         let ver = parseInt(version.split('')[0] + version.split('')[1]);
-        if (ver == parseInt(needVer)) {
+        if (ver === parseInt(needVer)) {
             return true;
         } else {
             return false;

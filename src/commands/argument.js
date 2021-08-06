@@ -71,7 +71,7 @@ class Argument {
             max: 1,
             time: wait
         });
-        if (responses.size == 0) {
+        if (responses.size === 0) {
  return {
             valid: true,
             timeLimit: true
@@ -98,14 +98,14 @@ class Argument {
      * @param {Argument}
      */
     determineArgument(client, argument) {
-        if (argument.type == 3) return new StringArgumentType(client, argument);
-        if (argument.type == 4) return new IntegerArgumentType(client, argument);
-        if (argument.type == 5) return new BooleanArgumentType(client, argument);
-        if (argument.type == 6) return new UserArgumentType(client, argument);
-        if (argument.type == 7) return new ChannelArgumentType(client, argument);
-        if (argument.type == 8) return new RoleArgumentType(client, argument);
-        if (argument.type == 9) return new MentionableArgumentType(client, argument);
-        if (argument.type == 10) return new NumberArgumentType(client, argument);
+        if (argument.type === 3) return new StringArgumentType(client, argument);
+        if (argument.type === 4) return new IntegerArgumentType(client, argument);
+        if (argument.type === 5) return new BooleanArgumentType(client, argument);
+        if (argument.type === 6) return new UserArgumentType(client, argument);
+        if (argument.type === 7) return new ChannelArgumentType(client, argument);
+        if (argument.type === 8) return new RoleArgumentType(client, argument);
+        if (argument.type === 9) return new MentionableArgumentType(client, argument);
+        if (argument.type === 10) return new NumberArgumentType(client, argument);
         else return { type: 'invalid' };
     }
 }
