@@ -4,7 +4,7 @@ const SelectMenuInteraction = require('../../structures/SelectMenuInteraction');
 const { interactionRefactor, inhibit } = require('../../util/util');
 
 module.exports = client => {
-    client.ws.on('INTERACTION_CREATE', async (data) => {
+    client.ws.on('INTERACTION_CREATE', async data => {
         let InteractionType;
         switch (data.type) {
             case 2:
