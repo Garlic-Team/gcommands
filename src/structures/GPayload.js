@@ -7,13 +7,13 @@ const { browser } = require('discord.js').Constants;
 class GPayload {
     /**
      * Creates new GPayload instance
-     * @param {TextChannel | NewsChannel | DMChannel} channel
+     * @param {TextChannel | NewsChannel | DMChannel | ThreadChannel} channel
      * @param {string|GPayloadOptions} options
     */
     constructor(channel, options) {
         /**
          * Channel
-         * @type {TextChannel | NewsChannel | DMChannel}
+         * @type {TextChannel | NewsChannel | DMChannel | ThreadChannel}
          */
 
         this.channel = channel;
@@ -134,7 +134,7 @@ class GPayload {
 
     /**
      * Creates a `GPayload` from user-level arguments.
-     * @param {TextChannel | NewsChannel | DMChannel} channel
+     * @param {TextChannel | NewsChannel | DMChannel | ThreadChannel} channel
      * @param {string|GPayloadOptions} options
      * @returns {GPayload}
      */
