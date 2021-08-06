@@ -159,7 +159,7 @@ class GEventHandling {
                     let arg = new Argument(this.client, commandos.args[i]);
                     if (arg.type === 'invalid') continue;
 
-                    let validArg = async (prompt) => {
+                    let validArg = async prompt => {
                         let final = await arg.obtain(message, prompt);
                         if (!final.valid) return validArg(message, prompt);
 
@@ -262,27 +262,21 @@ class GEventHandling {
 
                     let channelType = channelTypeRefactor(interaction.channel);
 
-                    if (commandos.nsfw && !interaction.channel.nsfw) 
-                        return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true });
-                    if (commandos.channelTextOnly && channelType !== 'text') 
-                        return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true });
-                    if (commandos.channelNewsOnly && channelType !== 'news') 
-                        return interaction.reply.send({ content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true });
-                    if (commandos.channelThreadOnly && channelType !== 'thread') 
-                        return interaction.reply.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true });
+                    if (commandos.nsfw && !interaction.channel.nsfw) { return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true }); }
+                    if (commandos.channelTextOnly && channelType !== 'text') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true }); }
+                    if (commandos.channelNewsOnly && channelType !== 'news') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true }); }
+                    if (commandos.channelThreadOnly && channelType !== 'thread') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true }); }
 
                     if (commandos.clientRequiredPermissions) {
                         if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
-                        if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) 
-                            return interaction.reply.send({ content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true });
+                        if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) { return interaction.reply.send({ content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true }); }
                     }
 
                     if (commandos.userRequiredPermissions) {
                         if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
-                        if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) 
-                            return interaction.reply.send({ content: this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true });
+                        if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) { return interaction.reply.send({ content: this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true }); }
                     }
 
                     if ((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
