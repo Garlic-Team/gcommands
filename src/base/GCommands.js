@@ -159,11 +159,13 @@ class GCommands extends EventEmitter {
         GUpdater.__updater();
     }
 
-    async loadSys() {
+    loadSys() {
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 
-        require('../structures/DMChannel'); require('../structures/NewsChannel'); require('../structures/TextChannel');
+        require('../structures/DMChannel'); 
+        require('../structures/NewsChannel'); 
+        require('../structures/TextChannel');
 
         setTimeout(() => {
             new GDatabaseLoader(this.GCommandsClient);

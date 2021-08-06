@@ -243,7 +243,7 @@ class GMessage {
             },
 
             awaitButtons: {
-                value: async function(filter, options = {}) {
+                value: function(filter, options = {}) {
                     return new Promise((resolve, reject) => {
                         const collector = this.client.dispatcher.createButtonCollector(this, filter, options);
                         collector.once('end', (buttons, reason) => {
@@ -265,7 +265,7 @@ class GMessage {
             },
 
             awaitSelectMenus: {
-                value: async function(filter, options = {}) {
+                value: function(filter, options = {}) {
                     return new Promise((resolve, reject) => {
                         const collector = this.client.dispatcher.createSelectMenuCollector(this, filter, options);
                         collector.once('end', (buttons, reason) => {

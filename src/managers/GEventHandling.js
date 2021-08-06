@@ -82,7 +82,8 @@ class GEventHandling {
                     },
                     edit: async (options = undefined) => {
                         if (!botMessageInhibit) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
-                        return await botMessageInhibit.edit(options);
+                        let editedMsg = await botMessageInhibit.edit(options);
+                        return editedMsg;
                     }
                 }, args, args);
                 if (inhibitReturn === false) return;
@@ -204,7 +205,8 @@ class GEventHandling {
                     },
                     edit: async (options = undefined) => {
                         if (!botMessage) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
-                        return await botMessage.edit(options);
+                        let editedMsg = await botMessage.edit(options);
+                        return editedMsg;
                     }
                 }, args, objectArgs);
             } catch (e) {
@@ -218,7 +220,7 @@ class GEventHandling {
      * @returns {void}
      * @private
     */
-    async slashEvent() {
+    slashEvent() {
         if ((this.client.slash) || (this.client.slash === 'both')) {
             this.client.on('GInteraction', async interaction => {
                 if (!interaction.isCommand()) return;
@@ -260,21 +262,27 @@ class GEventHandling {
 
                     let channelType = channelTypeRefactor(interaction.channel);
 
-                    if (commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true });
-                    if (commandos.channelTextOnly && channelType !== 'text') return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true });
-                    if (commandos.channelNewsOnly && channelType !== 'news') return interaction.reply.send({ content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true });
-                    if (commandos.channelThreadOnly && channelType !== 'thread') return interaction.reply.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true });
+                    if (commandos.nsfw && !interaction.channel.nsfw) 
+                        return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true });
+                    if (commandos.channelTextOnly && channelType !== 'text') 
+                        return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true });
+                    if (commandos.channelNewsOnly && channelType !== 'news') 
+                        return interaction.reply.send({ content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true });
+                    if (commandos.channelThreadOnly && channelType !== 'thread') 
+                        return interaction.reply.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true });
 
                     if (commandos.clientRequiredPermissions) {
                         if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
-                        if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) return interaction.reply.send({ content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true });
+                        if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) 
+                            return interaction.reply.send({ content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true });
                     }
 
                     if (commandos.userRequiredPermissions) {
                         if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
-                        if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) return interaction.reply.send({ content: this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true });
+                        if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) 
+                            return interaction.reply.send({ content: this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true });
                     }
 
                     if ((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {

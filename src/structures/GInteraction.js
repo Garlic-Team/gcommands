@@ -225,7 +225,7 @@ class GInteraction {
          * @param {Object} options
          * @memberof reply
         */
-        let _send = async result => {
+        let _send = result => {
             this.replied = true;
             return this.slashRespond(result);
         };
@@ -235,7 +235,7 @@ class GInteraction {
          * @param {Object} options
          * @memberof reply
         */
-        let _edit = async result => {
+        let _edit = result => {
             if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
             return this.slashEdit(result);
         };
@@ -245,7 +245,7 @@ class GInteraction {
          * @param {Object} options
          * @memberof reply
         */
-        let _update = async result => {
+        let _update = result => {
             if (!this.replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
             return this.slashEdit(result, true);
         };

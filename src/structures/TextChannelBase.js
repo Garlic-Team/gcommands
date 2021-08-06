@@ -34,7 +34,7 @@ module.exports = {
     },
 
     awaitButtons: {
-        value: async function(msg, filter, options = {}) {
+        value: function(msg, filter, options = {}) {
             return new Promise((resolve, reject) => {
                 const collector = this.createButtonCollector(msg, filter, options);
                 collector.once('end', (buttons, reason) => {
@@ -56,7 +56,7 @@ module.exports = {
     },
 
     awaitSelectMenus: {
-        value: async function(msg, filter, options = {}) {
+        value: function(msg, filter, options = {}) {
             return new Promise((resolve, reject) => {
                 const collector = this.createSelectMenuCollector(msg, filter, options);
                 collector.once('end', (buttons, reason) => {
