@@ -79,7 +79,7 @@ class GMessage {
                     if ('sticker_items' in data || 'stickers' in data || !partial && ifDjsV13) {
                         const { Sticker } = require('discord.js');
                         this.stickers = new Collection(
-                            (data.sticker_items || data.stickers).map(s => [s.id, new Sticker(this.client, s)]),
+                            (data.sticker_items || data.stickers) ? (data.sticker_items || data.stickers).map(s => [s.id, new Sticker(this.client, s)]) : null,
                         );
                     } else {
                         this.stickers = new Collection(this.stickers);
@@ -95,7 +95,7 @@ class GMessage {
 
                     if ('reactions' in data || !partial) {
                         this.reactions = new ReactionManager(this);
-                        if (data.reactions?.length > 0) {
+                        if (data.reactions && data.reactions.length > 0) {
                             for (const reaction of data.reactions) {
                                 ifDjsV13 ? this.reactions._add(reaction) : this.reactions.add(reaction);
                             }
@@ -109,16 +109,16 @@ class GMessage {
                             data.mention_roles,
                             data.mention_everyone,
                             data.mention_channels,
-                            data.referenced_message?.author,
+                            data.referenced_message ? data.referenced_message.author : null,
                         );
                     } else {
                         this.mentions = new MessageMentions(
                             this,
-                            data.mentions ?? this.mentions.users,
-                            data.mention_roles ?? this.mentions.roles,
-                            data.mention_everyone ?? this.mentions.everyone,
-                            data.mention_channels ?? this.mentions.crosspostedChannels,
-                            data.referenced_message?.author ?? this.mentions.repliedUser,
+                            data.mentions || this.mentions.users,
+                            data.mention_roles || this.mentions.roles,
+                            data.mention_everyone || this.mentions.everyone,
+                            data.mention_channels || this.mentions.crosspostedChannels,
+                            data.referenced_message ? data.referenced_message.author : null || this.mentions.repliedUser,
                         );
                     }
 

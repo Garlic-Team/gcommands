@@ -58,10 +58,14 @@ class GPayload {
         this.data.allowed_mentions = this.options.allowedMentions ? this.options.allowedMentions : { parse: [], repliedUser: true };
         this.data.flags = this.options.ephemeral ? 64 : null;
 
-        if (this.options.components) this.data.components = !Array.isArray(this.options.components) ? [this.options.components] : this.options.components;
-        if (this.options.embeds) this.data.embeds = !Array.isArray(this.options.embeds) ? [this.options.embeds] : this.options.embeds;
-        if (this.options.attachments) this.options.attachments = !Array.isArray(this.options.attachments) ? [this.options.attachments] : this.options.attachments;
-        if (this.options.files) this.options.files = !Array.isArray(this.options.files) ? [this.options.files] : this.options.files;
+        if (this.options.components) this.data.components = !Array.isArray(this.options.components) ? Array(this.options.components) : this.options.components;
+        if (this.options.embeds) this.data.embeds = !Array.isArray(this.options.embeds) ? Array(this.options.embeds) : this.options.embeds;
+        if (this.options.attachments) this.options.attachments = !Array.isArray(this.options.attachments) ? Array(this.options.attachments) : this.options.attachments;
+        if (this.options.files) this.options.files = !Array.isArray(this.options.files) ? Array(this.options.files) : this.options.files;
+        if (this.options.stickers) {
+          this.options.stickers = !Array.isArray(this.options.stickers) ? this.options.stickers = new Array(this.options.stickers) : this.options.stickers;
+          this.data.sticker_ids = this.options.stickers.map(sticker => sticker.id || sticker);
+        }
 
         if (this.options.inlineReply && typeof this.options.inlineReply === 'string') this.data.message_reference = { message_id: this.options.inlineReply };
         else if (typeof this.options.inlineReply === 'boolean' && this.options.inlineReply && this.channel.lastMessageID) this.data.message_reference = { message_id: this.channel.lastMessageID };
