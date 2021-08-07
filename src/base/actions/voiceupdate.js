@@ -41,16 +41,16 @@ module.exports = client => {
         }
 
         if (!oldState.deaf && newState.deaf) {
-            let deafType = newState.selfDeaf ? 'self-deafed' : 'server-v';
-            client.emit('voiceChannelDeaf',
+            let deafType = newState.selfDeaf ? 'self-deafened' : 'server-deafened';
+            client.emit('voiceChannelDeafen',
                 newMember,
                 deafType
             );
         }
 
         if (oldState.deaf && !newState.deaf) {
-            let deafType = oldState.selfDeaf ? 'self-deafed' : 'server-v';
-            client.emit('voiceChannelUndeaf',
+            let deafType = oldState.selfDeaf ? 'self-deafened' : 'server-deafened';
+            client.emit('voiceChannelUndeafen',
                 newMember,
                 deafType
             );
