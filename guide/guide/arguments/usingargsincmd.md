@@ -63,8 +63,8 @@ module.exports = class extends Command {
 };
 ```
 
-<div is="discord-messages">
-    <discord-messages>
+<div is="dis-messages">
+    <dis-messages>
         <dis-message profile="gcommands">
             <template #interactions>
                 <discord-interaction profile="hyro" :command="true">hug</discord-interaction>
@@ -77,8 +77,8 @@ module.exports = class extends Command {
             </template>
             <b>Hyro#8938</b> hugs <b>iZboxo#2828</b>, aww!
         </dis-message>
-    </discord-messages>
-    <discord-messages>
+    </dis-messages>
+    <dis-messages>
         <dis-message profile="izboxo">
             .hug
         </dis-message>
@@ -91,7 +91,7 @@ module.exports = class extends Command {
         <dis-message profile="gcommands">
             <b>iZboxo#2828</b> hugs <b>Hyro#8938</b>, aww!
         </dis-message>
-    </discord-messages>
+    </dis-messages>
 </div>
 
 or, an example with a `ping` command:
@@ -120,17 +120,17 @@ module.exports = class extends Command {
 };
 ```
 
-<div is="discord-messages">
-    <discord-messages>
-        <dis-message profile="gcommands">
+<div is="dis-messages">
+    <dis-messages :ephemeral="true">
+        <dis-message profile="gcommands" :ephemeral="true">
             <template #interactions>
-                <discord-interaction profile="hyro" :command="true">ping</discord-interaction>
+                <discord-interaction profile="hyro" :command="true" :ephemeral="true">ping</discord-interaction>
             </template>
             <b>My Ping:</b> <b><code>100ms</code></b><br/>
             <b>WS Ping:</b> <b><code>15ms</code></b>
         </dis-message>
-    </discord-messages>
-    <discord-messages>
+    </dis-messages>
+    <dis-messages>
         <dis-message profile="izboxo">
             .ping
         </dis-message>
@@ -138,7 +138,7 @@ module.exports = class extends Command {
             <b>My Ping:</b> <b><code>84ms</code></b><br/>
             <b>WS Ping:</b> <b><code>20ms</code></b>
         </dis-message>
-    </discord-messages>
+    </dis-messages>
 </div>
 
 ## Advanced Arguments
@@ -198,8 +198,9 @@ module.exports = class extends Command {
         : parseInt(args[1]);
 
     // Format the user's choices
-    let product = `${args[1]} Delicious ${args[0][0].toUpperCase() +
-      args[0].slice(1).toLowerCase()}${args[1] === 1 ? "" : "s"}`;
+    let product = `${args[1]} Delicious ${
+      args[0][0].toUpperCase() + args[0].slice(1).toLowerCase()
+    }${args[1] === 1 ? "" : "s"}`;
 
     // Send the response
     let m = await respond({
@@ -227,39 +228,39 @@ module.exports = class extends Command {
 };
 ```
 
-<div is="discord-messages">
-    <discord-messages>
-        <dis-message profile="gcommands">
+<div is="dis-messages">
+    <dis-messages>
+        <dis-message profile="gcommands" edited=true>
             <template #interactions>
                 <discord-interaction profile="izboxo" :command="true">bake Chocolate Chip Cookie 15</discord-interaction>
             </template>
             You decide to bake 15 Delicious Cookies. You put it in the oven and wait...<br/>
             <br/>Oh no! Your 15 Delicious Cookies were left in the oven for too long and burnt! Try again.
         </dis-message>
-        <dis-message profile="gcommands">
+        <dis-message profile="gcommands" edited=true>
             <template #interactions>
                 <discord-interaction profile="izboxo" :command="true">bake Chocolate Muffin 1</discord-interaction>
             </template>
             You decide to bake 1 Delicious Cookie. You put it in the oven and wait...<br/>
             <br/>You successfully bake your 1 Delicious Cookie and give it to your friends. They love it! 
         </dis-message>
-    </discord-messages>
-    <discord-messages>
+    </dis-messages>
+    <dis-messages>
         <dis-message profile="hyro">
             .bake cookie 30
         </dis-message>
-        <dis-message profile="gcommands">
+        <dis-message profile="gcommands" edited=true>
             You decide to bake 25 Delicious Cookies. You put them in the oven and wait...<br/>
             <br/>Oh no! Your 25 Delicious Cookies were left in the oven for too long and burnt! Try again.
         </dis-message>
         <dis-message profile="hyro">
             .bake muffin 1
         </dis-message>
-        <dis-message profile="gcommands">
-            You decide to bake 1 Delicious Cookie. You put them in the oven and wait...<br/>
-            <br/>You successfully bake your 1 Delicious Cookie and give it to your friends. They love it! 
+        <dis-message profile="gcommands" edited=true>
+            You decide to bake 1 Delicious Muffin. You put them in the oven and wait...<br/>
+            <br/>You successfully bake your 1 Delicious Muffin and give it to your friends. They love it! 
         </dis-message>
-    </discord-messages>
+    </dis-messages>
 </div>
 
 ::: tip

@@ -1,37 +1,42 @@
 # Interactions
+
 If you want you can use event interaction and there detect if there is a dropdown/button.
 
 #### Functions
-| Function | Description | Returns |
-|-- |-- | -- |
-| reply | The reply function, see below | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
-| think | The bot will reply with "Thinking..."
-| edit | The bot will edit the interaction **DEPRECATED** (use button/menu.message.edit)
-| defer | The bot will reply with nothing
+
+| Function | Description                                                                     | Returns                                                                                           |
+| -------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| reply    | The reply function, see below                                                   | [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) |
+| think    | The bot will reply with "Thinking..."                                           |
+| edit     | The bot will edit the interaction **DEPRECATED** (use button/menu.message.edit) |
+| defer    | The bot will reply with nothing                                                 |
 
 ```js
-button/menu.defer() //nothing
-button/menu.think() //the reply is "Thinking..."
-button/menu.edit("hello")
+button / menu.defer(); //nothing
+button / menu.think(); //the reply is "Thinking..."
+button / menu.edit("hello");
 ```
 
 #### Reply
-| Function | Description |
-|-- |-- | -- |
-| send | Send a reply
-| edit | Edit the reply
-| fetch | Fetch the reply
+
+| Function | Description     |
+| -------- | --------------- |
+| send     | Send a reply    |
+| edit     | Edit the reply  |
+| fetch    | Fetch the reply |
 
 ```js
-button/menu.reply.send({
+button /
+  menu.reply.send({
     content: "hi", // or MessageEmbed()
-    components: []
-})
+    components: [],
+  });
 
-button/menu.reply.edit({
+button /
+  menu.reply.edit({
     content: "hi", // or MessageEmbed()
-    components: []
-})
+    components: [],
+  });
 ```
 
 <branch version="2.x">
@@ -49,22 +54,24 @@ You need to have gcommands version **atleast** v4
 
 </branch>
 
-
 ## Buttons
+
 If you want buttons in your messages, you've come to the right place!
 
 ::: warning
 You can have maximum:
+
 - five `ActionRows` per message
-- five buttons within an `ActionRow` 
+- five buttons within an `ActionRow`
 - can't have a button with a `SelectMenu` in a certain `ActionRow`
-:::
+  :::
 
 ### Send Button
+
 The following steps will work for both normal and slash command.
 
 ```js
-const { MessageButton, MessageActionRow } = require("gcommands")
+const { MessageButton, MessageActionRow } = require("gcommands");
 
 const button = new MessageButton()
   .setStyle("red")
@@ -72,25 +79,32 @@ const button = new MessageButton()
   .setID("red_button")
   .setDisabled()
   .setEmoji("💚") // or .setEmoji("<:name:id>"), not required
-  .toJSON()
+  .toJSON();
 
-const buttonSe = new MessageButton().setStyle("gray").setLabel("Secondary").setID("secondary_button").toJSON()
-const buttonURL = new MessageButton().setStyle("url").setLabel("Link").setURL("https://gcommands.js.org").toJSON()
+const buttonSe = new MessageButton()
+  .setStyle("gray")
+  .setLabel("Secondary")
+  .setID("secondary_button")
+  .toJSON();
+const buttonURL = new MessageButton()
+  .setStyle("url")
+  .setLabel("Link")
+  .setURL("https://gcommands.js.org")
+  .toJSON();
 
 const buttonRow = new MessageActionRow()
-    .addComponent(button)
-    .addComponent(buttonURL)
+  .addComponent(button)
+  .addComponent(buttonURL);
 
-const buttonRow2 = new MessageActionRow()
-    .addComponent(buttonSe)
+const buttonRow2 = new MessageActionRow().addComponent(buttonSe);
 
 respond({
   content: "hi with buttons",
-  components: [buttonRow, buttonRow2]
-})
+  components: [buttonRow, buttonRow2],
+});
 ```
 
-<div is="discord-messages">
+<div is="dis-messages">
     <dis-messages>
         <dis-message profile="gcommands">
             <template #interactions>
@@ -111,62 +125,67 @@ respond({
 </div>
 
 #### Sending buttons to other channel/dm
+
 ```js
 let msg = await channel.send({
   content: "hi with buttons",
-  components: [buttonRow, buttonRow2] // 2 rows
-})
+  components: [buttonRow, buttonRow2], // 2 rows
+});
 
 msg.edit({
   content: "hello",
-  components: [buttonRow, buttonRow2] // 2 rows
-})
+  components: [buttonRow, buttonRow2], // 2 rows
+});
 
 // dm
 let msg = await member.send({
   content: "hi with buttons",
-  components: [buttonRow, buttonRow2] // 2 rows
-})
+  components: [buttonRow, buttonRow2], // 2 rows
+});
 
 msg.edit({
   content: "hello",
-  components: [buttonRow, buttonRow2] // 2 rows
-})
+  components: [buttonRow, buttonRow2], // 2 rows
+});
 ```
 
 ### Handling buttons
+
 Here we will show how you can detect if someone has clicked the button!
 The following steps will work for both normal and slash command.
 
 ```js
 client.on("clickButton", (button) => {
-    const buttonEdit = new MessageButton().setStyle("gray").setLabel("Secondary").setID("secondary_button").setDisabled();
-    const buttonRow = new MessageActionRow()
-        .addComponent(buttonEdit)
+  const buttonEdit = new MessageButton()
+    .setStyle("gray")
+    .setLabel("Secondary")
+    .setID("secondary_button")
+    .setDisabled();
+  const buttonRow = new MessageActionRow().addComponent(buttonEdit);
 
-    button.message.edit({
-      autoDefer: true, // if false use button.defer()
-      content: "hi",
-      components: [buttonRow]
-    })
+  button.message.edit({
+    autoDefer: true, // if false use button.defer()
+    content: "hi",
+    components: [buttonRow],
+  });
 
-    // new message (reply)
-    button.reply.send({
-        content: "a",
-        components: [buttonRow]
-    })
+  // new message (reply)
+  button.reply.send({
+    content: "a",
+    components: [buttonRow],
+  });
 
-    setTimeout(() => {
-      // edit reply
-      button.reply.edit({
-          content: "ab",
-          components: [buttonRow]
-      })
-    }, 4000)
-})
+  setTimeout(() => {
+    // edit reply
+    button.reply.edit({
+      content: "ab",
+      components: [buttonRow],
+    });
+  }, 4000);
+});
 ```
 
-<div is="discord-messages">
+<div is="dis-messages">
     <dis-messages>
         <dis-message profile="gcommands">
           hi
@@ -190,125 +209,143 @@ client.on("clickButton", (button) => {
 </div>
 
 ### Collectors
+
 ```js
 var msg = await respond({
-    content: new MessageEmbed().setTitle("a"),
-    components: buttonRow
-})
+  content: new MessageEmbed().setTitle("a"),
+  components: buttonRow,
+});
 
 const filter = (button) => button.clicker.user.id === member.id;
-const collector = msg.createButtonCollector(filter, { max: 1, time: 60000, errors: ['time'] });
-
-collector.on('collect', async(b) => {
-    console.log(b)
+const collector = msg.createButtonCollector(filter, {
+  max: 1,
+  time: 60000,
+  errors: ["time"],
 });
-collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+
+collector.on("collect", async (b) => {
+  console.log(b);
+});
+collector.on("end", (collected) =>
+  console.log(`Collected ${collected.size} items`)
+);
 ```
 
 ### Await Buttons
+
 ```js
 var msg = await respond({
-    content: new MessageEmbed().setTitle("a"),
-    components: buttonRow
-})
+  content: new MessageEmbed().setTitle("a"),
+  components: buttonRow,
+});
 
 const filter = (button) => button.clicker.user.id === member.id;
-const collector = await msg.awaitButtons(filter, { max: 1, time: 60000, errors: ['time'] });
+const collector = await msg.awaitButtons(filter, {
+  max: 1,
+  time: 60000,
+  errors: ["time"],
+});
 
 console.log(`${member.user.tag} clicked the pog button!`);
 ```
 
-| STYLES   	|  ALIASES     | MessageButton        	|
-|---------	| ----  | ----------------	|
-| BLURPLE 	|  PRIMARY  |`.setStyle()`    	|
-| GRAY    	|  SECONDARY  |`.setLabel()`    	|
-| GREEN   	|  SUCCESS  |`.setID()`       	|
-| RED     	|  DANGER  |`.setURL()`      	|
-| URL     	|  LINK  |`.setDisabled()` 	|
-|      	    |    |`.setEmoji("emoji")` 	|
+| STYLES  | ALIASES   | MessageButton        |
+| ------- | --------- | -------------------- |
+| BLURPLE | PRIMARY   | `.setStyle()`        |
+| GRAY    | SECONDARY | `.setLabel()`        |
+| GREEN   | SUCCESS   | `.setID()`           |
+| RED     | DANGER    | `.setURL()`          |
+| URL     | LINK      | `.setDisabled()`     |
+|         |           | `.setEmoji("emoji")` |
 
 ::: warning
 Only `URL` buttons can have a url. `URL` buttons can **not** have a `custom_id`. `URL` buttons also do not send an interaction event when clicked.
 :::
 
 ## Select Menu
+
 If you want menus in your messages, you've come to the right place!
 
 <img src="https://discord.com/assets/0845178564ed70a6c657d9b40d1de8fc.png" width="450px;">
 
 ::: warning
 You can have maximum:
+
 - one `SelectMenu` per `ActionRow`
-:::
+  :::
 
 ### Send Menus
+
 The following steps will work for both normal and slash command.
 
 ```js
-const { MessageSelectMenu, MessageSelectMenuOption, MessageActionRow } = require("gcommands")
+const {
+  MessageSelectMenu,
+  MessageSelectMenuOption,
+  MessageActionRow,
+} = require("gcommands");
 
 const dropdownOption = new MessageSelectMenuOption()
   .setDescription("test")
   .setLabel("label1")
   .setValue("dropdown_label_1")
   .setEmoji("💚") // or .setEmoji("<:name:id>"), not required
-  .setDefault()
+  .setDefault();
 
 const dropdownOption2 = new MessageSelectMenuOption()
   .setDescription("test")
   .setLabel("label2")
   .setValue("dropdown_label_2")
-  .setEmoji("💚") // or .setEmoji("<:name:id>"), not required
+  .setEmoji("💚"); // or .setEmoji("<:name:id>"), not required
 
 const dropdownOption3 = new MessageSelectMenuOption()
   .setDescription("test")
   .setLabel("POGASDJOA")
   .setValue("dropdown_label_3")
-  .setEmoji("💚") // or .setEmoji("<:name:id>"), not required
+  .setEmoji("💚"); // or .setEmoji("<:name:id>"), not required
 
 const dropdown = new MessageSelectMenu()
   .setID("dropdown_1")
   .setMaxValues(3) // not required
   .setMinValues(2)
   .setPlaceholder("hehe")
-  .addOptions([
-    dropdownOption, dropdownOption2, dropdownOption3
-  ])
+  .addOptions([dropdownOption, dropdownOption2, dropdownOption3]);
 
-const actionRow = new MessageActionRow()
-    .addComponent(dropdown)
+const actionRow = new MessageActionRow().addComponent(dropdown);
 
 respond({
   content: "hi with menus",
-  components: [actionRow, actionRow] // 2 rows
-})
+  components: [actionRow, actionRow], // 2 rows
+});
 ```
 
 #### Sending menus to other channel/dm
+
 ```js
 let msg = await channel.send({
   content: "hi with menu",
-  components: [actionRow, actionRow] // 2 rows
-})
+  components: [actionRow, actionRow], // 2 rows
+});
 
 msg.edit({
   content: "hello",
-  components: [actionRow, actionRow] // 2 rows
-})
+  components: [actionRow, actionRow], // 2 rows
+});
 
 // dm
 let msg = await member.send({
   content: "hi with menu",
-  components: [actionRow, actionRow] // 2 rows
-})
+  components: [actionRow, actionRow], // 2 rows
+});
 
 msg.edit({
   content: "hello",
-  components: [actionRow, actionRow] // 2 rows
-})
+  components: [actionRow, actionRow], // 2 rows
+});
 ```
 
 ### Handling menus
+
 Here we will show how you can detect if someone has used the menu!
 The following steps will work for both normal and slash command.
 
@@ -369,30 +406,42 @@ client.on("selectMenu", (menu) => {
 ```
 
 ### Collectors
+
 ```js
 var msg = await respond({
-    content: new MessageEmbed().setTitle("a"),
-    components: actionRow
-})
+  content: new MessageEmbed().setTitle("a"),
+  components: actionRow,
+});
 
 const filter = (menu) => menu.clicker.user.id === member.id;
-const collector = msg.createSelectMenuCollector(filter, { max: 1, time: 60000, errors: ['time'] });
-
-collector.on('collect', async(menu) => {
-    console.log(menu)
+const collector = msg.createSelectMenuCollector(filter, {
+  max: 1,
+  time: 60000,
+  errors: ["time"],
 });
-collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+
+collector.on("collect", async (menu) => {
+  console.log(menu);
+});
+collector.on("end", (collected) =>
+  console.log(`Collected ${collected.size} items`)
+);
 ```
 
 ### Await Select Menus
+
 ```js
 var msg = await respond({
-    content: new MessageEmbed().setTitle("a"),
-    components: actionRow
-})
+  content: new MessageEmbed().setTitle("a"),
+  components: actionRow,
+});
 
 const filter = (menu) => menu.clicker.user.id === member.id;
-const collector = await msg.awaitSelectMenus(filter, { max: 1, time: 60000, errors: ['time'] });
+const collector = await msg.awaitSelectMenus(filter, {
+  max: 1,
+  time: 60000,
+  errors: ["time"],
+});
 
 console.log(`${member.user.tag} select the pog menu!`);
 ```

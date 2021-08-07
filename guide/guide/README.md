@@ -1,8 +1,6 @@
 # Introduction
 
-![BANNER](https://cdn.discordapp.com/attachments/841186934319874049/849643615407439922/garlicnewbrand.png)
-
-<language lang="en">
+![BANNER](/../../garlic.png)
 
 If you came here, you probably want to learn how to use GCommands. GCommands allows you to easily handle Message & Slash commands for the [Discord.JS](https://discordjs.guide) library. This guide will teach you how to:
 
@@ -10,8 +8,6 @@ If you came here, you probably want to learn how to use GCommands. GCommands all
 - create slash & message commands.
 
 ## Before you begin...
-
-<language lang="en">
 
 First, you need to know at least some basics of JavaScript. You can start without them, but you'll get stuck on many simple problems that you would otherwise solve easily.
 
@@ -21,5 +17,3 @@ First, you need to know at least some basics of JavaScript. You can start withou
 - [W3School JavaScript](https://www.w3schools.com/js/)
 - [W3School NodeJS](https://www.w3schools.com/nodejs/)
 - And honestly, [Stack Overflow](https://stackoverflow.com) will be helping you with many problems
-
-</language>
