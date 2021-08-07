@@ -134,7 +134,7 @@ class GCommandsClient extends Client {
         });
 
         super.on("ready", () => {
-            console.log("ready")
+            console.log("ready");
             super.loadSys();
         });
         GUpdater.__updater();
