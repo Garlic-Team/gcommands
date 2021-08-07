@@ -1,5 +1,5 @@
 const { default: axios } = require('axios');
-const ifDjsV13 = (require('../../util/updater')).checkDjsVersion(13);
+const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
 
 module.exports = client => {
     client.on('guildMemberUpdate', async (oldMember, newMember) => {
