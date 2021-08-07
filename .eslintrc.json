@@ -62,7 +62,7 @@
         "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "capitalized-comments": ["error", "always", { "ignoreConsecutiveComments": true }],
         "comma-dangle": ["error", "always-multiline"],
-        "comma-spacing": "error",
+        "comma-spacing": 0,
         "comma-style": "error",
         "computed-property-spacing": "error",
         "consistent-this": ["error", "$this"],
