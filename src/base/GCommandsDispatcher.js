@@ -35,6 +35,10 @@ class GCommandsDispatcher {
         */
         this.cooldowns = new Collection();
 
+        /**
+         * Application
+         * @type {ClientApplication}
+        */
         this.application = null;
 
         this.client.inhibitors = this.inhibitors;

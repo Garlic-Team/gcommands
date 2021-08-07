@@ -196,12 +196,12 @@ class GEventHandling {
                 commandos.run({
                     client, bot, message, member, guild, channel,
                     respond: async (options = undefined) => {
-                        if (this.client.autoTyping) channel.startTyping(this.client.autoTyping);
+                        if (this.client.autoTyping) ifDjsV13 ? channel.sendTyping() : channel.startTyping();
 
                         let msg = await message.send(options);
                         botMessage = msg;
 
-                        if (this.client.autoTyping) channel.stopTyping(true);
+                        if (this.client.autoTyping && !ifDjsV13) channel.stopTyping(true);
                         return msg;
                     },
                     edit: async (options = undefined) => {

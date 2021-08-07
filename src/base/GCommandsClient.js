@@ -67,7 +67,7 @@ class GCommandsClient extends Client {
          * @type {Boolean}
          * @default false
         */
-        this.autoTyping = options.autoTyping ? msToSeconds(ms(options.autoTyping)) : null;
+        this.autoTyping = options.autoTyping;
 
         /**
          * OwnLanguageFile
