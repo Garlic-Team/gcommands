@@ -41,7 +41,7 @@ let row = new MessageActionRow()
   );
 
 let msg = await channel.send({
-  content: "Click a button!",
+  content: "Press a button!",
   components: row,
 });
 let filter = (btn) => btn.clicker.user.id === author.id;
@@ -62,7 +62,7 @@ collector.on("end", () => {
 <div is="dis-messages">
   <dis-messages>
     <dis-message profile="gcommands">
-      Click a button!
+      Press a button!
       <template #actions>
         <discord-buttons>
           <discord-button type="primary">Primary (Blurple)</discord-button>
@@ -73,25 +73,25 @@ collector.on("end", () => {
     </dis-message>
     <dis-message profile="gcommands">
       <template #interactions>
-          <discord-interaction profile="gcommands">Click a button!</discord-interaction>
+          <discord-interaction profile="gcommands">Press a button!</discord-interaction>
       </template>
       <mention profile="hyro" :highlight="true">Hyro</mention>, you clicked blurple!
     </dis-message>
     <dis-message profile="gcommands">
       <template #interactions>
-          <discord-interaction profile="gcommands">Click a button!</discord-interaction>
+          <discord-interaction profile="gcommands">Press a button!</discord-interaction>
       </template>
       <mention profile="hyro" :highlight="true">Hyro</mention>, you clicked gray!
     </dis-message>
     <dis-message profile="gcommands">
       <template #interactions>
-          <discord-interaction profile="gcommands">Click a button!</discord-interaction>
+          <discord-interaction profile="gcommands">Press a button!</discord-interaction>
       </template>
       <mention profile="hyro" :highlight="true">Hyro</mention>, you clicked red!
     </dis-message>
     <dis-message profile="gcommands">
       <template #interactions>
-          <discord-interaction profile="gcommands">Click a button!</discord-interaction>
+          <discord-interaction profile="gcommands">Press a button!</discord-interaction>
       </template>
       Time ran out!
     </dis-message>
@@ -124,7 +124,7 @@ let row = new MessageActionRow()
   );
 
 let msg = await respond({
-  content: "Click a button!",
+  content: "Press a button!",
   components: row,
 });
 let filter = (btn) => btn.clicker.user.id === author.id;
@@ -143,7 +143,7 @@ msg.reply({
 <div is="dis-messages">
   <dis-messages>
     <dis-message profile="gcommands">
-      Click a button!
+      Press a button!
       <template #actions>
         <discord-buttons>
           <discord-button type="primary">Primary (Blurple)</discord-button>
@@ -154,14 +154,14 @@ msg.reply({
     </dis-message>
     <dis-message profile="gcommands">
       <template #interactions>
-          <discord-interaction profile="gcommands">Click a button!</discord-interaction>
+          <discord-interaction profile="gcommands">Press a button!</discord-interaction>
       </template>
       You didn't click any button :(
     </dis-message>
   </dis-messages>
   <dis-messages>
     <dis-message profile="gcommands">
-      Click a button!
+      Press a button!
       <template #actions>
         <discord-buttons>
           <discord-button type="primary">Primary (Blurple)</discord-button>
@@ -172,7 +172,7 @@ msg.reply({
     </dis-message>
     <dis-message profile="gcommands">
       <template #interactions>
-          <discord-interaction profile="gcommands">Click a button!</discord-interaction>
+          <discord-interaction profile="gcommands">Press a button!</discord-interaction>
       </template>
       You clicked: blurple, gray, red!
     </dis-message>
