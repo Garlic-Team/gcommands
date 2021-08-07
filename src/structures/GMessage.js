@@ -4,7 +4,7 @@ const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonC
 const BaseMessageComponent = require('./BaseMessageComponent');
 const { InteractionTypes } = require('../util/Constants');
 const GPayload = require('./GPayload');
-const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
+const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
 
 /**
  * The GMessage class

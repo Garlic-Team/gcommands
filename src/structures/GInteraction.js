@@ -2,9 +2,8 @@ const { Message, SnowflakeUtil } = require('discord.js');
 const Color = require('../structures/Color');
 const GPayload = require('./GPayload');
 const axios = require('axios');
-const { checkDjsVersion } = require('../util/util');
 const { InteractionTypes, MessageComponentTypes } = require('../util/Constants');
-const ifDjsV13 = checkDjsVersion(13);
+const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
 
 /**
  * The GInteraction class
