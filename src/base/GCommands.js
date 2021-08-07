@@ -151,16 +151,12 @@ class GCommands extends EventEmitter {
 
         process.emitWarning('GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.');
 
-        setImmediate(() => {
-            super.on("ready", () => {
-                this.loadSys();
-            });
-        });
+        this.loadSys();
         GUpdater.__updater();
     }
 
     loadSys() {
-        this.dispatcher = new GCommandsDispatcher(this.GCommandsClient);
+        this.client.dispatcher = new GCommandsDispatcher(this.GCommandsClient);
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 

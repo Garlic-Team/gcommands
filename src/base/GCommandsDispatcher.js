@@ -209,7 +209,7 @@ class GCommandsDispatcher {
         if (this.application.owner === null) this.application.owners = [];
 
         if (this.application.owner instanceof Team) {
-            this.application.owners = this.application.owner.members.array().map(teamMember => teamMember.user);
+            this.application.owners = [...this.application.owner.members.values()].map(teamMember => teamMember.user);
         } else { this.application.owners = [this.application.owner]; }
 
         return this.application.owners;
