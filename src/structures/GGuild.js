@@ -23,7 +23,7 @@ const { Guild } = require('discord.js');
             getLanguage: {
                 value: async function(cache = true) {
                     let language = await this.client.dispatcher.getGuildLanguage(this.id, cache);
-                    return res(language || this.client.language || "english");
+                    return language || this.client.language || "english";
                 }
             },
             setLanguage: {
