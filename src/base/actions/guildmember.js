@@ -39,9 +39,9 @@ module.exports = client => {
                 url,
             };
 
-            let response = undefined;
-            if(!ifDjsV13) response = (await axios(config)).data;
-            else response = { pending: newMember.pending }
+            let response;
+            if (!ifDjsV13) response = (await axios(config)).data;
+            else response = { pending: newMember.pending };
 
             if (response.pending) return;
 
