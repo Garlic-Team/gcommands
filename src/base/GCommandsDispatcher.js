@@ -35,6 +35,8 @@ class GCommandsDispatcher {
         */
         this.cooldowns = new Collection();
 
+        this.apllication = null;
+
         this.client.inhibitors = this.inhibitors;
         this.client.cooldowns = this.cooldowns;
 
@@ -83,7 +85,7 @@ class GCommandsDispatcher {
      * @returns {String}
     */
     async getCooldown(guildId, userId, command) {
-        if (this.client.application.owners.some(user => user.id === userId)) return { cooldown: false };
+        if (this.application.owners.some(user => user.id === userId)) return { cooldown: false };
         let now = Date.now();
 
         let cooldown;
@@ -193,16 +195,17 @@ class GCommandsDispatcher {
      * @returns {Array}
     */
     async fetchClientApplication() {
-        if (!ifDjsV13) this.client.application = await this.client.fetchApplication();
-        else this.client.application = await this.client.application.fetch();
+        if (!ifDjsV13) this.application = await this.client.fetchApplication();
+        else this.application = await this.client.application.fetch();
 
-        if (this.client.application.owner === null) this.client.application.owners = [];
+        console.log(this.application)
+        if (this.application.owner === null) this.application.owners = [];
 
-        if (this.client.application.owner instanceof Team) {
-            this.client.application.owners = this.client.application.owner.members.array().map(teamMember => teamMember.user);
-        } else { this.client.application.owners = [this.client.application.owner]; }
+        if (this.application.owner instanceof Team) {
+            this.application.owners = this.application.owner.members.array().map(teamMember => teamMember.user);
+        } else { this.application.owners = [this.application.owner]; }
 
-        return this.client.application.owners;
+        return this.application.owners;
     }
 
     /**
