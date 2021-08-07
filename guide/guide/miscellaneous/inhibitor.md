@@ -4,7 +4,7 @@ Inhibitors always run before the command itself.
 Here is a blacklist example:
 
 ```js
-let blacklist = ["12345"];
+let blacklist = (await client.database.get("blacklist")) || [];
 
 client.dispatcher.addInhibitor((interaction, { respond, message, author }) => {
   if ((message || interaction.isCommand()) && blacklist.includes(author.id)) {
@@ -51,15 +51,23 @@ client.dispatcher.addInhibitor((interaction, { respond, message, author }) => {
   <dis-messages :ephemeral="true">
     <dis-message profile="gcommands">
       <template #interactions>
-        <discord-interaction profile="gcommands" :ephemeral="true">Press for free bobux!!!!!!!</discord-interaction>
+        <discord-interaction profile="hyro" :ephemeral="true">Press for free bobux!!!!!!!</discord-interaction>
       </template>
       You are blacklisted from interacting with this bot!
+    </dis-message>
+  </dis-messages>
+  <dis-messages>
+    <dis-message profile="gcommands">
+      <template #interactions>
+        <discord-interaction profile="izboxo">Press for free bobux!!!!!!!</discord-interaction>
+      </template>
+      Virus activated.
     </dis-message>
   </dis-messages>
 </div>
 
 ```js
-let blacklist = ["12345"];
+let blacklist = (await client.database.get("blacklist")) || [];
 
 client.dispatcher.addInhibitor((interaction, { respond, message, author }) => {
   if (
