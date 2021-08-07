@@ -2,6 +2,7 @@ const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const Color = require('../structures/Color'), { Events } = require('../util/Constants');
 const { inhibit, interactionRefactor, channelTypeRefactor } = require('../util/util');
+const ifDjsV13 = (require('../util/util')).checkDjsVersion('13');
 
 /**
  * The GEventHandling class
@@ -36,7 +37,7 @@ class GEventHandling {
     */
     messageEvent() {
         if ((this.client.slash === false) || (this.client.slash === 'both')) {
-            this.client.on('message', message => {
+            this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
                 messageEventUse(message);
             });
 
