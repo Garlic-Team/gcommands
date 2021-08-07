@@ -70,7 +70,7 @@ class Argument {
         message.send(prompt);
 
         const filter = msg => msg.author.id === message.author.id;
-        const responses = await (ifDjsV13 ? message.channel.awaitMessages({filter,  max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait }));
+        const responses = await (ifDjsV13 ? message.channel.awaitMessages({ filter, max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait }));
         if (responses.size === 0) {
             return {
                         valid: true,
