@@ -6,7 +6,7 @@ const GCommandLoader = require('../managers/GCommandLoader'),
     GEventHandling = require('../managers/GEventHandling'),
     GDatabaseLoader = require('../managers/GDatabaseLoader'),
     { Events } = require('../util/Constants'),
-    GUpdater = require('../util/updater'),
+    GUpdater = require('../util/updater');
 
 const { Collection } = require('discord.js');
 const fs = require('fs');
