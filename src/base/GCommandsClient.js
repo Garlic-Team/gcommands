@@ -133,7 +133,10 @@ class GCommandsClient extends Client {
             setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
         });
 
-        this.on("ready", this.loadSys());
+        super.on("ready", () => {
+            console.log("ready")
+            super.loadSys();
+        });
         GUpdater.__updater();
     }
 
