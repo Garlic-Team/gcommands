@@ -42,7 +42,7 @@ module.exports = client => {
 
         if (!oldState.deaf && newState.deaf) {
             let deafType = newState.selfDeaf ? 'self-deafened' : 'server-deafened';
-            client.emit('voiceChannelDeaf',
+            client.emit('voiceChannelDeafen',
                 newMember,
                 deafType
             );
@@ -50,7 +50,7 @@ module.exports = client => {
 
         if (oldState.deaf && !newState.deaf) {
             let deafType = oldState.selfDeaf ? 'self-deafened' : 'server-deafened';
-            client.emit('voiceChannelUndeaf',
+            client.emit('voiceChannelUndeafen',
                 newMember,
                 deafType
             );
