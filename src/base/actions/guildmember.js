@@ -1,4 +1,5 @@
 const { default: axios } = require('axios');
+const ifDjsV13 = (require('../../util/updater')).checkDjsVersion(13);
 
 module.exports = client => {
     client.on('guildMemberUpdate', async (oldMember, newMember) => {
@@ -38,7 +39,9 @@ module.exports = client => {
                 url,
             };
 
-            let response = (await axios(config)).data;
+            response = undefined;
+            if(!ifDjsV13) response = (await axios(config)).data;
+            else response = { pending: newMember.pending }
 
             if (response.pending) return;
 
