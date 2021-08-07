@@ -133,13 +133,12 @@ class GCommandsClient extends Client {
             setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
         });
 
-        this.dispatcher = new GCommandsDispatcher(this);
-
-        this.loadSys();
+        this.on("ready", this.loadSys());
         GUpdater.__updater();
     }
 
     loadSys() {
+        this.dispatcher = new GCommandsDispatcher(this);
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 
