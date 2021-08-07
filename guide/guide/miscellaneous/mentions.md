@@ -9,35 +9,35 @@ Here's the list:
 - roles
 - everyone
 
-You can also whitelist specific User/Role ID's.
+You can also whitelist specific User/Role ID's in `allowedMentions.users` and `allowedMentions.roles`.
 
 Example:
 
 ```js
-respond({
-  content: `Pong, <@491999008106217473>!`,
+await channel.send({
+  content: `1 Pong, <@491999008106217473>!`,
   allowedMentions: { parse: [], users: ["491999008106217473"] },
 });
-channel.send({
-  content: `Pong, <@491999008106217473>!`,
+await channel.send({
+  content: `2 Pong, <@491999008106217473>!`,
   allowedMentions: { parse: [] },
 });
-channel.send({
-  content: `Pong, <@491999008106217473>!`,
+await channel.send({
+  content: `3 Pong, <@491999008106217473>!`,
   allowedMentions: { parse: ["users"] },
 });
 ```
 
-<div is="dis-messages">
+<div is="dis-messages" :compactMode="false">
     <dis-messages>
         <dis-message profile="gcommands">
-            Pong, <mention profile="hyro" :highlight="true">Hyro</mention>!</b>
+            1 Pong, <mention profile="hyro" :highlight="true">Hyro</mention>!</b>
         </dis-message>
         <dis-message profile="gcommands">
-            Pong, <mention profile="hyro">Hyro</mention>!</b>
+            2 Pong, <mention profile="hyro">Hyro</mention>!</b>
         </dis-message>
         <dis-message profile="gcommands">
-            Pong, <mention profile="hyro" :highlight="true">Hyro</mention>!</b>
+            3 Pong, <mention profile="hyro" :highlight="true">Hyro</mention>!</b>
         </dis-message>
     </dis-messages>
 </div>

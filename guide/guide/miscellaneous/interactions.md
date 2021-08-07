@@ -1,5 +1,16 @@
 # Interactions
 
+Interactions are used mainly to get responses from a user.
+
+## Functions
+
+| FUNCTION | DESCRIPTION                                                                             | RETURNS                        |
+| -------- | --------------------------------------------------------------------------------------- | ------------------------------ |
+| reply    | Inline replies to a MessageComponent, just like `message.reply`                         | Promise <​MessageInteraction​> |
+| think    | The interaction will respond with "Thinking". This can later by resolved by `.edit()`   | undefined                      |
+| edit     | Edits the interaction. **DEPRECATED** (use `MessageComponent.message.edit`)             | Promise <​MessageInteraction​> |
+| defer    | Resolves the interaction, makes it so it won't respond with a "This interaction failed" | undefined                      |
+
 If you want you can use event interaction and there detect if there is a dropdown/button.
 
 #### Functions
