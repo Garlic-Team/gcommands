@@ -98,14 +98,14 @@ class GEventHandling {
                     if (typeof commandos.userOnly === 'object') {
                         let users = commandos.userOnly.some(v => message.author.id === v);
                         if (!users) return;
-                    } else if (message.author.id !== commandos.userOnly) return;
+                    } else if (message.author.id !== commandos.userOnly) { return; }
                 }
 
                 if (commandos.channelOnly) {
                     if (typeof commandos.channelOnly === 'object') {
                         let channels = commandos.channelOnly.some(v => message.channel.id === v);
                         if (!channels) return;
-                    } else if (message.channel.id !== commandos.channelOnly) return;
+                    } else if (message.channel.id !== commandos.channelOnly) { return; }
                 }
 
                 let channelType = channelTypeRefactor(message.channel);
