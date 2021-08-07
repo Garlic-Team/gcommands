@@ -138,6 +138,7 @@ class GCommandsClient extends Client {
                 console.log("ready")
                 super.loadSys();
             });
+            // never gonna give you up
         });
         GUpdater.__updater();
     }
