@@ -6,6 +6,7 @@ const UserArgumentType = require('./types/user');
 const RoleArgumentType = require('./types/role');
 const NumberArgumentType = require('./types/number');
 const MentionableArgumentType = require('./types/mentionable');
+const ifDjsV13 = require('../util/util').checkDjsVersion(13);
 
 /**
  * The Argument class
@@ -66,11 +67,10 @@ class Argument {
 
 		const wait = 30000;
 
-        message.reply(prompt);
-        const responses = await message.channel.awaitMessages(msg => msg.author.id === message.author.id, {
-            max: 1,
-            time: wait
-        });
+        message.send(prompt);
+
+        const filter = msg => msg.author.id === message.author.id;
+        const responses = await (ifDjsV13 ? message.channel.awaitMessages({filter,  max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait }));
         if (responses.size === 0) {
             return {
                         valid: true,
