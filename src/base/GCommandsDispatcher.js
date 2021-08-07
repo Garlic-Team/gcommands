@@ -198,7 +198,7 @@ class GCommandsDispatcher {
         if (!ifDjsV13) this.application = await this.client.fetchApplication();
         else this.application = await this.client.application.fetch();
 
-        console.log(this.application)
+        console.log(this.application);
         if (this.application.owner === null) this.application.owners = [];
 
         if (this.application.owner instanceof Team) {
