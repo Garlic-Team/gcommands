@@ -139,6 +139,7 @@ class GCommandsClient extends Client {
                 super.loadSys();
             });
             // never gonna give you up
+            // never gonna let you down
         });
         GUpdater.__updater();
     }
