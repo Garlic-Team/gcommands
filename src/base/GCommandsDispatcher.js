@@ -22,6 +22,7 @@ class GCommandsDispatcher {
          * @type {Client} client
         */
         this.client = client;
+        console.log(this.client)
 
         /**
          * Inhibitors
