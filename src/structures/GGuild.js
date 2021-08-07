@@ -9,7 +9,10 @@ const { Guild } = require('discord.js');
         Object.defineProperties(Guild.prototype, {
             getCommandPrefix: {
                 value: function(cache = true) {
-                    return this.client.dispatcher.getGuildPrefix(this.id, cache);
+                    return new Promise(async res => {
+                        let prefix = await this.client.dispatcher.getGuildPrefix(this.id, cache);
+                        return res(prefix || this.client.prefix || []);
+                    });
                 }
             },
             setCommandPrefix: {
@@ -20,7 +23,12 @@ const { Guild } = require('discord.js');
             },
 
             getLanguage: {
-                value: function(cache = true) { return this.client.dispatcher.getGuildLanguage(this.id, cache); }
+                value: function(cache = true) {
+                    return new Promise(async res => {
+                        let language = await this.client.dispatcher.getGuildLanguage(this.id, cache);
+                        return res(language || this.client.language || "english");
+                    });
+                }
             },
             setLanguage: {
                 value: function(lang) {
