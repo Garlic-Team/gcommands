@@ -149,6 +149,21 @@ class Util {
             return undefined;
         }
     }
+
+    /**
+     * Internal method to checkDjsVersion
+     * @param {Number} needVer
+     * @returns {Boolean}
+     * @private
+    */
+     static checkDjsVersion(needVer) {
+        let ver = parseInt(version.split('')[0] + version.split('')[1]);
+        if (ver === parseInt(needVer)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 module.exports = Util;
