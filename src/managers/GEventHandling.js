@@ -59,7 +59,6 @@ class GEventHandling {
             else if (!message.content.startsWith(prefix[0])) return;
 
             const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
-
             if (cmd.length === 0) return;
 
             try {
@@ -93,22 +92,20 @@ class GEventHandling {
                 let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos);
                 if (cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
 
-                if (commandos.guildOnly) {
-                    if (message.guild.id !== commandos.guildOnly) return;
-                }
+                if (commandos.guildOnly && message.guild.id !== commandos.guildOnly) return;
 
                 if (commandos.userOnly) {
                     if (typeof commandos.userOnly === 'object') {
                         let users = commandos.userOnly.some(v => message.author.id === v);
                         if (!users) return;
-                    } else if (message.author.id !== commandos.userOnly) { return; }
+                    } else if (message.author.id !== commandos.userOnly) return;
                 }
 
                 if (commandos.channelOnly) {
                     if (typeof commandos.channelOnly === 'object') {
                         let channels = commandos.channelOnly.some(v => message.channel.id === v);
                         if (!channels) return;
-                    } else if (message.channel.id !== commandos.channelOnly) { return; }
+                    } else if (message.channel.id !== commandos.channelOnly) return;
                 }
 
                 let channelType = channelTypeRefactor(message.channel);
@@ -139,16 +136,6 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
 
                     let roles = commandos.userRequiredRoles.some(v => member._roles.includes(v));
-                    if (!roles) {
-                        let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
-                        return message.send(permsNeed);
-                    }
-                }
-
-                if (commandos.userRequiredRole) {
-                    if (!Array.isArray(commandos.userRequiredRole)) commandos.userRequiredRole = [commandos.userRequiredRole];
-
-                    let roles = commandos.userRequiredRole.some(v => member._roles.includes(v));
                     if (!roles) {
                         let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
                         return message.send(permsNeed);

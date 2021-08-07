@@ -103,9 +103,7 @@ class GCommandsDispatcher {
         else cooldown = command.cooldown ? ms(command.cooldown) : ms(this.client.defaultCooldown);
 
         if (cooldown < 1800000 || !this.client.database) {
-            if (!this.client.cooldowns.has(command.name)) {
-                this.client.cooldowns.set(command.name, new Collection());
-            }
+            if (!this.client.cooldowns.has(command.name)) this.client.cooldowns.set(command.name, new Collection());
 
             const timestamps = this.client.cooldowns.get(command.name);
 
