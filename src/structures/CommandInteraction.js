@@ -70,7 +70,7 @@ class CommandInteraction extends GInteraction {
      * @private
     */
     getSlashArgsObject(options) {
-        if (options.length < 1) return {};
+        if (!Array.isArray(options)) return {};
         let args = {};
 
         for (let o of options) {
