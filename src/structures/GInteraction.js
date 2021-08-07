@@ -3,7 +3,7 @@ const Color = require('../structures/Color');
 const GPayload = require('./GPayload');
 const axios = require('axios');
 const { InteractionTypes, MessageComponentTypes } = require('../util/Constants');
-const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
+const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
  * The GInteraction class

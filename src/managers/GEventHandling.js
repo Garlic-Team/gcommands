@@ -2,7 +2,7 @@ const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const Color = require('../structures/Color'), { Events } = require('../util/Constants');
 const { inhibit, interactionRefactor, channelTypeRefactor } = require('../util/util');
-const ifDjsV13 = (require('../util/updater')).checkDjsVersion('13');
+const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
  * The GEventHandling class
