@@ -188,7 +188,8 @@ class GMessage {
             edit: {
                 value: async function(result) {
                     let GPayloadResult = await GPayload.create(this.channel, result)
-                        .resolveData();
+                        .resolveData()
+                        .resolveFiles();
 
                     if (result.edited === false) {
                         return this.client.api.channels(this.channel.id).messages[this.id].patch({

@@ -309,7 +309,8 @@ class GInteraction {
 
     async slashEdit(result, update) {
         let GPayloadResult = await GPayload.create(this.channel, result)
-            .resolveData();
+            .resolveData()
+            .resolveFiles();
 
         let apiMessage = {};
         if (update) {
