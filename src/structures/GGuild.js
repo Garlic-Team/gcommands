@@ -10,7 +10,7 @@ const { Guild } = require('discord.js');
             getCommandPrefix: {
                 value: async function(cache = true) {
                     let prefix = await this.client.dispatcher.getGuildPrefix(this.id, cache);
-                    return prefix || this.client.prefix || this.client.prefixes || [];
+                    return prefix || this.client.prefix || [];
                 }
             },
             setCommandPrefix: {

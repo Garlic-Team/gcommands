@@ -14,14 +14,20 @@ const ms = require('ms');
 class GCommandsDispatcher {
     /**
      * The GCommansDispatcher class
-     * @param {Client} client - Discord.js Client
+     * @param {GCommandsClient} GCommandsClient
      */
-    constructor(client) {
+    constructor(GCommandsClient) {
+        /**
+         * GCommandsClient
+         * @type {GCommands}
+        */
+         this.GCommandsClient = GCommandsClient;
+
         /**
          * Client
-         * @type {Client} client
-        */
-        this.client = client;
+         * @type {Client}
+         */
+        this.client = this.GCommandsClient.client;
 
         /**
          * Inhibitors
@@ -72,13 +78,13 @@ class GCommandsDispatcher {
      * @returns {string}
     */
     async getGuildPrefix(guildId, cache = true) {
-        if (!this.client.database) return this.client.prefixes;
+        if (!this.client.database) return this.client.prefix;
 
         let guild = this.client.guilds.cache.get(guildId);
-        if (cache) return guild.prefix ? !Array.isArray(guild.prefix) ? Array(guild.prefix) : guild.prefix : this.client.prefixes;
+        if (cache) return guild.prefix ? !Array.isArray(guild.prefix) ? Array(guild.prefix) : guild.prefix : this.client.prefix;
 
         let guildData = await this.client.database.get(`guild_${guildId}`);
-        return guildData ? guildData.prefix : this.client.prefixes;
+        return guildData ? guildData.prefix : this.client.prefix;
     }
 
     /**

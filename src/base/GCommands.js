@@ -7,11 +7,9 @@ const GCommandLoader = require('../managers/GCommandLoader'),
     GDatabaseLoader = require('../managers/GDatabaseLoader'),
     { Events } = require('../util/Constants'),
     GUpdater = require('../util/updater'),
-    { msToSeconds } = require('../util/util');
 
 const { Collection } = require('discord.js');
 const fs = require('fs');
-const ms = require('ms');
 
 /**
  * The main GCommands class
@@ -138,10 +136,10 @@ class GCommands extends EventEmitter {
         this.client.language = this.language;
         this.client.languageFile = this.languageFile;
         this.client.database = this.database;
-        this.client.prefixes = this.prefix;
+        this.client.prefix = this.prefix;
         this.client.slash = this.slash;
         this.client.defaultCooldown = this.defaultCooldown;
-        this.client.autoTyping = this.autoTyping ? msToSeconds(ms(this.autoTyping)) : null;
+        this.client.autoTyping = this.autoTyping;
         this.client.gcategories = this.gcategories;
         this.client.galiases = this.galiases;
         this.client.gcommands = this.gcommands;
@@ -153,13 +151,16 @@ class GCommands extends EventEmitter {
 
         process.emitWarning('GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.');
 
-        this.client.dispatcher = new GCommandsDispatcher(this.client);
-
-        this.loadSys();
+        setImmediate(() => {
+            super.on("ready", () => {
+                this.loadSys();
+            });
+        });
         GUpdater.__updater();
     }
 
     loadSys() {
+        this.dispatcher = new GCommandsDispatcher(this.GCommandsClient);
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 

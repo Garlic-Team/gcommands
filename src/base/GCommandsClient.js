@@ -6,11 +6,9 @@ const GCommandLoader = require('../managers/GCommandLoader'),
     GDatabaseLoader = require('../managers/GDatabaseLoader'),
     { Events } = require('../util/Constants'),
     GUpdater = require('../util/updater'),
-    { msToSeconds } = require('../util/util');
 
 const { Collection, Client } = require('discord.js');
 const fs = require('fs');
-const ms = require('ms');
 
 /**
  * The main GCommandsClient class
@@ -40,14 +38,14 @@ class GCommandsClient extends Client {
          * @type {Boolean}
          * @default true
         */
-        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true;
+        this.caseSensitiveCommands = options.caseSensitiveCommands ? Boolean(options.caseSensitiveCommands) : true;
 
         /**
          * CaseSensitivePrefixes
          * @type {Boolean}
          * @default true
         */
-        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true;
+        this.caseSensitivePrefixes = options.caseSensitivePrefixes ? Boolean(options.caseSensitivePrefixes) : true;
 
         /**
          * CmdDir
@@ -142,7 +140,7 @@ class GCommandsClient extends Client {
     }
 
     loadSys() {
-        this.dispatcher = new GCommandsDispatcher(this);
+        this.dispatcher = new GCommandsDispatcher(this.GCommandsClient);
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 
