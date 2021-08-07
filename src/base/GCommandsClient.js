@@ -33,6 +33,7 @@ class GCommandsClient extends Client {
         */
         this.GCommandsClient = this;
         this.GCommandsClient.client = this;
+        this.client = this;
 
         /**
          * CaseSensitiveCommands
