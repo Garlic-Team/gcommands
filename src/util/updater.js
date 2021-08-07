@@ -22,14 +22,14 @@ module.exports = {
     },
 
     checkDjsVersion: function(needVer) {
-        let pckg = "../../../../../";
+        let pckg = "../../../../";
         for (let i = 0; i < 10; i++) {
             if (fs.existsSync(__dirname + "/" + pckg + "package.json")) break;
             pckg += `../`;
         }
         if (!pckg) return false;
 
-        let pck = requrie(pckg);
+        let pck = require(pckg);
         let ver = pck.dependencies["discord.js"] || pck.devDependencies["discord.js"];
         if (!ver) return false;
 
