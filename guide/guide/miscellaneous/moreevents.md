@@ -97,6 +97,12 @@ client.on("guildPartnerUpdate", (guild, oldPartnered, newPartnered) => {
 client.on("guildVerifyUpdate", (guild, oldVerified, newVerified) => {
   console.log(oldVerified, newVerified);
 });
+client.on("commandPrefixChange", (guild, prefix) => {
+  console.log(prefix);
+});
+client.on("guildLanguageChange", (guild, language) => {
+  console.log(language);
+});
 ```
 
 ## Role
