@@ -24,13 +24,6 @@ class MessageComponentInteraction extends GInteraction {
         /**
          * The component's customId
          * @type {Number}
-         * @deprecated
-         */
-        this.id = data.data.custom_id;
-
-        /**
-         * The component's customId
-         * @type {Number}
          */
         this.customId = data.data.custom_id;
 

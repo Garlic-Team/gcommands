@@ -33,7 +33,7 @@ exports.Events = {
  * * ROLE
  * * MENTIONABLE
  * * NUMBER
- * @type {Object}
+ * @typedef {(string)} ArgumentType
  */
 exports.ArgumentType = {
     SUB_COMMAND: 1,
@@ -228,4 +228,24 @@ function createEnum(keys) {
  * @property {boolean} nsfw
  * @property {boolean} slash
  * @typedef {(Object)} CommandOptions
+ */
+
+/**
+ * The CommandArgsOption
+ *
+ * @property {string} name
+ * @property {string} description
+ * @property {ArgumentType} type
+ * @property {string} prompt
+ * @property {boolean} required
+ * @property {CommandArgsChoice[]} choices
+ * @typedef {(Object)} CommandArgsOption
+ */
+
+/**
+ * The CommandArgsChoices
+ *
+ * @property {string} name
+ * @property {string} value
+ * @typedef {(Object)} CommandArgsChoice
  */
