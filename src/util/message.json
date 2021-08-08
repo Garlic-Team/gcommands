@@ -22,7 +22,7 @@
         "slovak": "Client musí mať {PERMISSION} oprávnenia k použitiu tohoto príkazu.",
         "turkish": "Bu komutu kullanabilmek için Client'in {PERMISSION} yetkisine sahip olması gerekiyor.",
         "polish": "Klient musi posiadać permisje {PERMISSION} aby użyć tej komendy.",
-        "indonesian": "Client harus memiliki izin {PERMISSION} untuk menggunakan command ini."
+        "indonesian": "Client harus memiliki izin {PERMISSION} untuk menggunakan command ini.",
         "italian": "Il cliente deve avere il permesso {PERMISSION} per usare questo comando."
     },
     "MISSING_ROLES": {
@@ -35,7 +35,7 @@
         "slovak": "Nemáš potrebné role na použitie tohito príkazu! Potrebuješ jednu z: {ROLES}",
         "turkish": "Bu komutu kullanabilmek için gerekli rollerden birisine sahip değilsin! Şu rollerden birisine sahip olman gerekiyor: {ROLES}",
         "polish": "Nie posiadasz wymaganych ról aby użyć tej komendy! Potrzebujesz jednej z podanych: {ROLES}",
-        "indonesian": "Anda tidak memiliki salah satu peran yang diperlukan untuk menggunakan command ini! Anda memerlukan salah satu peran dari yang berikut: {ROLES}"
+        "indonesian": "Anda tidak memiliki salah satu peran yang diperlukan untuk menggunakan command ini! Anda memerlukan salah satu peran dari yang berikut: {ROLES}",
         "italian": "Non hai uno dei ruoli richiesti per usare questo comando! Hai bisogno di uno dei seguenti: {ROLES}."
     },
     "COOLDOWN": {
@@ -48,7 +48,7 @@
         "slovak": "Počkaj {COOLDOWN}, skôr ako použiješ príkaz znova.",
         "turkish": "Bu komutu kullanabilmek için {COOLDOWN} beklemelisin.",
         "polish": "Musisz poczekać {COOLDOWN} sekund przed ponownym użyciem komendy.",
-        "indonesian": "Anda harus menunggu {COOLDOWN} lagi sebelum menggunakan command itu lagi."
+        "indonesian": "Anda harus menunggu {COOLDOWN} lagi sebelum menggunakan command itu lagi.",
         "italian": "Devi aspettare ancora {COOLDOWN} prima di usare questo comando di nuovo."
     },
     "UNKNOWN_COMMAND": {
@@ -61,7 +61,7 @@
         "slovak": "Príkaz {COMMAND} nebol nájdený!",
         "turkish": "{COMMAND} adındaki komutu bulamadım!",
         "polish": "Nie mogę znaleźć komendy {COMMAND}!",
-        "indonesian": "Tidak bisa mencari command {COMMAND}!"
+        "indonesian": "Tidak bisa mencari command {COMMAND}!",
         "italian": "Non è stato possibile trovare il comando {COMMAND}."
     },
     "CHANNEL_TEXT_ONLY": {
@@ -74,7 +74,7 @@
         "slovak": "Tento príkaz môžete spustiť len v textových kanáloch.",
         "turkish": "Bu komutu yalnızca metin kanallarında çalıştırabilirsiniz.",
         "polish": "Możesz uruchomić to polecenie tylko w kanałach tekstowych.",
-        "indonesian": "Anda hanya bisa menjalankan command di channel teks saja."
+        "indonesian": "Anda hanya bisa menjalankan command di channel teks saja.",
         "italian": "Puoi usare questo comando solo in canali da testo."
     },
     "CHANNEL_NEWS_ONLY": {
@@ -87,7 +87,7 @@
         "slovak": "Tento príkaz môžete spustiť len v spravodajských kanáloch.",
         "turkish": "Bu komutu sadece haber kanallarında çalıştırabilirsiniz.",
         "polish": "To polecenie można uruchomić tylko w kanałach informacyjnych.",
-        "indonesian": "Anda hanya bisa menjalankan command ini di channel berita saja."
+        "indonesian": "Anda hanya bisa menjalankan command ini di channel berita saja.",
         "italian": "Puoi usare questo comando solo in canali da notizie."
     },
     "CHANNEL_THREAD_ONLY": {
@@ -100,7 +100,7 @@
         "slovak": "Tento príkaz môžete spustiť len v spravodajských kanáloch.",
         "turkish": "Bu komutu sadece haber kanallarında çalıştırabilirsiniz.",
         "polish": "To polecenie można uruchomić tylko w kanałach informacyjnych.",
-        "indonesian": "Anda hanya bisa menjalankan command ini di sebuah thread saja."
+        "indonesian": "Anda hanya bisa menjalankan command ini di sebuah thread saja.",
         "italian": "Puoi usare questo comando solo in canali da discussione."
 
     },
@@ -114,7 +114,7 @@
         "slovak": "Príkaz môžete využiť iba v nsfw room.",
         "turkish": "Bu komutu sadece nsfw kanalında kullanabilirsiniz.",
         "polish": "Tej komendy możesz użyć tylko na kanale NSFW.",
-        "indonesian": "Anda hanya bisa menjalankan command ini di sebuah channel NSFW saja."
+        "indonesian": "Anda hanya bisa menjalankan command ini di sebuah channel NSFW saja.",
         "italian": "Puoi usare questo comando solo in canali da NSFW."
     },
     "ARGS_TIME_LIMIT": {
@@ -127,7 +127,7 @@
         "slovak": "Na odpoveď vám už nezostáva čas. Príkaz musíte spustiť znova.",
         "turkish": "Cevaplamak için zamanınız kalmadı. Komutu tekrar çalıştırmanız gerekir.",
         "polish": "Nie masz już czasu na odpowiedź. Musisz ponownie uruchomić polecenie.",
-        "indonesian": "Anda tidak punya waktu lagi untuk menjawab. Anda harus menjalankan command ini lagi."
+        "indonesian": "Anda tidak punya waktu lagi untuk menjawab. Anda harus menjalankan command ini lagi.",
         "italian": "Non ti resta nessun tempo per rispondere. Devi usare il comando di nuovo."
     },        
     "ARGS_MUST_CONTAIN": {
@@ -153,7 +153,7 @@
         "slovak": "Zadajte jednu z nasledujúcich možností: {choices}.",
         "turkish": "Lütfen aşağıdaki seçeneklerden birini girin: {choices}.",
         "polish": "Proszę wprowadzić jedną z poniższych opcji: {choices}.",
-        "indonesian": "Silahkan isi salah satu opsi berikut: {choices}"
+        "indonesian": "Silahkan isi salah satu opsi berikut: {choices}",
         "italian": "Per favore introduca una delle seguenti opzioni: {choices}."
     }
 }
