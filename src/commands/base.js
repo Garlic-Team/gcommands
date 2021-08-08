@@ -38,7 +38,7 @@ class Command {
 
         /**
          * Args
-         * @type {String | Array}
+         * @type {CommandArgsOption[]}
          */
         this.args = options.args;
 
