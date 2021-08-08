@@ -67,7 +67,7 @@ class Argument {
 
 		const wait = 30000;
 
-        message.send(prompt);
+        message.reply(prompt);
 
         const filter = msg => msg.author.id === message.author.id;
         const responses = await (ifDjsV13 ? message.channel.awaitMessages({ filter, max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait }));

@@ -73,7 +73,7 @@ class GEventHandling {
                      respond: async (options = undefined) => {
                         if (this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
-                        let msg = await message.send(options);
+                        let msg = await message.reply(options);
                         botMessageInhibit = msg;
 
                         if (this.client.autoTyping) channel.stopTyping(true);
@@ -108,17 +108,17 @@ class GEventHandling {
                 }
 
                 let channelType = channelTypeRefactor(message.channel);
-                if (commandos.nsfw && !message.channel.nsfw) return message.send(this.client.languageFile.NSFW[guildLanguage]);
-                if (commandos.channelTextOnly && channelType !== 'text') return message.send(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage]);
-                if (commandos.channelNewsOnly && channelType !== 'news') return message.send(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage]);
-                if (commandos.channelThreadOnly && channelType !== 'thread') return message.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true });
+                if (commandos.nsfw && !message.channel.nsfw) return message.reply(this.client.languageFile.NSFW[guildLanguage]);
+                if (commandos.channelTextOnly && channelType !== 'text') return message.reply(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage]);
+                if (commandos.channelNewsOnly && channelType !== 'news') return message.reply(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage]);
+                if (commandos.channelThreadOnly && channelType !== 'thread') return message.reply({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true });
 
                 if (commandos.clientRequiredPermissions) {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
                         let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
-                        return message.send(permsNeed);
+                        return message.reply(permsNeed);
                     }
                 }
 
@@ -127,7 +127,7 @@ class GEventHandling {
 
                     if (!member.permissions.has(commandos.userRequiredPermissions)) {
                         let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
-                        return message.send(permsNeed);
+                        return message.reply(permsNeed);
                     }
                 }
 
@@ -137,7 +137,7 @@ class GEventHandling {
                     let roles = commandos.userRequiredRoles.some(v => member._roles.includes(v));
                     if (!roles) {
                         let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
-                        return message.send(permsNeed);
+                        return message.reply(permsNeed);
                     }
                 }
 
@@ -184,7 +184,7 @@ class GEventHandling {
                     respond: async (options = undefined) => {
                         if (this.client.autoTyping) ifDjsV13 ? channel.sendTyping() : channel.startTyping();
 
-                        let msg = await message.send(options);
+                        let msg = await message.reply(options);
                         botMessage = msg;
 
                         if (this.client.autoTyping && !ifDjsV13) channel.stopTyping(true);
