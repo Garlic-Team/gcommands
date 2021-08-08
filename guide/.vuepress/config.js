@@ -1,7 +1,7 @@
 module.exports = {
     title: 'GCommands',
     description: 'Open source slash/normal command handler',
-    base: "/guide/",
+    base: "/", // /guide/
 
     head: [
         ['link', { rel: 'icon', href: '/gcommands.png' }],
