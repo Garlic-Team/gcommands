@@ -36,16 +36,16 @@ class GEventHandling {
      * @private
     */
     messageEvent() {
-        if ((this.client.slash === false) || (this.client.slash === 'both')) {
-            this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
-                messageEventUse(message);
-            });
+        if(String(this.client.slash) === 'true') return;
 
-            this.client.on('messageUpdate', (oldMessage, newMessage) => {
-                if (oldMessage.content === newMessage.content || oldMessage.embeds === newMessage.embeds) return;
-                messageEventUse(newMessage);
-            });
-        }
+        this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
+            messageEventUse(message);
+        });
+
+        this.client.on('messageUpdate', (oldMessage, newMessage) => {
+            if (oldMessage.content === newMessage.content || oldMessage.embeds === newMessage.embeds) return;
+            messageEventUse(newMessage);
+        });
 
         let messageEventUse = async message => {
             if (!message || !message.author || message.author.bot || !message.guild) return;
@@ -208,108 +208,108 @@ class GEventHandling {
      * @private
     */
     slashEvent() {
-        if ((this.client.slash) || (this.client.slash === 'both')) {
-            this.client.on('GInteraction', async interaction => {
-                if (!interaction.isCommand()) return;
+        if(String(this.client.slash) === 'false') return;
+
+        this.client.on('GInteraction', async interaction => {
+            if (!interaction.isCommand()) return;
+
+            try {
+                let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
+                if (!commandos || String(commandos.slash) === 'false') return;
+
+                let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
+                    interaction,
+                    member: interaction.member,
+                    author: interaction.author,
+                    guild: interaction.guild,
+                    channel: interaction.channel,
+                    respond: result => interaction.reply.send(result),
+                    edit: result => interaction.reply.edit(result)
+                }, interaction.arrayArguments, interaction.objectArguments);
+                if (inhibitReturn === false) return;
+
+                let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
+                let cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos);
+                if (cooldown.cooldown) return interaction.reply.send(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
+
+                if (commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage]);
+
+                if (commandos.userOnly) {
+                    if (typeof commandos.userOnly === 'object') {
+                        let users = commandos.userOnly.some(v => interaction.author.id === v);
+                        if (!users) return;
+                    } else if (interaction.author.id !== commandos.userOnly) { return; }
+                }
+
+                if (commandos.channelOnly) {
+                    if (typeof commandos.channelOnly === 'object') {
+                        let channels = commandos.channelOnly.some(v => interaction.channel.id === v);
+                        if (!channels) return;
+                    } else if (interaction.channel.id !== commandos.channelOnly) { return; }
+                }
+
+                let channelType = channelTypeRefactor(interaction.channel);
+
+                if (commandos.nsfw && !interaction.channel.nsfw) { return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true }); }
+                if (commandos.channelTextOnly && channelType !== 'text') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true }); }
+                if (commandos.channelNewsOnly && channelType !== 'news') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true }); }
+                if (commandos.channelThreadOnly && channelType !== 'thread') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true }); }
+
+                if (commandos.clientRequiredPermissions) {
+                    if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
+
+                    if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
+                        return interaction.reply.send({ content:
+                            this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true
+                        });
+                    }
+                }
+
+                if (commandos.userRequiredPermissions) {
+                    if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
+
+                    if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
+                        return interaction.reply.send({ content:
+                            this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true
+                        });
+                    }
+                }
+
+                if ((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
+                    if (commandos.userRequiredRole) commandos.userRequiredRoles = commandos.userRequiredRole;
+                    if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
+
+                    let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v));
+                    if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
+                }
 
                 try {
-                    let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
-                    if (!commandos || String(commandos.slash) === 'false') return;
-
-                    let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
-                        interaction,
+                    const client = this.client, bot = this.client;
+                    commandos.run({
+                        client, bot, interaction,
                         member: interaction.member,
                         author: interaction.author,
                         guild: interaction.guild,
                         channel: interaction.channel,
+
+                        /**
+                         * Respond
+                         * @param {string|GPayloadOptions} result
+                         * @returns {Message}
+                         * @memberof GEventHandling
+                         */
                         respond: result => interaction.reply.send(result),
                         edit: result => interaction.reply.edit(result)
                     }, interaction.arrayArguments, interaction.objectArguments);
-                    if (inhibitReturn === false) return;
-
-                    let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
-                    let cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos);
-                    if (cooldown.cooldown) return interaction.reply.send(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
-
-                    if (commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage]);
-
-                    if (commandos.userOnly) {
-                        if (typeof commandos.userOnly === 'object') {
-                            let users = commandos.userOnly.some(v => interaction.author.id === v);
-                            if (!users) return;
-                        } else if (interaction.author.id !== commandos.userOnly) { return; }
-                    }
-
-                    if (commandos.channelOnly) {
-                        if (typeof commandos.channelOnly === 'object') {
-                            let channels = commandos.channelOnly.some(v => interaction.channel.id === v);
-                            if (!channels) return;
-                        } else if (interaction.channel.id !== commandos.channelOnly) { return; }
-                    }
-
-                    let channelType = channelTypeRefactor(interaction.channel);
-
-                    if (commandos.nsfw && !interaction.channel.nsfw) { return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true }); }
-                    if (commandos.channelTextOnly && channelType !== 'text') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true }); }
-                    if (commandos.channelNewsOnly && channelType !== 'news') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true }); }
-                    if (commandos.channelThreadOnly && channelType !== 'thread') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true }); }
-
-                    if (commandos.clientRequiredPermissions) {
-                        if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
-
-                        if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                            return interaction.reply.send({ content:
-                                this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true
-                            });
-                        }
-                    }
-
-                    if (commandos.userRequiredPermissions) {
-                        if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
-
-                        if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
-                            return interaction.reply.send({ content:
-                                this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true
-                            });
-                        }
-                    }
-
-                    if ((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
-                        if (commandos.userRequiredRole) commandos.userRequiredRoles = commandos.userRequiredRole;
-                        if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
-
-                        let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v));
-                        if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
-                    }
-
-                    try {
-                        const client = this.client, bot = this.client;
-                        commandos.run({
-                            client, bot, interaction,
-                            member: interaction.member,
-                            author: interaction.author,
-                            guild: interaction.guild,
-                            channel: interaction.channel,
-
-                            /**
-                             * Respond
-                             * @param {string|GPayloadOptions} result
-                             * @returns {Message}
-                             * @memberof GEventHandling
-                             */
-                            respond: result => interaction.reply.send(result),
-                            edit: result => interaction.reply.edit(result)
-                        }, interaction.arrayArguments, interaction.objectArguments);
-                    } catch (e) {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3${e}`).getText());
-                    }
-
-                    this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3User &a${interaction.member.user.id}&3 used &a${interaction.commandName}`).getText());
                 } catch (e) {
-                    this.GCommandsClient.emit(Events.DEBUG, e);
+                    this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3${e}`).getText());
                 }
-            });
-        }
+
+                this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3User &a${interaction.member.user.id}&3 used &a${interaction.commandName}`).getText());
+            } catch (e) {
+                this.GCommandsClient.emit(Events.DEBUG, e);
+            }
+        });
     }
 
     /**

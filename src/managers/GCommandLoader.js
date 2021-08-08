@@ -91,6 +91,8 @@ class GCommandLoader {
      * @private
      */
     __loadSlashCommands() {
+        if (String(this.client.slash) === 'false') return;
+        
         let keys = Array.from(this.client.gcommands.keys());
         this.__deleteNonExistCommands(keys);
 
