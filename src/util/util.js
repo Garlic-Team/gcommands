@@ -71,7 +71,7 @@ class Util {
     static channelTypeRefactor(channel) {
         let finalResult;
 
-        if(!channel) return null;
+        if (!channel) return null;
         if (channel instanceof TextChannel) finalResult = 'text';
         if (channel instanceof NewsChannel) finalResult = 'news';
         if (channel instanceof DMChannel) finalResult = 'dm';

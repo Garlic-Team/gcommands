@@ -36,7 +36,7 @@ class GEventHandling {
      * @private
     */
     messageEvent() {
-        if(String(this.client.slash) === 'true') return;
+        if (String(this.client.slash) === 'true') return;
 
         this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
             messageEventUse(message);
@@ -206,7 +206,7 @@ class GEventHandling {
      * @private
     */
     slashEvent() {
-        if(String(this.client.slash) === 'false') return;
+        if (String(this.client.slash) === 'false') return;
 
         this.client.on('GInteraction', async interaction => {
             if (!interaction.isCommand()) return;
