@@ -163,18 +163,18 @@ class Command {
     async reload() {
         let cmdPath = this.client.gcommands.get(this.name)._path;
 
-        delete require.cache[require.resolve(cmdPath)]
-        this.client.gcommands.delete(this.name)
+        delete require.cache[require.resolve(cmdPath)];
+        this.client.gcommands.delete(this.name);
 
         let newCommand = await require(cmdPath);
 
-        if(!isClass(newCommand)) return console.log(new Color('&d[GCommands] &cThe command must be class!').getText());
+        if (!isClass(newCommand)) return console.log(new Color('&d[GCommands] &cThe command must be class!').getText());
         else newCommand = new newCommand(this.client);
 
-        if(!(newCommand instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${newCommand.name} doesnt belong in Commands.`).getText());
+        if (!(newCommand instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${newCommand.name} doesnt belong in Commands.`).getText());
 
-		if(newCommand.name !== this.name) return console.log(new Color('&d[GCommands] &cCommand name cannot change.').getText());
-		if(newCommand.guildOnly !== this.guildOnly) return console.log(new Color('&d[GCommands] &cCommand guildOnly cannot change.').getText());
+		if (newCommand.name !== this.name) return console.log(new Color('&d[GCommands] &cCommand name cannot change.').getText());
+		if (newCommand.guildOnly !== this.guildOnly) return console.log(new Color('&d[GCommands] &cCommand guildOnly cannot change.').getText());
 
         newCommand._path = cmdPath;
         this.client.gcommands.set(newCommand.name, newCommand);
