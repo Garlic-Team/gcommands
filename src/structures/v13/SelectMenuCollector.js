@@ -6,10 +6,6 @@ class SelectMenuCollector extends Collector {
   constructor(message, filter, options = {}) {
     super(message.client, filter, options);
 
-    /**
-     * client
-     * @type {Client}
-     */
     this.client = message.client;
     
     this.message = message;
