@@ -17,11 +17,11 @@ const { Events } = require('discord.js').Constants;
     super(message.client, filter, options);
 
     /**
-     * client
+     * Client
      * @type {Client}
      */
     this.client = message.client;
-    
+
     this.message = message;
 
     /**
