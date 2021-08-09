@@ -15,7 +15,7 @@ const { Events } = require('discord.js').Constants;
    */
   constructor(message, filter, options = {}) {
     /**
-     * client
+     * Client
      * @type {Client}
      */
     this.client = message.client;

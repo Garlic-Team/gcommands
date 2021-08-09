@@ -5,11 +5,11 @@ const { Events } = require('discord.js').Constants;
 class ButtonCollector extends Collector {
   constructor(message, filter, options = {}) {
     /**
-     * client
+     * Client
      * @type {Client}
      */
     this.client = message.client;
-    
+
     super(this.client, filter, options);
     this.message = message;
 
