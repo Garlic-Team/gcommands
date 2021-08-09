@@ -14,8 +14,7 @@ const { Events } = require('discord.js').Constants;
    * @emits SelectMenuCollector#selectMenu
    */
   constructor(message, filter, options = {}) {
-
-    super(this.client, filter, options);
+    super(message.client, filter, options);
 
     /**
      * client
