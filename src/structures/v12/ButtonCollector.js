@@ -4,7 +4,7 @@ const { Events } = require('discord.js').Constants;
 
 /**
  * Collects buttons on a message.
- * Will automatically stop if the channel (`'channelDelete'`), guild (`'guildDelete'`) or (`'messageDelete'`) are deleted.
+ * Will automatically stop if the channel (`'channelDelete'`), guild (`'guildDelete'`) or message (`'messageDelete'`) are deleted.
  * @extends {Collector}
  */
 class ButtonCollector extends Collector {
@@ -14,7 +14,13 @@ class ButtonCollector extends Collector {
    * @emits ButtonCollector#clickButton
    */
   constructor(message, filter, options = {}) {
-    super(message.client, filter, options);
+    /**
+     * client
+     * @type {Client}
+     */
+    this.client = message.client;
+
+    super(this.client, filter, options);
     this.message = message;
 
     /**
@@ -33,6 +39,7 @@ class ButtonCollector extends Collector {
     this._handleChannelDeletion = this._handleChannelDeletion.bind(this);
     this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
     this._handleMessageDeletion = this._handleMessageDeletion.bind(this);
+
 
     this.client.incrementMaxListeners();
     this.client.on('clickButton', this.handleCollect);

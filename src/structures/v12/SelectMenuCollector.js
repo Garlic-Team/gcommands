@@ -4,7 +4,7 @@ const { Events } = require('discord.js').Constants;
 
 /**
  * Collects menus on a message.
- * Will automatically stop if the channel (`'channelDelete'`), guild (`'guildDelete'`) or (`'messageDelete'`) are deleted.
+ * Will automatically stop if the channel (`'channelDelete'`), guild (`'guildDelete'`) or message (`'messageDelete'`) are deleted.
  * @extends {Collector}
  */
  class SelectMenuCollector extends Collector {
@@ -14,7 +14,13 @@ const { Events } = require('discord.js').Constants;
    * @emits SelectMenuCollector#selectMenu
    */
   constructor(message, filter, options = {}) {
-    super(message.client, filter, options);
+    /**
+     * client
+     * @type {Client}
+     */
+    this.client = message.client;
+
+    super(this.client, filter, options);
     this.message = message;
 
     /**
