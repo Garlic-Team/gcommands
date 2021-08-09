@@ -41,7 +41,7 @@ class GCommandLoader {
      * @private
      */
      async __loadCommandFiles() {
-        for await(let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`))) {
+        for await(let file of (await fs.readdirSync(`${__dirname}/../../../${this.cmdDir}`))) {
             const fileName = file.split('.').reverse()[1]
             const fileType = file.split('.').reverse()[0]
 
@@ -56,6 +56,7 @@ class GCommandLoader {
                 if(!(file instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${fileName} doesnt belong in Commands.`).getText());
             }
 
+            file._path = `../../../../${this.cmdDir}/${fileName}.${fileType}`;
             this.client.gcommands.set(file.name, file);
             if(file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
             this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded (File): &e➜   &3' + fileName, {json:false}).getText());
@@ -72,6 +73,7 @@ class GCommandLoader {
     async __loadCommandCategoryFiles(categoryFolder) {
         for await(let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}${categoryFolder}`))) {
             const fileName = file.split('.').reverse()[1]
+            const fileType = file.split('.').reverse()[0]
 
             file = await require(`../../../../${this.cmdDir}${categoryFolder}/${file}`);
             if(isClass(file)) {
@@ -79,6 +81,7 @@ class GCommandLoader {
                 if(!(file instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${fileName} doesnt belong in Commands.`).getText());
             }
 
+            file._path = `../../../../${this.cmdDir}${categoryFolder}/${fileName}.${fileType}`;
             this.client.gcommands.set(file.name, file);
             if(file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
             this.GCommandsClient.emit(Events.LOG, new Color('&d[GCommands] &aLoaded (File): &e➜   &3' + fileName, {json:false}).getText());
@@ -165,7 +168,6 @@ class GCommandLoader {
             }
         })
     }
-
 
     /**
      * Internal method to deleteNonExistCommands
