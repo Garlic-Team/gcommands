@@ -5,6 +5,7 @@ const { Events } = require('discord.js').Constants;
 class SelectMenuCollector extends Collector {
   constructor(message, filter, options = {}) {
     super(message.client, filter, options);
+    
     this.message = message;
 
     this.users = new Collection();
@@ -16,18 +17,18 @@ class SelectMenuCollector extends Collector {
     this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
     this._handleMessageDeletion = this._handleMessageDeletion.bind(this);
 
-    this.client.incrementMaxListeners();
-    this.client.on('selectMenu', this.handleCollect);
-    this.client.on(Events.MESSAGE_DELETE, this._handleMessageDeletion);
-    this.client.on(Events.CHANNEL_DELETE, this._handleChannelDeletion);
-    this.client.on(Events.GUILD_DELETE, this._handleGuildDeletion);
+    this.message.client.incrementMaxListeners();
+    this.message.client.on('selectMenu', this.handleCollect);
+    this.message.client.on(Events.MESSAGE_DELETE, this._handleMessageDeletion);
+    this.message.client.on(Events.CHANNEL_DELETE, this._handleChannelDeletion);
+    this.message.client.on(Events.GUILD_DELETE, this._handleGuildDeletion);
 
     this.once('end', () => {
-      this.client.removeListener('selectMenu', this.handleCollect);
-      this.client.removeListener(Events.MESSAGE_DELETE, this._handleMessageDeletion);
-      this.client.removeListener(Events.CHANNEL_DELETE, this._handleChannelDeletion);
-      this.client.removeListener(Events.GUILD_DELETE, this._handleGuildDeletion);
-      this.client.decrementMaxListeners();
+      this.message.client.removeListener('selectMenu', this.handleCollect);
+      this.message.client.removeListener(Events.MESSAGE_DELETE, this._handleMessageDeletion);
+      this.message.client.removeListener(Events.CHANNEL_DELETE, this._handleChannelDeletion);
+      this.message.client.removeListener(Events.GUILD_DELETE, this._handleGuildDeletion);
+      this.message.client.decrementMaxListeners();
     });
 
     this.on('collect', (menu) => {
