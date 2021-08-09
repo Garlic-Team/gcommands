@@ -14,13 +14,14 @@ class ButtonCollector extends Collector {
    * @emits ButtonCollector#clickButton
    */
   constructor(message, filter, options = {}) {
+    super(message.client, filter, options);
+    
     /**
      * client
      * @type {Client}
      */
     this.client = message.client;
-
-    super(this.client, filter, options);
+    
     this.message = message;
 
     /**

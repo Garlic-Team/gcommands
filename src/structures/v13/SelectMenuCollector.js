@@ -4,13 +4,14 @@ const { Events } = require('discord.js').Constants;
 
 class SelectMenuCollector extends Collector {
   constructor(message, filter, options = {}) {
+    super(this.client, filter, options);
+
     /**
      * client
      * @type {Client}
      */
     this.client = message.client;
-
-    super(this.client, filter, options);
+    
     this.message = message;
 
     this.users = new Collection();
