@@ -46,7 +46,7 @@ class GCommandLoader {
             const fileType = file.split('.').reverse()[0]
 
             if(!['js','ts'].includes(fileType)) {
-                this.__loadCommandCategoryFiles(file); 
+                await this.__loadCommandCategoryFiles(file); 
                 continue;
             }
 
@@ -70,7 +70,7 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandCategoryFiles(categoryFolder) {
-        for(let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}${categoryFolder}`))) {
+        for await(let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}${categoryFolder}`))) {
             const fileName = file.split('.').reverse()[1]
 
             file = await require(`../../../../${this.cmdDir}${categoryFolder}/${file}`);
