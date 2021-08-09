@@ -1,6 +1,6 @@
 module.exports = {
     title: 'GCommands',
-    description: 'Open source slash/normal command handler',
+    description: 'Powerful and flexible command handler that can do everything!',
     base: "/", // /guide/
 
     head: [
