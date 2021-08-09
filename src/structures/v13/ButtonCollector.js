@@ -17,7 +17,6 @@ class ButtonCollector extends Collector {
     this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
     this._handleMessageDeletion = this._handleMessageDeletion.bind(this);
 
-    console.log(this.message.client);
     this.message.client.incrementMaxListeners();
     this.message.client.on('clickButton', this.handleCollect);
     this.message.client.on(Events.MESSAGE_DELETE, this._handleMessageDeletion);
