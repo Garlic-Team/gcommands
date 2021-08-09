@@ -99,12 +99,12 @@ client.on("ready", () => {
     cmdDir: "commands/",
     eventDir: "events/",
     unkownCommandMessage: false, // true of false | send unkownCommand Message
-    language: "english", //english, spanish, portuguese, russian, german, czech, turkish
+    language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
     slash: {
       slash: "both", //true = slash only, false = only normal, both = slash and normal
       prefix: ".", // for normal commands
     },
-    defaultCooldown: 3,
+    defaultCooldown: "3s",
     database: "url",
     /* DB SUPPORT
      * redis://user:pass@localhost:6379

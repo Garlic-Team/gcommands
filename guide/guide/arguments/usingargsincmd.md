@@ -32,7 +32,7 @@ module.exports = class extends Command {
       name: "hug",
       description: "Hugs someone!",
       slash: "both",
-      cooldown: 2,
+      cooldown: "2s",
       args: [
         {
           name: "user",
@@ -105,7 +105,7 @@ module.exports = class extends Command {
       name: "ping",
       description: "Checks the bot's latency",
       slash: "both",
-      cooldown: 2,
+      cooldown: "2s",
     });
   }
 
@@ -156,7 +156,7 @@ module.exports = class extends Command {
       name: "bake",
       description: "Bakes a product!",
       slash: "both",
-      cooldown: 2,
+      cooldown: "2s,
       args: [
         {
           name: "product",
@@ -198,9 +198,8 @@ module.exports = class extends Command {
         : parseInt(args[1]);
 
     // Format the user's choices
-    let product = `${args[1]} Delicious ${
-      args[0][0].toUpperCase() + args[0].slice(1).toLowerCase()
-    }${args[1] === 1 ? "" : "s"}`;
+    let product = `${args[1]} Delicious ${args[0][0].toUpperCase() +
+      args[0].slice(1).toLowerCase()}${args[1] === 1 ? "" : "s"}`;
 
     // Send the response
     let m = await respond({

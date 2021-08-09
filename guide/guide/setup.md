@@ -32,10 +32,6 @@ Make sure you upgrade to the needed Node.js version for discord.js.
 Use `npm i gcommands` to download the latest stable version.  
 Use `npm i gcommands@dev` to install the dev version.
 
-::: tip
-You can also install the experimental version of GCommands on our github → `npm i github:Garlic-Team/GCommands#dev`
-:::
-
 ::: danger
 You need to import GCommands before importing discord.js
 :::
@@ -50,7 +46,7 @@ const client = new GCommandsClient({
   caseSensitiveCommands: false, // true or false | whether to match the commands' caps
   caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
   unkownCommandMessage: false, // true or false | send unkownCommand Message
-  language: "english", //english, spanish, portuguese, russian, german, czech, turkish
+  language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
   slash: {
     slash: "both", //true = slash only, false = only normal, both = slash and normal
     prefix: ".", // for normal commands
