@@ -41,7 +41,7 @@ class GCommandLoader {
      * @private
      */
      async __loadCommandFiles() {
-        for await(let file of (await fs.readdirSync(`${__dirname}/../../../${this.cmdDir}`))) {
+        for await(let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`))) {
             const fileName = file.split('.').reverse()[1]
             const fileType = file.split('.').reverse()[0]
 
