@@ -4,7 +4,7 @@ module.exports = client => {
             client.emit('guildBoostLevelUp',
                 newGuild,
                 oldGuild.premiumTier,
-                newGuild.premiumTier
+                newGuild.premiumTier,
             );
         }
 
@@ -12,7 +12,7 @@ module.exports = client => {
             client.emit('guildBoostLevelDown',
                 newGuild,
                 oldGuild.premiumTier,
-                newGuild.premiumTier
+                newGuild.premiumTier,
             );
         }
 
@@ -20,7 +20,7 @@ module.exports = client => {
             client.emit('guildRegionUpdate',
                 newGuild,
                 oldGuild.region,
-                newGuild.region
+                newGuild.region,
             );
         }
 
@@ -28,7 +28,7 @@ module.exports = client => {
             client.emit('guildBannerUpdate',
                 newGuild,
                 oldGuild.banner,
-                newGuild.banner
+                newGuild.banner,
             );
         }
 
@@ -36,7 +36,7 @@ module.exports = client => {
             client.emit('guildAfkChannelUpdate',
                 newGuild,
                 oldGuild.afkChannel,
-                newGuild.afkChannel
+                newGuild.afkChannel,
             );
         }
 
@@ -44,7 +44,7 @@ module.exports = client => {
             client.emit('guildVanityURLUpdate',
                 newGuild,
                 oldGuild.vanityURLCode,
-                newGuild.vanityURLCode
+                newGuild.vanityURLCode,
             );
         }
 
@@ -52,7 +52,7 @@ module.exports = client => {
             client.emit('guildFeaturesUpdate',
                 newGuild,
                 oldGuild.features,
-                newGuild.features
+                newGuild.features,
             );
         }
 
@@ -60,7 +60,7 @@ module.exports = client => {
             client.emit('guildAcronymUpdate',
                 newGuild,
                 oldGuild.nameAcronym,
-                newGuild.nameAcronym
+                newGuild.nameAcronym,
             );
         }
 
@@ -68,7 +68,7 @@ module.exports = client => {
             client.emit('guildOwnerUpdate',
                 newGuild,
                 oldGuild.ownerID,
-                newGuild.ownerID
+                newGuild.ownerID,
             );
         }
 
@@ -76,7 +76,7 @@ module.exports = client => {
             client.emit('guildMaximumMembersUpdate',
                 newGuild,
                 oldGuild.maximumMembers,
-                newGuild.maximumMembers
+                newGuild.maximumMembers,
             );
         }
 
@@ -84,7 +84,7 @@ module.exports = client => {
             client.emit('guildPartnerUpdate',
                 newGuild,
                 oldGuild.partnered,
-                newGuild.partnered
+                newGuild.partnered,
             );
         }
 
@@ -92,7 +92,7 @@ module.exports = client => {
             client.emit('guildVerifyUpdate',
                 newGuild,
                 oldGuild.verified,
-                newGuild.verified
+                newGuild.verified,
             );
         }
     });

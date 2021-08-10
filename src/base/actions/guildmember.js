@@ -7,7 +7,7 @@ module.exports = client => {
             client.emit('guildMemberBoost',
                 newMember,
                 oldMember.premiumSince,
-                newMember.premiumSince
+                newMember.premiumSince,
             );
         }
 
@@ -15,7 +15,7 @@ module.exports = client => {
             client.emit('guildMemberUnboost',
                 newMember,
                 oldMember.premiumSince,
-                newMember.premiumSince
+                newMember.premiumSince,
             );
         }
 
@@ -23,7 +23,7 @@ module.exports = client => {
             client.emit('guildMemberNicknameUpdate',
                 newMember,
                 oldMember.nickname,
-                newMember.nickname
+                newMember.nickname,
             );
         }
 
@@ -34,7 +34,7 @@ module.exports = client => {
                 method: 'GET',
                 headers: {
                     Authorization: `Bot ${client.token}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 url,
             };
@@ -46,7 +46,7 @@ module.exports = client => {
             if (response.pending) return;
 
             client.emit('guildMemberAcceptShipScreening',
-                newMember
+                newMember,
             );
         }
     });

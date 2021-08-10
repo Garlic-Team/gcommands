@@ -266,7 +266,7 @@ class GInteraction {
             send: _send,
             edit: _edit,
             update: _update,
-            fetch: _fetch
+            fetch: _fetch,
         };
     }
 
@@ -278,9 +278,9 @@ class GInteraction {
         let apiMessage = (await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: result.thinking ? 5 : 4,
-                data: GPayloadResult.data
+                data: GPayloadResult.data,
             },
-            files: GPayloadResult.files
+            files: GPayloadResult.files,
         }));
 
         let apiMessageMsg = {};
@@ -288,7 +288,7 @@ class GInteraction {
             apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.token}/messages/@original`)).data;
         } catch (e) {
             apiMessageMsg = {
-                id: undefined
+                id: undefined,
             };
         }
 
@@ -316,12 +316,12 @@ class GInteraction {
             apiMessage = this.client.api.interactions(this.id, this.token).callback.post({
                 data: {
                     type: 7,
-                    data: GPayloadResult.data
+                    data: GPayloadResult.data,
                 },
             });
         } else {
             apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : '@original'].patch({
-                data: GPayloadResult.data
+                data: GPayloadResult.data,
             }));
         }
 

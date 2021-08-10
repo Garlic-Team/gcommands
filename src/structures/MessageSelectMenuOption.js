@@ -107,7 +107,7 @@ class MessageSelectMenuOption {
             value: this.value,
             description: this.description,
             emoji: this.emoji,
-            default: this.default
+            default: this.default,
         };
     }
 }

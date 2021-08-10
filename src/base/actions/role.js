@@ -4,7 +4,7 @@ module.exports = client => {
             client.emit('rolePositionUpdate',
                 newRole,
                 oldRole.rawPosition,
-                newRole.rawPosition
+                newRole.rawPosition,
             );
         }
 
@@ -12,7 +12,7 @@ module.exports = client => {
             client.emit('rolePermissionsUpdate',
                 newRole,
                 oldRole.permissions.bitfield,
-                newRole.permissions.bitfield
+                newRole.permissions.bitfield,
             );
         }
     });

@@ -182,7 +182,7 @@ class GMessage {
                     } else if (!this.interaction) {
                         this.interaction = null;
                     }
-                }
+                },
             },
 
             edit: {
@@ -195,17 +195,17 @@ class GMessage {
                         return this.client.api.channels(this.channel.id).messages[this.id].patch({
                             data: {
                                 type: 7,
-                                data: GPayloadResult.data
+                                data: GPayloadResult.data,
                             },
                         }).then(d => this.client.actions.MessageCreate.handle(d).message);
                     }
 
                     let apiMessage = (await this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
-                        data: GPayloadResult.data
+                        data: GPayloadResult.data,
                     }));
 
                     return new Message(this.client, apiMessage, this.channel);
-                }
+                },
             },
 
             update: {
@@ -216,15 +216,15 @@ class GMessage {
                     return this.client.api.channels(this.channel.id).messages[this.id].patch({
                         data: {
                             type: 7,
-                            data: GPayloadResult.data
+                            data: GPayloadResult.data,
                         },
                     }).then(d => this.client.actions.MessageCreate.handle(d).message);
-                }
+                },
             },
 
             reply: {
                 value: async function(result) {
-                    if (typeof result === "string") result = { content: result, inlineReply: this.id };
+                    if (typeof result === 'string') result = { content: result, inlineReply: this.id };
                     else if (result.inlineReply === undefined || result.inlineReply === true) result.inlineReply = this.id;
 
                     let GPayloadResult = await GPayload.create(this.channel, result)
@@ -233,17 +233,17 @@ class GMessage {
 
                     return this.client.api.channels[this.channel.id].messages.post({
                         data: GPayloadResult.data,
-                        files: GPayloadResult.files
+                        files: GPayloadResult.files,
                     })
                     .then(d => this.client.actions.MessageCreate.handle(d).message);
-                }
+                },
             },
 
             createButtonCollector: {
                 value: function(filter, options = {}) {
                     if (ifDjsV13) return new ButtonCollectorV13(this, filter, options);
                     else return new ButtonCollectorV12(this, filter, options);
-                }
+                },
             },
 
             awaitButtons: {
@@ -258,14 +258,14 @@ class GMessage {
                             }
                         });
                     });
-                }
+                },
             },
 
             createSelectMenuCollector: {
                 value: function(filter, options = {}) {
                     if (ifDjsV13) return new SelectMenuCollectorV13(this, filter, options);
                     else return new SelectMenuCollectorV12(this, filter, options);
-                }
+                },
             },
 
             awaitSelectMenus: {
@@ -280,8 +280,8 @@ class GMessage {
                             }
                         });
                     });
-                }
-            }
+                },
+            },
         });
     }
 

@@ -132,7 +132,7 @@ class GCommandsClient extends Client {
         });
 
         setImmediate(() => {
-            super.on("ready", () => {
+            super.on('ready', () => {
                 this.loadSys();
             });
         });

@@ -18,7 +18,7 @@
  */
 exports.Events = {
     DEBUG: 'debug',
-    LOG: 'log'
+    LOG: 'log',
 };
 
 /**
@@ -45,7 +45,7 @@ exports.ArgumentType = {
     CHANNEL: 7,
     ROLE: 8,
     MENTIONABLE: 9,
-    NUMBER: 10
+    NUMBER: 10,
 };
 
 /**
@@ -72,7 +72,7 @@ exports.ArgumentType = {
     primary: 'green',
     secondary: 'gray',
     danger: 'red',
-    link: 'url'
+    link: 'url',
 };
 
 /**

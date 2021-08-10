@@ -4,7 +4,7 @@ module.exports = client => {
             client.emit('userAvatarUpdate',
                 newUser,
                 oldUser.displayAvatarURL(),
-                newUser.displayAvatarURL()
+                newUser.displayAvatarURL(),
             );
         }
 
@@ -12,7 +12,7 @@ module.exports = client => {
             client.emit('userUsernameUpdate',
                 newUser,
                 oldUser.username,
-                newUser.username
+                newUser.username,
             );
         }
 
@@ -20,7 +20,7 @@ module.exports = client => {
             client.emit('userDiscriminatorUpdate',
                 newUser,
                 oldUser.discriminator,
-                newUser.discriminator
+                newUser.discriminator,
             );
         }
 
@@ -29,7 +29,7 @@ module.exports = client => {
             client.emit('userFlagsUpdate',
                 newUser,
                 oldUser.flags,
-                newUser.flags
+                newUser.flags,
             );
         }
     });

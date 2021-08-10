@@ -41,7 +41,7 @@ module.exports = {
     ArgumentType: require('./util/Constants').ArgumentType,
     ButtonType: require('./util/Constants').ButtonType,
 
-    version: require('../package.json').version
+    version: require('../package.json').version,
 };
 
 module.exports.default = module.exports;

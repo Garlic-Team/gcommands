@@ -31,7 +31,7 @@ module.exports = client => {
                 guild: guild,
                 channel: channel,
                 respond: result => interaction.slashRespond(result),
-                edit: (result, update = false) => interaction.slashEdit(result, update)
+                edit: (result, update = false) => interaction.slashEdit(result, update),
             });
             if (inhibitReturn === false) return;
 

@@ -15,17 +15,17 @@ class ButtonCollector extends Collector {
    */
   constructor(message, filter, options = {}) {
     super(message.client, filter, options);
-    
+
     this.message = message;
 
     /**
-     * users
+     * Users
      * @type {Collection}
      */
     this.users = new Collection();
 
     /**
-     * total
+     * Total
      * @type {Number}
      */
     this.total = 0;
@@ -50,7 +50,7 @@ class ButtonCollector extends Collector {
       this.message.client.decrementMaxListeners();
     });
 
-    this.on('collect', (button) => {
+    this.on('collect', button => {
       this.total++;
       this.users.set(button.clicker.user.id, button.clicker.user);
     });
@@ -63,7 +63,7 @@ class ButtonCollector extends Collector {
    * @private
    */
   collect(button) {
-    if(this.message.unstable) return ButtonCollector.key(button)
+    if (this.message.unstable) return ButtonCollector.key(button);
     if (button.message.id !== this.message.id) return null;
     return ButtonCollector.key(button);
   }

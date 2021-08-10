@@ -4,17 +4,17 @@ const { MessageComponentTypes } = require('../util/Constants');
 const BaseMessageComponent = require('./BaseMessageComponent');
 const Color = require('./Color');
 const styles = {
-    'blurple': 1,
-    'gray': 2,
-    'grey': 2,
-    'green': 3,
-    'red': 4,
-    'url': 5,
-    'primary': 1,
-    'secondary': 2,
-    'success': 3,
-    'danger': 4,
-    'link': 5
+    blurple: 1,
+    gray: 2,
+    grey: 2,
+    green: 3,
+    red: 4,
+    url: 5,
+    primary: 1,
+    secondary: 2,
+    success: 3,
+    danger: 4,
+    link: 5,
 };
 
 /**
@@ -150,7 +150,7 @@ class MessageButton extends BaseMessageComponent {
             disabled: this.disabled,
             url: this.url,
             custom_id: this.url ? null : this.customId,
-            emoji: this.emoji
+            emoji: this.emoji,
         };
     }
 

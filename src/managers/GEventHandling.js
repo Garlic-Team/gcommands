@@ -81,7 +81,7 @@ class GEventHandling {
                         if (!botMessageInhibit) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
                         let editedMsg = await botMessageInhibit.edit(options);
                         return editedMsg;
-                    }
+                    },
                 }, args, args);
                 if (inhibitReturn === false) return;
 
@@ -192,7 +192,7 @@ class GEventHandling {
                         if (!botMessage) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
                         let editedMsg = await botMessage.edit(options);
                         return editedMsg;
-                    }
+                    },
                 }, args, objectArgs);
             } catch (e) {
                 this.GCommandsClient.emit(Events.DEBUG, e);
@@ -222,7 +222,7 @@ class GEventHandling {
                     guild: interaction.guild,
                     channel: interaction.channel,
                     respond: result => interaction.reply.send(result),
-                    edit: result => interaction.reply.edit(result)
+                    edit: result => interaction.reply.edit(result),
                 }, interaction.arrayArguments, interaction.objectArguments);
                 if (inhibitReturn === false) return;
 
@@ -258,7 +258,7 @@ class GEventHandling {
 
                     if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
                         return interaction.reply.send({ content:
-                            this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true
+                            this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true,
                         });
                     }
                 }
@@ -268,7 +268,7 @@ class GEventHandling {
 
                     if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
                         return interaction.reply.send({ content:
-                            this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true
+                            this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true,
                         });
                     }
                 }
@@ -297,7 +297,7 @@ class GEventHandling {
                          * @memberof GEventHandling
                          */
                         respond: result => interaction.reply.send(result),
-                        edit: result => interaction.reply.edit(result)
+                        edit: result => interaction.reply.edit(result),
                     }, interaction.arrayArguments, interaction.objectArguments);
                 } catch (e) {
                     this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3${e}`).getText());

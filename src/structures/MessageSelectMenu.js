@@ -165,7 +165,7 @@ class MessageSelectMenu extends BaseMessageComponent {
             placeholder: this.placeholder || '',
             custom_id: this.customId,
             disabled: this.disabled,
-            options: this.options
+            options: this.options,
         };
     }
 }

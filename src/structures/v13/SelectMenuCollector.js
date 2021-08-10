@@ -5,7 +5,7 @@ const { Events } = require('discord.js').Constants;
 class SelectMenuCollector extends Collector {
   constructor(message, filter, options = {}) {
     super(message.client, filter, options);
-    
+
     this.message = message;
 
     this.users = new Collection();
@@ -31,14 +31,14 @@ class SelectMenuCollector extends Collector {
       this.message.client.decrementMaxListeners();
     });
 
-    this.on('collect', (menu) => {
+    this.on('collect', menu => {
       this.total++;
       this.users.set(menu.clicker.user.id, menu.clicker.user);
     });
   }
 
   collect(menu) {
-    if(this.message.unstable) return SelectMenuCollector.key(menu)
+    if (this.message.unstable) return SelectMenuCollector.key(menu);
     if (menu.message.id !== this.message.id) return null;
     return SelectMenuCollector.key(menu);
   }

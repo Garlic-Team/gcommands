@@ -20,17 +20,17 @@ module.exports = {
 
             return this.client.api.channels[this.id].messages.post({
                 data: GPayloadResult.data,
-                files: GPayloadResult.files
+                files: GPayloadResult.files,
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
-        }
+        },
     },
 
     createButtonCollector: {
         value: function(msg, filter, options = {}) {
             if (ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
             else return new ButtonCollectorV12(msg, filter, options);
-        }
+        },
     },
 
     awaitButtons: {
@@ -45,14 +45,14 @@ module.exports = {
                     }
                 });
             });
-        }
+        },
     },
 
     createSelectMenuCollector: {
         value: function(msg, filter, options = {}) {
             if (ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
             else return new SelectMenuCollectorV12(msg, filter, options);
-        }
+        },
     },
 
     awaitSelectMenus: {
@@ -67,6 +67,6 @@ module.exports = {
                     }
                 });
             });
-        }
-    }
+        },
+    },
 };

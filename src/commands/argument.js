@@ -74,7 +74,7 @@ class Argument {
         if (responses.size === 0) {
             return {
                         valid: true,
-                        timeLimit: true
+                        timeLimit: true,
             };
         }
 
@@ -82,13 +82,13 @@ class Argument {
         if (valid) {
             return {
                 valid: false,
-                prompt: valid
+                prompt: valid,
             };
         }
 
         return {
             valid: true,
-            content: responses.first().content
+            content: responses.first().content,
         };
     }
 

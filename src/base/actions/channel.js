@@ -12,7 +12,7 @@ module.exports = client => {
             client.emit('guildChannelTopicUpdate',
                 newChannel,
                 oldChannel.topic,
-                newChannel.topic
+                newChannel.topic,
             );
         }
 
@@ -20,7 +20,7 @@ module.exports = client => {
             client.emit('guildChannelNSFWUpdate',
                 newChannel,
                 oldChannel.nsfw,
-                newChannel.nsfw
+                newChannel.nsfw,
             );
         }
 
@@ -28,7 +28,7 @@ module.exports = client => {
             client.emit('guildChannelTypeUpdate',
                 newChannel,
                 oldChannel.type,
-                newChannel.type
+                newChannel.type,
             );
         }
 
@@ -36,7 +36,7 @@ module.exports = client => {
             client.emit('guildChannelUserLimitUpdate',
                 newChannel,
                 oldChannel.userLimit,
-                newChannel.userLimit
+                newChannel.userLimit,
             );
         }
 
@@ -44,7 +44,7 @@ module.exports = client => {
             client.emit('guildChannelBitrateUpdate',
                 newChannel,
                 oldChannel.bitrate,
-                newChannel.bitrate
+                newChannel.bitrate,
             );
         }
     });
