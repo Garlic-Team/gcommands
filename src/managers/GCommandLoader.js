@@ -121,7 +121,7 @@ class GCommandLoader {
                     name: cmd.name,
                     description: cmd.description,
                     options: cmd.args || [],
-                    type: 1
+                    type: 1,
                 }),
                 url,
             };
@@ -179,18 +179,18 @@ class GCommandLoader {
                 },
                 data: JSON.stringify({
                     name: cmd.name,
-                    type: type === 4 ? 2 : type
+                    type: type === 4 ? 2 : type,
                 }),
                 url,
             };
 
             axios(config).then(() => {
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
-                if(type === 4) {
+                if (type === 4) {
                     config.data = JSON.parse(config.data);
                     config.data.type = 3;
                     config.data = JSON.stringify(config.data);
-                    this.__tryAgain(cmd, config, 'Context Menu (message)')
+                    this.__tryAgain(cmd, config, 'Context Menu (message)');
                 }
             })
             .catch(error => {

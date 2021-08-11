@@ -19,6 +19,7 @@ module.exports = client => {
                         InteractionType = ContextMenuInteraction;
                         break;
                 }
+                break;
             case InteractionTypes.MESSAGE_COMPONENT:
                 switch (data.data.component_type) {
                     case MessageComponentTypes.BUTTON:

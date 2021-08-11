@@ -84,9 +84,9 @@ exports.ArgumentType = {
  */
  exports.ApplicationCommandTypes = createEnum([null, 'CHAT_INPUT', 'USER', 'MESSAGE']);
  exports.ApplicationCommandTypesRaw = {
-    'user': 2,
-    'message': 3,
-    'both': 4
+    user: 2,
+    message: 3,
+    both: 4,
  };
 
 /**
@@ -174,9 +174,9 @@ function createEnum(keys) {
 /**
  * The GPayloadOptions
  * @property {string} content
- * @property {MessageEmbed} embeds
- * @property {MessageActionRow} components
- * @property {MessageAttachment} attachments
+ * @property {MessageEmbed[]} embeds
+ * @property {MessageActionRow[]} components
+ * @property {MessageAttachment[]} attachments
  * @property {Boolean} ephemeral
  * @property {Object} allowedMentions
  * @property {(string | Boolean)} inlineReply
