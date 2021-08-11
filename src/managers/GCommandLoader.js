@@ -135,7 +135,7 @@ class GCommandLoader {
                 if (error.response) {
                     if (error.response.status === 429) {
                         setTimeout(() => {
-                            this.__tryAgain(cmd, config, "Slash");
+                            this.__tryAgain(cmd, config, 'Slash');
                         }, (error.response.data.retry_after) * 1000);
                     } else {
                         this.GCommandsClient.emit(Events.DEBUG, new Color([
@@ -190,7 +190,7 @@ class GCommandLoader {
                     config.data = JSON.parse(config.data);
                     config.data.type = 3;
                     config.data = JSON.stringify(config.data);
-                    this.__tryAgain(cmd, config, "Context Menu (message)")
+                    this.__tryAgain(cmd, config, 'Context Menu (message)')
                 }
             })
             .catch(error => {
@@ -199,7 +199,7 @@ class GCommandLoader {
                 if (error.response) {
                     if (error.response.status === 429) {
                         setTimeout(() => {
-                            this.__tryAgain(cmd, config, "Context Menu");
+                            this.__tryAgain(cmd, config, 'Context Menu');
                         }, (error.response.data.retry_after) * 1000);
                     } else {
                         this.GCommandsClient.emit(Events.DEBUG, new Color([

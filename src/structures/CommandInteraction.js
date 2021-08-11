@@ -1,5 +1,4 @@
 const BaseCommandInteraction = require('./BaseCommandInteraction');
-const GInteraction = require('./GInteraction');
 
 /**
  * The CommandInteraction

@@ -84,9 +84,9 @@ exports.ArgumentType = {
  */
  exports.ApplicationCommandTypes = createEnum([null, 'CHAT_INPUT', 'USER', 'MESSAGE']);
  exports.ApplicationCommandTypesRaw = {
-    "user": 2,
-    "message": 3,
-    "both": 4
+    'user': 2,
+    'message': 3,
+    'both': 4
  };
 
 /**
@@ -182,14 +182,14 @@ function createEnum(keys) {
  * @property {(string | Boolean)} inlineReply
  * @property {(string | Array)} stickers
  * @example .send({
- *  content: "hello",
+ *  content: 'hello',
  *  embeds: [embed],
  *  components: [actionRow],
  *  attachments: [myMessageAttachment],
  *  ephemeral: false,
- *  allowedMentions: { parse: ["users","roles","everyone"] },
+ *  allowedMentions: { parse: ['users','roles','everyone'] },
  *  inlineReply: true,
- *  stickers: ["sticker id"]
+ *  stickers: ['sticker id']
  * })
  * @typedef {(string | Object)} GPayloadOptions
 */

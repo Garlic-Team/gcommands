@@ -1,7 +1,6 @@
 const { User, GuildMember, Message } = require('discord.js');
 const { ApplicationCommandTypes } = require('../util/Constants');
 const BaseCommandInteraction = require('./BaseCommandInteraction');
-const GInteraction = require('./GInteraction');
 
 /**
  * The ContextMenuInteraction
