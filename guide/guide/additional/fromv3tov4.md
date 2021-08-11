@@ -48,7 +48,7 @@
 
 ## Using respond/edit
 
-```js {6,7,15,16,17,19,20,21}
+```js {6,7,16,17,18,19,21,22,23,24}
 const wait = require("util").promisify(setTimeout);
 
 module.exports = {
