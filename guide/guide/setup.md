@@ -47,8 +47,9 @@ const client = new GCommandsClient({
   caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
   unkownCommandMessage: false, // true or false | send unkownCommand Message
   language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
-  slash: {
-    slash: "both", //true = slash only, false = only normal, both = slash and normal
+  commands: {
+    slash: "both", // https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsSlash
+    context: "false", // https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsContext
     prefix: ".", // for normal commands
   },
   defaultCooldown: "3s",
@@ -71,20 +72,21 @@ client.on("log", console.log);
 client.login("TOKEN");
 ```
 
-Below are all the available options for `GCommandsClient`:
+Below are all the available options for [`GCommandsClient`](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptions):
 
-| PARAMETER             | REQUIRED | FUNCTIONALITY                                                                                                                                                       |
-| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cmdDir                | ✅       | The directory to look for commands in                                                                                                                               |
-| eventDir              | ❌       | The directory to look for events in                                                                                                                                 |
-| caseSensitiveCommands | ❌       | If set to true, command names will be case sensitive                                                                                                                |
-| caseSensitivePrefixes | ❌       | If set to true, prefixes will be case sensitive                                                                                                                     |
-| unkownCommandMessage  | ❌       | If set to true, the bot will respond with an error message if a command the user tried to use doesn't exist                                                         |
-| language              | ✅       | The language the bot sends default messages in                                                                                                                      |
-| slash.slash           | ❌       | If set to true, the bot will only register slash commands. If set to false, the bot will only register message commands. If set to both, the bot will register both |
-| slash.prefix          | ❌       | The prefix the bot will use in message commands                                                                                                                     |
-| defaultCooldown       | ❌       | The default cooldown for commands                                                                                                                                   |
-| database              | ❌       | The database to store guild prefixes, etc. in                                                                                                                       |
+| PARAMETER             | REQUIRED | FUNCTIONALITY                                                                                                                                                                                                                                                                                          |
+| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| cmdDir                | ✅       | The directory to look for commands in                                                                                                                                                                                                                                                                  |
+| eventDir              | ❌       | The directory to look for events in                                                                                                                                                                                                                                                                    |
+| caseSensitiveCommands | ❌       | If set to true, command names will be case sensitive                                                                                                                                                                                                                                                   |
+| caseSensitivePrefixes | ❌       | If set to true, prefixes will be case sensitive                                                                                                                                                                                                                                                        |
+| unkownCommandMessage  | ❌       | If set to true, the bot will respond with an error message if a command the user tried to use doesn't exist                                                                                                                                                                                            |
+| language              | ✅       | The language the bot sends default messages in                                                                                                                                                                                                                                                         |
+| commands.slash        | ✅       | If set to true, the bot will only register slash commands. If set to false, the bot will only register message commands. If set to both, the bot will register both                                                                                                                                    |
+| commands.context      | ✅       | If set to user, the bot will register user context commands. If set to false, the bot will only register message commands. If set to message, the bot will register message context commands. If set to false, the bot will only register message commands. If set to both, the bot will register both |
+| commands.prefix       | ❌       | The prefix the bot will use in message commands                                                                                                                                                                                                                                                        |
+| defaultCooldown       | ❌       | The default cooldown for commands                                                                                                                                                                                                                                                                      |
+| database              | ❌       | The database to store guild prefixes, etc. in                                                                                                                                                                                                                                                          |
 
 </branch>
 

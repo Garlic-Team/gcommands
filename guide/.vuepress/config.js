@@ -57,11 +57,19 @@ module.exports = {
             ]
           },
           {
+            title: 'Interactions',
+            collapsable: false,
+            children: [
+              'interactions/slashcommands',
+              'interactions/contextmenus',
+              'interactions/messagecomponents'
+            ]
+          },
+          {
             title: 'Miscellaneous',
             collapsable: false,
             children: [
               'miscellaneous/mentions',
-              'miscellaneous/interactions',
               'miscellaneous/inhibitor',
               'miscellaneous/moreevents'
             ]

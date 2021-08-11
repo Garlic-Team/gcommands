@@ -1,6 +1,7 @@
 # Additional Features
 
-Here's all the list of additional features in commands, members, etc.
+Here's all the list of additional features in commands, members, etc.  
+We recommend that you also take a look at the [documentation](https://gcommands.js.org/docs/#/docs/main/dev/typedef/CommandOptions).
 
 ## Command Respond/Edit
 
