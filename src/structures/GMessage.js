@@ -62,7 +62,7 @@ class GMessage {
                     }
 
                     if ('components' in data || !partial) {
-                        this.components = data.components ? data.components.map(c => BaseMessageComponent.create(c, this.client))  || [] : [];
+                        this.components = data.components ? data.components.map(c => BaseMessageComponent.create(c, this.client)) || [] : [];
                     } else {
                         this.components = this.components.slice();
                     }
@@ -245,16 +245,16 @@ class GMessage {
                 value: function(filter, options = {}) {
                     options.messageId = this.id;
                     options.guildId = this.guild.id;
-        
+
                     if (ifDjsV13) {
                         options.filter = filter;
-                        return new InteractionCollectorV13(this.client, options, options)
+                        return new InteractionCollectorV13(this.client, options, options);
                     } else {
-                        return new InteractionCollectorV12(this.client, filter, options)
+                        return new InteractionCollectorV12(this.client, filter, options);
                     }
                 }
             },
-        
+
             awaitMessageComponents: {
                 value: function(filter, options = {}) {
                     return new Promise((resolve, reject) => {

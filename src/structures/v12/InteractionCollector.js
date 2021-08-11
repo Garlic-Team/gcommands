@@ -27,13 +27,13 @@ class InteractionCollector extends Collector {
       * The channel from which to collect interactions, if provided
       * @type {?Snowflake}
       */
-    this.channelId = options.channelId
+    this.channelId = options.channelId;
 
     /**
       * The guild from which to collect interactions, if provided
       * @type {?Snowflake}
       */
-    this.guildId = options.guildId
+    this.guildId = options.guildId;
 
     /**
       * The the type of interaction to collect
