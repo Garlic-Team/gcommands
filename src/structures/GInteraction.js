@@ -112,11 +112,27 @@ class GInteraction {
     }
 
     /**
-     * Indicates whether this interaction is a {@link CommandInteraction}.
+     * Indicates whether this interaction is a {@link BaseCommandInteraction} || {@link ContextMenuInteraction}.
+     * @returns {boolean}
+     */
+    isApplication() {
+        return InteractionTypes[this.type] === InteractionTypes.APPLICATION_COMMAND;
+    }
+
+    /**
+     * Indicates whether this interaction is a {@link BaseCommandInteraction}.
      * @returns {boolean}
      */
     isCommand() {
-        return InteractionTypes[this.type] === InteractionTypes.APPLICATION_COMMAND;
+        return InteractionTypes[this.type] === InteractionTypes.APPLICATION_COMMAND && String(this.targetType) === 'undefined';
+    }
+
+    /**
+     * Indicates whether this interaction is a {@link ContextMenuInteraction}.
+     * @returns {boolean}
+     */
+    isContextMenu() {
+        return InteractionTypes[this.type] === InteractionTypes.APPLICATION_COMMAND && String(this.targetType) !== 'undefined';
     }
 
     /**

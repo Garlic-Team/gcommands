@@ -122,6 +122,12 @@ class Command {
         this.slash = options.slash ? Boolean(options.slash) : null;
 
         /**
+         * Context
+         * @type {GCommandsOptionsCommandsContext}
+         */
+        this.context = options.context;
+
+        /**
          * Aliases
          * @type {Array}
          */

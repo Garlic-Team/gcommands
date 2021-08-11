@@ -110,14 +110,21 @@ class GCommandsClient extends Client {
          * @type {string}
          * @default undefined
          */
-        this.prefix = !Array.isArray(options.slash.prefix) ? [options.slash.prefix] : options.slash.prefix;
+        this.prefix = !Array.isArray(options.commands.prefix) ? [options.commands.prefix] : options.commands.prefix;
 
         /**
          * Slash
          * @type {string}
          * @default false
          */
-        this.slash = options.slash.slash ? options.slash.slash : false;
+        this.slash = options.commands.slash ? options.commands.slash : false;
+
+        /**
+         * Context
+         * @type {string}
+         * @default false
+         */
+        this.context = options.commands.context ? options.commands.context : false;
 
         /**
          * DefaultCooldown

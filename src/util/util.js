@@ -45,22 +45,26 @@ class Util {
      * @param {GInteraction} interaction
      * @returns {Object}
     */
-    static interactionRefactor(client, interaction) {
-        interaction.inGuild = () => Boolean(this.guild && this.member);
+    static interactionRefactor(interaction, cmd) {
+        interaction.inGuild = () => Boolean(interaction.guild && interaction.member);
 
-        interaction.isCommand = () => InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND;
+        interaction.isApplication = () => InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND;
+        interaction.isCommand = () => cmd ? true : false || (InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND && String(interaction.targetType) === 'undefined');
+        interaction.isContextMenu = () => InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND && String(interaction.targetType) !== 'undefined';
 
         interaction.isMessageComponent = () => InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT;
 
         interaction.isButton = () => (
             InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
             MessageComponentTypes[interaction.componentType] === MessageComponentTypes.BUTTON
-            );
+        );
 
         interaction.isSelectMenu = () => (
             InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
             MessageComponentTypes[interaction.componentType] === MessageComponentTypes.SELECT_MENU
-            );
+        );
+
+        return interaction;
     }
 
     /**

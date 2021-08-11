@@ -117,14 +117,21 @@ class GCommands extends EventEmitter {
          * @type {string}
          * @default undefined
          */
-        this.prefix = !Array.isArray(options.slash.prefix) ? [options.slash.prefix] : options.slash.prefix;
+        this.prefix = !Array.isArray(options.commands.prefix) ? [options.commands.prefix] : options.commands.prefix;
 
         /**
          * Slash
          * @type {string}
          * @default false
          */
-        this.slash = options.slash.slash ? options.slash.slash : false;
+        this.slash = options.commands.slash ? options.commands.slash : false;
+
+         /**
+          * Context
+          * @type {string}
+          * @default false
+          */
+        this.context = options.commands.context ? options.commands.context : false;
 
         /**
          * DefaultCooldown
@@ -138,6 +145,7 @@ class GCommands extends EventEmitter {
         this.client.database = this.database;
         this.client.prefix = this.prefix;
         this.client.slash = this.slash;
+        this.client.context = this.context;
         this.client.defaultCooldown = this.defaultCooldown;
         this.client.autoTyping = this.autoTyping;
         this.client.gcategories = this.gcategories;

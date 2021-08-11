@@ -76,7 +76,21 @@ exports.ArgumentType = {
 };
 
 /**
- * The type of an {@link Interaction} object:
+ * The type of an {@link ApplicationCommand} object:
+ * * CHAT_INPUT
+ * * USER
+ * * MESSAGE
+ * @typedef {string} ApplicationCommandType
+ */
+ exports.ApplicationCommandTypes = createEnum([null, 'CHAT_INPUT', 'USER', 'MESSAGE']);
+ exports.ApplicationCommandTypesRaw = { 
+    "user": 2,
+    "message": 3,
+    "both": 4
+ }
+
+/**
+ * The type of an {@link GInteraction} object:
  * * PING
  * * APPLICATION_COMMAND
  * * MESSAGE_COMPONENT
@@ -108,7 +122,7 @@ function createEnum(keys) {
  * @property {string} cmdDir
  * @property {string} eventDir
  * @property {GCommandsOptionsLanguage} language
- * @property {GCommandsOptionsSlash} slash
+ * @property {GCommandsOptionsCommands} commands
  * @property {boolean} caseSensitiveCommands
  * @property {boolean} caseSensitivePrefixes
  * @property {string} defaultCooldown
@@ -132,10 +146,29 @@ function createEnum(keys) {
  */
 
 /**
- * The GCommandsOptionsSlash
- * @property {boolean|string} slash
+ * The GCommandsOptionsCommandsContext
+ * * both
+ * * user
+ * * message
+ * * false
+ * @typedef {(string | boolean)} GCommandsOptionsCommandsContext
+ */
+
+/**
+ * The GCommandsOptionsCommandsSlash
+ * * both
+ * * true
+ * * false
+ * @typedef {(string | boolean)} GCommandsOptionsCommandsSlash
+ */
+
+/**
+ * The GCommandsOptionsCommands
+ * @property {GCommandsOptionsCommandsSlash} slash
+ * @property {GCommandsOptionsCommandsContext} context
  * @property {string} prefix
- * @typedef {(object)} GCommandsOptionsSlash
+ * @typedef {(object)} GCommandsOptionsCommands
+ * @typedef {(Object)} GCommandsOptionsCommands
  */
 
 /**

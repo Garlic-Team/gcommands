@@ -62,11 +62,11 @@ class GEventHandling {
                 let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
                 if (!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
 
-                if (!commandos || String(commandos.slash) === 'true') return;
+                if (!commandos || commandos._type !== 'slash' || String(commandos.slash) === 'true') return;
 
                 let member = message.member, guild = message.guild, channel = message.channel;
                 let botMessageInhibit;
-                let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
+                let inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
                     message, member, guild, channel,
                      respond: async (options = undefined) => {
                         if (this.client.autoTyping) channel.startTyping(this.client.autoTyping);
@@ -209,13 +209,13 @@ class GEventHandling {
         if (String(this.client.slash) === 'false') return;
 
         this.client.on('GInteraction', async interaction => {
-            if (!interaction.isCommand()) return;
+            if (!interaction.isApplication()) return;
 
             try {
                 let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
                 if (!commandos || String(commandos.slash) === 'false') return;
 
-                let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
+                let inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
                     interaction,
                     member: interaction.member,
                     author: interaction.author,

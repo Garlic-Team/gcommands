@@ -32,6 +32,8 @@ module.exports = {
     ButtonInteraction: require('./structures/ButtonInteraction'),
     CommandInteraction: require('./structures/CommandInteraction'),
     SelectMenuInteraction: require('./structures/SelectMenuInteraction'),
+    ContextMenuInteraction: require('./structures/ContextMenuInteraction'),
+    BaseCommandInteraction: require('./structures/BaseCommandInteraction'),
     MessageComponentInteraction: require('./structures/MessageComponentInteraction'),
     BaseMessageComponent: require('./structures/BaseMessageComponent'),
 

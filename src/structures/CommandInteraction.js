@@ -1,44 +1,33 @@
+const BaseCommandInteraction = require('./BaseCommandInteraction');
 const GInteraction = require('./GInteraction');
 
 /**
  * The CommandInteraction
- * @extends GInteraction
+ * @extends BaseCommandInteraction
  */
-class CommandInteraction extends GInteraction {
+class CommandInteraction extends BaseCommandInteraction {
     constructor(client, data) {
         super(client, data);
-
-        /**
-         * The invoked application command's id
-         * @type {Snowflake}
-         */
-        this.commandId = data.data.id;
-
-        /**
-         * The invoked application command's name
-         * @type {string}
-         */
-        this.commandName = data.data.name;
 
         /**
          * The invoked application command's arrayArguments
          * @type {Array}
          */
-        this.arrayArguments = this.getSlashArgs(data.data.options);
+        this.arrayArguments = this.getArgs(data.data.options);
 
         /**
          * The invoked application command's objectArguments
          * @type {object}
          */
-        this.objectArguments = this.getSlashArgsObject(data.data.options);
+        this.objectArguments = this.getArgsObject(data.data.options);
     }
 
     /**
-     * Internal method to getSlashArgs
+     * Internal method to getArgs
      * @returns {Array}
      * @private
     */
-    getSlashArgs(options) {
+     getArgs(options) {
         let args = [];
 
         let check = option => {
@@ -65,19 +54,19 @@ class CommandInteraction extends GInteraction {
     }
 
     /**
-     * Internal method to getSlashArgsObject
+     * Internal method to getArgsObject
      * @returns {object}
      * @private
     */
-    getSlashArgsObject(options) {
+     getArgsObject(options) {
         if (!Array.isArray(options)) return {};
         let args = {};
 
         for (let o of options) {
           if (o.type === 1) {
-            args[o.name] = this.getSlashArgsObject(o.options || []);
+            args[o.name] = this.getArgsObject(o.options || []);
           } else if (o.type === 2) {
-            args[o.name] = this.getSlashArgsObject(o.options || []);
+            args[o.name] = this.getArgsObject(o.options || []);
           } else {
             args[o.name] = o.value;
           }
