@@ -35,9 +35,9 @@ module.exports = {
 
             if (ifDjsV13) {
                 options.filter = filter;
-                return new InteractionCollectorV13(this.client, options, options)
+                return new InteractionCollectorV13(this.client, options, options);
             } else {
-                return new InteractionCollectorV12(this.client, filter, options)
+                return new InteractionCollectorV12(this.client, filter, options);
             }
         }
     },

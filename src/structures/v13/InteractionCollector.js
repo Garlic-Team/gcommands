@@ -8,8 +8,8 @@ class InteractionCollector extends Collector {
     super(client, filter, options);
 
     this.messageId = options.messageId || null;
-    this.channelId = options.channelId || null
-    this.guildId = options.guildId
+    this.channelId = options.channelId || null;
+    this.guildId = options.guildId;
 
     this.interactionType =
       typeof options.interactionType === 'number'
