@@ -44,13 +44,13 @@ class ContextMenuInteraction extends BaseCommandInteraction {
      getArgs(options) {
         let args = [];
 
-        if(options.resolved.users && options.resolved.users[options.target_id]) {
-          args.push(new User(this.client, options.resolved.users[options.target_id]))
-          args.push(new GuildMember(this.client, options.resolved.members[options.target_id]))
+        if (options.resolved.users && options.resolved.users[options.target_id]) {
+          args.push(new User(this.client, options.resolved.users[options.target_id]));
+          args.push(new GuildMember(this.client, options.resolved.members[options.target_id]));
         }
 
-        if(options.resolved.messages && options.resolved.messages[options.target_id]) {
-          args.push(new Message(this.client, options.resolved.messages[options.target_id]))
+        if (options.resolved.messages && options.resolved.messages[options.target_id]) {
+          args.push(new Message(this.client, options.resolved.messages[options.target_id]));
         }
 
         return args;
@@ -64,13 +64,13 @@ class ContextMenuInteraction extends BaseCommandInteraction {
      getArgsObject(options) {
         let args = {};
 
-        if(options.resolved.users && options.resolved.users[options.target_id]) {
-          args.user = new User(this.client, options.resolved.users[options.target_id])
-          args.member = new GuildMember(this.client, options.resolved.members[options.target_id])
+        if (options.resolved.users && options.resolved.users[options.target_id]) {
+          args.user = new User(this.client, options.resolved.users[options.target_id]);
+          args.member = new GuildMember(this.client, options.resolved.members[options.target_id]);
         }
 
-        if(options.resolved.messages && options.resolved.messages[options.target_id]) {
-          args.message = new Message(this.client, options.resolved.messages[options.target_id])
+        if (options.resolved.messages && options.resolved.messages[options.target_id]) {
+          args.message = new Message(this.client, options.resolved.messages[options.target_id]);
         }
 
         return args;

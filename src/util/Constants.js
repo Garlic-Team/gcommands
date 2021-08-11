@@ -83,11 +83,11 @@ exports.ArgumentType = {
  * @typedef {string} ApplicationCommandType
  */
  exports.ApplicationCommandTypes = createEnum([null, 'CHAT_INPUT', 'USER', 'MESSAGE']);
- exports.ApplicationCommandTypesRaw = { 
+ exports.ApplicationCommandTypesRaw = {
     "user": 2,
     "message": 3,
     "both": 4
- }
+ };
 
 /**
  * The type of an {@link GInteraction} object:
