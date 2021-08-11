@@ -309,15 +309,7 @@ class GInteraction {
         }
 
         if (typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
-        if (apiMessage) {
-            apiMessage = apiMessageMsg;
-            apiMessage.client = this.client;
-            apiMessage.createButtonCollector = function createButtonCollector(filter, options) { return this.client.dispatcher.createButtonCollector(apiMessage, filter, options); };
-            apiMessage.awaitButtons = function awaitButtons(filter, options) { return this.client.dispatcher.awaitButtons(apiMessage, filter, options); };
-            apiMessage.createSelectMenuCollector = function createSelectMenuCollector(filter, options) { return this.client.dispatcher.createSelectMenuCollector(apiMessage, filter, options); };
-            apiMessage.awaitSelectMenus = function awaitSelectMenus(filter, options) { return this.client.dispatcher.awaitSelectMenus(apiMessage, filter, options); };
-            apiMessage.delete = function deleteMsg() { return this.client.api.webhooks(this.client.user.id, this.token).messages[apiMessageMsg.id].delete(); };
-        }
+        if (apiMessage) apiMessage = apiMessageMsg;
 
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }

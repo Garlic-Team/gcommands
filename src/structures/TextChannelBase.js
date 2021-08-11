@@ -1,5 +1,7 @@
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
 const GPayload = require('./GPayload');
+const InteractionCollectorV12 = require('./v12/InteractionCollector');
+const InteractionCollectorV13 = require('./v12/InteractionCollector');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
@@ -24,6 +26,35 @@ module.exports = {
             })
             .then(d => this.client.actions.MessageCreate.handle(d).message);
         },
+    },
+
+    createMessageComponentCollector: {
+        value: function(filter, options = {}) {
+            options.channelId = this.id;
+            options.guildId = this.guild.id;
+
+            if (ifDjsV13) {
+                options.filter = filter;
+                return new InteractionCollectorV13(this.client, options, options)
+            } else {
+                return new InteractionCollectorV12(this.client, filter, options)
+            }
+        }
+    },
+
+    awaitMessageComponents: {
+        value: function(filter, options = {}) {
+            return new Promise((resolve, reject) => {
+                const collector = this.createMessageComponentCollector(filter, options);
+                collector.once('end', (buttons, reason) => {
+                    if (options.errors && options.errors.includes(reason)) {
+                        reject(buttons);
+                    } else {
+                        resolve(buttons);
+                    }
+                });
+            });
+        }
     },
 
     createButtonCollector: {
