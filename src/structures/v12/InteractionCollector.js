@@ -27,13 +27,13 @@ class InteractionCollector extends Collector {
       * The channel from which to collect interactions, if provided
       * @type {?Snowflake}
       */
-    this.channelId = this.client.channels.resolveId(options.channel)
+    this.channelId = options.channelId
 
     /**
       * The guild from which to collect interactions, if provided
       * @type {?Snowflake}
       */
-    this.guildId = this.client.guilds.resolveId(options.guild)
+    this.guildId = options.guildId
 
     /**
       * The the type of interaction to collect
@@ -95,7 +95,7 @@ class InteractionCollector extends Collector {
 
     this.on('collect', interaction => {
       this.total++;
-      this.users.set(interaction.user.id, interaction.user);
+      this.users.set(interaction.author.id, interaction.author);
     });
   }
 
@@ -111,11 +111,12 @@ class InteractionCollector extends Collector {
      * @event InteractionCollector#collect
      * @param {Interaction} interaction The interaction that was collected
      */
+
     if (this.interactionType && interaction.type !== this.interactionType) return null;
     if (this.componentType && interaction.componentType !== this.componentType) return null;
-    if (this.messageId && interaction.message?.id !== this.messageId) return null;
-    if (this.channelId && interaction.channelId !== this.channelId) return null;
-    if (this.guildId && interaction.guildId !== this.guildId) return null;
+    if (this.messageId && interaction.message.id !== this.messageId) return null;
+    if (this.channelId && interaction.channel.id !== this.channelId) return null;
+    if (this.guildId && interaction.guild.id !== this.guildId) return null;
 
     return interaction.id;
   }
@@ -133,9 +134,9 @@ class InteractionCollector extends Collector {
      */
     if (this.type && interaction.type !== this.type) return null;
     if (this.componentType && interaction.componentType !== this.componentType) return null;
-    if (this.messageId && interaction.message?.id !== this.messageId) return null;
-    if (this.channelId && interaction.channelId !== this.channelId) return null;
-    if (this.guildId && interaction.guildId !== this.guildId) return null;
+    if (this.messageId && interaction.message.id !== this.messageId) return null;
+    if (this.channelId && interaction.channel.id !== this.channelId) return null;
+    if (this.guildId && interaction.guild.id !== this.guildId) return null;
 
     return interaction.id;
   }

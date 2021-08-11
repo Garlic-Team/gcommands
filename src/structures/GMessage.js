@@ -1,6 +1,8 @@
 const { Message, ReactionManager, ClientApplication, MessageFlags, Collection, MessageAttachment, SnowflakeUtil, MessageMentions, MessageEmbed } = require('discord.js');
 const { MessageTypes } = require('discord.js').Constants;
 const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
+const InteractionCollectorV12 = require('./v12/InteractionCollector');
+const InteractionCollectorV13 = require('./v13/InteractionCollector');
 const BaseMessageComponent = require('./BaseMessageComponent');
 const { InteractionTypes } = require('../util/Constants');
 const GPayload = require('./GPayload');
@@ -54,13 +56,13 @@ class GMessage {
                     }
 
                     if ('embeds' in data || !partial) {
-                        this.embeds = data.embeds.map(e => new MessageEmbed(e, true)) || [];
+                        this.embeds = data.embeds ? data.embeds.map(e => new MessageEmbed(e, true)) || [] : [];
                     } else {
                         this.embeds = this.embeds.slice();
                     }
 
                     if ('components' in data || !partial) {
-                        this.components = data.components.map(c => BaseMessageComponent.create(c, this.client)) || [];
+                        this.components = data.components ? data.components.map(c => BaseMessageComponent.create(c, this.client))  || [] : [];
                     } else {
                         this.components = this.components.slice();
                     }
@@ -239,6 +241,35 @@ class GMessage {
                 },
             },
 
+            createMessageComponentCollector: {
+                value: function(filter, options = {}) {
+                    options.messageId = this.id;
+                    options.guildId = this.guild.id;
+        
+                    if (ifDjsV13) {
+                        options.filter = filter;
+                        return new InteractionCollectorV13(this.client, options, options)
+                    } else {
+                        return new InteractionCollectorV12(this.client, filter, options)
+                    }
+                }
+            },
+        
+            awaitMessageComponents: {
+                value: function(filter, options = {}) {
+                    return new Promise((resolve, reject) => {
+                        const collector = this.createMessageComponentCollector(filter, options);
+                        collector.once('end', (buttons, reason) => {
+                            if (options.errors && options.errors.includes(reason)) {
+                                reject(buttons);
+                            } else {
+                                resolve(buttons);
+                            }
+                        });
+                    });
+                }
+            },
+
             createButtonCollector: {
                 value: function(filter, options = {}) {
                     if (ifDjsV13) return new ButtonCollectorV13(this, filter, options);
@@ -308,7 +339,24 @@ class GMessage {
     send() {}
 
     /**
+     * Method to createMessageComponentCollector
+     * @param {Function} filter
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+     */
+    createMessageComponentCollector() {}
+
+     /**
+      * Method to awaitMessageComponents
+      * @param {Function} filter
+      * @param {CollectorOptions} options
+      * @returns {Collector}
+      */
+    awaitMessageComponents() {}
+
+    /**
      * Method to createButtonCollector
+     * @deprecated
      * @param {Function} filter
      * @param {CollectorOptions} options
      * @returns {Collector}
@@ -317,6 +365,7 @@ class GMessage {
 
     /**
      * Method to awaitButtons
+     * @deprecated
      * @param {Function} filter
      * @param {CollectorOptions} options
      * @returns {Collector}
@@ -325,6 +374,7 @@ class GMessage {
 
     /**
      * Method to createSelectMenuCollector
+     * @deprecated
      * @param {Function} filter
      * @param {CollectorOptions} options
      * @returns {Collector}
@@ -333,6 +383,7 @@ class GMessage {
 
     /**
      * Method to awaitSelectMenus
+     * @deprecated
      * @param {Function} filter
      * @param {CollectorOptions} options
      * @returns {Collector}
