@@ -3,6 +3,7 @@ const Color = require('../structures/Color');
 const GPayload = require('./GPayload');
 const axios = require('axios');
 const { interactionRefactor } = require('../util/util');
+const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
  * The GInteraction class
@@ -71,16 +72,16 @@ class GInteraction {
         this.createdTimestamp = Date.now();
 
         /**
-         * author
+         * The interaction's author
          * @type {User}
          */
-        this.author = this.client.users.cache.get(data.guild_id ? data.member.user.id : data.user.id);
+        this.author = ifDjsV13 ? this.client.users._add(data.user || data.member.user) : this.client.users.add(data.user || data.member.user);
 
         /**
-         * member
+         * The interaction's member
          * @type {GuildMember | null}
          */
-        this.member = data.guild_id ? this.guild.members.cache.get(data.member.user.id) : null;
+        this.member = data.guild_id ? ifDjsV13 ? this.guild.members._add(data.member) || data.member : this.guild.members.add(data.member) || data.member : null;
 
         /**
          * interaction
