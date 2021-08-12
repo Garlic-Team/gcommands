@@ -1,4 +1,4 @@
-const { User, GuildMember, Message } = require('discord.js');
+const { User, GuildMember } = require('discord.js');
 const { ApplicationCommandTypes } = require('../util/Constants');
 const BaseCommandInteraction = require('./BaseCommandInteraction');
 const ifDjsV13 = require('../util/util').checkDjsVersion(13);
