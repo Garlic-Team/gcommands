@@ -21,7 +21,7 @@ A token is something like a password, which every Discord user has. You can use 
 
 Go back to the `Bot` page, and press the `Copy Token` button. The token will be copied to your clipboard. You can also `Click to Reveal Token`.
 
-[!Token](/../../token.png)
+![Token](/../../token.png)
 
 ::: warning
 Tokens should never be shared with anyone! A token gives complete access to a bot, which can be abused badly.
