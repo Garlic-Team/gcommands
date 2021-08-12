@@ -78,12 +78,18 @@ class GCommandsDispatcher {
      * @returns {string}
     */
     async getGuildPrefix(guildId, cache = true) {
+        if(!Array.isArray(this.client.prefix)) this.client.prefix = Array(this.client.prefix);
+        
         if (!this.client.database) return this.client.prefix;
 
         let guild = this.client.guilds.cache.get(guildId);
-        if (cache) return guild.prefix ? !Array.isArray(guild.prefix) ? Array(guild.prefix) : guild.prefix : this.client.prefix;
+        if(!Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix)
+
+        if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
 
         let guildData = await this.client.database.get(`guild_${guildId}`);
+        if(!Array.isArray(guildData.prefix)) guildData.prefix = Array(guildData.prefix)
+
         return guildData ? guildData.prefix : this.client.prefix;
     }
 

@@ -110,7 +110,7 @@ class GCommandsClient extends Client {
          * @type {string}
          * @default undefined
          */
-        this.prefix = !Array.isArray(options.commands.prefix) ? [options.commands.prefix] : options.commands.prefix;
+        this.prefix = !Array.isArray(options.commands.prefix) ? Array(options.commands.prefix) : options.commands.prefix;
 
         /**
          * Slash
