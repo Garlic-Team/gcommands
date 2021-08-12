@@ -1,6 +1,6 @@
 # Updating from v5 to v6
 
-## Changes
+## Changes in v6
 
 ```diff
 + multi character prefix
@@ -51,4 +51,4 @@
 
 ## More Changes
 
-- [Context Menus](./contextmenus.md)
+- [Context Menus](../interactions/contextmenus.md)

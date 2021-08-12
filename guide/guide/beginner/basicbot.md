@@ -33,7 +33,7 @@ In case you forgot your token, or someone else has got your token, the best way 
 
 ## Writing code
 
-Let's actually start writing code! If you still setup anything else, head to [Setup](./setup.md).  
+Let's actually start writing code! If you still setup anything else, head to [Setup](../setup.md).  
 Create your main file and call it something like `index.js`.  
 Then, paste this code in:
 
@@ -80,4 +80,5 @@ Use `node .` in the console to start the bot!
 
 Coding your Bot:
 
-- [Commands](./usingargsincmd.md)
+- [Commands](../arguments/usingargsincmd.md)
+- [Database](../beginner/database.md)

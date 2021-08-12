@@ -1,6 +1,6 @@
 # Updating from v2 to v3
 
-## Changes
+## Changes in v3
 
 ::: danger
 You need to import GCommands before importing discord.js
@@ -56,5 +56,5 @@ Here's the [**default message.json file**](https://raw.githubusercontent.com/Gar
 
 ## More Changes
 
-- [Inhibitors](./inhibitor.md)
-- [Arguments](./usingargsincmd.md)
+- [Inhibitors](../miscellaneous/inhibitor.md)
+- [Arguments](../miscellaneous/usingargsincmd.md)

@@ -57,7 +57,7 @@ module.exports = class extends Command {
 </div>
 
 The `respond` function allows you to send responses with message, slash and context menu commands.  
-The respond function works the same way as `TextBasedChannel.send` function but has more options. You can find them [here](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GPayloadOptions), or look in [Additional Features](./additionalfeatures.md)
+The respond function works the same way as `TextBasedChannel.send` function but has more options. You can find them [here](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GPayloadOptions), or look in [Additional Features](../beginner/additionalfeatures.md)
 
 ::: warning
 Don't forget that `ephemeral` property only works on slash commands (interactions).
@@ -135,4 +135,4 @@ This command also automatically works with message commands!
 
 Also see:
 
-- [Arguments](./usingargsincmd.md)
+- [Arguments](../arguments/usingargsincmd.md)

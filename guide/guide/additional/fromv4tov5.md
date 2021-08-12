@@ -1,6 +1,6 @@
 # Updating from v4 to v5
 
-## Changes
+## Changes in v5
 
 ```diff
 + docs
@@ -82,4 +82,4 @@ module.exports = class extends Event {
 
 ## More Changes
 
-- [Arguments](./usingargsincmd.md)
+- [Arguments](../arguments/usingargsincmd.md)
