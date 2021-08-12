@@ -1,4 +1,4 @@
-# Buttons
+# Message Components
 
 Buttons send an event when clicked.
 

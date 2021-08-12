@@ -78,6 +78,7 @@ module.exports = {
             title: 'Additionals',
             collapsable: false,
             children: [
+              'additional/fromv5tov6',
               'additional/fromv4tov5',
               'additional/fromv3tov4',
               'additional/fromv2tov3'
