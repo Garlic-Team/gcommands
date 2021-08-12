@@ -62,7 +62,7 @@ class GEventHandling {
                 let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
                 if (!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
 
-                if (!commandos || commandos._type !== 'slash' || String(commandos.slash) === 'true') return;
+                if (!commandos || String(commandos.slash) === 'true') return;
 
                 let member = message.member, guild = message.guild, channel = message.channel;
                 let botMessageInhibit;
