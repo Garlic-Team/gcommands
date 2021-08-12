@@ -37,8 +37,6 @@ Let's actually start writing code! If you still setup anything else, head to [Se
 Create your main file and call it something like `index.js`.  
 Then, paste this code in:
 
-<branch version="5.x">
-
 ```js
 const { GCommandsClient } = require("gcommands");
 const client = new GCommandsClient({
@@ -71,8 +69,6 @@ client.on("log", console.log);
 
 client.login("TOKEN");
 ```
-
-</branch>
 
 ::: tip
 Use `node .` in the console to start the bot!

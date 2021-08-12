@@ -1,6 +1,6 @@
 # Database
 
-If you still don't have a database, checkout [Basic Bot](./basicbot.md)
+If you still don't have a database, check out [Basic Bot](./basicbot.md)
 
 ## Guild Prefix
 
@@ -18,8 +18,6 @@ await client.dispatcher.setGuildPrefix("Guild ID", "prefix");
 await guild.setCommandPrefix("prefix");
 ```
 
-<branch version="5.x">
-
 ## Guild Language
 
 Guild languages are used for users to customize your bot. (as if you didn't already know that)
@@ -35,5 +33,3 @@ await guild.getLanguage();
 await client.dispatcher.setGuildLanguage("Guild ID", "language");
 await guild.setLanguage("Guild ID", "language");
 ```
-
-</branch>

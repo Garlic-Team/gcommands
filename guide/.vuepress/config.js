@@ -1,4 +1,6 @@
-module.exports = {
+const { config } = require("vuepress-theme-hope");
+
+module.exports = config({
     title: 'GCommands',
     description: 'Powerful and flexible command handler that can do everything!',
     base: "/", // /guide/
@@ -9,19 +11,15 @@ module.exports = {
         ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
         ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }]
     ],
-
-    plugins: [],
-    theme: 'yuu',
+    markdown: {
+      lineNumbers: true
+    },
 
     themeConfig: {
-      yuu: {
-        extraOptions: {
-          before: 'BranchSelector',
-          below: 'LanguageSelector'
-        },
-        defaultDarkTheme: true,
-        defaultColorTheme: 'red',
-      },
+      sidebarDepth: 3,
+      editLinks: true,
+      lastUpdated: true,
+      blog: false,
       repo: 'garlic-team/gcommands#master',
       logo: '/gcommands.png',
       nav: [
@@ -29,6 +27,10 @@ module.exports = {
           {text:"Docs", link:"https://gcommands.js.org/docs/"},
           {text:"Discord", link:"https://discord.gg/fV8EgwSpgN"}
       ],
+      footer: {
+        display: true,
+        copyright: "Copyright © 2021 Garlic Team",
+      },
       sidebar: {
         '/guide/': [
           {
@@ -93,6 +95,5 @@ module.exports = {
           '@': '../',
         },
       },
-    },
-    globalUIComponents: ['Notice','V2v3'],
-}
+    }
+})

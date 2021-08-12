@@ -36,8 +36,6 @@ Use `npm i gcommands@dev` to install the dev version.
 You need to import GCommands before importing discord.js
 :::
 
-<branch version="5.2.x">
-
 ```js
 const { GCommandsClient } = require("gcommands");
 const client = new GCommandsClient({
@@ -87,8 +85,6 @@ Below are all the available options for [`GCommandsClient`](https://gcommands.js
 | commands.prefix       | ❌       | The prefix the bot will use in message commands                                                                                                                                                                                                                                                        |
 | defaultCooldown       | ❌       | The default cooldown for commands                                                                                                                                                                                                                                                                      |
 | database              | ❌       | The database to store guild prefixes, etc. in                                                                                                                                                                                                                                                          |
-
-</branch>
 
 ::: warning
 You need to have `discord.js@12+`
