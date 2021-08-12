@@ -252,7 +252,7 @@ class GMessage {
                     } else {
                         return new InteractionCollectorV12(this.client, filter, options);
                     }
-                }
+                },
             },
 
             awaitMessageComponents: {
@@ -267,7 +267,7 @@ class GMessage {
                             }
                         });
                     });
-                }
+                },
             },
 
             createButtonCollector: {
