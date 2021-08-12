@@ -3,8 +3,11 @@ home: true
 heroImage: /gcommands.png
 heroText: GCommands
 tagline: An easy to use, advanced Discord Slash command handler!
-actionText: Get Started →
-actionLink: /guide/
+action: 
+  - text: Get Started →
+    link: /guide/
+    type: primary
+
 features:
   - title: Easy to use
     details: With GCommands, you can setup a bot in seconds!
