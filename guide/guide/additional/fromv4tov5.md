@@ -1,5 +1,7 @@
 # Updating from v4 to v5
 
+## Changes
+
 ```diff
 + docs
 + command classes
@@ -33,46 +35,51 @@
 + setDisabled() to MessageSelectMenu
 ```
 
-#### Command
+## Command
 
 ```js
-const { Command } = require("gcommands")
-const wait = require('util').promisify(setTimeout);
+const { Command } = require("gcommands");
+const wait = require("util").promisify(setTimeout);
 
-module.exports = class Test extends Command {
-	constructor(...args) {
-		super(...args, {
-			name: "test",
-			description: "Test"
-		})
-	}
+module.exports = class extends Command {
+  constructor(...args) {
+    super(...args, {
+      name: "ping",
+      description: "Pongs the bot",
+    });
+  }
 
-	async run({client, interaction, member, message, guild, channel, respond, edit}, args) {
-		interaction.think()
-		await wait(4000)
-		edit("lol")
-	}
+  async run(
+    { client, interaction, member, message, guild, channel, respond, edit },
+    args
+  ) {
+    interaction.think();
+    await wait(2000);
+    edit(`Pong! WS: **${client.ws.ping}ms**`);
+  }
 };
 ```
 
-#### Event
+## Event
 
 ```js
-const { Event } = require("gcommands")
+const { Event } = require("gcommands");
 
-module.exports = class Test extends Event {
-	constructor(...args) {
-		super(...args, {
-			name: "message",
-			once: false,
-			ws: false
-		})
-	}
+module.exports = class extends Event {
+  constructor(...args) {
+    super(...args, {
+      name: "message",
+      once: false,
+      ws: false,
+    });
+  }
 
-	async run(client, message) {
-		console.log(message)
-	}
+  async run(client, message) {
+    console.log(message);
+  }
 };
 ```
 
-You can see the arguments [here](../arguments/usingargsincmd.md)
+## More Changes
+
+- [Arguments](./usingargsincmd.md)

@@ -1,19 +1,18 @@
 # Context Menus
 
-GCommands now also brings context menu support in 1 file with slash + legal commands.  
-It's very simple again.  
-You must enable context menus in [`GCommandsClient`](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsContext)
+GCommands also brings context menu support with slash and legal commands.  
+You must enable context menus in `new GCommandsClient`.
 
 ```js
 new GCommandsClient({
-  ...options,
+  /* ... */
   commands: {
     context: "both",
   },
 });
 ```
 
-When you set `both`, it means that both user commands and message commands will work.
+Here are all the options:
 
 | TYPE    | DESCRIPTION    |
 | ------- | -------------- |
@@ -21,6 +20,8 @@ When you set `both`, it means that both user commands and message commands will 
 | message | Only message   |
 | user    | Only user      |
 | false   | Nothing        |
+
+Here's a basic example:
 
 ```js
 const { Command } = require("gcommands");
@@ -39,6 +40,60 @@ module.exports = class extends Command {
     } else if (objectArgs.message) {
       respond(`Message: ${objectArgs.message.content}`);
     }
+  }
+};
+```
+
+Here's an example with every command type mixed:
+
+```js
+const { Command, ArgumentType } = require("gcommands");
+
+module.exports = class extends Command {
+  constructor(...args) {
+    super(...args, {
+      name: "parse",
+      descriptions: "Parses user/message info",
+      args: [
+        {
+          name: "message",
+          description: "Message Info",
+          type: ArgumentType.STRING,
+          required: true,
+        },
+        {
+          name: "user",
+          description: "User Info",
+          type: ArgumentType.USER,
+          required: true,
+        },
+      ],
+    });
+  }
+
+  run({ client, interaction, client, channel }, args, objectArgs) {
+    if (interaction && interaction.isContextMenu()) {
+      if (objectArgs.user)
+        respond({
+          content: `${objectArgs.user.username}`,
+          ephemeral: true,
+        });
+      if (objectArgs.message)
+        respond({
+          content: `${objectArgs.message.content}`,
+          ephemeral: true,
+        });
+    }
+
+    respond(
+      content: [
+        `**User:** ${client.users.cache.get(objectArgs.user).username}`,
+        `**Channel:** ${
+          channel.messages.cache.get(objectArgs.message).content
+        }`,
+      ].join("\n"),
+      ephemeral: true
+    );
   }
 };
 ```
@@ -96,7 +151,7 @@ module.exports = class extends Command {
 Why do I have to make a distinction there as to whether it's a context menu or not?  
 For the sake of argument. Context menu already returns the user/member/message in the arguments, not just the ID.
 
-![Context Menu](/../../contextmenu.png)
+<img src="/../../contextmenu.png" width="450px;">
 
 <div is="dis-messages">
     <dis-messages>

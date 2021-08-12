@@ -11,35 +11,39 @@ You can have a maximum of:
 
 ## Handling Buttons
 
-### createButtonCollector
+### createMessageComponentCollector
 
 ```js
 const { MessageActionRow, MessageButton } = require("gcommands");
 
-let row = new MessageActionRow()
-  .addComponents([
-    new MessageButton()
-      .setLabel("Primary (Blurple)")
-      .setID("blurple")
-      .setStyle("PRIMARY"),
+let row = new MessageActionRow().addComponents([
+  new MessageButton()
+    .setLabel("Primary (Blurple)")
+    .setID("blurple")
+    .setStyle("PRIMARY"),
 
-    new MessageButton()
-      .setLabel("Secondary (Gray)")
-      .setID("gray")
-      .setStyle("SECONDARY"),
+  new MessageButton()
+    .setLabel("Secondary (Gray)")
+    .setID("gray")
+    .setStyle("SECONDARY"),
 
-    new MessageButton()
-      .setLabel("Danger (Red)")
-      .setID("red")
-      .setStyle("DANGER")
-  ])
+  new MessageButton()
+    .setLabel("Danger (Red)")
+    .setID("red")
+    .setStyle("DANGER"),
+]);
 
 let msg = await channel.send({
   content: "Press a button!",
   components: row,
 });
-let filter = (btn) => btn.clicker.user.id === author.id;
-let collector = msg.createButtonCollector(filter { max: 3, time: 120000 });
+let filter = (interaction) =>
+  interaction.isButton() && btn.author.id === author.id;
+let collector = msg.createMessageComponentCollector({
+  filter,
+  max: 3,
+  time: 120000,
+});
 
 collector.on("collect", (btn) => {
   btn.reply.send({
@@ -92,7 +96,7 @@ collector.on("end", () => {
   </dis-messages>
 </div>
 
-### awaitButtons
+### awaitMessageComponents
 
 ```js
 const { MessageActionRow, MessageButton } = require("gcommands");
@@ -118,8 +122,13 @@ let msg = await respond({
   content: "Press a button!",
   components: row,
 });
-let filter = (btn) => btn.clicker.user.id === author.id;
-let clicked = await msg.awaitButtons(filter, { max: 3, time: 120000 });
+let filter = (interaction) =>
+  interaction.isButton() && interaction.author.id === author.id;
+let clicked = await msg.awaitMessageComponents({
+  filter,
+  max: 3,
+  time: 120000,
+});
 
 if (clicked.size === 0)
   return msg.reply({
