@@ -1,6 +1,7 @@
 const { User, GuildMember, Message } = require('discord.js');
 const { ApplicationCommandTypes } = require('../util/Constants');
 const BaseCommandInteraction = require('./BaseCommandInteraction');
+const ifDjsV13 = require('../util/util').checkDjsVersion(13);
 
 /**
  * The ContextMenuInteraction
@@ -49,7 +50,7 @@ class ContextMenuInteraction extends BaseCommandInteraction {
         }
 
         if (options.resolved.messages && options.resolved.messages[options.target_id]) {
-          args.push(new Message(this.client, options.resolved.messages[options.target_id]));
+          args.push(ifDjsV13 ? this.channel.messages._add(options.resolved.messages[options.target_id]) : this.channel.messages.add(options.resolved.messages[options.target_id]));
         }
 
         return args;
@@ -69,7 +70,7 @@ class ContextMenuInteraction extends BaseCommandInteraction {
         }
 
         if (options.resolved.messages && options.resolved.messages[options.target_id]) {
-          args.message = new Message(this.client, options.resolved.messages[options.target_id]);
+          args.message = ifDjsV13 ? this.channel.messages._add(options.resolved.messages[options.target_id]) : this.channel.messages.add(options.resolved.messages[options.target_id])
         }
 
         return args;
