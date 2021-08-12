@@ -70,7 +70,7 @@ class ContextMenuInteraction extends BaseCommandInteraction {
         }
 
         if (options.resolved.messages && options.resolved.messages[options.target_id]) {
-          args.message = ifDjsV13 ? this.channel.messages._add(options.resolved.messages[options.target_id]) : this.channel.messages.add(options.resolved.messages[options.target_id])
+          args.message = ifDjsV13 ? this.channel.messages._add(options.resolved.messages[options.target_id]) : this.channel.messages.add(options.resolved.messages[options.target_id]);
         }
 
         return args;
