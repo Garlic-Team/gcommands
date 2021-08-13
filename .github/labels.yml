@@ -39,4 +39,4 @@
 - name: 's: approved'
   color: '49eb34'
 - name: 's: awaiting review'
-  color: 'eb5934'
+  color: 'ed6432'
