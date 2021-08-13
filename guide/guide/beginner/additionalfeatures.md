@@ -70,7 +70,7 @@ module.exports = class extends Command {
 };
 ```
 
-## Categores
+## Categories
 
 Categories can help you find commands more easily.
 You can either:

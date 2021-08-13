@@ -257,7 +257,7 @@ module.exports = class extends Command {
         </dis-message>
         <dis-message profile="gcommands" edited=true>
             You decide to bake 1 Delicious Muffin. You put them in the oven and wait...<br/>
-            <br/>You successfully bake your 1 Delicious Muffin and give it to your friends. They love it! 
+            <br/>You successfully baked your 1 Delicious Muffin and gave it to your friends. They loved it! 
         </dis-message>
     </dis-messages>
 </div>
