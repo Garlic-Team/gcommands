@@ -135,6 +135,8 @@ class GCommandsClient extends Client {
 
         /**
          * Dispatcher
+         * @type {GCommandsDispatcher}
+         * @readonly
          */
         this.dispatcher = new GCommandsDispatcher(this.GCommandsClient, true);
 

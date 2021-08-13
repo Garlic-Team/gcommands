@@ -142,6 +142,8 @@ class GCommands extends EventEmitter {
 
         /**
          * Dispatcher
+         * @type {GCommandsDispatcher}
+         * @readonly
          */
         this.client.dispatcher = new GCommandsDispatcher(this.GCommandsClient, false);
 
