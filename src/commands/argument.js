@@ -90,7 +90,7 @@ class Argument {
         let resFirst = responses.first();
 
         let invalid;
-        if (!this.required && resFirst.content === "skip") invalid = false;
+        if (!this.required && resFirst.content === 'skip') invalid = false;
         else invalid = await this.argument.validate(this, resFirst);
 
         if (invalid) {

@@ -159,7 +159,7 @@ class GEventHandling {
                             if (!argInput.valid) argInput = await validArg(argInput.prompt);
 
                             if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
-                            if (argInput.content !== "skip") {
+                            if (argInput.content !== 'skip') {
                                 args[i] = argInput.content;
                                 objectArgs[arg.name] = argInput.content;
                             }
@@ -173,7 +173,7 @@ class GEventHandling {
 
                     if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
 
-                    if (argInput.content !== "skip") {
+                    if (argInput.content !== 'skip') {
                         args[i] = argInput.content;
                         objectArgs[arg.name] = argInput.content;
                     }
