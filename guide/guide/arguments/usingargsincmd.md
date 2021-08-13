@@ -217,7 +217,7 @@ module.exports = class extends Command {
         args[1] === 1 ? "was" : "were"
       } left in the oven for too long and burnt! Try again.`;
     else
-      m.content += `\n\nYou successfully bake your ${product} and give ${
+      m.content += `\n\nYou successfully baked your ${product} and gave ${
         args[1] === 1 ? "it" : "them"
       } to your friends. They like it!`;
 
@@ -241,7 +241,7 @@ module.exports = class extends Command {
                 <discord-interaction profile="izboxo" :command="true">bake Chocolate Muffin 1</discord-interaction>
             </template>
             You decide to bake 1 Delicious Cookie. You put it in the oven and wait...<br/>
-            <br/>You successfully bake your 1 Delicious Cookie and give it to your friends. They love it! 
+            <br/>You successfully baked your 1 Delicious Cookie and give it to your friends. They loved it! 
         </dis-message>
     </dis-messages>
     <dis-messages>
