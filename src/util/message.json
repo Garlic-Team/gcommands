@@ -155,5 +155,18 @@
         "polish": "Proszę wprowadzić jedną z poniższych opcji: {choices}.",
         "indonesian": "Silahkan isi salah satu opsi berikut: {choices}",
         "italian": "Per favore introduca una delle seguenti opzioni: {choices}."
+    },
+    "ARGS_OPTIONAL": {
+        "english": "This argument is optional, so you can use `skip` to skip this argument.",
+        "spanish": "Este argumento es opcional, por lo que puede utilizar `skip` para omitir este argumento.",
+        "portuguese": "Este argumento é opcional, pelo que pode utilizar `saltar` para saltar este argumento.",
+        "russian": "Этот аргумент является необязательным, поэтому вы можете использовать `skip`, чтобы пропустить этот аргумент.",
+        "german": "Dieses Argument ist optional, Sie können also `skip` verwenden, um dieses Argument zu überspringen.",
+        "czech": "Tento argument je nepovinný, takže jej můžete přeskočit pomocí `skip`.",
+        "slovak": "Tento argument je optional, takže pomocou `skip` môžete preskočiť tento argument.",
+        "turkish": "Bu argüman isteğe bağlıdır, dolayısıyla bu argümanı atlamak için `skip` yı kullanabilirsiniz.",
+        "polish": "Ten argument jest opcjonalny, więc możesz użyć `skip` aby pominąć ten argument.",
+        "indonesian": "Argumen ini opsional, jadi Anda bisa menggunakan `skip` untuk melewati argumen ini.",
+        "italian": "Questo argomento è opzionale, quindi puoi usare `skip` per saltare questo argomento."
     }
 }

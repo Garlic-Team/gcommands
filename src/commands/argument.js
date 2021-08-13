@@ -30,6 +30,13 @@ class Argument {
         */
         this.name = argument.name;
 
+
+        /**
+         * Required
+         * @type {boolean}
+        */
+        this.required = argument.required;
+
         /**
          * Argument
          * @type {Argument}
@@ -65,8 +72,10 @@ class Argument {
     async obtain(message, prompt = this.prompt) {
         if (message.author.bot) return;
 
+        const guildLanguage = await message.guild.getLanguage();
 		const wait = 30000;
 
+        if(!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`
         message.reply(prompt);
 
         const filter = msg => msg.author.id === message.author.id;
@@ -78,7 +87,12 @@ class Argument {
             };
         }
 
-        let valid = await this.argument.validate(this, responses.first());
+        let resFirst = this.responses.first();
+
+        let valid;
+        if (!this.required && resFirst.content === "skip") valid = true;
+        else valid = await this.argument.validate(this, resFirst);
+
         if (valid) {
             return {
                 valid: false,
@@ -88,7 +102,7 @@ class Argument {
 
         return {
             valid: true,
-            content: responses.first().content,
+            content: resFirst.content,
         };
     }
 
