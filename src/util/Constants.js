@@ -12,13 +12,17 @@
 
 /**
  * Events
- * * DEBUG
- * * LOG
+ * * debug
+ * * log
+ * * commandExecute
+ * * commandError
  * @type {Object}
  */
 exports.Events = {
     DEBUG: 'debug',
     LOG: 'log',
+    COMMAND_EXECUTE: 'commandExecute',
+    COMMAND_ERROR: 'commandError'
 };
 
 /**
@@ -142,6 +146,7 @@ function createEnum(keys) {
  * * turkish
  * * polish
  * * indonesian
+ * * italian
  * @typedef {(string)} GCommandsOptionsLanguage
  */
 

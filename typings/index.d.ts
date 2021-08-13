@@ -1,7 +1,7 @@
 import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
-type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian';
+type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian';
 
 declare module 'discord.js' {
   export interface Message {
@@ -57,6 +57,8 @@ declare module 'discord.js' {
     clickButton: [InteractionEvent];
     GInteraction: [GGinteraction | InteractionEvent];
     commandPrefixChange: [Guild, string];
+    commandExecute: [Command, GuildMember];
+    commandError: [Command, GuildMember, String]
     log: [string];
     debug: [string];
 

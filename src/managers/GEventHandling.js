@@ -173,7 +173,7 @@ class GEventHandling {
                     objectArgs[arg.name] = argInput.content;
                 }
 
-                this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3User &a${message.author.id}&3 used &a${cmd}`).getText());
+                this.client.emit(Events.COMMAND_EXECUTE, commandos, member)
 
                 const client = this.client, bot = this.client;
                 let botMessage;
@@ -195,6 +195,7 @@ class GEventHandling {
                     },
                 }, args, objectArgs);
             } catch (e) {
+                this.client.emit(Events.COMMAND_ERROR, commandos, member, e)
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         };
@@ -300,11 +301,13 @@ class GEventHandling {
                         edit: result => interaction.reply.edit(result),
                     }, interaction.arrayArguments, interaction.objectArguments);
                 } catch (e) {
-                    this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3${e}`).getText());
+                    this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e)
+                    this.GCommandsClient.emit(Events.DEBUG, e);
                 }
 
-                this.GCommandsClient.emit(Events.DEBUG, new Color(`&d[GCommands Debug] &3User &a${interaction.member.user.id}&3 used &a${interaction.commandName}`).getText());
+                this.client.emit(Events.COMMAND_EXECUTE, commandos, interaction.member)
             } catch (e) {
+                this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e)
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         });
