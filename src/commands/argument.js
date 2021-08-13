@@ -75,7 +75,7 @@ class Argument {
         const guildLanguage = await message.guild.getLanguage();
 		const wait = 30000;
 
-        if(!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`
+        if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
         message.reply(prompt);
 
         const filter = msg => msg.author.id === message.author.id;
