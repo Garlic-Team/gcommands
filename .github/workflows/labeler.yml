@@ -9,6 +9,7 @@ on:
       - dev
     paths:
       - '.github/labels.yml'
+      - '.github/workflows/labeler.yml'
 jobs:
   labeler:
     name: Labeler
@@ -36,6 +37,6 @@ jobs:
             "s: approved":
               {
                 "number": 2,
-                "await label": "s: awaiting review"
+                "await_label": "s: awaiting review"
               }
           }
