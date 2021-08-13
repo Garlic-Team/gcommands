@@ -173,7 +173,7 @@ class GEventHandling {
                     objectArgs[arg.name] = argInput.content;
                 }
 
-                this.client.emit(Events.COMMAND_EXECUTE, commandos, member)
+                this.client.emit(Events.COMMAND_EXECUTE, commandos, member);
 
                 const client = this.client, bot = this.client;
                 let botMessage;
@@ -195,7 +195,7 @@ class GEventHandling {
                     },
                 }, args, objectArgs);
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, commandos, member, e)
+                this.client.emit(Events.COMMAND_ERROR, commandos, member, e);
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         };
@@ -301,13 +301,13 @@ class GEventHandling {
                         edit: result => interaction.reply.edit(result),
                     }, interaction.arrayArguments, interaction.objectArguments);
                 } catch (e) {
-                    this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e)
+                    this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
                     this.GCommandsClient.emit(Events.DEBUG, e);
                 }
 
-                this.client.emit(Events.COMMAND_EXECUTE, commandos, interaction.member)
+                this.client.emit(Events.COMMAND_EXECUTE, commandos, interaction.member);
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e)
+                this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         });
