@@ -87,7 +87,7 @@ class Argument {
             };
         }
 
-        let resFirst = this.responses.first();
+        let resFirst = responses.first();
 
         let valid;
         if (!this.required && resFirst.content === "skip") valid = true;
