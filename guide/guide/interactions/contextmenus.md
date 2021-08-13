@@ -71,7 +71,7 @@ module.exports = class extends Command {
     });
   }
 
-  run({ client, interaction, client, channel }, args, objectArgs) {
+  async run({ client, interaction, respond, channel }, args, objectArgs) {
     if (interaction && interaction.isContextMenu()) {
       if (objectArgs.user)
         respond({
@@ -83,17 +83,19 @@ module.exports = class extends Command {
           content: `${objectArgs.message.content}`,
           ephemeral: true,
         });
+
+      return;
     }
 
-    respond(
+    respond({
       content: [
         `**User:** ${client.users.cache.get(objectArgs.user).username}`,
-        `**Channel:** ${
-          channel.messages.cache.get(objectArgs.message).content
+        `**Message:** ${
+          (await channel.messages.fetch(objectArgs.message)).content
         }`,
       ].join("\n"),
       ephemeral: true
-    );
+    });
   }
 };
 ```
