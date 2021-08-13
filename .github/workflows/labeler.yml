@@ -21,14 +21,21 @@ jobs:
         uses: crazy-max/ghaction-github-labeler@v3
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
-  labelWhenApproved:
-    name: Label when approved
+  label-approved:
     runs-on: ubuntu-latest
     steps:
-    - name: Label when approved
-      uses: pullreminders/label-when-approved-action@master
-      env:
-        APPROVALS: "2"
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        ADD_LABEL: "s:%20approved"
-        REMOVE_LABEL: "s:%20awaiting%20review"
+    - uses: docker://tiangolo/label-approved:0.0.2
+      with:
+        token: ${{ secrets.ACCESS_TOKEN }}
+        config: >
+          {
+            "s: awaiting review":
+              {
+                "number": 0
+              },
+            "s: approved":
+              {
+                "number": 2,
+                "await label": "s: awaiting review"
+              }
+          }
