@@ -1,5 +1,6 @@
 name: Labeler
 on:
+  pull_request_review:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
@@ -20,3 +21,14 @@ jobs:
         uses: crazy-max/ghaction-github-labeler@v3
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
+  labelWhenApproved:
+    name: Label when approved
+    runs-on: ubuntu-latest
+    steps:
+    - name: Label when approved
+      uses: pullreminders/label-when-approved-action@master
+      env:
+        APPROVALS: "2"
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        ADD_LABEL: "s: approved"
+        REMOVE_LABEL: "s: awaiting review"

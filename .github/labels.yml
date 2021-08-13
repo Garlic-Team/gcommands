@@ -36,3 +36,7 @@
   color: '1b99fa'
 - name: 'meta: documentation'
   color: 'FBCA04'
+- name: 's: approved'
+  color: '49eb34'
+- name: 's: awaiting review'
+  color: 'eb5934'
