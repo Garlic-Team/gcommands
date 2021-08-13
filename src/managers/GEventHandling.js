@@ -196,7 +196,7 @@ class GEventHandling {
                     },
                 }, args, objectArgs);
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, commandos, message.member, e)
+                this.client.emit(Events.COMMAND_ERROR, commandos, message.member, e);
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         };
