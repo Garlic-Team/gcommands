@@ -146,7 +146,7 @@ declare module 'gcommands' {
   export class SelectMenuInteraction extends MessageComponentInteraction {
     constructor(client: Client, data: object)
 
-    public values: array;
+    public values: Array;
   }
 
   export class CommandInteraction extends GInteraction {
@@ -233,7 +233,7 @@ declare module 'gcommands' {
     public custom_id: string;
     public options: object;
 
-    public setPlaceholder(placeholder: string): tMessageSelectMenuhis;
+    public setPlaceholder(placeholder: string): MessageSelectMenu;
     public setMaxValues(max: number): MessageSelectMenu;
     public setMinValues(min: number): MessageSelectMenu;
     public setID(id: number): MessageSelectMenu;
@@ -263,8 +263,8 @@ declare module 'gcommands' {
 
   export class GCommandsDispatcher {
     public client: Client & {
-      inhibitors: Collection;
-      cooldowns: Collection;
+      inhibitors: Collection<Function, Function>;
+      cooldowns: Collection<string, Collection>;
     }
 
     public setGuildPrefix(guildId: Snowflake, prefix: string): void;
@@ -301,24 +301,23 @@ declare module 'gcommands' {
     public name: string;
     public description: string;
     public cooldown: string;
-    public expectedArgs: String | Array;
-    public args: Array;
+    public args: Array<object>;
     public minArgs: number;
-    public clientRequiredPermissions: String | Array;
-    public userRequiredPermissions: String | Array;
-    public userRequiredRoles: String | Array;
-    public userOnly: Snowflake | Array;
-    public channelOnly: Snowflake | Array;
+    public clientRequiredPermissions: String | Array<string>;
+    public userRequiredPermissions: String | Array<string>;
+    public userRequiredRoles: String | Array<Snowflake>;
+    public userOnly: Snowflake | Array<Snowflake>;
+    public channelOnly: Snowflake | Array<Snowflake>;
     public channelTextOnly: Boolean;
     public channelNewsOnly: Boolean;
     public channelThreadOnly: Boolean;
     public guildOnly: Snowflake | String;
     public nsfw: boolean;
-    public aliases: Array;
+    public aliases: Array<string>;
     public category: string;
     public usage: string;
 
-    public run(options: CommandRunOptions, args: Array, args2: Object | Array): void;
+    public run(options: CommandRunOptions, args: Array<string>, args2: Object): void;
   }
 
   export class Event {
@@ -351,7 +350,7 @@ declare module 'gcommands' {
 
   interface GInteractionInteraction {
     name: string;
-    options: Array,
+    options: Array<object>,
     id: number;
   }
 
@@ -417,14 +416,14 @@ declare module 'gcommands' {
     cooldown?: string;
     expectedArgs?: string;
     minArgs?: number;
-    userRequiredPermissions?: Array | String;
-    userRequiredRoles?: Array | String;
-    clientRequiredPermissions?: Array | String;
-    userOnly?: Array | Snowflake;
-    channelOnly?: Array | Snowflake;
-    guildOnly?: Array | Snowflake;
+    userRequiredPermissions?: Array<string> | String;
+    userRequiredRoles?: Array<Snowflake> | String;
+    clientRequiredPermissions?: Array<string> | String;
+    userOnly?: Array<Snowflake> | Snowflake;
+    channelOnly?: Array<Snowflake> | Snowflake;
+    guildOnly?: Array<Snowflake> | Snowflake;
     nsfw?: boolean;
-    aliases?: Array;
+    aliases?: Array<string>;
     category?: string;
     usage?: string;
     channelTextOnly?: boolean;

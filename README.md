@@ -21,11 +21,11 @@
 
 ```sh
 npm install gcommands
-yarn install gcommands
+yarn add gcommands
 
 # Dev Build
 npm install gcommands@dev
-yarn install gcommands@dev
+yarn add gcommands@dev
 ```
 
 ## 🐢 | Guide & Documentation
