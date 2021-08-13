@@ -58,8 +58,9 @@ class GEventHandling {
             const [cmd, ...args] = message.content.slice(prefix[0].length).trim().split(/ +/g);
             if (cmd.length === 0) return;
 
+            let commandos;
             try {
-                let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
+                commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
                 if (!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
 
                 if (!commandos || String(commandos.slash) === 'true') return;
@@ -195,7 +196,7 @@ class GEventHandling {
                     },
                 }, args, objectArgs);
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, commandos, member, e)
+                this.client.emit(Events.COMMAND_ERROR, commandos, message.member, e)
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         };
@@ -212,8 +213,9 @@ class GEventHandling {
         this.client.on('GInteraction', async interaction => {
             if (!interaction.isApplication()) return;
 
+            let commandos;
             try {
-                let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
+                commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
                 if (!commandos || String(commandos.slash) === 'false') return;
 
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {

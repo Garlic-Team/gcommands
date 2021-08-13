@@ -22,7 +22,7 @@ exports.Events = {
     DEBUG: 'debug',
     LOG: 'log',
     COMMAND_EXECUTE: 'commandExecute',
-    COMMAND_ERROR: 'commandError'
+    COMMAND_ERROR: 'commandError',
 };
 
 /**
