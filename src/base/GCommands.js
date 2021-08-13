@@ -140,6 +140,11 @@ class GCommands extends EventEmitter {
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
 
+        /**
+         * Dispatcher
+         */
+        this.client.dispatcher = new GCommandsDispatcher(this.GCommandsClient, false);
+
         this.client.language = this.language;
         this.client.languageFile = this.languageFile;
         this.client.database = this.database;
@@ -164,7 +169,6 @@ class GCommands extends EventEmitter {
     }
 
     loadSys() {
-        this.client.dispatcher = new GCommandsDispatcher(this.GCommandsClient);
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 

@@ -16,7 +16,7 @@ class GCommandsDispatcher {
      * The GCommansDispatcher class
      * @param {GCommandsClient} GCommandsClient
      */
-    constructor(GCommandsClient) {
+    constructor(GCommandsClient, readyWait = true) {
         /**
          * GCommandsClient
          * @type {GCommands}
@@ -50,7 +50,13 @@ class GCommandsDispatcher {
         this.client.inhibitors = this.inhibitors;
         this.client.cooldowns = this.cooldowns;
 
-        this.fetchClientApplication();
+        if (readyWait) {
+            setImmediate(() => {
+                this.client.on('ready', () => {
+                    this.fetchClientApplication();
+                });
+            });
+        }
     }
 
     /**

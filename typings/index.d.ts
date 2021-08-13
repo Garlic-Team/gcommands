@@ -281,11 +281,17 @@ declare module 'gcommands' {
     public awaitSelectMenus(msg: Object | Message, filter: Function, options: Object);
   }
 
-  export class GCommandsBase extends EventEmitter {
-    constructor();
+  export class GCommands extends GCommandsBase {
+    constructor(client: Client, options: GCommandsOptions)
+
+    public on<K extends keyof GEvents>(event: K, listener: (...args: GEvents[K]) => void): this;
+    public on<S extends string | symbol>(
+      event: Exclude<S, keyof GEvents>,
+      listener: (...args: any[]) => void,
+    ): this;
   }
 
-  export class GCommands extends GCommandsBase {
+  export class GCommandsClient extends Client {
     constructor(client: Client, options: GCommandsOptions)
 
     public on<K extends keyof GEvents>(event: K, listener: (...args: GEvents[K]) => void): this;
