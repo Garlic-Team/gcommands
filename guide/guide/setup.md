@@ -32,10 +32,6 @@ Make sure you upgrade to the needed Node.js version for discord.js.
 Use `npm i gcommands` to download the latest stable version.  
 Use `npm i gcommands@dev` to install the dev version.
 
-::: danger
-You need to import GCommands before importing discord.js
-:::
-
 ```js
 const { GCommandsClient } = require("gcommands");
 const client = new GCommandsClient({
