@@ -39,7 +39,8 @@ The `createButtonCollector, createSelectMenuCollector, awaitButtons and awaitSel
 ### Command
 Added the ability to reload a command without restarting the bot using `<Command>.reload(), client.gcommands.get("name").reload()`.  
 The option to use the `usage` parameter in commands has been added.  
-You can detect if there is a channel thread, using `channelThreadOnly`.
+You can detect if there is a channel thread, using `channelThreadOnly`.  
+Legal commands support the optional arguments.
 
 ::: warning
 `channelThreadOnly` only works with djs v13.
@@ -94,7 +95,7 @@ Fixed a `prefix` option that didn't allow to have multiple character prefixes.
 + interaction.id
 
 - interaction.setID
-+ interaction.setCustomID
++ interaction.setCustomId
 
 [-] Translations
 
