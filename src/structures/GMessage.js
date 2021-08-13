@@ -107,8 +107,8 @@ class GMessage {
                     if (!partial) {
                         this.mentions = new MessageMentions(
                             this,
-                            data.mentions,
-                            data.mention_roles,
+                            (data.mentions instanceof MessageMentions) ? [] : data.mentions,
+                            data.mention_roles ,
                             data.mention_everyone,
                             data.mention_channels,
                             data.referenced_message ? data.referenced_message.author : null,

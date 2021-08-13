@@ -67,6 +67,7 @@ class GInteraction {
          * The interaction's author
          * @type {User}
          */
+        this.user = ifDjsV13 ? this.client.users._add(data.user || data.member.user) : this.client.users.add(data.user || data.member.user);
         this.author = ifDjsV13 ? this.client.users._add(data.user || data.member.user) : this.client.users.add(data.user || data.member.user);
 
         /**
@@ -212,7 +213,7 @@ class GInteraction {
             });
         }
 
-        this.slashEdit(result);
+        this.replyEdit(result);
     }
 
     /**
@@ -228,7 +229,7 @@ class GInteraction {
             });
         }
 
-        this.slashEdit(result, true);
+        this.replyEdit(result, true);
     }
 
     /**
@@ -243,7 +244,7 @@ class GInteraction {
         */
         let _send = result => {
             this._replied = true;
-            return this.slashRespond(result);
+            return this.replySend(result);
         };
 
         /**
@@ -253,7 +254,7 @@ class GInteraction {
         */
         let _edit = result => {
             if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
-            return this.slashEdit(result);
+            return this.replyEdit(result);
         };
 
         /**
@@ -263,7 +264,7 @@ class GInteraction {
         */
         let _update = result => {
             if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
-            return this.slashEdit(result, true);
+            return this.replyEdit(result, true);
         };
 
         /**
@@ -275,7 +276,7 @@ class GInteraction {
             if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
 
-            return new Message(this.client, apiMessage, this.channel);
+            return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
         };
 
         return {
@@ -286,35 +287,25 @@ class GInteraction {
         };
     }
 
-    async slashRespond(result) {
+    async replySend(result) {
         let GPayloadResult = await GPayload.create(this.channel, result)
             .resolveData()
             .resolveFiles();
 
-        let apiMessage = (await this.client.api.interactions(this.id, this.token).callback.post({
+        await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: result.thinking ? 5 : 4,
                 data: GPayloadResult.data,
             },
             files: GPayloadResult.files,
-        }));
+        });
 
-        let apiMessageMsg = {};
-        try {
-            apiMessageMsg = (await axios.get(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.token}/messages/@original`)).data;
-        } catch (e) {
-            apiMessageMsg = {
-                id: undefined,
-            };
-        }
-
-        if (typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
-        if (apiMessage) apiMessage = apiMessageMsg;
+        let apiMessage = await this.reply.fetch();
 
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 
-    async slashEdit(result, update) {
+    async replyEdit(result, update) {
         let GPayloadResult = await GPayload.create(this.channel, result)
             .resolveData()
             .resolveFiles();
