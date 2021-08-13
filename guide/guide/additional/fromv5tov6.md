@@ -71,7 +71,7 @@ Added events `commandExecute` and `commandError`.
 #### GCommandsOptions#prefix
 Fixed a `prefix` option that didn't allow to have multiple character prefixes.  
 
-
+### diff
 ```diff
 + multi character prefix
 + Number argument type

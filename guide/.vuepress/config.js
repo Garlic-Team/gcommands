@@ -32,6 +32,9 @@ module.exports = config({
         display: true,
         copyright: "Copyright © 2021 Garlic Team",
       },
+      mdEnhance: {
+        tasklist: true,
+      },
       sidebar: {
         '/guide/': [
           {
