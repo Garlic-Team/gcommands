@@ -144,9 +144,13 @@ class GMessage {
                             }
                             : null;
                     }
+
                     if ('thread' in data) {
                         ifDjsV13 ? this.client.channels._add(data.thread, this.guild) : this.client.channels.add(data.thread, this.guild);
                     }
+
+                    this._edits = [];
+
                     if (this.member && data.member) {
                         this.member._patch(data.member);
                     } else if (data.member && this.guild && this.author) {
