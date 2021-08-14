@@ -147,7 +147,7 @@ class GCommandsClient extends Client {
         });
 
         new GDatabaseLoader(this.GCommandsClient);
-        
+
         setImmediate(() => {
             super.on('ready', () => {
                 this.loadSys();
