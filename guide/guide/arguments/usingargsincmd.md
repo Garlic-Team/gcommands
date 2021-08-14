@@ -35,7 +35,6 @@ module.exports = class extends Command {
     super(...args, {
       name: "hug",
       description: "Hugs someone!",
-      slash: "both",
       cooldown: "2s",
       args: [
         {
@@ -108,7 +107,6 @@ module.exports = class extends Command {
     super(...args, {
       name: "ping",
       description: "Checks the bot's latency",
-      slash: "both",
       cooldown: "2s",
     });
   }
@@ -159,7 +157,6 @@ module.exports = class extends Command {
     super(...args, {
       name: "bake",
       description: "Bakes a product!",
-      slash: "both",
       cooldown: "2s,
       args: [
         {
