@@ -104,7 +104,7 @@ class GCommandLoader {
      * @returns {void}
      * @private
      */
-    __loadSlashCommands() {
+    async __loadSlashCommands() {
         if (String(this.client.slash) === 'false') return;
 
         let keys = Array.from(this.client.gcommands.keys());
@@ -120,11 +120,11 @@ class GCommandLoader {
             if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
             let ifAlready;
-            if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name)
-            else ifAlready = (await _allGlobalCommands).filter(c => c.name === cmd.name);
+            if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && c.type === 1)
+            else ifAlready = (await _allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
-            if(ifAlready.description === cmd.description &&  ifAlready.args === cmd.args) {
-                console.log("alr");
+            if(ifAlready.length > 0 && ifAlready[0].description === cmd.description &&  ifAlready[0].args === cmd.args) {
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 continue;
             }
 
@@ -173,13 +173,12 @@ class GCommandLoader {
      * @returns {void}
      * @private
      */
-     __loadContextMenuCommands() {
+    async __loadContextMenuCommands() {
         if (String(this.client.context) === 'false') return;
 
         let keys = Array.from(this.client.gcommands.keys());
 
         for (const commandName of keys) {
-            const slashCmd = (await __getAllCommands(this.client)).filter
             const cmd = this.client.gcommands.get(commandName);
             if (String(cmd.context) === 'false') return;
 
@@ -188,9 +187,18 @@ class GCommandLoader {
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
+            let ifAlready;
+            if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type))
+            else ifAlready = (await _allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
+
+            if(ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
+                continue;
+            }
+
             let type = cmd.context ? ApplicationCommandTypesRaw[cmd.context] : ApplicationCommandTypesRaw[this.client.context];
             let config = {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                     Authorization: `Bot ${this.client.token}`,
                     'Content-Type': 'application/json',
