@@ -146,7 +146,7 @@ class GMessage {
                     }
 
                     if ('thread' in data && data.thread !== null) {
-                        console.log(data.thread)
+                        console.log(data.thread);
                         ifDjsV13 ? this.client.channels._add(data.thread, this.guild) : this.client.channels.add(data.thread, this.guild);
                     }
 
