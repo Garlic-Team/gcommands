@@ -155,7 +155,7 @@ class Util {
 
             return cmds;
         } catch (e) {
-            return undefined;
+            return [];
         }
     }
 
