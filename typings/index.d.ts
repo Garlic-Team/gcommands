@@ -221,7 +221,7 @@ declare module 'gcommands' {
     public setEmoji(emoji: string): MessageButton;
     public setURL(url: string): MessageButton;
     public setDisabled(disabled: boolean): MessageButton;
-    public setID(id: number): MessageButton;
+    public setCustomId(id: string): MessageButton;
     public toJSON(): MessageButton;
   }
 
@@ -236,7 +236,7 @@ declare module 'gcommands' {
     public setPlaceholder(placeholder: string): MessageSelectMenu;
     public setMaxValues(max: number): MessageSelectMenu;
     public setMinValues(min: number): MessageSelectMenu;
-    public setID(id: number): MessageSelectMenu;
+    public setCustomId(id: string): MessageSelectMenu;
     public setDisabled(disabled: boolean): MessageSelectMenu;
     public addOption(option: MessageSelectMenuOption)
     public addOptions(...options: MessageSelectMenuOption[])
