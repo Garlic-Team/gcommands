@@ -112,7 +112,7 @@ class GCommandLoader {
             if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
             let config = {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                     Authorization: `Bot ${this.client.token}`,
                     'Content-Type': 'application/json',
