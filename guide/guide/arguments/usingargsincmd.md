@@ -18,6 +18,10 @@ ArgumentType.SUB_COMMAND_GROUP; // 2 | only for slash commands
 ArgumentType.SUB_COMMAND; // 1 | only for slash commands
 ```
 
+:::tip
+Global commands are cached for one hour. New global commands will fan out slowly across all guilds and will only be guaranteed to be updated after an hour. Guild commands update instantly. As such, we recommend you use guild-based commands during development and publish them to global commands when they're ready for public use.
+:::
+
 ## Basic Arguments
 
 Basic arguments (string, int, number, boolean, member, etc.) are used for more simpler commands.
