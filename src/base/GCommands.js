@@ -172,6 +172,7 @@ class GCommands extends EventEmitter {
     }
 
     loadSys() {
+        new GDatabaseLoader(this.GCommandsClient);
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 
@@ -181,7 +182,6 @@ class GCommands extends EventEmitter {
         require('../structures/ThreadChannel');
 
         setTimeout(() => {
-            new GDatabaseLoader(this.GCommandsClient);
             new GEventHandling(this.GCommandsClient);
             new GEventLoader(this.GCommandsClient);
             new GCommandLoader(this.GCommandsClient);

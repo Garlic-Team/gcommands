@@ -146,6 +146,8 @@ class GCommandsClient extends Client {
             setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
         });
 
+        new GDatabaseLoader(this.GCommandsClient);
+        
         setImmediate(() => {
             super.on('ready', () => {
                 this.loadSys();
@@ -164,7 +166,6 @@ class GCommandsClient extends Client {
         require('../structures/ThreadChannel');
 
         setTimeout(() => {
-            new GDatabaseLoader(this.GCommandsClient);
             new GEventHandling(this.GCommandsClient);
             new GEventLoader(this.GCommandsClient);
             new GCommandLoader(this.GCommandsClient);
