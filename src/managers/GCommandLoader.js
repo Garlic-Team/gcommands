@@ -32,6 +32,14 @@ class GCommandLoader {
         */
         this.cmdDir = this.GCommandsClient.cmdDir;
 
+        /**
+         * All Global Commands
+         * @type {Object}
+        */
+        this._allGlobalCommands = __getAllCommands(this.client);
+        
+        this.client._applicationCommandsCache = new Array();
+
         this.__loadCommandFiles();
     }
 
@@ -111,6 +119,15 @@ class GCommandLoader {
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
+            let ifAlready;
+            if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name)
+            else ifAlready = (await _allGlobalCommands).filter(c => c.name === cmd.name);
+
+            if(ifAlready.description === cmd.description &&  ifAlready.args === cmd.args) {
+                console.log("alr");
+                continue;
+            }
+
             let config = {
                 method: 'POST',
                 headers: {
@@ -162,6 +179,7 @@ class GCommandLoader {
         let keys = Array.from(this.client.gcommands.keys());
 
         for (const commandName of keys) {
+            const slashCmd = (await __getAllCommands(this.client)).filter
             const cmd = this.client.gcommands.get(commandName);
             if (String(cmd.context) === 'false') return;
 

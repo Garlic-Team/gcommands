@@ -1,6 +1,5 @@
 const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
 const { InteractionTypes, MessageComponentTypes } = require('./Constants');
-let _allSlashCommands;
 
 /**
  * The Util class
@@ -138,7 +137,10 @@ class Util {
      * @private
     */
     static async __getAllCommands(client, guildId = undefined) {
-        if (_allSlashCommands && !guildId) return _allSlashCommands;
+        if (this.client._applicationCommandsCache) {
+            if(guildId && this.client._applicationCommandsCache[guildId]) this.client._applicationCommandsCache[guildId]
+            else if(!guildId) return this.client._applicationCommandsCache["global"];
+        }
 
         try {
             const app = client.api.applications(client.user.id);
@@ -148,7 +150,9 @@ class Util {
 
             const cmds = await app.commands.get();
 
-            _allSlashCommands = cmds;
+            if(guildId) this.client._applicationCommandsCache[guildId] = cmds;
+            else this.client._applicationCommandsCache["global"] = cmds;
+            
             return cmds;
         } catch (e) {
             return undefined;
