@@ -94,7 +94,7 @@ class GCommandsDispatcher {
 
         if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
 
-        let guildData = await this.client.database.get(`guild_${guildId}`);
+        let guildData = await this.client.database.get(`guild_${guildId}`) || {};
         if (guildData.prefix && !Array.isArray(guildData.prefix)) guildData.prefix = Array(guildData.prefix);
 
         return guildData ? guildData.prefix : this.client.prefix;
