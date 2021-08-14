@@ -27,7 +27,7 @@ class GCommands extends EventEmitter {
         if (!Object.keys(options).length) return console.log(new Color('&d[GCommands] &cNo default options provided!',{ json: false }).getText());
         if (!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{ json: false }).getText());
         if (!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language)',{ json: false }).getText());
-        if(String(options.commands.slash) !== 'false' && !options.prefix) return console.log(new Color('&d[GCommands] &cNo default options provided! (commands#prefix)',{ json: false }).getText());
+        if (String(options.commands.slash) !== 'false' && !options.prefix) return console.log(new Color('&d[GCommands] &cNo default options provided! (commands#prefix)',{ json: false }).getText());
 
         /**
          * GCommandsClient
