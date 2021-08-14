@@ -90,6 +90,7 @@ class GCommandsDispatcher {
 
         let guild = this.client.guilds.cache.get(guildId);
         if (guild.prefix && !Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix);
+        else return this.getGuildPrefix(guildId, false)
 
         if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
 
