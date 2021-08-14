@@ -138,8 +138,8 @@ class Util {
     */
     static async __getAllCommands(client, guildId = undefined) {
         if (client._applicationCommandsCache) {
-            if(guildId && client._applicationCommandsCache[guildId]) return client._applicationCommandsCache[guildId]
-            else if(!guildId) return client._applicationCommandsCache["global"];
+            if (guildId && client._applicationCommandsCache[guildId]) return client._applicationCommandsCache[guildId];
+            else if (!guildId) return client._applicationCommandsCache.global;
         }
 
         try {
@@ -150,9 +150,9 @@ class Util {
 
             const cmds = await app.commands.get();
 
-            if(guildId) client._applicationCommandsCache[guildId] = cmds;
-            else client._applicationCommandsCache["global"] = cmds;
-            
+            if (guildId) client._applicationCommandsCache[guildId] = cmds;
+            else client._applicationCommandsCache.global = cmds;
+
             return cmds;
         } catch (e) {
             return undefined;
