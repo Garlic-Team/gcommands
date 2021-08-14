@@ -90,7 +90,7 @@ class GCommandsDispatcher {
 
         let guild = this.client.guilds.cache.get(guildId);
         if (guild.prefix && !Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix);
-        else return this.getGuildPrefix(guildId, false)
+        else cache = false;
 
         if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
 
@@ -108,7 +108,7 @@ class GCommandsDispatcher {
      * @returns {String}
     */
     async getCooldown(guildId, userId, command) {
-        if (this.application.owners.some(user => user.id === userId)) return { cooldown: false };
+        if (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
         let now = Date.now();
 
         let cooldown;
