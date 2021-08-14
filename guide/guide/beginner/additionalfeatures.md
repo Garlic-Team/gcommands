@@ -1,119 +1,70 @@
-# Additional features
+# Additional Features
 
-<language lang="en" inline=true>Accessories that may be useful to you.</language>
-<language lang="tk" inline=true>Aşağıda verilen bazı özellikler ihtiyacınızı karşılayabilir. </language>
+Here's all the list of additional features in commands, members, etc.  
+We recommend that you also take a look at the [documentation](https://gcommands.js.org/docs/#/docs/main/dev/typedef/CommandOptions).
 
-## Slash respond/edit
-
-<language lang="en" inline=true>For example, do you want when you send a command to be sent as a clyde or to disable ping in a certain message?</language>
-<language lang="tk" inline=true>Örnek vermek gerekirse bütün mesajını sadece bir kişiye özel hale getirmek veya mesajında mevcut olan etiketlemelerin önüne geçmek ister misin?</language>
-
-<branch version="5.x">
-
-<language lang="en">
+## Command Respond/Edit
 
 ```js
-const { Command } = require("gcommands")
+const { Command, MessageActionRow } = require("gcommands");
+const { MessageEmbed } = require("discord.js");
 
-module.exports = class Ping extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "ping",
-      description: "command ping",
-      cooldown: 5,
-    })
+      description: "Shows the bot's ping",
+    });
   }
-  async run({client, respond, edit}) {
+
+  async run({ respond, edit }) {
     respond({
-      content: "pong", //or embed object new MessagEmbed().setTitle("a")
-      ephemeral: true, //clyde
-      allowedMentions: { parse: [], repliedUser: true }, // mentions
-      embeds: new MessageEmbed().setTitle("hi"),
-      components: new MessageActionRow(), // [actionRow, actionRow2]
-      attachments: new MessageAttachment(Buffer.from("he"), "name.txt"), // attachments
-      inlineReply: false/true // inline reply
-    })
+      content: "I'm too lazy to make an actual ping command", // content accepts string, number, MessageEmbed
+      ephemeral: true, // makes the message only visible for the user
+      allowedMentions: {}, // allowedMentions, more here: https://discord.js.org/#/docs/main/stable/typedef/MessageMentionOptions
+      embeds: new MessageEmbed()
+        .setAuthor("hi")
+        .setTitle("TOP TEXT")
+        .setDescription("BOTTOM TEXT"),
+      components: new MessageActionRow(), // MessageActionRow, [MessageActionRow, MessageActionRow]
+      attachments: new MessageAttachment(
+        Buffer.from("me when\nme when guide"),
+        "funny_meme.txt"
+      ), // MessageAttachment, [MessageAttachment, MessageAttachment]
+      inlineReply: true, // if set to true, the client will reply to the latest message in the channel
+    });
 
     setTimeout(() => {
       edit({
-        content: "pong", //or embed object new MessagEmbed().setTitle("a")
-        allowedMentions: { parse: [], repliedUser: true }, // mentions
-        embeds: new MessageEmbed().setTitle("hi"),
-        components: new MessageActionRow(), // [actionRow, actionRow2]
-        attachments: new MessageAttachment(Buffer.from("he"), "name.txt"), // attachments
-        edited: false, // update message without (edited)
-        messageId: "id of message" // NOT REQUIRED! ONLY IF YOU WANT EDIT OTHER MESSAGE
-      })
-    }, 2000)
+        content: "Yep, still lazy", // content accepts string, number, MessageEmbed
+        embeds: new MessageEmbed()
+          .setAuthor("hi")
+          .setTitle("TOP TEXT")
+          .setDescription("BOTTOM TEXT"),
+        components: new MessageActionRow(), // MessageActionRow, [MessageActionRow, MessageActionRow]
+      });
+    }, 2500);
   }
 };
 ```
-
-</language>
-<language lang="tk">
-
-```js
-const { Command } = require("gcommands")
-
-module.exports = class Ping extends Command {
-  constructor(...args) {
-    super(...args, {
-      name: "ping",
-      description: "command ping",
-      cooldown: 5,
-    })
-  }
-  async run({client, respond, edit}) {
-    respond({
-      content: "pong", // Buraya embed koyabilirsiniz. new MessagEmbed().setTitle("a") veya aşağıdaki embeds: kısmına embed koyun.
-      ephemeral: true, // Bu mesajın görünürlüğünü değiştirir. Yani mesajınız Clyde'nin gönderdiği mesaj gibi olsun mu?
-      allowedMentions: { parse: [], repliedUser: true }, // Etiketlemeler
-      embeds: new MessageEmbed().setTitle("selam"),
-      components: new MessageActionRow(), // [actionRow, actionRow2] (Burası buton kullanmak isteyenler için ayrıldı.)
-      attachments: new MessageAttachment(Buffer.from("he"), "name.txt"), // attachments
-      inlineReply: false/true // inline reply
-    })
-
-    setTimeout(() => {
-      edit({
-        content: "pong", // Buraya embed koyabilirsiniz. new MessagEmbed().setTitle("a") veya aşağıdaki embeds: kısmına embed koyun.
-        allowedMentions: { parse: [], repliedUser: true }, // mentions
-        embeds: new MessageEmbed().setTitle("hi"),
-        components: new MessageActionRow(), // [actionRow, actionRow2] (Burası buton kullanmak isteyenler için ayrıldı.)
-        attachments: new MessageAttachment(Buffer.from("he"), "name.txt"), // attachments
-        edited: false, // update message without (edited)
-        messageId: "id of message" // NOT REQUIRED! ONLY IF YOU WANT EDIT OTHER MESSAGE
-      })
-    }, 2000)
-  }
-};
-```
-
-</language>
-
-</branch>
 
 ## Cooldowns
 
-<language lang="en" inline=true>Spam is something you generally want to avoid–especially if one of your commands requires calls to other APIs or takes a bit of time to build/send. Cooldowns are also a very common feature bot developers want to integrate into their projects, so let's get started on that!</language>
-<language lang="tk" inline=true>Spam kaçınmak isteyeceğiniz durumlardan birisidir. Eğer komutunuz başka bir API'den bilgi alıyorsa veya inşa ediyorsa arka arkaya komut kullanmanın önüne geçmek zorundasınız. Bekleme süreleri ayrıca geliştiricilerin botlarına eklemek istedikleri özelliklerin başında gelir. Hadi başlayalım!</language>
-
-<language lang="en" inline=true>Add a `cooldown` key to one of your commands. This determines how long the user will have to wait (in seconds) before using this specific command again.</language>
-<language lang="tk" inline=true>Herhangi bir komuta `cooldown` anahtarı ekleyin. Bu anahtar komutun kullanıldıktan sonra ne kadar süre içinde tekrar o üyenin komutu kullanabileceğini belirler.</language>
+Spam is one of the things you want your bot to avoid. GCommands has added a cooldown parameter for commands:
 
 ```js {8}
-const { Command } = require("gcommands")
+const { Command } = require("gcommands");
 
-module.exports = class Ping extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "ping",
-      description: "command ping",
-      cooldown: "5s",
-    })
+      description: "Shows the bot's ping",
+      cooldown: "1s", // String | can also be: 1m, 1h, 1d, ...
+    });
   }
 
-  async run(/*etc*/) {
+  async run(/* ... */) {
     // ...
   }
 };
@@ -121,246 +72,276 @@ module.exports = class Ping extends Command {
 
 ## Categories
 
-<language lang="en" inline=true>You can have all the commands in the `cmdDir` folder that you specified. If you want more order, just create another folder in this folder and put commands in it.</language>
-<language lang="tk" inline=true>Bütün komutları `cmdDir` klasörü içerisine koymanız gerektiğini söylemiştik. Eğer daha fazlasını isterseniz bu klasörün içersinde yeni klasörler açarak komutlarınızı kategorilere ayırabilirsiniz.</language>
+Categories can help you find commands more easily.
+You can either:
+
+- add the `category` parameter to your command:
+
+```js {9}
+const { Command } = require("gcommands");
+
+module.exports = class extends Command {
+  constructor(...args) {
+    super(...args, {
+      name: "ping",
+      description: "Shows the bot's ping",
+      cooldown: "1s",
+      category: "Utilities", // String
+    });
+  }
+
+  async run(/* ... */) {
+    // ...
+  }
+};
+```
+
+- put your command in a folder:
+
+```{2}
+cmdDir/
+  Utilities/
+    ping.js
+```
+
+::: warning
+Keep in mind, categories are case sensitive!
+:::
 
 ## Aliases
 
-<language lang="en" inline=true>If you want the command to be able to be executed from multiple commands. Just add the `aliases` parameter.</language>
-<language lang="tk" inline=true>Komutunuzu başka adlarla da çalıştırmak isterseniz `aliases` parametresini eklemeniz yeterli olacak.</language>
+Aliases can help users find your command more easily, or just save them a few words. [**More about Aliases in Slash Commands**](https://github.com/discord/discord-api-docs/issues/2323#issuecomment-761137779)
 
-```js {8}
-const { Command } = require("gcommands")
+```js {10}
+const { Command } = require("gcommands");
 
-module.exports = class Ban extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "ban",
-      description: "user ban",
-      aliases: ["banuser","userban"],
-    })
+      name: "ping",
+      description: "Shows the bot's ping",
+      aliases: ["pong", "pingpong"],
+      cooldown: "1s",
+      category: "Utilities", // String
+    });
   }
 
-  async run(/*etc*/) {
-        // ...
+  async run(/* ... */) {
+    // ...
   }
 };
 ```
 
 ## UserPermissions
 
-<branch version="5.x">
+GCommands has also added a `userRequiredPermissions` key to commands, so you can save a few lines of, checking for permissions.
 
-<language lang="en" inline=true>Add a `userRequiredPermissions` key to your existing command options. We will use the 'ban' command to example.</language>
-<language lang="tk" inline=true>`userRequiredPermissions` anahtarını herhangi bir komuta ekleyelim. Bu komutu kullanan üyenin hangi yetkilerinin olması gerektiğini belirler. </language>
+```js {11}
+const { Command } = require("gcommands");
 
-```js {8}
-const { Command } = require("gcommands")
-
-module.exports = class Ban extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "ban",
-      description: "user ban",
-      userRequiredPermissions: "ADMINISTRATOR", //["ADMINISTRATOR","MANAGE_GUILD"]
-    })
+      name: "ping",
+      description: "Shows the bot's ping",
+      aliases: ["pong", "pingpong"],
+      cooldown: "1s",
+      category: "Utilities",
+      userRequiredPermissions: "ADMINISTRATOR", // Permission, [Permission, Permission]
+    });
   }
 
-  async run(/*etc*/) {
-        // ...
+  async run(/* ... */) {
+    // ...
   }
 };
 ```
-
-</branch>
 
 ## ClientRequiredPermissions
 
-<branch version="5.x">
+Along with `userRequiredPermissions`, GCommands has also added a `clientRequiredPermissions` key, to check if your client has a specific permissions
 
-<language lang="en">
+```js {12}
+const { Command } = require("gcommands");
 
-Add a `clientRequiredPermissions` key to your existing command options. We will use the 'ban' command to example.
-It determines if the bot has permissions and if so it executes the command.
-
-</language>
-<language lang="tk">
-
-`clientRequiredPermissions` anahtarını herhangi bir komuta ekleyelim. Bu botun o sunucuda hangi yetkilerinin olması gerektiğini belirler.
-It determines if the bot has permissions and if so it executes the command.
-
-</language>
-
-```js {8}
-const { Command } = require("gcommands")
-
-module.exports = class Ban extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "ban",
-      description: "user ban",
-      clientRequiredPermissions: "ADMINISTRATOR", //["ADMINISTRATOR","MANAGE_GUILD"]
-    })
+      name: "ping",
+      description: "Shows the bot's ping",
+      aliases: ["pong", "pingpong"],
+      cooldown: "1s",
+      category: "Utilities",
+      userRequiredPermissions: "ADMINISTRATOR",
+      clientRequiredPermissions: "ADMINISTRATOR", // Permission, [Permission, Permission]
+    });
   }
 
-  async run(/*etc*/) {
-        // ...
+  async run(/* ... */) {
+    // ...
   }
 };
 ```
 
-</branch>
+## UserRequiredRoles
 
-## userRequiredRoles
-<branch version="5.x">
+The `userRequiredRoles` property only allows members who have a specific role to run the command
 
-<language lang="en" inline=true>Add a `userRequiredRoles` key to your existing command options. We will use the 'ban' command to example.</language>
-<language lang="tk" inline=true>Kodunuza `userRequiredRoles` anahtarını ekleyin. </language>
+```js {13}
+const { Command } = require("gcommands");
 
-```js {8}
-const { Command } = require("gcommands")
-
-module.exports = class Ban extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "ban",
-      description: "user ban",
-      userRequiredRoles: ["MODERATOR ID ROLE","ADMIN ROLE ID"],
-    })
+      name: "ping",
+      description: "Shows the bot's ping",
+      aliases: ["pong", "pingpong"],
+      cooldown: "1s",
+      category: "Utilities",
+      userRequiredPermissions: "ADMINISTRATOR",
+      clientRequiredPermissions: "ADMINISTRATOR",
+      userRequiredRoles: ["69", "420"], // [Snowflake, Snowflake]
+    });
   }
 
-  async run(/*etc*/) {
-        // ...
+  async run(/* ... */) {
+    // ...
   }
 };
 ```
-
-</branch>
 
 ## GuildOnly
 
-<language lang="en" inline=true>If you only want the command for a guild, just add the `guildOnly` parameter.</language>
-<language lang="tk" inline=true>Sunucuya özel komutlar yapmak istersen tek yapman gereken `guildOnly` anahtarını eklemek olacak.</language>
+This property makes the command only create/work on a specific guildId. This is recommended for server-specific bots, or just for testing.
 
-```js {8}
-const { Command } = require("gcommands")
+```js {14}
+const { Command } = require("gcommands");
 
-module.exports = class Refresh extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "refresh",
-      description: "refresh",
-      guildOnly: "guild id",
-    })
+      name: "ping",
+      description: "Shows the bot's ping",
+      aliases: ["pong", "pingpong"],
+      cooldown: "1s",
+      category: "Utilities",
+      userRequiredPermissions: "ADMINISTRATOR",
+      clientRequiredPermissions: "ADMINISTRATOR",
+      userRequiredRoles: ["69", "420"],
+      guildOnly: "123", // Snowflake
+    });
   }
 
-  async run(/*etc*/) {
-        // ...
+  async run(/* ... */) {
+    // ...
   }
 };
 ```
 
 ## UserOnly
 
-<language lang="en" inline=true>If you only want the command for a user, just add the `userOnly` parameter.</language>
-<language lang="tk" inline=true>Komutu sadece seçilen üyelere özel yapmak istersen `userOnly` komutunu kullanmanız yeterli olur.</language>
+This property only allows a specific user(s) to run the command.
 
-```js {8}
-const { Command } = require("gcommands")
+```js {15}
+const { Command } = require("gcommands");
 
-module.exports = class Eval extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "eval",
-      description: "run code",
-      userOnly: "user id", //["user id2", "user id2"]
-    })
+      name: "ping",
+      description: "Shows the bot's ping",
+      aliases: ["pong", "pingpong"],
+      cooldown: "1s",
+      category: "Utilities",
+      userRequiredPermissions: "ADMINISTRATOR",
+      clientRequiredPermissions: "ADMINISTRATOR",
+      userRequiredRoles: ["69", "420"],
+      guildOnly: "123",
+      userOnly: "456", // Snowflake, [Snowflake, Snowflake]
+    });
   }
 
-  async run(/*etc*/) {
-        // ...
+  async run(/* ... */) {
+    // ...
   }
 };
 ```
 
 ## ChannelOnly
 
-<language lang="en" inline=true>If you only want the command for a channel, just add the `channelOnly` parameter.</language>
-<language lang="tk" inline=true>Komutun kanala özel çalışmasını isterseniz `channelOnly` anahtarını kullanabilirsiniz.</language>
+This property makes the command only be runnable in a specific channel(s).
 
-```js {8}
-const { Command } = require("gcommands")
+```js {16}
+const { Command } = require("gcommands");
 
-module.exports = class Eval extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "eval",
-      description: "run code",
-      channelOnly: "channel id", //["channel id2", "channel id2"]
-    })
+      name: "ping",
+      description: "Shows the bot's ping",
+      aliases: ["pong", "pingpong"],
+      cooldown: "1s",
+      category: "Utilities",
+      userRequiredPermissions: "ADMINISTRATOR",
+      clientRequiredPermissions: "ADMINISTRATOR",
+      userRequiredRoles: ["69", "420"],
+      guildOnly: "123",
+      userOnly: "456",
+      channelOnly: "789", // Snowflake, [Snowflake, Snowflake]
+    });
   }
 
-  async run(/*etc*/) {
-        // ...
+  async run(/* ... */) {
+    // ...
   }
 };
 ```
-
-<branch version="5.x">
 
 ## NSFW
 
-<language lang="en" inline=true>If you only want the command only for a nsfw channel, just add the `nsfw` parameter.</language>
-<language lang="tk" inline=true>Komutun sadece NSFW kanallarında kullanılmasını istersen `nsfw` anahtarını eklemen yeterli olacak.</language>
+~~This property makes the commad send a hent-~~ This property makes the command only runnable in NSFW channels.
 
-```js {8}
-const { Command } = require("gcommands")
+```js {17}
+const { Command } = require("gcommands");
 
-module.exports = class Ping extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "eval",
-      description: "run code",
-      nsfw: true,
-    })
+      name: "ping",
+      description: "Shows the bot's ping",
+      aliases: ["pong", "pingpong"],
+      cooldown: "1s",
+      category: "Utilities",
+      userRequiredPermissions: "ADMINISTRATOR",
+      clientRequiredPermissions: "ADMINISTRATOR",
+      userRequiredRoles: ["69", "420"],
+      guildOnly: "123",
+      userOnly: "456",
+      channelOnly: "789",
+      nsfw: false, // Boolean
+    });
   }
-  
-  async run(/*etc*/) {
-        // ...
+
+  async run(/* ... */) {
+    // ...
   }
 };
 ```
 
-</branch>
-
 ## Custom Language File
 
-<language lang="en" inline=true>Do you want to customize the messages for you? So just do the following things.</language>
-<language lang="tk" inline=true>Mesajları kendine göre özelleştirmek ister misin? Aşağıdaki yönergeleri takip etmen yeterli.</language>
+GCommands also allows you to customize the messages it sends. [**Here's the default language file**](https://raw.githubusercontent.com/Garlic-Team/GCommands/dev/src/util/message.json)
 
 ```js
-new GCommands(client, {
-    language: "czech", //english, spanish, portuguese, russian, german, czech, turkish
-    ownLanguageFile: require("./message.json")
-})
+new GCommandsClient({
+  /* ... */
+  language: "italian", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
+  ownLanguageFile: require("./message.json"),
+});
 ```
 
-<language lang="en" inline=true>Create a `message.json` where you can then put this:</language>
-<language lang="tk" inline=true>`message.json` adında bir klasör oluşturun ve şunu içerisine yerleştirin:</language>
-
-[language file](https://raw.githubusercontent.com/Garlic-Team/GCommands/main/src/util/message.json)
-
-<language lang="en">
+Copy the default language file, and modify it however you want.
 
 ::: tip
-If you want support the project. So you can create a pull request to the dev branch where you can then add the new language.
+You can help us out by adding new languages. You can do that by going [here](https://github.com/Garlic-Team/GCommands/blob/dev/src/util/message.json), editing the file, and submitting it.
 :::
-
-</language>
-<language lang="tk">
-
-::: tip
-Eğer yeni diller eklemek istersen yeni bir PR oluşturarak bizi destekleyebilirsin. Böylece kendi dilini de eklemiş olursun.
-:::
-
-</language>

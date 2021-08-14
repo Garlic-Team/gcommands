@@ -1,7 +1,9 @@
-module.exports = {
+const { config } = require("vuepress-theme-hope");
+
+module.exports = config({
     title: 'GCommands',
-    description: 'Open source slash/normal command handler',
-    base: "/guide/",
+    description: 'Powerful and flexible command handler that can do everything!',
+    base: "/", // /guide/
 
     head: [
         ['link', { rel: 'icon', href: '/gcommands.png' }],
@@ -10,18 +12,15 @@ module.exports = {
         ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }]
     ],
 
-    plugins: [],
-    theme: 'yuu',
+    markdown: {
+      lineNumbers: true
+    },
 
     themeConfig: {
-      yuu: {
-        extraOptions: {
-          before: 'BranchSelector',
-          below: 'LanguageSelector'
-        },
-        defaultDarkTheme: true,
-        defaultColorTheme: 'red',
-      },
+      sidebarDepth: 3,
+      editLinks: true,
+      lastUpdated: true,
+      blog: false,
       repo: 'garlic-team/gcommands#master',
       logo: '/gcommands.png',
       nav: [
@@ -29,6 +28,13 @@ module.exports = {
           {text:"Docs", link:"https://gcommands.js.org/docs/"},
           {text:"Discord", link:"https://discord.gg/fV8EgwSpgN"}
       ],
+      footer: {
+        display: true,
+        copyright: "Copyright © 2021 Garlic Team",
+      },
+      mdEnhance: {
+        tasklist: true,
+      },
       sidebar: {
         '/guide/': [
           {
@@ -57,11 +63,19 @@ module.exports = {
             ]
           },
           {
+            title: 'Interactions',
+            collapsable: false,
+            children: [
+              'interactions/slashcommands',
+              'interactions/contextmenus',
+              'interactions/messagecomponents'
+            ]
+          },
+          {
             title: 'Miscellaneous',
             collapsable: false,
             children: [
               'miscellaneous/mentions',
-              'miscellaneous/interactions',
               'miscellaneous/inhibitor',
               'miscellaneous/moreevents'
             ]
@@ -70,6 +84,7 @@ module.exports = {
             title: 'Additionals',
             collapsable: false,
             children: [
+              'additional/fromv5tov6',
               'additional/fromv4tov5',
               'additional/fromv3tov4',
               'additional/fromv2tov3'
@@ -84,6 +99,5 @@ module.exports = {
           '@': '../',
         },
       },
-    },
-    globalUIComponents: ['Notice','V2v3'],
-}
+    }
+})

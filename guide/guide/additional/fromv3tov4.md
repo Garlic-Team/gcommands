@@ -1,81 +1,78 @@
 # Updating from v3 to v4
-You can use `respond()` and `edit()` in normal/slash command!
+
+## Changes in v4
 
 ```diff
-- cmd.requiredRole
-+ cmd.userRequiredRoles
-
-- return (in slash cmd)
-- run: async(client, slash. etc)
-+ respond()
-+ edit()
-+ ({client, interaction, member, message, guild, channel, respond, edit}, arrayArgs, args)
-
-- new Buttons()
-+ new MessageButton()
-+ new MessageActionRow()
-
-- args.user [slash args]
-+ args[0] [slash args]
-
-+ nodejs15+ support
-+ support asynchronous module.exports
++ NodeJS v15+ support
++ asynchronous run function support
 + followup messages
-+ more djs v13
-+ buttons
-+ arrayArgs for slash cmd
-+ nsfw parameter
-
-- cooldown: "5"
-+ cooldown: "5s"
-+ cooldown bypass for owners
-
-+ array support for default/guild prefix
++ djs v13 support
++ command cooldown bypass for application owners
 + cached guild prefixes
++ dropdowns
++ typings
 
-- database: {/*etc*/}
-+ database: "mongodb://"
+[-] GCommands
+
+- database: {}
++ database: ""
  * redis://user:pass@localhost:6379
  * mongodb://user:pass@localhost:27017/dbname
  * sqlite://path/to/database.sqlite
  * postgresql://user:pass@localhost:5432/dbname
  * mysql://user:pass@localhost:3306/dbname
-+ dropdowns
-+ typings
+
+[-] Command
+
+- command.requiredRole
++ command.userRequiredRoles
+
+- return
++ respond
++ edit
+- run (client, ...)
++ run ({ client }, arrayArgs, args)
+
++ command.nsfw
+
+- new Buttons()
++ new MessageButton()
++ new MessageActionRow()
+
+- args.user
++ args[0]
+
+- command.cooldown: "5"
++ command.cooldown: "5s"
 ```
 
-#### Why respond/edit function?
-Due to the fact that the respond function facilitates slash return, and due to this function, the command is almost always slash and normal without much change.
+## Using respond/edit
 
-```js {6,9,14,17}
-const { MessageButton, MessageActionRow } = require("gcommands")
+```js {6,7,16,17,18,19,21,22,23,24}
+const wait = require("util").promisify(setTimeout);
 
 module.exports = {
-	name: "test",
-	description: "Test",
-	expectedArgs: "<user:6:select user>"
-	run: async({client, interaction, member, message, guild, channel, respond, edit}, args) => {
-		console.log(args[0])
-		const button = new MessageButton()
-			.setStyle("gray")
-			.setLabel("test")
-			.setID("custom_id")
-			.setEmoji("💚") // or .setEmoji("<:happy:id:>")
-			.toJSON()
+  name: "ping",
+  description: "Shows the bot's ping!",
+  expectedArgs: "<ws:5:Shows the websocket ping>",
+  minArgs: 0,
+  run: async ({ client, interaction, message, respond, edit }, args) => {
+    let sentAt = interaction ? interaction.createdAt : message.createdAt;
+    let message;
 
-		const buttonRow = new MessageActionRow().addComponent(button)
+    if (args[0] === "true" || args[0] === true)
+      message = `WebSocket: **\`${client.ws.ping}ms\`**`;
+    else message = `Ping: **\`${Date.now() - sentAt}ms\`**`;
 
-		respond({
-			content: "My ping is `" + Math.round(client.ws.ping) + "ms`",
-			ephemeral: true,
-			allowedMentions: { parse: [], repliedUser: true },
-			components: buttonRow,
-			embeds: new MessageEmbed().setTitle("hi") // content + embed
-		})
-
-		setTimeout(() => {
-			edit("hi")
-		}, 3000)
-	}
+    await respond({
+      content: "Getting ping...",
+      ephemeral: true,
+    });
+    await wait(1000);
+    await edit({
+      content: message,
+      ephemeral: true,
+    });
+  },
 };
 ```

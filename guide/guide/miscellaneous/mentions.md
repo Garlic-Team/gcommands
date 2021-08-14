@@ -1,37 +1,43 @@
 # Mentions
-Switching off/on mentions.<br>
-We will work with the `allowedMentions` parameter.
 
-You can put in the object parse:
- - users
- - roles
- - everyone
+Toggling certain mentions on/off.  
+You can parse specific mention types in `allowedMentions.parse`
 
-For example, if we put only roles in the parse object, the bot will only be able to ping roles.
+Here's the list:
+
+- users
+- roles
+- everyone
+
+You can also whitelist specific User/Role ID's in `allowedMentions.users` and `allowedMentions.roles`.
+
+Example:
 
 ```js
-allowedMentions: {parse: [], repliedUser: true}
+await channel.send({
+  content: `1 Pong, <@491999008106217473>!`,
+  allowedMentions: { parse: [], users: ["491999008106217473"] },
+});
+await channel.send({
+  content: `2 Pong, <@491999008106217473>!`,
+  allowedMentions: { parse: [] },
+});
+await channel.send({
+  content: `3 Pong, <@491999008106217473>!`,
+  allowedMentions: { parse: ["users"] },
+});
 ```
 
-```js {7}
-respond({
-    content: "hello",
-    allowedMentions = { parse: ["users","roles","everyone"] };
-})
-
-<channel>.send({
-    content: "hello",
-    allowedMentions = { parse: ["users","roles","everyone"] };
-})
-```
-
-<div is="discord-messages">
-    <discord-messages>
+<div is="dis-messages" :compactMode="false">
+    <dis-messages>
         <dis-message profile="gcommands">
-            <mention profile="hyro">Hyro</mention> <mention>everyone</mention> <mention type="role">Dev</mention> <b>with mentions</b>
+            1 Pong, <mention profile="hyro" :highlight="true">Hyro</mention>!</b>
         </dis-message>
         <dis-message profile="gcommands">
-            @Hyro @everyone @Dev <b>without mentions</b>
+            2 Pong, <mention profile="hyro">Hyro</mention>!</b>
         </dis-message>
-    </discord-messages>
+        <dis-message profile="gcommands">
+            3 Pong, <mention profile="hyro" :highlight="true">Hyro</mention>!</b>
+        </dis-message>
+    </dis-messages>
 </div>

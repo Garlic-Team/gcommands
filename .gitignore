@@ -10,3 +10,4 @@ logs/
 .tmp/
 .vscode/
 .idea/
+update.sh

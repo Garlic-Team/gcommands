@@ -2,7 +2,8 @@
 	<div
 		class="discord-message"
 		:class="{
-			'discord-ephemeral-highlight': ephemeralMessage
+			'discord-ephemeral-highlight': ephemeralMessage,
+			'discord-mention-highlight': highlightMention
 		}"
 	>
 		<slot name="interactions"></slot>
@@ -87,7 +88,7 @@ export default {
 	},
 	mounted() {
 		this.highlightMention = this.$children.some(child => {
-			return child.$options.name === 'Mention' && child.$props.highlight && child.$props.type !== 'channel';
+			return child.$options._componentTag === 'mention' && child.$props.highlight && child.$props.type !== 'channel';
 		});
 	},
 };

@@ -2,225 +2,86 @@
 
 ## Installing Node.js
 
-<language lang="en">
-
-Don't have Node.js yet? Go to their [website](https://nodejs.org) and install it!<br>
-Don't have an editor? Check out [VS Code](https://code.visualstudio.com/).
-
-</language>
-<language lang="tk">
-
-Hala Node.JS'ye sahip değil misin? Buradan [sitesine](https://nodejs.org) gidip kurulum yapabilirsin.<br>
-Hala bir kod editörün yok mu? [VS Code]([link](https://code.visualstudio.com/))'u incele.
-
-</language>
+Don't have Node.js yet? Go to [NodeJS.org](https://nodejs.org) and install it!
+Don't have an editor? Check out [Visual Studio Code](https://code.visualstudio.com).
 
 ### Installing on Windows
 
-<language lang="en">
-
-If you have a Windows machine, it's as simple as installing any other program. Go to the [Node.js website](https://nodejs.org), download the latest version, open up the downloaded file, and follow the steps on the installer.
-
-</language>
-<language lang="tk">
-
-Eğer Windows kullanan makinen varsa kurulum yapmak çok basit. [Node.JS'nin sitesine](https://nodejs.org) gidip oradaki en son sürümü indir ve kurulumu takip et.
-
-</language>
+If you have a Windows OS, it's as simple as installing any other program. Go to the [Node.js website](https://nodejs.org), download the latest version, open the download file, and follow the steps in the installer.
 
 ### Installing on macOS
 
-<language lang="en">
+If you have macOS, you have a two options. You can:
 
-If you have a macOS machine, you have a few options. You can go to the [Node.js website](https://nodejs.org), download the latest version, double click the package installer, and follow the instructions. Or you can use a package manager like Homebrew (opens new window) with the command `brew install node`.
-
-</language>
-<language lang="tk">
-
-macOS kullanan makinen varsa kurulum yapmak için birden fazla şansın var. Windows'ta olduğu gibi [Node.JS'nin sitesine](https://nodejs.org) gidip son sürümü indirebilirsin veya paket yükleyicilerinden birisini kullanabilirsin. Örnek vermek gerekirse HomeBrew iyi bir seçenek. Şu komutu kullanarak kurulum yap: `brew install node`.
-
-</language>
+- go to the [Node.js website](https://nodejs.org), download the latest version, open the download file, and follow the steps in the installer.
+- use a package manager like [Homebrew](https://brew.sh)
 
 ### Installing on Linux
 
-<language lang="en">
-
-If you have a Linux machine, you may see [this page](https://nodejs.org/en/download/package-manager/) to determine how you should install Node.
+If you have a Linux OS, you should go to [this page](https://nodejs.org/en/download/package-manager/), to determine how to install Node.
 
 ::: warning
-If you do have Node installed, but have an older version \(i.e. anything below 12.0\), you should upgrade to the latest version. discord.js v12 requires Node 12.0 or higher.
-:::
+Make sure you upgrade to the needed Node.js version for discord.js.
 
-</language>
-<language lang="tk">
-
-Linux'a kurulum yapıyorsan [şu sayfayı](https://nodejs.org/en/download/package-manager/) ziyaret etmen iyi olur. 
-
-::: warning
-Node.JS kuruluysa ama kurulu olduğu sürüm eski sürümlerinden birisiye bunu güncel hale getirmen iyi olacaktır. Çünkü discord.js V12, Node'nin 12.0 sürümü ve üzerindeki sürümlerde çalışıyor.
-:::
-
-</language>
+- **discord.js@12** requires `NodeJS@12+`
+- **discord.js@13** requires `NodeJS@16+`
+  :::
 
 ## Installing GCommands
 
-<language lang="en">
-
-Use `npm i gcommands` for download stable version.<br>
-Use `npm i github:Garlic-Team/GCommands#dev` for download dev version.<br>
-Create a folder with your own name and then create index.js in it
-
-::: warning
-If you installing dev version you need has git.
-:::
-
-::: danger
-Need import GCmmands **before** creating new Discord.Client
-:::
-
-</language>
-<language lang="tk">
-
-Stabil olan sürümünü kurmak için `npm i gcommands` veya yarn add gcommands komutunu kullanabilirsin..<br>
-Eğer geliştirici sürümünü kullanmak istiyorsan `npm i github:Garlic-Team/GCommands#dev` veya `yarn add github:Garlic-Team/GCommands#dev` komutunu kullanabilirsin.<br>
-Bir klasör yarat ve içerisine index.js'yi oluştur.
-
-::: warning
-Geliştirici sürümünü kullanıyorsan git'e ihtiyacın olacak.
-:::
-
-::: danger
-new Discord.Client kullanılmadan önce GCommands'ı import etmelisin.
-:::
-
-</language>
-
-<branch version="5.x">
-
-<language lang="en">
+Use `npm i gcommands` to download the latest stable version.  
+Use `npm i gcommands@dev` to install the dev version.
 
 ```js
-const { GCommands } = require("gcommands");
-const Discord = require("discord.js");
-
-const client = new Discord.Client();
-
-client.on("ready", () => {
-    const GCommandsClient = new GCommands(client, {
-        cmdDir: "commands/",
-        eventDir: "events/",
-        unkownCommandMessage: false, // true of false | send unkownCommand Message
-        language: "english", //english, spanish, portuguese, russian, german, czech, turkish
-        slash: {
-           slash: 'both', //true = slash only, false = only normal, both = slash and normal
-           prefix: '.' // for normal commands
-        },
-        defaultCooldown: "3s",
-        database: "url"
-        /* DB SUPPORT
-         * redis://user:pass@localhost:6379
-         * mongodb://user:pass@localhost:27017/dbname
-         * sqlite://path/to/database.sqlite
-         * postgresql://user:pass@localhost:5432/dbname
-         * mysql://user:pass@localhost:3306/dbname
-        */
-    })
-    
-    GCommandsClient.on("debug", (debug)=>{
-        console.log(debug)
-    })
-
-    console.log("Ready")
-})
-
-client.login("token")
-```
-
-Below are all the available options.
-
-
-| PARAMETER        	    | REQUIRED 	 | WHAT IT DOES                                                                                                                                              |
-|---------------------- |----------- |---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cmdDir           	    | ✅        | The directory commands are stored in.                                                                                                                      |
-| eventDir         	    | ❌        | The directory events are stored in.                                                                                                                        |
-| unkownCommandMessage         	    | ❌        | Send unkown command message                                                                                                                         |
-| language         	    | ✅        | All messages in json                                                              |
-| slash.slash      	    | ✅        | If set to **true**, only slash commands will execute. If set to **false**, only normal commands will execute. If set to **both**, both types will execute 	|
-| slash.prefix     	    | ✅        | Default prefix for normal commands.                                                                                     	                                |
-| defaultCooldown 	    | ✅        | Default cooldown for all commands. (in seconds)                                                                                                            |
-| shardClusterName 	    | ❌        | Your shard cluster name if you are sharding. Default is "shard"                                                                                                            |
-| database    	    | ❌    	   | DB                                                                                                    |
-
-</language>
-<language lang="tk">
-
-```js
-const { GCommands } = require("gcommands");
-const Discord = require("discord.js");
-
-const client = new Discord.Client();
+const { GCommandsClient } = require("gcommands");
+const client = new GCommandsClient({
+  cmdDir: "commands/",
+  eventDir: "events/",
+  caseSensitiveCommands: false, // true or false | whether to match the commands' caps
+  caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
+  unkownCommandMessage: false, // true or false | send unkownCommand Message
+  language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
+  commands: {
+    slash: "both", // https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsSlash
+    context: "false", // https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsContext
+    prefix: ".", // for normal commands
+  },
+  defaultCooldown: "3s",
+  database: "url",
+  /* DB SUPPORT
+   * redis://user:pass@localhost:6379
+   * mongodb://user:pass@localhost:27017/dbname
+   * sqlite://path/to/database.sqlite
+   * postgresql://user:pass@localhost:5432/dbname
+   * mysql://user:pass@localhost:3306/dbname
+   */
+});
 
 client.on("ready", () => {
-    const GCommandsClient = new GCommands(client, {
-        cmdDir: "komutlar/", // Komutlarınızın olduğu klasörün ismi.
-        eventDir: "events/", // Eventlerinizin olduğu klasörün ismi.
-        unkownCommandMessage: false, // true ya da false | Olmayan bir komut kullanıldığında mesaj gönderir.
-        language: "english", //english, spanish, portuguese, russian, german, czech, turkish 
-        slash: {
-           slash: 'both', // true = Sadece eğik çizgi komutları | false = Sadece normal komutlar | both = Her ikisini de destekler.
-           prefix: '.' // Normal komutları kullanacaksan bir önek oluştur.
-        },
-        defaultCooldown: "3s", // Komut bekleme süresi.
-        database: "url"
-        /* DB SUPPORT
-         * redis://user:pass@localhost:6379
-         * mongodb://user:pass@localhost:27017/dbname
-         * sqlite://path/to/database.sqlite
-         * postgresql://user:pass@localhost:5432/dbname
-         * mysql://user:pass@localhost:3306/dbname
-        */
-    })
-    
-    GCommandsClient.on("debug", (debug)=>{
-        console.log(debug)
-    })
+  console.log("Ready");
+});
+client.on("debug", console.log); // warning | this also enables the default discord.js debug logging
+client.on("log", console.log);
 
-    console.log("Hazır!")
-})
-
-client.login("tokeniniz_buraya")
+client.login("TOKEN");
 ```
 
-Aşağıda kullanabileceğin bütün ayarlar mevcut.
+Below are all the available options for [`GCommandsClient`](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptions):
 
-
-| PARAMETRE          	    | ZORUNLULUK   	 | NE İŞ YAPAR?                                                                                            |
-|---------------------- |----------- |---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cmdDir           	    | ✅        | Komutların depolandığı klasörün ismi.                                                                                                                      |
-| eventDir         	    | ❌        | Eventlerin depolandığı klasörün ismi.                                                                                                                        |
-| unkownCommandMessage         	    | ❌        | Botta ekli olmayan bir komut yazıldığında hata mesajı.                                                                                                                         |
-| language         	    | ✅        | JSON içerisinde olan bütün diller.                                                              |
-| slash.slash      	    | ✅        | Eğer **true** ayarlanırsa sadece eğik çizgi komutları, **false** olarak ayarlanırsa sadece normal komutları veya both olarak ayarlanırsa her iki komut türünü de kullanabilirsin. 	|
-| slash.prefix     	    | ✅        | Normal komutlar için önek.                                                                                     	                                |
-| defaultCooldown 	    | ✅        | Bütün komutlarda geçerli olan bekleme süresi. (Saniye cinsinden.)                                                                                                            |
-| shardClusterName 	    | ❌        | Shard işlemi uyguluyorsan Shard Cluster adı. Varsayılan ad "shard".                                                                                                            |
-| database    	    | ❌    	   | DB                                                             
-
-</language>
-
-</branch>
-
-<language lang="en">
+| PARAMETER             | REQUIRED | FUNCTIONALITY                                                                                                                                                                                                                                                                                          |
+| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| cmdDir                | ✅       | The directory to look for commands in                                                                                                                                                                                                                                                                  |
+| eventDir              | ❌       | The directory to look for events in                                                                                                                                                                                                                                                                    |
+| caseSensitiveCommands | ❌       | If set to true, command names will be case sensitive                                                                                                                                                                                                                                                   |
+| caseSensitivePrefixes | ❌       | If set to true, prefixes will be case sensitive                                                                                                                                                                                                                                                        |
+| unkownCommandMessage  | ❌       | If set to true, the bot will respond with an error message if a command the user tried to use doesn't exist                                                                                                                                                                                            |
+| language              | ✅       | The default language used to sends messages in                                                                                                                                                                                                                                                         |
+| commands.slash        | ✅       | If set to true, the bot will only register slash commands. If set to false, the bot will only register message commands. If set to both, the bot will register both                                                                                                                                    |
+| commands.context      | ✅       | If set to user, the bot will register user context commands. If set to false, the bot will only register message commands. If set to message, the bot will register message context commands. If set to both, the bot will register both |
+| commands.prefix       | ❌       | The prefix the bot will use in message commands                                                                                                                                                                                                                                                        |
+| defaultCooldown       | ❌       | The default cooldown for commands                                                                                                                                                                                                                                                                      |
+| database              | ❌       | The database to store guild prefixes, etc. in                                                                                                                                                                                                                                                          |
 
 ::: warning
-You need to have discord.js version **atleast** v12
+You need to have `discord.js@12+`
 :::
-
-</language>
-<language lang="tk">
-
-::: warning
-Discord.JS'nin en az V12 sürümünü kullanıyor olman gerek
-:::
-
-</language>
