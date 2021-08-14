@@ -31,4 +31,9 @@ Event.ws = GEvents.Event.ws;
  */
 Event.run = () => GEvents.Event.run;
 
+/**
+ * Reloads the event
+ */
+Event.reload = () => GEvents.Event.reload;
+
 module.exports = Event;
