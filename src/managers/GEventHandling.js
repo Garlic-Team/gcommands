@@ -1,13 +1,13 @@
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const Color = require('../structures/Color'), { Events } = require('../util/Constants');
-const ifDjsV13 = require('../util/util').checkDjsVersion('13'), { inhibit, interactionRefactor } = require('../util/util')
+const { inhibit, interactionRefactor, channelTypeRefactor } = require('../util/util');
+const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
  * The GEventHandling class
 */
 class GEventHandling {
-
     /**
      * Creates new GEventHandling instance
      * @param {GCommandsClient} GCommandsClient
@@ -20,14 +20,14 @@ class GEventHandling {
         this.GCommandsClient = GCommandsClient;
 
         /**
-         * client
+         * Client
          * @type {Client}
         */
         this.client = GCommandsClient.client;
 
-        this.messageEvent()
-        this.slashEvent()
-        this.loadMoreEvents()
+        this.messageEvent();
+        this.slashEvent();
+        this.loadMoreEvents();
     }
 
     /**
@@ -35,185 +35,176 @@ class GEventHandling {
      * @returns {void}
      * @private
     */
-    async messageEvent() {
-        if((this.client.slash == false) || (this.client.slash == 'both')) {
-            this.client.on('message', async(message) => {
-                messageEventUse(message)
-            })
+    messageEvent() {
+        if (String(this.client.slash) === 'true') return;
 
-            this.client.on('messageUpdate', async(oldMessage, newMessage) => {
-                if(oldMessage.content == newMessage.content || oldMessage.embeds == newMessage.embeds) return;
-                messageEventUse(newMessage)
-            })
-        }
+        this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
+            messageEventUse(message);
+        });
 
-        let messageEventUse = async(message) => {
+        this.client.on('messageUpdate', (oldMessage, newMessage) => {
+            if (oldMessage.content === newMessage.content || oldMessage.embeds === newMessage.embeds) return;
+            messageEventUse(newMessage);
+        });
+
+        let messageEventUse = async message => {
             if (!message || !message.author || message.author.bot || !message.guild) return;
 
-            let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `)
+            let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `);
 
-            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : (await message.guild.getCommandPrefix()).filter(p => message.content.startsWith(p))
-            if(prefix.length === 0) return;
+            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : (await message.guild.getCommandPrefix()).filter(p => this.GCommandsClient.caseSensitivePrefixes ? message.content.toLowerCase().slice(0, p.length) === p.toLowerCase() : message.content.slice(0, p.length) === p);
+            if (prefix.length === 0) return;
 
-            if (this.GCommandsClient.caseSensitivePrefixes && !message.content.toLowerCase().startsWith(prefix[0].toLowerCase())) return;
-            else if (!message.content.startsWith(prefix[0])) return;
-        
-            const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
-
+            const [cmd, ...args] = message.content.slice(prefix[0].length).trim().split(/ +/g);
             if (cmd.length === 0) return;
-    
+
+            let commandos;
             try {
-                let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
-                if(!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
+                commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
+                if (!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
 
-                if(!commandos || String(commandos.slash) == 'true') return;
+                if (!commandos || String(commandos.slash) === 'true') return;
 
-                let member = message.member, guild = message.guild, channel = message.channel
+                let member = message.member, guild = message.guild, channel = message.channel;
                 let botMessageInhibit;
-                let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
+                let inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
                     message, member, guild, channel,
-                     respond: async(options = undefined) => {
-                        if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
+                     respond: async (options = undefined) => {
+                        if (this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
-                        let msg = await message.send(options);
+                        let msg = await message.reply(options);
                         botMessageInhibit = msg;
 
-                        if(this.client.autoTyping) channel.stopTyping(true);
+                        if (this.client.autoTyping) channel.stopTyping(true);
                         return msg;
                     },
-                    edit: async(options = undefined) => {
-                        if(!botMessageInhibit) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'))
-                        return await botMessageInhibit.edit(options);
-                    }
-                }, args, args)
-                if(inhibitReturn == false) return;
+                    edit: async (options = undefined) => {
+                        if (!botMessageInhibit) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
+                        let editedMsg = await botMessageInhibit.edit(options);
+                        return editedMsg;
+                    },
+                }, args, args);
+                if (inhibitReturn === false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
-                let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos)
-                if(cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
+                let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos);
+                if (cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
 
-                if(commandos.nsfw) {
-                    if(!message.channel.nsfw) {
-                        return ifDjsV13 ? message.inlineReply(this.client.languageFile.NSFW[guildLanguage]) : message.reply(this.client.languageFile.NSFW[guildLanguage]);
-                    }
+                if (commandos.guildOnly && message.guild.id !== commandos.guildOnly) return;
+
+                if (commandos.userOnly) {
+                    if (typeof commandos.userOnly === 'object') {
+                        let users = commandos.userOnly.some(v => message.author.id === v);
+                        if (!users) return;
+                    } else if (message.author.id !== commandos.userOnly) { return; }
                 }
 
-                if(commandos.guildOnly) {
-                    if(message.guild.id !== commandos.guildOnly) return;
-                } 
-
-                if(commandos.userOnly) {
-                    if(typeof commandos.userOnly == 'object') {
-                        let users = commandos.userOnly.some(v => message.author.id == v)
-                        if(!users) return;
-                    } else {
-                        if(message.author.id !== commandos.userOnly) return;
-                    }
+                if (commandos.channelOnly) {
+                    if (typeof commandos.channelOnly === 'object') {
+                        let channels = commandos.channelOnly.some(v => message.channel.id === v);
+                        if (!channels) return;
+                    } else if (message.channel.id !== commandos.channelOnly) { return; }
                 }
 
-                if(commandos.channelOnly) {
-                    if(typeof commandos.channelOnly == 'object') {
-                        let channels = commandos.channelOnly.some(v => message.channel.id == v)
-                        if(!channels) return;
-                    } else {
-                        if(message.channel.id !== commandos.channelOnly) return;
-                    }
-                }
+                let channelType = channelTypeRefactor(message.channel);
+                if (commandos.nsfw && !message.channel.nsfw) return message.reply(this.client.languageFile.NSFW[guildLanguage]);
+                if (commandos.channelTextOnly && channelType !== 'text') return message.reply(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage]);
+                if (commandos.channelNewsOnly && channelType !== 'news') return message.reply(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage]);
+                if (commandos.channelThreadOnly && channelType !== 'thread') return message.reply({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true });
 
-                if(commandos.channelTextOnly && message.channel.type != 'text') return message.send(this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage])
-                if(commandos.channelNewsOnly && message.channel.type != 'news') return message.send(this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage])
+                if (commandos.clientRequiredPermissions) {
+                    if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
-                if(commandos.clientRequiredPermissions) {
-                    if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
-
-                    if(message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
+                    if (message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
                         let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
-                        return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
+                        return message.reply(permsNeed);
                     }
                 }
 
-                if(commandos.userRequiredPermissions) {
-                    if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
+                if (commandos.userRequiredPermissions) {
+                    if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
-                    if(!member.permissions.has(commandos.userRequiredPermissions)) {
+                    if (!member.permissions.has(commandos.userRequiredPermissions)) {
                         let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
-                        return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
+                        return message.reply(permsNeed);
                     }
                 }
 
-                if(commandos.userRequiredRoles) {
-                    if(!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
+                if (commandos.userRequiredRoles) {
+                    if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
 
-                    let roles = commandos.userRequiredRoles.some(v => member._roles.includes(v))
-                    if(!roles) {
+                    let roles = commandos.userRequiredRoles.some(v => member._roles.includes(v));
+                    if (!roles) {
                         let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
-                        return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
+                        return message.reply(permsNeed);
                     }
                 }
 
-                if(commandos.userRequiredRole) {
-                    if(!Array.isArray(commandos.userRequiredRole)) commandos.userRequiredRole = [commandos.userRequiredRole];
-
-                    let roles = commandos.userRequiredRole.some(v => member._roles.includes(v))
-                    if(!roles) {
-                        let permsNeed = this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
-                        return ifDjsV13 ? message.inlineReply(permsNeed) : message.reply(permsNeed);
-                    }
-                }
-
-                for(let i in commandos.args) {
+                let objectArgs = {};
+                for (let i in commandos.args) {
                     let arg = new Argument(this.client, commandos.args[i]);
-                    if(arg.type == "invalid") continue;
+                    if (arg.type === 'invalid') continue;
 
-                    if(args[i]) {
-                        let argInvalid = await arg.argument.validate(arg, {content: args[i], guild: message.guild})
-                        if(argInvalid) {
-                            let argInput = await arg.obtain(message, argInvalid)
-                            if(!argInput.valid) argInput = await arg.obtain(message, argInput.prompt);
-        
-                            if(argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
-                            args[i] = argInput.content;
+                    let validArg = async prompt => {
+                        let final = await arg.obtain(message, prompt);
+                        if (!final.valid) return validArg(message, prompt);
+
+                        return final;
+                    };
+
+                    if (args[i]) {
+                        let argInvalid = await arg.argument.validate(arg, { content: args[i], guild: message.guild });
+                        if (argInvalid) {
+                            let argInput = await arg.obtain(message, argInvalid);
+                            if (!argInput.valid) argInput = await validArg(argInput.prompt);
+
+                            if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                            if (argInput.content !== 'skip') {
+                                args[i] = argInput.content;
+                                objectArgs[arg.name] = argInput.content;
+                            }
                         }
-    
+
                         continue;
                     }
 
-                    let argInput = await arg.obtain(message)
-                    if(!argInput.valid) argInput = await arg.obtain(message, argInput.prompt);
+                    let argInput = await arg.obtain(message);
+                    if (!argInput.valid) argInput = await validArg(argInput.prompt);
 
-                    if(argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
-                    args[i] = argInput.content;
+                    if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+
+                    if (argInput.content !== 'skip') {
+                        args[i] = argInput.content;
+                        objectArgs[arg.name] = argInput.content;
+                    }
                 }
 
-                this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + message.author.id + '&3 used &a' + cmd).getText())
+                this.client.emit(Events.COMMAND_EXECUTE, commandos, member);
 
-                const client = this.client, bot = this.client
+                const client = this.client, bot = this.client;
                 let botMessage;
                 commandos.run({
                     client, bot, message, member, guild, channel,
-                    respond: async(options = undefined) => {
-                        if(this.client.autoTyping) channel.startTyping(this.client.autoTyping);
+                    respond: async (options = undefined) => {
+                        if (this.client.autoTyping) ifDjsV13 ? channel.sendTyping() : channel.startTyping();
 
-                        let msg = await message.send(options);
+                        let msg = await message.reply(options);
                         botMessage = msg;
 
-                        if(this.client.autoTyping) channel.stopTyping(true);
+                        if (this.client.autoTyping && !ifDjsV13) channel.stopTyping(true);
                         return msg;
                     },
-                    edit: async(options = undefined) => {
-                        if(!botMessage) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'))
-                        return await botMessage.edit(options);
-                    }
-                }, args, args)
-            } catch(e) {
+                    edit: async (options = undefined) => {
+                        if (!botMessage) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
+                        let editedMsg = await botMessage.edit(options);
+                        return editedMsg;
+                    },
+                }, args, objectArgs);
+            } catch (e) {
+                this.client.emit(Events.COMMAND_ERROR, commandos, message.member, e);
                 this.GCommandsClient.emit(Events.DEBUG, e);
-
-                if(!this.GCommandsClient.unkownCommandMessage) return;
-                if(this.client.languageFile.UNKNOWN_COMMAND[this.client.language]) {
-                    message.channel.send(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace('{COMMAND}',cmd));
-                }
             }
-        }
+        };
     }
 
     /**
@@ -221,121 +212,112 @@ class GEventHandling {
      * @returns {void}
      * @private
     */
-    async slashEvent() {
-        if((this.client.slash) || (this.client.slash == 'both')) {
-            this.client.on('GInteraction', async (interaction) => {
-                if(interaction.type !== 2) return;
+    slashEvent() {
+        if (String(this.client.slash) === 'false') return;
 
-                try {
-                    let commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.interaction.name.toLowerCase() : interaction.interaction.name);
-                    if(!commandos || String(commandos.slash) == 'false') return;
+        this.client.on('GInteraction', async interaction => {
+            if (!interaction.isApplication()) return;
 
-                    let inhibitReturn = await inhibit(this.client, interactionRefactor(this.client, commandos), {
-                        interaction, 
-                        member: interaction.member,
-                        author: interaction.author,
-                        guild: interaction.guild, 
-                        channel: interaction.channel,
-                        respond: async(result) => {
-                            return interaction.reply.send(result);
-                        },
-                        edit: async(result) => {
-                            return interaction.reply.edit(result);
-                        }
-                    }, await this.getSlashArgs(interaction.interaction.options || []), await this.getSlashArgsObject(interaction.interaction.options || []))
-                    if(inhibitReturn == false) return;
+            let commandos;
+            try {
+                commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
+                if (!commandos || String(commandos.slash) === 'false') return;
 
-                    let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
-                    let cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos)
-                    if(cooldown.cooldown) return interaction.reply.send(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name))
+                let inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
+                    interaction,
+                    member: interaction.member,
+                    author: interaction.author,
+                    guild: interaction.guild,
+                    channel: interaction.channel,
+                    respond: result => interaction.reply.send(result),
+                    edit: result => interaction.reply.edit(result),
+                }, interaction.arrayArguments, interaction.objectArguments);
+                if (inhibitReturn === false) return;
 
-                    if(commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage])
+                let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
+                let cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos);
+                if (cooldown.cooldown) return interaction.reply.send(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
 
-                    if(commandos.userOnly) {
-                        if(typeof commandos.userOnly == 'object') {
-                            let users = commandos.userOnly.some(v => interaction.author.id == v)
-                            if(!users) return;
-                        } else {
-                            if(interaction.author.id !== commandos.userOnly) return;
-                        }
-                    }
+                if (commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage]);
 
-                    if(commandos.channelOnly) {
-                        if(typeof commandos.channelOnly == 'object') {
-                            let channels = commandos.channelOnly.some(v => interaction.channel.id == v);
-                            if(!channels) return;
-                        } else {
-                            if(interaction.channel.id !== commandos.channelOnly) return;
-                        }
-                    }
+                if (commandos.userOnly) {
+                    if (typeof commandos.userOnly === 'object') {
+                        let users = commandos.userOnly.some(v => interaction.author.id === v);
+                        if (!users) return;
+                    } else if (interaction.author.id !== commandos.userOnly) { return; }
+                }
 
-                    if(commandos.channelTextOnly && interaction.channel.type != 'text') return interaction.reply.send({content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true})
-                    if(commandos.channelNewsOnly && interaction.channel.type != 'news') return interaction.reply.send({content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true})
+                if (commandos.channelOnly) {
+                    if (typeof commandos.channelOnly === 'object') {
+                        let channels = commandos.channelOnly.some(v => interaction.channel.id === v);
+                        if (!channels) return;
+                    } else if (interaction.channel.id !== commandos.channelOnly) { return; }
+                }
 
-                    if(commandos.clientRequiredPermissions) {
-                        if(!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
+                let channelType = channelTypeRefactor(interaction.channel);
 
-                        if(interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) return interaction.reply.send({content: this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true})
-                    }
+                if (commandos.nsfw && !interaction.channel.nsfw) { return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true }); }
+                if (commandos.channelTextOnly && channelType !== 'text') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true }); }
+                if (commandos.channelNewsOnly && channelType !== 'news') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true }); }
+                if (commandos.channelThreadOnly && channelType !== 'thread') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true }); }
 
-                    if(commandos.userRequiredPermissions) {
-                        if(!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
+                if (commandos.clientRequiredPermissions) {
+                    if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
-                        if(!interaction.member.permissions.has(commandos.userRequiredPermissions)) return interaction.reply.send({content:this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true})
-                    }
-
-                    if((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
-                        if(commandos.userRequiredRole) commandos.userRequiredRoles = commandos.userRequiredRole;
-                        if(!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
-    
-                        let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v))
-                        if(!roles) return interaction.reply.send({content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true})
-                    }
-
-                    try {
-                        const client = this.client, bot = this.client
-                        commandos.run({
-                            client, bot, interaction,
-                            member: interaction.member,
-                            author: interaction.author,
-                            guild: interaction.guild, 
-                            channel: interaction.channel,   
-
-                            /**
-                             * Respond
-                             * @param {string|GPayloadOptions} result
-                             * @returns {Message}
-                             * @memberof GEventHandling
-                             */
-                            respond: async(result) => {
-                                return interaction.reply.send(result);
-                            },
-                            edit: async(result) => {
-                                return interaction.reply.edit(result);
-                            }
-                        }, this.getSlashArgs(interaction.interaction.options || []), this.getSlashArgsObject(interaction.interaction.options || []))
-                    } catch(e) {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3' + e).getText())
-                    }
-                    
-                    this.GCommandsClient.emit(Events.DEBUG, new Color('&d[GCommands Debug] &3User &a' + interaction.member.user.id + '&3 used &a' + interaction.interaction.name).getText())
-                }catch(e) {
-                    this.GCommandsClient.emit(Events.DEBUG, e);
-
-                    if(!this.unkownCommandMessage) return;
-                    if(this.client.languageFile.UNKNOWN_COMMAND[guildLanguage]) {
-                        this.client.api.interactions(interaction.id, interaction.token).callback.post({
-                            data: {
-                                type: 4,
-                                data: {
-                                    content: this.client.languageFile.UNKNOWN_COMMAND[guildLanguage].replace('{COMMAND}',interaction.data.name)
-                                }
-                            }
+                    if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
+                        return interaction.reply.send({ content:
+                            this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true,
                         });
                     }
                 }
-            })
-        }
+
+                if (commandos.userRequiredPermissions) {
+                    if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
+
+                    if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
+                        return interaction.reply.send({ content:
+                            this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true,
+                        });
+                    }
+                }
+
+                if ((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
+                    if (commandos.userRequiredRole) commandos.userRequiredRoles = commandos.userRequiredRole;
+                    if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
+
+                    let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v));
+                    if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
+                }
+
+                try {
+                    const client = this.client, bot = this.client;
+                    commandos.run({
+                        client, bot, interaction,
+                        member: interaction.member,
+                        author: interaction.author,
+                        guild: interaction.guild,
+                        channel: interaction.channel,
+
+                        /**
+                         * Respond
+                         * @param {string|GPayloadOptions} result
+                         * @returns {Message}
+                         * @memberof GEventHandling
+                         */
+                        respond: result => interaction.reply.send(result),
+                        edit: result => interaction.reply.edit(result),
+                    }, interaction.arrayArguments, interaction.objectArguments);
+                } catch (e) {
+                    this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
+                    this.GCommandsClient.emit(Events.DEBUG, e);
+                }
+
+                this.client.emit(Events.COMMAND_EXECUTE, commandos, interaction.member);
+            } catch (e) {
+                this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
+                this.GCommandsClient.emit(Events.DEBUG, e);
+            }
+        });
     }
 
     /**
@@ -345,58 +327,8 @@ class GEventHandling {
     */
     async loadMoreEvents() {
         await readdirSync(`${__dirname}/../base/actions/`).forEach(file => {
-            require(`../base/actions/${file}`)(this.client)
-        })
-    }
-
-    /**
-     * Internal method to getSlashArgs
-     * @returns {Array}
-     * @private
-    */
-    getSlashArgs(options) {
-        let args = [];
-  
-        let check = (option) => {
-          if (!option) return;
-          if (option.value) args.push(option.value);
-          else args.push(option.name);
-      
-          if (option.options) {
-            for (let o = 0; o < option.options.length; o++) {
-              check(option.options[o]);
-            }
-          }
-        }
-      
-        if (Array.isArray(options)) {
-          for (let o = 0; o < options.length; o++) {
-            check(options[o]);
-          }
-        } else {
-          check(options);
-        }
-      
-        return args;
-    }
-
-    /**
-     * Internal method to getSlashArgsObject
-     * @returns {object}
-     * @private
-    */
-    getSlashArgsObject(options) {
-        let args = {};
-
-        for (let o of options) {
-          if (o.type == 1) args[o.name] = this.getSlashArgsObject(o.options || []);
-          else if (o.type == 2) args[o.name] = this.getSlashArgsObject(o.options || []); 
-          else {
-              args[o.name] = o.value;
-          }
-        }
-        
-        return args;
+            require(`../base/actions/${file}`)(this.client);
+        });
     }
 }
 

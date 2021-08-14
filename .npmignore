@@ -13,6 +13,8 @@ deploy/
 .tmp/
 .vscode/
 docs/
+.github/
 
 # NPM ignore
 jsdoc.json
+.eslintrc.json

@@ -4,7 +4,7 @@ const { Events } = require('discord.js').Constants;
 
 /**
  * Collects menus on a message.
- * Will automatically stop if the channel (`'channelDelete'`), guild (`'guildDelete'`) or (`'messageDelete'`) are deleted.
+ * Will automatically stop if the channel (`'channelDelete'`), guild (`'guildDelete'`) or message (`'messageDelete'`) are deleted.
  * @extends {Collector}
  */
  class SelectMenuCollector extends Collector {
@@ -15,16 +15,17 @@ const { Events } = require('discord.js').Constants;
    */
   constructor(message, filter, options = {}) {
     super(message.client, filter, options);
+
     this.message = message;
 
     /**
-     * users
+     * Users
      * @type {Collection}
      */
     this.users = new Collection();
 
     /**
-     * total
+     * Total
      * @type {Number}
      */
     this.total = 0;
@@ -34,21 +35,21 @@ const { Events } = require('discord.js').Constants;
     this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
     this._handleMessageDeletion = this._handleMessageDeletion.bind(this);
 
-    this.client.incrementMaxListeners();
-    this.client.on('selectMenu', this.handleCollect);
-    this.client.on(Events.MESSAGE_DELETE, this._handleMessageDeletion);
-    this.client.on(Events.CHANNEL_DELETE, this._handleChannelDeletion);
-    this.client.on(Events.GUILD_DELETE, this._handleGuildDeletion);
+    this.message.client.incrementMaxListeners();
+    this.message.client.on('selectMenu', this.handleCollect);
+    this.message.client.on(Events.MESSAGE_DELETE, this._handleMessageDeletion);
+    this.message.client.on(Events.CHANNEL_DELETE, this._handleChannelDeletion);
+    this.message.client.on(Events.GUILD_DELETE, this._handleGuildDeletion);
 
     this.once('end', () => {
-      this.client.removeListener('selectMenu', this.handleCollect);
-      this.client.removeListener(Events.MESSAGE_DELETE, this._handleMessageDeletion);
-      this.client.removeListener(Events.CHANNEL_DELETE, this._handleChannelDeletion);
-      this.client.removeListener(Events.GUILD_DELETE, this._handleGuildDeletion);
-      this.client.decrementMaxListeners();
+      this.message.client.removeListener('selectMenu', this.handleCollect);
+      this.message.client.removeListener(Events.MESSAGE_DELETE, this._handleMessageDeletion);
+      this.message.client.removeListener(Events.CHANNEL_DELETE, this._handleChannelDeletion);
+      this.message.client.removeListener(Events.GUILD_DELETE, this._handleGuildDeletion);
+      this.message.client.decrementMaxListeners();
     });
 
-    this.on('collect', (menu) => {
+    this.on('collect', menu => {
       this.total++;
       this.users.set(menu.clicker.user.id, menu.clicker.user);
     });
@@ -61,7 +62,7 @@ const { Events } = require('discord.js').Constants;
    * @private
    */
   collect(menu) {
-    if(this.message.unstable) return SelectMenuCollector.key(menu)
+    if (this.message.unstable) return SelectMenuCollector.key(menu);
     if (menu.message.id !== this.message.id) return null;
     return SelectMenuCollector.key(menu);
   }

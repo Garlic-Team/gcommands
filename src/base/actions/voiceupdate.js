@@ -1,19 +1,18 @@
-module.exports = (client) => {
-    client.on('voiceStateUpdate', async(oldState, newState) => {
-        const oldMember = oldState.member;
+module.exports = client => {
+    client.on('voiceStateUpdate', (oldState, newState) => {
         const newMember = newState.member;
 
         if (!oldState.channel && newState.channel) {
             client.emit('voiceChannelJoin',
                 newMember,
-                newState.channel
+                newState.channel,
             );
         }
 
         if (oldState.channel && !newState.channel) {
             client.emit('voiceChannelLeave',
                 newMember,
-                oldState.channel
+                oldState.channel,
             );
         }
 
@@ -21,7 +20,7 @@ module.exports = (client) => {
             client.emit('voiceChannelSwitch',
                 newMember,
                 oldState.channel,
-                newState.channel
+                newState.channel,
             );
         }
 
@@ -29,7 +28,7 @@ module.exports = (client) => {
             let muteType = newState.selfMute ? 'self-muted' : 'server-muted';
             client.emit('voiceChannelMute',
                 newMember,
-                muteType
+                muteType,
             );
         }
 
@@ -37,38 +36,38 @@ module.exports = (client) => {
             let muteType = oldState.selfMute ? 'self-muted' : 'server-muted';
             client.emit('voiceChannelUnmute',
                 newMember,
-                muteType
+                muteType,
             );
         }
 
         if (!oldState.deaf && newState.deaf) {
-            let deafType = newState.selfDeaf ? 'self-deafed' : 'server-v';
-            client.emit('voiceChannelDeaf',
+            let deafType = newState.selfDeaf ? 'self-deafened' : 'server-deafened';
+            client.emit('voiceChannelDeafen',
                 newMember,
-                deafType
+                deafType,
             );
         }
 
         if (oldState.deaf && !newState.deaf) {
-            let deafType = oldState.selfDeaf ? 'self-deafed' : 'server-v';
-            client.emit('voiceChannelUndeaf',
+            let deafType = oldState.selfDeaf ? 'self-deafened' : 'server-deafened';
+            client.emit('voiceChannelUndeafen',
                 newMember,
-                deafType
+                deafType,
             );
         }
 
         if (!oldState.streaming && newState.streaming) {
             client.emit('voiceStreamingStart',
                 newMember,
-                newState.channel
+                newState.channel,
             );
         }
 
         if (oldState.streaming && !newState.streaming) {
             client.emit('voiceStreamingStop',
                 newMember,
-                newState.channel
+                newState.channel,
             );
         }
-    })
-}
+    });
+};

@@ -1,4 +1,5 @@
-const { version } = require('discord.js');
+const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
+const { InteractionTypes, MessageComponentTypes } = require('./Constants');
 
 /**
  * The Util class
@@ -43,30 +44,45 @@ class Util {
      * @param {GInteraction} interaction
      * @returns {Object}
     */
-    static interactionRefactor(client, interaction, raw = false) {
-        let is = {
-            button: false,
-            menu: false,
-            command: false,
-        }
+    static interactionRefactor(interaction, cmd) {
+        interaction.inGuild = () => Boolean(interaction.guild && interaction.member);
 
-        if(interaction.name && client.gcommands.get(interaction.name)) {
-            is.command = true;
-        }
+        interaction.isApplication = () => InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND;
+        interaction.isCommand = () => cmd ? true : false || (InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND && String(interaction.targetType) === 'undefined');
+        interaction.isContextMenu = () => InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND && String(interaction.targetType) !== 'undefined';
 
-        if(interaction.componentType == 2) {
-            is.button = true;
-        }
+        interaction.isMessageComponent = () => InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT;
 
-        if(interaction.componentType == 3) {
-            is.menu = true;
-        }
+        interaction.isButton = () => (
+            InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
+            MessageComponentTypes[interaction.componentType] === MessageComponentTypes.BUTTON
+        );
 
-        interaction.isCommand = () => is.command;
-        interaction.isButton = () => is.button;
-        interaction.isSelectMenu = () => is.menu;
-        if(!raw) return interaction;
-        else return { c: is.command, b: is.button, m: is.menu }
+        interaction.isSelectMenu = () => (
+            InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
+            MessageComponentTypes[interaction.componentType] === MessageComponentTypes.SELECT_MENU
+        );
+
+        return interaction;
+    }
+
+    /**
+     * Internal method to channelTypeRefactor
+     * @param {Channel} channel
+     * @returns {Object}
+    */
+    static channelTypeRefactor(channel) {
+        let finalResult;
+
+        if (!channel) return null;
+        if (channel instanceof TextChannel) finalResult = 'text';
+        if (channel instanceof NewsChannel) finalResult = 'news';
+        if (channel instanceof DMChannel) finalResult = 'dm';
+        if (channel.type === 'GUILD_NEWS_THREAD') finalResult = 'thread';
+        if (channel.type === 'GUILD_PUBLIC_THREAD') finalResult = 'thread';
+        if (channel.type === 'GUILD_PRIVATE_THREAD') finalResult = 'thread';
+
+        return finalResult;
     }
 
     /**
@@ -77,7 +93,7 @@ class Util {
      * @returns {object}
     */
     static inhibit(client, interaction, data) {
-		for(const inhibitor of client.inhibitors) {
+		for (const inhibitor of client.inhibitors) {
 			let inhibit = inhibitor(interaction, data);
 			return inhibit;
 		}
@@ -103,31 +119,43 @@ class Util {
     */
     static async __deleteCmd(client, commandId, guildId = undefined) {
         try {
-            const app = client.api.applications(client.user.id)
-            if(guildId) {
-                app.guilds(guildId)
+            const app = client.api.applications(client.user.id);
+            if (guildId) {
+                app.guilds(guildId);
             }
 
-            await app.commands(commandId).delete()
-        } catch(e) {return;}
+            await app.commands(commandId).delete();
+        } catch (e) {
+            return null;
+        }
     }
 
     /**
-     * Internal method to getAllCmds
+     * Internal method to getAllCommands
      * @param {Client} client
      * @param {Number} guildId
      * @private
     */
     static async __getAllCommands(client, guildId = undefined) {
+        if (client._applicationCommandsCache) {
+            if (guildId && client._applicationCommandsCache[guildId]) return client._applicationCommandsCache[guildId];
+            else if (!guildId) return client._applicationCommandsCache.global;
+        }
+
         try {
-            const app = client.api.applications(client.user.id)
-            if(guildId) {
-                app.guilds(guildId)
+            const app = client.api.applications(client.user.id);
+            if (guildId) {
+                app.guilds(guildId);
             }
 
-            return await app.commands.get()
-        } catch(e) {
-            return undefined;
+            const cmds = await app.commands.get();
+
+            if (guildId) client._applicationCommandsCache[guildId] = cmds;
+            else client._applicationCommandsCache.global = cmds;
+
+            return cmds;
+        } catch (e) {
+            return [];
         }
     }
 
@@ -137,9 +165,9 @@ class Util {
      * @returns {Boolean}
      * @private
     */
-    static checkDjsVersion(needVer) {
+     static checkDjsVersion(needVer) {
         let ver = parseInt(version.split('')[0] + version.split('')[1]);
-        if(ver == parseInt(needVer)) {
+        if (ver === parseInt(needVer)) {
             return true;
         } else {
             return false;

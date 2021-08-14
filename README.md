@@ -8,58 +8,35 @@
   <p>
     <a href="https://www.npmjs.com/package/gcommands"><img src="https://nodei.co/npm/gcommands.png?downloads=true&stars=true" alt="NPM Banner"></a>
   </p>
+  <p>
+    <a href="https://ko-fi.com/H2H05FNRL"><img src="https://garlic-team.github.io/GarMod/sources/support-ko-fi.svg" height="30" /></a>
+    <a href="https://github.com/Garlic-Team/GCommands"><img src="https://garlic-team.github.io/GarMod/sources/open-source.svg" height="30" /></a>
+    <img src="https://forthebadge.com/images/badges/made-with-javascript.svg" height="30" />
+  </p>
 </div>
 
 ---
 
-### 📂 | Installation
+## 📂 | Installation
+
 ```sh
 npm install gcommands
-yarn install gcommands
+yarn add gcommands
 
 # Dev Build
-npm install Garlic-Team/GCommands#dev
-yarn install Garlic-Team/GCommands#dev
+npm install gcommands@dev
+yarn add gcommands@dev
 ```
 
-If you're updating from 4.x to 5.x, check https://gcommands.js.org/guide/guide/additional/fromv4tov5.html
+## 🐢 | Guide & Documentation
+To help you learn more with GCommands we have a [guide](https://gcommands.js.org/guide/) and [documentation](https://gcommands.js.org/docs/) for you.  
+If you are still having trouble, you can join our [Garlic Team](https://discord.gg/AjKJSBbGm2) discord server.
 
-### 📜 | Setup
-```js
-const { Client } = require("discord.js")
-const { GCommands } = require("gcommands")
-const client = Client();
+## 👀 | Features
 
-client.on("ready", () => {
-    const gc = new GCommands(client, {
-        cmdDir: "commands/",
-        eventDir: "events/",
-        language: "english",
-        unkownCommandMessage: false,
-        slash: {
-            slash: "both",
-            prefix: "."
-        },
-        database: "url"
-        /* DB SUPPORT
-         * redis://user:pass@localhost:6379
-         * mongodb://user:pass@localhost:27017/dbname
-         * sqlite://path/to/database.sqlite
-         * postgresql://user:pass@localhost:5432/dbname
-         * mysql://user:pass@localhost:3306/dbname
-        */
-    })
-
-    gc.on("debug", (debug)=>{console.log(debug)})
-    gc.on("log", (log)=>{console.log(log)})
-})
-
-client.login("bot token")
-```
-
-### ✍ | Examples
-You can find everything in the [guide](https://gcommands.js.org/guide/) and [docs](https://gcommands.js.org/docs/).<br>
-Join our [discord server](https://discord.gg/AjKJSBbGm2), if you need help or have any questions.
-
-### 👥 | Contact
-<a href="https://discord.gg/AjKJSBbGm2"><img src="https://discord.com/api/guilds/833628077556367411/widget.png?style=banner1"></a>
+- Command Handler, Event Handler
+- Supports slash, legacy and context menus commands
+- Supports custom i18n messages
+- Supports discord.js v12 and v13
+- Simply have a legacy and slash command in 1 file
+- Supports many types of arguments

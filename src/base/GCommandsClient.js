@@ -1,4 +1,3 @@
-const EventEmitter = require('events');
 const GCommandLoader = require('../managers/GCommandLoader'),
     Color = require('../structures/Color'),
     GCommandsDispatcher = require('./GCommandsDispatcher'),
@@ -8,23 +7,21 @@ const GCommandLoader = require('../managers/GCommandLoader'),
     { Events } = require('../util/Constants'),
     GUpdater = require('../util/updater');
 
-const { Collection } = require('discord.js');
+const { Collection, Client } = require('discord.js');
 const fs = require('fs');
 
 /**
- * The main GCommands class
+ * The main GCommandsClient class
+ * @extends Client
  */
-class GCommands extends EventEmitter {
+class GCommandsClient extends Client {
     /**
-     * The GCommands class
-     * @param {Client} client - Discord.js Client
-     * @param {GCommandsOptions} options - Options (cmdDir, eventDir etc)
+     * The GCommandsClient class
+     * @param {GCommandsOptions} options - Options (Discord.js client options, GCommandOptions)
      */
-    constructor(client, options = {}) {
-        super(client, options);
+    constructor(options = {}) {
+        super(options);
 
-        if (typeof client !== 'object') return console.log(new Color('&d[GCommands] &cNo discord.js client provided!',{ json: false }).getText());
-        if (!Object.keys(options).length) return console.log(new Color('&d[GCommands] &cNo default options provided!',{ json: false }).getText());
         if (!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{ json: false }).getText());
         if (!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language)',{ json: false }).getText());
         if (String(options.commands.slash) !== 'false' && !options.commands.prefix) return console.log(new Color('&d[GCommands] &cNo default options provided! (commands#prefix)',{ json: false }).getText());
@@ -34,26 +31,22 @@ class GCommands extends EventEmitter {
          * @type {GCommands}
         */
         this.GCommandsClient = this;
-
-        /**
-         * Client
-         * @type {Client}
-        */
-        this.client = client;
+        this.GCommandsClient.client = this;
+        this.client = this;
 
         /**
          * CaseSensitiveCommands
          * @type {Boolean}
          * @default true
         */
-        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true;
+        this.caseSensitiveCommands = options.caseSensitiveCommands ? Boolean(options.caseSensitiveCommands) : true;
 
         /**
          * CaseSensitivePrefixes
          * @type {Boolean}
          * @default true
         */
-        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true;
+        this.caseSensitivePrefixes = options.caseSensitivePrefixes ? Boolean(options.caseSensitivePrefixes) : true;
 
         /**
          * CmdDir
@@ -118,7 +111,7 @@ class GCommands extends EventEmitter {
          * @type {string}
          * @default undefined
          */
-         this.prefix = !Array.isArray(options.commands.prefix) ? Array(options.commands.prefix) : options.commands.prefix;
+        this.prefix = !Array.isArray(options.commands.prefix) ? Array(options.commands.prefix) : options.commands.prefix;
 
         /**
          * Slash
@@ -127,11 +120,11 @@ class GCommands extends EventEmitter {
          */
         this.slash = options.commands.slash ? options.commands.slash : false;
 
-         /**
-          * Context
-          * @type {string}
-          * @default false
-          */
+        /**
+         * Context
+         * @type {string}
+         * @default false
+         */
         this.context = options.commands.context ? options.commands.context : false;
 
         /**
@@ -146,33 +139,24 @@ class GCommands extends EventEmitter {
          * @type {GCommandsDispatcher}
          * @readonly
          */
-        this.client.dispatcher = new GCommandsDispatcher(this.GCommandsClient, false);
-
-        this.client.language = this.language;
-        this.client.languageFile = this.languageFile;
-        this.client.database = this.database;
-        this.client.prefix = this.prefix;
-        this.client.slash = this.slash;
-        this.client.context = this.context;
-        this.client.defaultCooldown = this.defaultCooldown;
-        this.client.autoTyping = this.autoTyping;
-        this.client.gcategories = this.gcategories;
-        this.client.galiases = this.galiases;
-        this.client.gcommands = this.gcommands;
+        this.dispatcher = new GCommandsDispatcher(this.GCommandsClient, true);
 
         process.on('uncaughtException', error => {
             this.emit(Events.LOG, new Color(`&d[GCommands Errors] &eHandled: &a${error} ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
             setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
         });
 
-        process.emitWarning('GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.');
+        new GDatabaseLoader(this.GCommandsClient);
 
-        this.loadSys();
+        setImmediate(() => {
+            super.on('ready', () => {
+                this.loadSys();
+            });
+        });
         GUpdater.__updater();
     }
 
     loadSys() {
-        new GDatabaseLoader(this.GCommandsClient);
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 
@@ -189,4 +173,4 @@ class GCommands extends EventEmitter {
     };
 }
 
-module.exports = GCommands;
+module.exports = GCommandsClient;

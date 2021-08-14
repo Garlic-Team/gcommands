@@ -4,10 +4,9 @@ const { resolveString, parseEmoji } = require('../util/util');
  * The MessageSelectMenuOption class
  */
 class MessageSelectMenuOption {
-
     /**
      * Creates new MessageSelectMenuOption instance
-     * @param {Object} data 
+     * @param {Object} data
     */
     constructor(data = {}) {
         this.setup(data);
@@ -15,38 +14,38 @@ class MessageSelectMenuOption {
 
     /**
      * Setup
-     * @param {Object} data 
+     * @param {Object} data
      * @returns {MessageButton}
      * @private
      */
     setup(data) {
         /**
-         * label
-         * @type {string} 
+         * Label
+         * @type {string}
         */
         this.label = 'label' in data ? resolveString(data.label) : null;
 
         /**
-         * value
-         * @type {string} 
+         * Value
+         * @type {string}
         */
         this.value = 'value' in data ? resolveString(data.value) : null;
 
         /**
-         * description
-         * @type {string} 
+         * Description
+         * @type {string}
         */
         this.description = 'description' in data ? resolveString(data.description) : null;
 
         /**
-         * emoji
-         * @type {string} 
+         * Emoji
+         * @type {string}
         */
         this.emoji = 'emoji' in data ? parseEmoji(data.emoji) : null;
 
         /**
-         * default
-         * @type {Boolean} 
+         * Default
+         * @type {Boolean}
         */
         this.default = 'default' in data ? Boolean(data.default) : false;
 
@@ -55,7 +54,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setLabel
-     * @param {String} label 
+     * @param {String} label
     */
     setLabel(label) {
         this.label = resolveString(label);
@@ -64,7 +63,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setValue
-     * @param {String} value 
+     * @param {String} value
     */
     setValue(value) {
         this.value = resolveString(value);
@@ -73,7 +72,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setValue
-     * @param {String} desc 
+     * @param {String} desc
     */
     setDescription(desc) {
         this.description = resolveString(desc);
@@ -82,7 +81,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setEmoji
-     * @param {String} emoji  
+     * @param {String} emoji
     */
     setEmoji(emoji) {
         this.emoji = parseEmoji(`${emoji}`);
@@ -91,10 +90,10 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setDefault
-     * @param {Boolean} default  
+     * @param {Boolean} default
     */
     setDefault(def = true) {
-        this.default = Boolean(def)
+        this.default = Boolean(def);
         return this;
     }
 
@@ -108,8 +107,8 @@ class MessageSelectMenuOption {
             value: this.value,
             description: this.description,
             emoji: this.emoji,
-            default: this.default
-        }
+            default: this.default,
+        };
     }
 }
 
