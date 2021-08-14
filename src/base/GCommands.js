@@ -26,7 +26,8 @@ class GCommands extends EventEmitter {
         if (typeof client !== 'object') return console.log(new Color('&d[GCommands] &cNo discord.js client provided!',{ json: false }).getText());
         if (!Object.keys(options).length) return console.log(new Color('&d[GCommands] &cNo default options provided!',{ json: false }).getText());
         if (!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{ json: false }).getText());
-        if (!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language (english, spanish, portuguese, russian, german, czech, slovak, turkish))',{ json: false }).getText());
+        if (!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language)',{ json: false }).getText());
+        if(String(options.commands.slash) !== 'false' && !options.prefix) return console.log(new Color('&d[GCommands] &cNo default options provided! (commands#prefix)',{ json: false }).getText());
 
         /**
          * GCommandsClient

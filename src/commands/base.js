@@ -179,13 +179,13 @@ class Command {
 
         if (!(newCommand instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${newCommand.name} doesnt belong in Commands.`).getText());
 
-		if (newCommand.name !== this.name) return console.log(new Color('&d[GCommands] &cCommand name cannot change.').getText());
-		if (newCommand.guildOnly !== this.guildOnly) return console.log(new Color('&d[GCommands] &cCommand guildOnly cannot change.').getText());
+        if (newCommand.name !== this.name) return console.log(new Color('&d[GCommands] &cCommand name cannot change.').getText());
+        if (newCommand.guildOnly !== this.guildOnly) return console.log(new Color('&d[GCommands] &cCommand guildOnly cannot change.').getText());
 
         newCommand._path = cmdPath;
         this.client.gcommands.set(newCommand.name, newCommand);
         return true;
-	}
+    }
 }
 
 module.exports = Command;
