@@ -37,8 +37,8 @@ class GCommandLoader {
          * @type {Object}
         */
         this._allGlobalCommands = __getAllCommands(this.client);
-        
-        this.client._applicationCommandsCache = new Array();
+
+        this.client._applicationCommandsCache = [];
 
         this.__loadCommandFiles();
     }
@@ -120,10 +120,10 @@ class GCommandLoader {
             if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
             let ifAlready;
-            if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && c.type === 1)
-            else ifAlready = (await _allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
+            if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
+            else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
-            if(ifAlready.length > 0 && ifAlready[0].description === cmd.description &&  ifAlready[0].args === cmd.args) {
+            if (ifAlready.length > 0 && ifAlready[0].description === cmd.description && ifAlready[0].args === cmd.args) {
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 continue;
             }
@@ -188,10 +188,10 @@ class GCommandLoader {
             if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
             let ifAlready;
-            if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type))
-            else ifAlready = (await _allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
+            if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
+            else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
 
-            if(ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
+            if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
                 continue;
             }
