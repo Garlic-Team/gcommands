@@ -20,9 +20,7 @@ jobs:
         run: npm run test
         id: eslint
         continue-on-error: true
-  automate-pullrequest-review:
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Success
         if: steps.eslint.outputs.status == 'success'
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
