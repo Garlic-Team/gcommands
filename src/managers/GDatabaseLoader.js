@@ -1,3 +1,5 @@
+const GError = require('../structures/GError');
+
 /**
  * The GDatabaseLoader class
  */
@@ -30,8 +32,12 @@ class GDatabaseLoader {
     __loadDB() {
         let dbType = this.GCommandsClient.database;
         if (!dbType) { this.client.database = undefined; } else {
-            const Keyv = require('keyv');
-            this.client.database = new Keyv(dbType);
+            try {
+                const Keyv = require('keyv');
+                this.client.database = new Keyv(dbType);
+            } catch(e) {
+                throw new GError("[DATABASE]", e)
+            }
         }
     }
 }
