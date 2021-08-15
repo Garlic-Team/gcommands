@@ -1,6 +1,6 @@
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
-const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events } = require('../util/Constants');
+const GError = require('../structures/GError'), { Events } = require('../util/Constants');
 const { inhibit, interactionRefactor, channelTypeRefactor } = require('../util/util');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 

@@ -61,7 +61,7 @@ class GCommandLoader {
             file = await require(`../../../../${this.cmdDir}${file}`);
             if (isClass(file)) {
                 file = await new file(this.client);
-                if (!(file instanceof Command)) throw new GError('[COMMAND]',`Command ${fileName} doesnt belong in Commands.`)
+                if (!(file instanceof Command)) throw new GError('[COMMAND]',`Command ${fileName} doesnt belong in Commands.`);
             }
 
             file._path = `../../../../${this.cmdDir}/${fileName}.${fileType}`;
@@ -88,7 +88,7 @@ class GCommandLoader {
             file = await require(`../../../../${this.cmdDir}${categoryFolder}/${file}`);
             if (isClass(file)) {
                 file = await new file(this.client);
-                if (!(file instanceof Command)) throw new GError('[COMMAND]',`Command ${fileName} doesnt belong in Commands.`)
+                if (!(file instanceof Command)) throw new GError('[COMMAND]',`Command ${fileName} doesnt belong in Commands.`);
             }
 
             file._path = `../../../../${this.cmdDir}${categoryFolder}/${fileName}.${fileType}`;
