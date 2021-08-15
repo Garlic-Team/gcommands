@@ -28,7 +28,7 @@ jobs:
 
       - name: Success
         if: ${{ steps.eslint.outcome == 'success' }}
-        uses: golfzaptw/action-auto-reviews-from-branches@master
+        uses: omio-labs/pr-reviewer-bot@v1
         with:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           EVENT_TYPE: APPROVE
