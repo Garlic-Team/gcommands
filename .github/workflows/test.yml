@@ -28,15 +28,15 @@ jobs:
 
       - name: Success
         if: ${{ steps.eslint.outcome == 'success' }}
-        uses: andrewmusgrave/automatic-pull-request-review@0.0.5
+        uses: golfzaptw/action-auto-reviews-from-branches@master
         with:
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
-          event: APPROVE
-          body: 'Everything is fine.'
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          EVENT_TYPE: APPROVE
+          MESSAGE: 'Everything is fine.'
       - name: Failure
         if: ${{ steps.eslint.outcome != 'success' }}
-        uses: andrewmusgrave/automatic-pull-request-review@0.0.5
+        uses: golfzaptw/action-auto-reviews-from-branches@master
         with:
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
-          event: REQUEST_CHANGES
-          body: 'ESLint found errors. Please correct them. ${{ github.job }}'
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          EVENT_TYPE: REQUEST_CHANGES
+          MESSAGE: 'ESLint found errors. Please correct them. ${{ github.job }}'
