@@ -21,13 +21,13 @@ jobs:
       - name: Run Labeler
         uses: crazy-max/ghaction-github-labeler@v3
         with:
-          github-token: ${{ secrets.ACCESS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
   label-approved:
     runs-on: ubuntu-latest
     steps:
     - uses: docker://tiangolo/label-approved:0.0.2
       with:
-        token: ${{ secrets.ACCESS_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         config: >
           {
             "s: awaiting review":
