@@ -141,11 +141,6 @@ class GCommandsClient extends Client {
          */
         this.dispatcher = new GCommandsDispatcher(this.GCommandsClient, true);
 
-        process.on('uncaughtException', error => {
-            this.emit(Events.LOG, new Color(`&d[GCommands Errors] &eHandled: &a${error} ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
-            setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
-        });
-
         new GDatabaseLoader(this.GCommandsClient);
 
         setImmediate(() => {
