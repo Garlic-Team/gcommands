@@ -28,6 +28,15 @@ jobs:
 
       - name: Success
         if: ${{ steps.eslint.outcome == 'success' }}
-        uses: omio-labs/pr-reviewer-bot@v1
+        uses: xHyroM/automatic-pull-request-review@0.1.1
         with:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          repo-token: ${{ secrets.ACCESS_TOKEN }}
+          event: APPROVE
+          body: 'Everything is fine.'
+      - name: Failure
+        if: ${{ steps.eslint.outcome != 'success' }}
+        uses: xHyroM/automatic-pull-request-review@0.1.1
+        with:
+          repo-token: ${{ secrets.ACCESS_TOKEN }}
+          event: REQUEST_CHANGES
+          body: 'ESLint found errors. Please correct them. ${{ github.job }}'
