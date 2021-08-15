@@ -20,6 +20,11 @@ jobs:
         run: npm run test
         id: eslint
 
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+
       - name: Success
         if: steps.eslint.outputs.status == 'success'
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
