@@ -89,7 +89,7 @@ class GCommandsDispatcher {
         if (!this.client.database) return this.client.prefix;
 
         let guild = this.client.guilds.cache.get(guildId);
-        if (guild.prefix && !Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix);
+        if (guild && guild.prefix && !Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix);
         else cache = false;
 
         if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
@@ -206,7 +206,7 @@ class GCommandsDispatcher {
         if (!this.client.database) return this.client.language;
 
         let guild = this.client.guilds.cache.get(guildId);
-        if (!guild.language) cache = false;
+        if (!guild || !guild.language) cache = false;
 
         if (cache) return guild.language ? guild.language : this.client.language;
 
