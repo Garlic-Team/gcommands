@@ -1,5 +1,5 @@
 name: Testing
-on: [push, pull_request]
+on: [pull_request]
 jobs:
   lint:
     name: ESLint
@@ -21,22 +21,17 @@ jobs:
         id: eslint
         continue-on-error: true
 
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-
       - name: Success
         if: ${{ steps.eslint.outcome == 'success' }}
-        uses: xHyroM/Review-beta@1.0.1
+        uses: xHyroM/Review-beta@1.0.2
         with:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           EVENT_TYPE: APPROVE
           MESSAGE: 'Everything is fine.'
       - name: Failure
         if: ${{ steps.eslint.outcome != 'success' }}
-        uses: xHyroM/Review-beta@1.0.1
+        uses: xHyroM/Review-beta@1.0.2
         with:
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
-          event: REQUEST_CHANGES
-          body: 'ESLint found errors. Please correct them. ${{ github.job }}'
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          EVENT_TYPE: REQUEST_CHANGES
+          MESSAGE: 'ESLint found errors. Please correct them. ${{ github.job }}'
