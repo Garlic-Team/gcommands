@@ -69,6 +69,7 @@ class GEventHandling {
                 let botMessageInhibit;
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
                     message, member, guild, channel,
+                    author: message.author,
                      respond: async (options = undefined) => {
                         if (this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
@@ -185,6 +186,7 @@ class GEventHandling {
                 let botMessage;
                 commandos.run({
                     client, bot, message, member, guild, channel,
+                    author: message.author,
                     respond: async (options = undefined) => {
                         if (this.client.autoTyping) ifDjsV13 ? channel.sendTyping() : channel.startTyping();
 
