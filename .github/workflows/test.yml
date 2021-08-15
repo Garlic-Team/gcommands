@@ -26,14 +26,14 @@ jobs:
         run: echo "$STEPS_CONTEXT"
 
       - name: Success
-        if: steps.eslint.outputs.status == 'success'
+        if: ${{ steps.eslint.outputs.status == 'success' }}
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
         with:
           repo-token: ${{ secrets.ACCESS_TOKEN }}
           event: APPROVE
           body: 'Everything is fine.'
       - name: Failure
-        if: steps.eslint.outputs.status == 'failure'
+        if: ${{ steps.eslint.outputs.status == 'failure' }}
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
         with:
           repo-token: ${{ secrets.ACCESS_TOKEN }}
