@@ -204,9 +204,13 @@ class GCommandsDispatcher {
     */
     async getGuildLanguage(guildId, cache = true) {
         if (!this.client.database) return this.client.language;
-        if (cache) return this.client.guilds.cache.get(guildId).language ? this.client.guilds.cache.get(guildId).language : this.client.language;
 
-        let guildData = await this.client.database.get(`guild_${guildId}`);
+        let guild = this.client.guilds.cache.get(guildId);
+        if (!guild.language) cache = false;
+
+        if (cache) return guild.language ? guild.language : this.client.language;
+
+        let guildData = await this.client.database.get(`guild_${guildId}`) || {};
         return guildData ? guildData.language : this.client.language;
     }
 
