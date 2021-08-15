@@ -39,8 +39,7 @@ let msg = await channel.send({
 });
 let filter = (interaction) =>
   interaction.isButton() && btn.author.id === author.id;
-let collector = msg.createMessageComponentCollector({
-  filter,
+let collector = msg.createMessageComponentCollector(filter, {
   max: 3,
   time: 120000,
 });
@@ -124,8 +123,7 @@ let msg = await respond({
 });
 let filter = (interaction) =>
   interaction.isButton() && interaction.author.id === author.id;
-let clicked = await msg.awaitMessageComponents({
-  filter,
+let clicked = await msg.awaitMessageComponents(filter, {
   max: 3,
   time: 120000,
 });

@@ -178,3 +178,13 @@ client.on("clickButton", (button) => {
   console.log(button);
 });
 ```
+
+## Commands
+```js
+client.on("commandExecute", (command, member) => {
+  console.log(command, member);
+});
+client.on("commandError", (command, member, error) => {
+  console.log(command, member, error);
+});
+```
