@@ -34,4 +34,4 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT_TYPE: REQUEST_CHANGES
-          MESSAGE: 'ESLint found errors. Please correct them. ${{ github.job }}'
+          MESSAGE: 'ESLint found errors. Please correct them. https://github.com/Garlic-Team/GCommands/runs/${{ github.run_id }}?check_suite_focus=true'
