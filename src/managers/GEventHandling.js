@@ -1,6 +1,6 @@
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
-const Color = require('../structures/Color'), { Events } = require('../util/Constants');
+const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events } = require('../util/Constants');
 const { inhibit, interactionRefactor, channelTypeRefactor } = require('../util/util');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
@@ -79,7 +79,7 @@ class GEventHandling {
                         return msg;
                     },
                     edit: async (options = undefined) => {
-                        if (!botMessageInhibit) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
+                        if (!botMessageInhibit) throw new GError('[NEED RESPOND]',`First you need to send a respond.`);
                         let editedMsg = await botMessageInhibit.edit(options);
                         return editedMsg;
                     },
@@ -195,7 +195,7 @@ class GEventHandling {
                         return msg;
                     },
                     edit: async (options = undefined) => {
-                        if (!botMessage) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
+                        if (!botMessage) throw new GError('[NEED RESPOND]',`First you need to send a respond.`);
                         let editedMsg = await botMessage.edit(options);
                         return editedMsg;
                     },

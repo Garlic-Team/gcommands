@@ -1,14 +1,13 @@
 const GCommandLoader = require('../managers/GCommandLoader'),
-    Color = require('../structures/Color'),
     GCommandsDispatcher = require('./GCommandsDispatcher'),
     { GEvents: GEventLoader } = require('@gcommands/events'),
     GEventHandling = require('../managers/GEventHandling'),
     GDatabaseLoader = require('../managers/GDatabaseLoader'),
-    { Events } = require('../util/Constants'),
     GUpdater = require('../util/updater');
 
 const { Collection, Client } = require('discord.js');
 const fs = require('fs');
+const GError = require('../structures/GError');
 
 /**
  * The main GCommandsClient class
@@ -22,9 +21,9 @@ class GCommandsClient extends Client {
     constructor(options = {}) {
         super(options);
 
-        if (!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{ json: false }).getText());
-        if (!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language)',{ json: false }).getText());
-        if (String(options.commands.slash) !== 'false' && !options.commands.prefix) return console.log(new Color('&d[GCommands] &cNo default options provided! (commands#prefix)',{ json: false }).getText());
+        if (!options.cmdDir) throw new GError('[DEFAULT OPTIONS]','You must specify the cmdDir');
+        if (!options.language) throw new GError('[DEFAULT OPTIONS]','You must specify the language');
+        if (String(options.commands.slash) !== 'false' && !options.commands.prefix) throw new GError('[DEFAULT OPTIONS]','You must specify the commands#prefix');
 
         /**
          * GCommandsClient

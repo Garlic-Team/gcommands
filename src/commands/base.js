@@ -1,5 +1,5 @@
 const { resolveString, isClass } = require('../util/util');
-const Color = require('../structures/Color');
+const GError = require('../structures/GError');
 
 /**
  * The Command class
@@ -160,7 +160,7 @@ class Command {
      * @param {Object} objectArgs
      */
     async run(options, arrayArgs, objectArgs) { // eslint-disable-line no-unused-vars, require-await
-        return console.log(new Color(`&d[GCommands] &cCommand ${this.name} doesn't provide a run method!`).getText());
+        throw new GError('[COMMAND]',`Command ${this.name} doesn't provide a run method!`);
     }
 
 	/**
@@ -174,13 +174,13 @@ class Command {
 
         let newCommand = await require(cmdPath);
 
-        if (!isClass(newCommand)) return console.log(new Color('&d[GCommands] &cThe command must be class!').getText());
+        if (!isClass(newCommand)) throw new GError('[COMMAND]',`Command ${this.name} must be class!`);
         else newCommand = new newCommand(this.client);
 
-        if (!(newCommand instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${newCommand.name} doesnt belong in Commands.`).getText());
+        if (!(newCommand instanceof Command)) throw new GError('[COMMAND]',`Command ${newCommand.name} doesnt belong in Commands.`);
 
-        if (newCommand.name !== this.name) return console.log(new Color('&d[GCommands] &cCommand name cannot change.').getText());
-        if (newCommand.guildOnly !== this.guildOnly) return console.log(new Color('&d[GCommands] &cCommand guildOnly cannot change.').getText());
+        if (newCommand.name !== this.name) throw new GError('[COMMAND]','Command name cannot change.');
+        if (newCommand.guildOnly !== this.guildOnly) throw new GError('[COMMAND]','Command guildOnly cannot change.');
 
         newCommand._path = cmdPath;
         this.client.gcommands.set(newCommand.name, newCommand);

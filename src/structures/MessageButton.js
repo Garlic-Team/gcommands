@@ -2,7 +2,7 @@
 const { resolveString, parseEmoji } = require('../util/util');
 const { MessageComponentTypes } = require('../util/Constants');
 const BaseMessageComponent = require('./BaseMessageComponent');
-const Color = require('./Color');
+const GError = require('./GError');
 const styles = {
     blurple: 1,
     gray: 2,
@@ -155,9 +155,9 @@ class MessageButton extends BaseMessageComponent {
     }
 
     resolveStyle(style) {
-        if (!style || style === undefined || style === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText());
+        if (!style || style === undefined || style === null) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
 
-        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText());
+        if (!styles[style] || styles[style] === undefined || styles[style] === null) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
 
         return styles[style] || style;
     }

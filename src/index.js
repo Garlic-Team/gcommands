@@ -38,6 +38,7 @@ module.exports = {
     BaseCommandInteraction: require('./structures/BaseCommandInteraction'),
     MessageComponentInteraction: require('./structures/MessageComponentInteraction'),
     BaseMessageComponent: require('./structures/BaseMessageComponent'),
+    GError: require('./structures/GError'),
 
     // Other
     Color: require('./structures/Color'),

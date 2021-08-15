@@ -1,7 +1,7 @@
 const { MessageComponentTypes } = require('../util/Constants');
 const { resolveString } = require('../util/util');
 const BaseMessageComponent = require('./BaseMessageComponent');
-const Color = require('./Color');
+const GError = require('./GError');
 
 /**
  * The MessageSelectMenu class
@@ -126,7 +126,7 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @param {MessageSelectMenuOption} MessageSelectMenuOption
     */
     addOption(option) {
-        if (typeof option !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText());
+        if (typeof option !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
         this.options.push(option);
         return this;
     }
@@ -136,7 +136,7 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption
     */
     addOptions(...options) {
-        if (typeof options !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText());
+        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
         this.options.push(...options.flat(Infinity).map(o => o));
         return this;
     }
@@ -148,7 +148,7 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption[]
     */
     removeOptions(index, deleteCount, ...options) {
-        if (typeof options !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText());
+        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
         this.components.splice(index, deleteCount, ...options.flat(Infinity).map(o => o));
         return this;
     }

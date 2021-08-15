@@ -1,4 +1,4 @@
-const Color = require('../../structures/Color');
+const GError = require('../../structures/GError');
 
 /**
  * The ArgumentType class
@@ -10,8 +10,8 @@ class ArgumentType {
      * @param {String} type
      */
     constructor(client, type) {
-        if (!client) return console.log(new Color('&d[GCommands Args] &cNo discord.js client provided!').getText());
-        if (!type) return console.log(new Color('&d[GCommands Args] &cNo argument provided!').getText());
+        if (!client) throw new GError('[ARGUMENTS]','You must specify the client');
+        if (!type) throw new GError('[ARGUMENTS]','You must specify the argument type');
 
         /**
          * Type
@@ -28,7 +28,7 @@ class ArgumentType {
      * @param {Message|Object}
      */
     validate(argument, message) { // eslint-disable-line no-unused-vars, require-await
-        return console.log(new Color('&d[GCommands Args] &cArgument doesnt have provided validate() method'));
+        throw new GError('[ARGUMENTS]','Argument doesnt have provided validate() method');
     }
 }
 
