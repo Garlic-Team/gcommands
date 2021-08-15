@@ -272,7 +272,7 @@ class GInteraction {
          * @memberof reply
         */
         let _fetch = async () => {
-            if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.')
+            if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.');
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
 
             return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
