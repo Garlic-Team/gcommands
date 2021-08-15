@@ -35,8 +35,8 @@ class GDatabaseLoader {
             try {
                 const Keyv = require('keyv');
                 this.client.database = new Keyv(dbType);
-            } catch(e) {
-                throw new GError("[DATABASE]", e)
+            } catch (e) {
+                throw new GError("[DATABASE]", e);
             }
         }
     }
