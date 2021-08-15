@@ -249,7 +249,7 @@ class GMessage {
             createMessageComponentCollector: {
                 value: function(filter, options = {}) {
                     options.messageId = this.id;
-                    options.guildId = this.guild.id;
+                    options.guildId = this.guild ? this.guild.id : null;
 
                     if (ifDjsV13) {
                         options.filter = filter;
