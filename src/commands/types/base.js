@@ -28,7 +28,7 @@ class ArgumentType {
      * @param {Message|Object}
      */
     validate(argument, message) { // eslint-disable-line no-unused-vars, require-await
-        throw new GError('[ARGUMENTS]','Argument doesnt have provided validate() method')
+        throw new GError('[ARGUMENTS]','Argument doesnt have provided validate() method');
     }
 }
 
