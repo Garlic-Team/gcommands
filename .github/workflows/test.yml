@@ -23,14 +23,14 @@ jobs:
 
       - name: Success
         if: ${{ steps.eslint.outcome == 'success' }}
-        uses: xHyroM/Review-beta@1.0.4
+        uses: xHyroM/Review-beta@1.0.5
         with:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           EVENT_TYPE: APPROVE
           MESSAGE: 'Everything is fine.'
       - name: Failure
         if: ${{ steps.eslint.outcome != 'success' }}
-        uses: xHyroM/Review-beta@1.0.4
+        uses: xHyroM/Review-beta@1.0.5
         with:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           EVENT_TYPE: REQUEST_CHANGES
