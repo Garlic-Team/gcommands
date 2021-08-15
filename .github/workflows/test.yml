@@ -31,12 +31,3 @@ jobs:
         uses: omio-labs/pr-reviewer-bot@v1
         with:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          EVENT_TYPE: APPROVE
-          MESSAGE: 'Everything is fine.'
-      - name: Failure
-        if: ${{ steps.eslint.outcome != 'success' }}
-        uses: golfzaptw/action-auto-reviews-from-branches@master
-        with:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          EVENT_TYPE: REQUEST_CHANGES
-          MESSAGE: 'ESLint found errors. Please correct them. ${{ github.job }}'
