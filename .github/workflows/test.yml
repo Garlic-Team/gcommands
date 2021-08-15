@@ -19,7 +19,6 @@ jobs:
       - name: Run ESLint
         run: npm run test
         id: eslint
-        continue-on-error: true
 
       - name: Success
         if: steps.eslint.outputs.status == 'success'
