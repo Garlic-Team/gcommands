@@ -28,14 +28,14 @@ jobs:
 
       - name: Success
         if: ${{ steps.eslint.outcome == 'success' }}
-        uses: xHyroM/automatic-pull-request-review@1.1.2
+        uses: xHyroM/automatic-pull-request-review@1.1.3
         with:
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
-          event: APPROVE
-          body: 'Everything is fine.'
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          EVENT_TYPE: APPROVE
+          MESSAGE: 'Everything is fine.'
       - name: Failure
         if: ${{ steps.eslint.outcome != 'success' }}
-        uses: xHyroM/automatic-pull-request-review@1.1.2
+        uses: xHyroM/automatic-pull-request-review@1.1.3
         with:
           repo-token: ${{ secrets.ACCESS_TOKEN }}
           event: REQUEST_CHANGES
