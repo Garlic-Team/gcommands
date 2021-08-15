@@ -46,8 +46,9 @@ const client = new GCommandsClient({
   caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
   unkownCommandMessage: false, // true or false | send unkownCommand Message
   language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
-  slash: {
+  commands: {
     slash: "both", //true = slash only, false = only normal, both = slash and normal
+    context: "false", // https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsContext
     prefix: ".", // for normal commands
   },
   defaultCooldown: "3s",
