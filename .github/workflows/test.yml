@@ -35,7 +35,7 @@ jobs:
           MESSAGE: 'Everything is fine.'
       - name: Failure
         if: ${{ steps.eslint.outcome != 'success' }}
-        uses: xHyroM/automatic-pull-request-review@1.1.3
+        uses: xHyroM/Review-beta@1.0.0
         with:
           repo-token: ${{ secrets.ACCESS_TOKEN }}
           event: REQUEST_CHANGES
