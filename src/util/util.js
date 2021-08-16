@@ -165,7 +165,7 @@ class Util {
      * @returns {Boolean}
      * @private
     */
-     static checkDjsVersion(needVer) {
+    static checkDjsVersion(needVer) {
         let ver = parseInt(version.split('')[0] + version.split('')[1]);
         if (ver === parseInt(needVer)) {
             return true;
@@ -173,6 +173,13 @@ class Util {
             return false;
         }
     }
+
+    /**
+     * Determine equality for two JavaScript objects
+     * @param {Object | Array} o
+     * @returns {Object | Array}
+    */
+    static comparable = o => (typeof o != 'object' || !o)? o : Object.keys(o).sort().reduce((c, key) => (c[key] = comparable(o[key]), c), {});
 }
 
 module.exports = Util;
