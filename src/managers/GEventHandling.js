@@ -287,7 +287,7 @@ class GEventHandling {
                     if (commandos.userRequiredRole) commandos.userRequiredRoles = commandos.userRequiredRole;
                     if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
 
-                    let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v));
+                    let roles = commandos.userRequiredRoles.some(v => interaction.member._roles.includes(v));
                     if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
                 }
 
