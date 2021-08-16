@@ -1,6 +1,6 @@
 # Introduction
 
-![BANNER](/garlic.png)
+![BANNER](./garlic.png)
 
 If you came here, you probably want to learn how to use GCommands. GCommands allows you to easily handle Message & Slash commands for the [Discord.JS](https://discordjs.guide) library. This guide will teach you how to:
 
