@@ -89,19 +89,19 @@ class Command {
          * ChannelTextOnly
          * @type {Boolean}
          */
-        this.channelTextOnly = options.channelTextOnly ? Boolean(options.channelTextOnly) : null;
+        this.channelTextOnly = options.channelTextOnly;
 
         /**
          * ChannelNewsOnly
          * @type {Boolean}
          */
-        this.channelNewsOnly = options.channelNewsOnly ? Boolean(options.channelNewsOnly) : null;
+        this.channelNewsOnly = options.channelNewsOnly;
 
         /**
          * ChannelThreadOnly
          * @type {Boolean}
          */
-        this.channelThreadOnly = options.channelThreadOnly ? Boolean(options.channelThreadOnly) : null;
+        this.channelThreadOnly = options.channelThreadOnly;
 
         /**
          * GuildOnly
@@ -113,13 +113,13 @@ class Command {
          * Nsfw
          * @type {Boolean}
          */
-        this.nsfw = options.nsfw ? Boolean(options.nsfw) : null;
+        this.nsfw = options.nsfw;
 
         /**
          * Slash
          * @type {Boolean}
          */
-        this.slash = options.slash ? Boolean(options.slash) : null;
+        this.slash = options.slash;
 
         /**
          * Context
