@@ -98,7 +98,7 @@ class GCommands extends EventEmitter {
          * Gcategories
          * @type {Array}
          */
-        this.gcategories = fs.readdirSync(`./${this.cmdDir}`);
+        this.gcategories = fs.readdirSync(this.cmdDir);
 
         /**
          * Gcommands

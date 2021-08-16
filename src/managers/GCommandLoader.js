@@ -49,7 +49,7 @@ class GCommandLoader {
      * @private
      */
      async __loadCommandFiles() {
-        for await (let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}`))) {
+        for await (let file of (await fs.readdirSync(this.cmdDir))) {
             const fileName = file.split('.').reverse()[1] || file;
             const fileType = file.split('.').reverse()[0];
 
@@ -58,13 +58,13 @@ class GCommandLoader {
                 continue;
             }
 
-            file = await require(`../../../../${this.cmdDir}${file}`);
+            file = await require(`${this.cmdDir}/${file}`);
             if (isClass(file)) {
                 file = await new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]',`Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `../../../../${this.cmdDir}/${fileName}.${fileType}`;
+            file._path = `${this.cmdDir}/${fileName}.${fileType}`;
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
@@ -81,17 +81,17 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandCategoryFiles(categoryFolder) {
-        for await (let file of (await fs.readdirSync(`${__dirname}/../../../../${this.cmdDir}${categoryFolder}`))) {
+        for await (let file of (await fs.readdirSync(`${this.cmdDir}/${categoryFolder}`))) {
             const fileName = file.split('.').reverse()[1];
             const fileType = file.split('.').reverse()[0];
 
-            file = await require(`../../../../${this.cmdDir}${categoryFolder}/${file}`);
+            file = await require(`${this.cmdDir}/${categoryFolder}/${file}`);
             if (isClass(file)) {
                 file = await new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]',`Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `../../../../${this.cmdDir}${categoryFolder}/${fileName}.${fileType}`;
+            file._path = `${this.cmdDir}/${categoryFolder}/${fileName}.${fileType}`;
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
