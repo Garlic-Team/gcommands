@@ -22,6 +22,7 @@ jobs:
         uses: crazy-max/ghaction-github-labeler@v3
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
   label-approved:
     runs-on: ubuntu-latest
     steps:
