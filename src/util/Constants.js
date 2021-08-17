@@ -147,6 +147,7 @@ function createEnum(keys) {
  * * polish
  * * indonesian
  * * italian
+ * * french
  * @typedef {(string)} GCommandsOptionsLanguage
  */
 

@@ -1,7 +1,7 @@
 import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
-type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian';
+type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian' | 'french';
 
 declare module 'discord.js' {
   export interface Message {
@@ -308,7 +308,6 @@ declare module 'gcommands' {
     public description: string;
     public cooldown: string;
     public args: Array<object>;
-    public minArgs: number;
     public clientRequiredPermissions: String | Array<string>;
     public userRequiredPermissions: String | Array<string>;
     public userRequiredRoles: String | Array<Snowflake>;
@@ -322,6 +321,8 @@ declare module 'gcommands' {
     public aliases: Array<string>;
     public category: string;
     public usage: string;
+    public slash: GCommandsOptionsCommandsSlash;
+    public context: GCommandsOptionsCommandsContext;
 
     public run(options: CommandRunOptions, args: Array<string>, args2: Object): void;
   }
@@ -420,8 +421,7 @@ declare module 'gcommands' {
     name: string;
     description: string;
     cooldown?: string;
-    expectedArgs?: string;
-    minArgs?: number;
+    args?: string;
     userRequiredPermissions?: Array<string> | String;
     userRequiredRoles?: Array<Snowflake> | String;
     clientRequiredPermissions?: Array<string> | String;
@@ -435,7 +435,12 @@ declare module 'gcommands' {
     channelTextOnly?: boolean;
     channelNewsOnly?: boolean;
     channelThreadOnly?: boolean;
+    slash?: GCommandsOptionsCommandsSlash;
+    context?: GCommandsOptionsCommandsContext;
   }
+
+  type GCommandsOptionsCommandsSlash = 'both' | 'true' | 'false';
+  type GCommandsOptionsCommandsContext = 'both' | 'user' | 'message' | 'false';
 
   interface EventOptions {
     name: string;

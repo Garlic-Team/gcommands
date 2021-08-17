@@ -6,7 +6,7 @@ const { MessageComponentTypes, InteractionTypes } = require('../../util/Constant
 class InteractionCollector extends Collector {
   constructor(client, filter, options) {
     if (!options) options = filter;
-    if (typeof filter === "function") Object.defineProperty(options, "filter", filter);
+    if (typeof filter === 'function') Object.defineProperty(options, 'filter', filter);
 
     super(client, options);
 
