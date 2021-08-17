@@ -1,6 +1,7 @@
 import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
+import { Command, GCommandsDispatcher, GInteraction, MessageEditAndUpdateOptions } from '../src/index';
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian' | 'french';
 
 declare module 'discord.js' {
@@ -48,14 +49,10 @@ declare module 'discord.js' {
     dispatcher: GCommandsDispatcher;
   }
 
-  export interface Client extends discord.Client {
-    dispatcher: GCommandsDispatcher;
-  }
-
   interface ClientEvents {
     selectMenu: [InteractionEvent];
     clickButton: [InteractionEvent];
-    GInteraction: [GGinteraction | InteractionEvent];
+    GInteraction: [GInteraction | InteractionEvent];
     commandPrefixChange: [Guild, string];
     commandExecute: [Command, GuildMember];
     commandError: [Command, GuildMember, String]
@@ -146,7 +143,7 @@ declare module 'gcommands' {
   export class SelectMenuInteraction extends MessageComponentInteraction {
     constructor(client: Client, data: object)
 
-    public values: Array;
+    public values: Array<string>;
   }
 
   export class CommandInteraction extends GInteraction {
@@ -371,8 +368,9 @@ declare module 'gcommands' {
     cmdDir: string;
     eventDir?: string;
     language: GuildLanguageTypes;
-    slash: {
-      slash: string | boolean;
+    commands: {
+      slash: GCommandsOptionsCommandsSlash;
+      context?: GCommandsOptionsCommandsContext;
       prefix?: string;
     },
     caseSensitiveCommands?: boolean;
