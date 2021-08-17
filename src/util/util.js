@@ -179,7 +179,9 @@ class Util {
      * @param {Object | Array} o
      * @returns {Object | Array}
     */
-    static comparable = o => (typeof o != 'object' || !o)? o : Object.keys(o).sort().reduce((c, key) => (c[key] = comparable(o[key]), c), {});
+    static comparable(o) {
+        return (typeof o != 'object' || !o)? o : Object.keys(o).sort().reduce((c, key) => (c[key] = comparable(o[key]), c), {});
+    }
 }
 
 module.exports = Util;
