@@ -112,7 +112,7 @@ class GCommandLoader {
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (String(cmd.slash) === 'false') return;
+            if (String(cmd.slash) === 'false') continue;
 
             if (cmd.expectedArgs) cmd.args = cmd.expectedArgs;
 
@@ -180,7 +180,7 @@ class GCommandLoader {
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (String(cmd.context) === 'false') return;
+            if (String(cmd.context) === 'false') continue;
 
             if (cmd.expectedArgs) cmd.args = cmd.expectedArgs;
 

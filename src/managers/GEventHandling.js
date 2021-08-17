@@ -89,7 +89,7 @@ class GEventHandling {
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
                 let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos);
-                if (cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
+                if (cooldown.cooldown) return message.reply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
 
                 if (commandos.guildOnly && message.guild.id !== commandos.guildOnly) return;
 
