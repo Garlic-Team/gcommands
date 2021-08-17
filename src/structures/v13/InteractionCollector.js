@@ -4,8 +4,11 @@ const { Events } = require('discord.js').Constants;
 const { MessageComponentTypes, InteractionTypes } = require('../../util/Constants');
 
 class InteractionCollector extends Collector {
-  constructor(client, filter, options = {}) {
-    super(client, filter, options);
+  constructor(client, filter, options) {
+    if (!options) options = filter;
+    if (typeof filter === "function") Object.defineProperty(options, "filter", filter);
+
+    super(client, options);
 
     this.messageId = options.messageId || null;
     this.channelId = options.channelId || null;
