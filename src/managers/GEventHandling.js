@@ -219,11 +219,16 @@ class GEventHandling {
 
         this.client.on('GInteraction', async interaction => {
             if (!interaction.isApplication()) return;
+            
+            if(interaction.isCommand() && String(this.client.slash) === 'false') return;
+            if(interaction.isContextMenu() && String(this.client.context) === 'false') return;
 
             let commandos;
             try {
                 commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
-                if (!commandos || String(commandos.slash) === 'false') return;
+                if (!commandos) return;
+                if(interaction.isCommand() && String(commandos.slash) === 'false') return;
+                if(interaction.isContextMenu() && String(commandos.context) === 'false') return;
 
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
                     interaction,
