@@ -292,7 +292,7 @@ declare module 'gcommands' {
   }
 
   export class GCommandsClient extends Client {
-    constructor(client: Client, options: GCommandsOptions)
+    constructor(options: GCommandsOptions)
 
     public on<K extends keyof GEvents>(event: K, listener: (...args: GEvents[K]) => void): this;
     public on<S extends string | symbol>(
