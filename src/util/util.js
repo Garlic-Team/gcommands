@@ -180,7 +180,7 @@ class Util {
      * @returns {Object | Array}
     */
     static comparable(o) {
-        return (typeof o != 'object' || !o)? o : Object.keys(o).sort().reduce((c, key) => (c[key] = comparable(o[key]), c), {});
+        return (typeof o !== 'object' || !o) ? o : Object.keys(o).sort().reduce((c, key) => (c[key] = comparable(o[key]), c), {});
     }
 }
 
