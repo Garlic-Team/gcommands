@@ -97,7 +97,7 @@ class GCommandsDispatcher {
         let guildData = await this.client.database.get(`guild_${guildId}`) || {};
         if (guildData.prefix && !Array.isArray(guildData.prefix)) guildData.prefix = Array(guildData.prefix);
 
-        return guildData ? guildData.prefix : this.client.prefix;
+        return guildData ? guildData.prefix || this.client.prefix : this.client.prefix;
     }
 
     /**
@@ -211,7 +211,7 @@ class GCommandsDispatcher {
         if (cache) return guild.language ? guild.language : this.client.language;
 
         let guildData = await this.client.database.get(`guild_${guildId}`) || {};
-        return guildData ? guildData.language : this.client.language;
+        return guildData ? guildData.language || this.client.language : this.client.language;
     }
 
     /**
