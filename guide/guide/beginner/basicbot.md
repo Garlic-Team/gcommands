@@ -4,16 +4,16 @@
 
 First, you need to create an application in Discord's Developer Portal. Head to the [Applications Page](https://discord.com/developers/applications) and press the `New Application` button. A popup will appear asking to enter the application's name. You can name it whatever you want.
 
-![New Application](/../../createapp.png)
+![New Application](https://gcommands.js.org/guide/createapp.png)
 
 Go to the `Bot` section on the left and click `Add Bot`. It'll ask you for confirmation (you cannot delete the bot afterwards). Just click on `Yes, do it!`, after you're done contemplating your life choices.
 
-![Add Bot](/../../addbot.png)
+![Add Bot](https://gcommands.js.org/guide/addbot.png)
 
 And your bot was successfully created! You can now invite the bot to your server.  
 Go to the `OAuth2` tab and select the `bot` scope. You can also scroll down a bit, and select whatever permissions you want.
 
-![OAuth2](/../../oauth2.png)
+![OAuth2](https://gcommands.js.org/guide/oauth2.png)
 
 ## Getting the bot token
 
@@ -21,7 +21,7 @@ A token is something like a password, which every Discord user has. You can use 
 
 Go back to the `Bot` page, and press the `Copy Token` button. The token will be copied to your clipboard. You can also `Click to Reveal Token`.
 
-![Token](/../../token.png)
+![Token](https://gcommands.js.org/guide/token.png)
 
 ::: warning
 Tokens should never be shared with anyone! A token gives complete access to a bot, which can be abused badly.

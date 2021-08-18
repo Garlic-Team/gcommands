@@ -51,6 +51,7 @@ module.exports = config({
             collapsable: false,
             children: [
               'beginner/basicbot',
+              'beginner/events',
               'beginner/database',
               'beginner/additionalfeatures'
             ]
