@@ -1,7 +1,8 @@
-import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates } from 'discord.js';
+import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates, ClientOptions } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 import { Command, GCommandsDispatcher, GInteraction, MessageEditAndUpdateOptions } from '../src/index';
+import Keyv = require('keyv');
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian' | 'french';
 
 declare module 'discord.js' {
@@ -47,6 +48,7 @@ declare module 'discord.js' {
 
   export interface Client {
     dispatcher: GCommandsDispatcher;
+    database: Keyv;
   }
 
   interface ClientEvents {
@@ -278,7 +280,7 @@ declare module 'gcommands' {
     public awaitSelectMenus(msg: Object | Message, filter: Function, options: Object);
   }
 
-  export class GCommands extends GCommandsBase {
+  export class GCommands extends EventEmitter {
     constructor(client: Client, options: GCommandsOptions)
 
     public on<K extends keyof GEvents>(event: K, listener: (...args: GEvents[K]) => void): this;
@@ -289,7 +291,7 @@ declare module 'gcommands' {
   }
 
   export class GCommandsClient extends Client {
-    constructor(options: GCommandsOptions)
+    constructor(options: GCommandsOptions | ClientOptions)
 
     public on<K extends keyof GEvents>(event: K, listener: (...args: GEvents[K]) => void): this;
     public on<S extends string | symbol>(
