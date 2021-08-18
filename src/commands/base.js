@@ -151,6 +151,12 @@ class Command {
          * @private
          */
         this._path;
+
+        /**
+         * Options, ability to add own options
+         * @type {Object}
+         */
+        this._options = options;
     }
 
     /**
