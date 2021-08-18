@@ -54,5 +54,5 @@ await guild.getLanguage();
 // SET
 
 await client.dispatcher.setGuildLanguage("Guild ID", "language");
-await guild.setLanguage("Guild ID", "language");
+await guild.setLanguage("language");
 ```
