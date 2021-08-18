@@ -27,7 +27,7 @@ class GCommandsClient extends Client {
 
         /**
          * GCommandsClient
-         * @type {GCommands}
+         * @type {GCommandsClient}
         */
         this.GCommandsClient = this;
         this.GCommandsClient.client = this;

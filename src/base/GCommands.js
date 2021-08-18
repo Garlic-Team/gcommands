@@ -12,6 +12,7 @@ const fs = require('fs');
 
 /**
  * The main GCommands class
+ * @deprecated
  */
 class GCommands extends EventEmitter {
     /**

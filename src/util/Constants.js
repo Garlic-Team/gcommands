@@ -237,15 +237,6 @@ function createEnum(keys) {
  */
 
 /**
- * The GInteractionInteraction
- *
- * @property {string} name
- * @property {Array} options
- * @property {number} id
- * @typedef {(Object)} GInteractionInteraction
- */
-
-/**
  * The CommandOptions
  * <info>`channelThreadOnly` is only for d.js v13</info>
  *
