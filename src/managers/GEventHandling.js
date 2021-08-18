@@ -223,6 +223,8 @@ class GEventHandling {
             if (interaction.isCommand() && String(this.client.slash) === 'false') return;
             if (interaction.isContextMenu() && String(this.client.context) === 'false') return;
 
+            if (!interaction.guild) return;
+
             let commandos;
             try {
                 commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
