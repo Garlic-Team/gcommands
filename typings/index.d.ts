@@ -49,6 +49,7 @@ declare module 'discord.js' {
   export interface Client {
     dispatcher: GCommandsDispatcher;
     database: Keyv;
+    gcommands: Collection<string, file>
   }
 
   interface ClientEvents {
