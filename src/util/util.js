@@ -63,6 +63,11 @@ class Util {
             MessageComponentTypes[interaction.componentType] === MessageComponentTypes.SELECT_MENU
         );
 
+        if (interaction.isCommand() && !interaction.isApplication()) {
+            interaction.commandName = cmd.name;
+            interaction.commandId = null;
+        }
+
         return interaction;
     }
 
