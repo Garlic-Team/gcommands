@@ -4,8 +4,8 @@ const { Events } = require('discord.js').Constants;
 
 class SelectMenuCollector extends Collector {
   constructor(message, filter, options) {
-    if (!options) options = filter;
     if (typeof filter === 'function') options.filter = filter;
+    else options = filter;
 
     super(message.client, options);
 
