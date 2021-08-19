@@ -257,6 +257,7 @@ function createEnum(keys) {
  * @property {boolean} channelThreadOnly
  * @property {boolean} nsfw
  * @property {boolean} slash
+ * @property {GCommandsOptionsCommandsContext} context
  * @typedef {(Object)} CommandOptions
  */
 
