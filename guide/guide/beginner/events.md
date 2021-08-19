@@ -2,6 +2,10 @@
 
 If you want to use event handler with GCommands, just add `eventDir` to `GCommandsClient`
 
+::: warning
+Since `@gcommands/events` 2.x, the path for `eventDir` is used. If you have `gcommands` 6.x you can update events, or just use `events/`
+:::
+
 ```js
 const { GCommandsClient } = require("gcommands");
 const { join } = require("path");
