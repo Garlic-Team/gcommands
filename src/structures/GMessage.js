@@ -183,7 +183,7 @@ class GMessage {
                         this.interaction = {
                             id: data.interaction.id,
                             type: InteractionTypes[data.interaction.type],
-                            commandName: data.interaction.name,
+                            commandName: data.interaction.name || data.interaction.commandName,
                             user: ifDjsV13 ? this.client.users._add(data.interaction.user) : this.client.users.add(data.interaction.user),
                         };
                     } else if (!this.interaction) {

@@ -204,14 +204,6 @@ class GInteraction {
      * @param {Object} options
     */
     async edit(result) {
-        if (result.autoDefer === true) {
-            await this.client.api.interactions(this.id, this.token).callback.post({
-                data: {
-                    type: 6,
-                },
-            });
-        }
-
         this.replyEdit(result);
     }
 
@@ -220,14 +212,6 @@ class GInteraction {
      * @param {Object} options
     */
     async update(result) {
-        if (typeof result === 'object' && result.autoDefer === true) {
-            await this.client.api.interactions(this.id, this.token).callback.post({
-                data: {
-                    type: 6,
-                },
-            });
-        }
-
         this.replyEdit(result, true);
     }
 
@@ -311,20 +295,17 @@ class GInteraction {
 
         let apiMessage = {};
         if (update) {
-            apiMessage = this.client.api.interactions(this.id, this.token).callback.post({
+            apiMessage = (await this.client.api.interactions(this.id, this.token).callback.post({
                 data: {
                     type: 7,
                     data: GPayloadResult.data,
                 },
-            });
+            }));
         } else {
             apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : '@original'].patch({
                 data: GPayloadResult.data,
             }));
         }
-
-        if (typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
-        return new Message(this.client, apiMessage, this.channel);
     }
 }
 
