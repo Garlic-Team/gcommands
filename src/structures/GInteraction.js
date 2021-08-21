@@ -259,6 +259,7 @@ class GInteraction {
             if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.');
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
 
+            apiMessage.channel_id = this.channel.id;
             return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
         };
 
@@ -285,6 +286,7 @@ class GInteraction {
 
         let apiMessage = await this.reply.fetch();
 
+        apiMessage.channel_id = this.channel.id;
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 
@@ -307,6 +309,7 @@ class GInteraction {
             }));
         }
 
+        apiMessage.channel_id = this.channel.id;
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 }

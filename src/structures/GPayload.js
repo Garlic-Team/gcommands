@@ -49,6 +49,7 @@ class GPayload {
         if (type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options };
 
         this.options.inlineReply = this.options.inlineReply === undefined ? false : this.options.inlineReply;
+        this.channel_id = this.channel.id;
 
         if (this.options.content && typeof this.options.content === 'object') {
             this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
@@ -69,7 +70,7 @@ class GPayload {
 
         if (this.options.inlineReply && typeof this.options.inlineReply === 'string') this.data.message_reference = { message_id: this.options.inlineReply };
         else if (typeof this.options.inlineReply === 'boolean' && this.options.inlineReply && (this.channel.lastMessageID || this.channel.lastMessageId)) this.data.message_reference = { message_id: this.channel.lastMessageID || this.channel.lastMessageId };
-
+        
         return this;
     }
 
