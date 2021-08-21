@@ -293,8 +293,6 @@ class GInteraction {
         });
 
         let apiMessage = await this.reply.fetch();
-
-        apiMessage.channel_id = this.channel.id;
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 
@@ -317,7 +315,7 @@ class GInteraction {
             }));
         }
 
-        apiMessage.channel_id = this.channel.id;
+        let apiMessage = await this.reply.fetch();
         return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 }
