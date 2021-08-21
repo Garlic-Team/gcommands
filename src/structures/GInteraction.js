@@ -179,7 +179,7 @@ class GInteraction {
                 },
             },
         });
-        
+
         this._replied = true;
 
         let awaitMessage = await this.reply.fetch();
