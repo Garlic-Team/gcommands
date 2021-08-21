@@ -70,7 +70,7 @@ class GPayload {
 
         if (this.options.inlineReply && typeof this.options.inlineReply === 'string') this.data.message_reference = { message_id: this.options.inlineReply };
         else if (typeof this.options.inlineReply === 'boolean' && this.options.inlineReply && (this.channel.lastMessageID || this.channel.lastMessageId)) this.data.message_reference = { message_id: this.channel.lastMessageID || this.channel.lastMessageId };
-        
+
         return this;
     }
 
