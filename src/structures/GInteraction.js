@@ -179,7 +179,11 @@ class GInteraction {
                 },
             },
         });
+        
         this._replied = true;
+
+        let awaitMessage = await this.reply.fetch();
+        return awaitMessage;
     }
 
     /**
@@ -196,7 +200,11 @@ class GInteraction {
                 },
             },
         });
+
         this._replied = true;
+
+        let awaitMessage = await this.reply.fetch();
+        return awaitMessage;
     }
 
     /**
