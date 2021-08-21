@@ -179,7 +179,7 @@ class GInteraction {
                 },
             },
         });
-        
+
         this._replied = true;
 
         let awaitMessage = await this.reply.fetch();
@@ -293,7 +293,7 @@ class GInteraction {
         });
 
         let apiMessage = await this.reply.fetch();
-        return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
+        return apiMessage;
     }
 
     async replyEdit(result, update) {
@@ -316,7 +316,7 @@ class GInteraction {
         }
 
         let apiMessage = await this.reply.fetch();
-        return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
+        return apiMessag;
     }
 }
 
