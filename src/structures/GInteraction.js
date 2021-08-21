@@ -203,7 +203,7 @@ class GInteraction {
      * Method to edit
      * @param {Object} options
     */
-    async edit(result) {
+    edit(result) {
         this.replyEdit(result);
     }
 
@@ -211,7 +211,7 @@ class GInteraction {
      * Method to update
      * @param {Object} options
     */
-    async update(result) {
+    update(result) {
         this.replyEdit(result, true);
     }
 
@@ -306,6 +306,8 @@ class GInteraction {
                 data: GPayloadResult.data,
             }));
         }
+
+        return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
     }
 }
 
