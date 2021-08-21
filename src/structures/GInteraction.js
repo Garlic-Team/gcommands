@@ -315,7 +315,7 @@ class GInteraction {
             }));
         }
 
-        let apiMessage = await this.reply.fetch();
+        apiMessage = await this.reply.fetch();
         return apiMessag;
     }
 }
