@@ -10,6 +10,12 @@ class StringArgumentType extends ArgumentType {
      */
     constructor(client) {
         super(client, 'string');
+
+        /**
+         * Client
+         * @type {Client}
+        */
+        this.client = client;
     }
 
 	async validate(argument, message) {
