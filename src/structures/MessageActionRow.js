@@ -37,7 +37,7 @@ class MessageActionRow extends BaseMessageComponent {
 
     /**
      * Method to addComponent
-     * @param {MessageButton | MessageSelectMenu} cmponent
+     * @param {MessageButton | MessageSelectMenu} component
     */
     addComponent(component) {
         if (typeof component !== 'object') throw new GError('[INVALID COMPONENT]','Need provide BaseMessageComponent');
