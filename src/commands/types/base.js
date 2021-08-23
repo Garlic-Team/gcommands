@@ -19,6 +19,12 @@ class ArgumentType {
         */
         this.type = type;
 
+        /**
+         * Client
+         * @type {Client}
+        */
+        this.client = client;
+
         return this;
     }
 
