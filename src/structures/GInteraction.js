@@ -316,7 +316,7 @@ class GInteraction {
         }
 
         apiMessage = await this.reply.fetch();
-        return apiMessag;
+        return apiMessage;
     }
 }
 
