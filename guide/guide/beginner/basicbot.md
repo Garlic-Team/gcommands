@@ -38,6 +38,7 @@ Create your main file and call it something like `index.js`.
 Then, paste this code in:
 
 ```js
+const { Intents } = require("discord.js");
 const { GCommandsClient } = require("gcommands");
 const client = new GCommandsClient({
   cmdDir: "commands/",
@@ -53,6 +54,7 @@ const client = new GCommandsClient({
   },
   defaultCooldown: "3s",
   database: "url",
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES]
   /* DB SUPPORT
    * redis://user:pass@localhost:6379
    * mongodb://user:pass@localhost:27017/dbname
