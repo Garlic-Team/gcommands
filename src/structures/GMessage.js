@@ -210,6 +210,7 @@ class GMessage {
                         data: GPayloadResult.data,
                     }));
 
+                    apiMessage.channel_id = this.channel.id;
                     return new Message(this.client, apiMessage, this.channel);
                 },
             },
