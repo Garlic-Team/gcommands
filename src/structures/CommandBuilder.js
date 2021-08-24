@@ -165,7 +165,7 @@ class CommandBuilder {
 
     /**
      * Method to setArgs
-     * @param {String} usage
+     * @param {Array} args
     */
     setArgs(args) {
       this.args = args;
