@@ -148,7 +148,7 @@ class GEventHandling {
 
                     let validArg = async prompt => {
                         let final = await arg.obtain(message, prompt);
-                        if (!final.valid) return validArg(message, prompt);
+                        if (!final.valid) return validArg(prompt);
 
                         return final;
                     };
