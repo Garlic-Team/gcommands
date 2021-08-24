@@ -165,7 +165,7 @@ class CommandBuilder {
 
     /**
      * Method to addArg
-     * @param {CommandArgsChoice} arg
+     * @param {CommandArgsOption} arg
     */
     addArg(arg) {
       if (!Array.isArray(this.args)) this.args = [];
@@ -175,7 +175,7 @@ class CommandBuilder {
 
     /**
      * Method to addArgs
-     * @param {Array<CommandArgsChoice>} args
+     * @param {Array<CommandArgsOption>} args
     */
     addArgs(args) {
       for (const arg of Object.values(args)) {
