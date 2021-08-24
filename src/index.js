@@ -19,6 +19,7 @@ module.exports = {
     GDMChannel: require('./structures/DMChannel'),
     GThreadChannel: require('./structures/ThreadChannel'),
     CommandBuilder: require('./structures/CommandBuilder'),
+    CommandArgBuilder: require('./structures/CommandArgBuilder'),
     MessageButton: require('./structures/MessageButton'),
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),

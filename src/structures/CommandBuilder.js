@@ -39,7 +39,7 @@ class CommandBuilder {
 
        /**
          * Args
-         * @type {Array}
+         * @type {Array<CommandArgsOption>}
         */
        this.args = 'args' in data ? data.args : null;
 
@@ -164,11 +164,25 @@ class CommandBuilder {
     }
 
     /**
-     * Method to setArgs
-     * @param {Array} args
+     * Method to addArg
+     * @param {CommandArgsChoice} arg
     */
-    setArgs(args) {
-      this.args = args;
+    addArg(arg) {
+      if (!Array.isArray(this.args)) this.args = [];
+      this.args.push(arg);
+      console.log(this.args);
+      return this;
+    }
+
+    /**
+     * Method to addArgs
+     * @param {Array<CommandArgsChoice>} args
+    */
+    addArgs(args) {
+      if (!Array.isArray(this.args)) this.args = [];
+      for (const arg of Object.values(args)) {
+        this.args.push(arg);
+      }
       return this;
     }
 
@@ -258,7 +272,7 @@ class CommandBuilder {
      * @param {Boolean} channelTextOnly
     */
     setChannelTextOnly(channelTextOnly) {
-      this.channelTextOnly = channelTextOnly;
+      this.channelTextOnly = Boolean(channelTextOnly);
       return this;
     }
 
@@ -267,7 +281,7 @@ class CommandBuilder {
      * @param {Boolean} channelNewsOnly
     */
     setChannelNewsOnly(channelNewsOnly) {
-      this.channelNewsOnly = channelNewsOnly;
+      this.channelNewsOnly = Boolean(channelNewsOnly);
       return this;
     }
 
@@ -276,7 +290,7 @@ class CommandBuilder {
      * @param {Boolean} channelThreadOnly
     */
     setChannelThreadOnly(channelThreadOnly) {
-      this.channelThreadOnly = channelThreadOnly;
+      this.channelThreadOnly = Boolean(channelThreadOnly);
       return this;
     }
 
@@ -285,7 +299,7 @@ class CommandBuilder {
      * @param {Boolean} nsfw
     */
     setNsfw(nsfw) {
-      this.nsfw = nsfw;
+      this.nsfw = Boolean(nsfw);
       return this;
     }
 
@@ -294,7 +308,7 @@ class CommandBuilder {
      * @param {Boolean} slash
     */
     setSlash(slash) {
-      this.slash = slash;
+      this.slash = Boolean(slash);
       return this;
     }
 
@@ -303,7 +317,7 @@ class CommandBuilder {
      * @param {String | Boolean} context
     */
     setContext(context) {
-      this.context = context;
+      this.context = Boolean(context);
       return this;
     }
 

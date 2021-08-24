@@ -202,7 +202,7 @@ declare module 'gcommands' {
     public name: string;
     public description: string;
     public cooldown: string;
-    public args: Array<object>;
+    public args: Array<CommandArgsOption>;
     public clientRequiredPermissions: String | Array<string>;
     public userRequiredPermissions: String | Array<string>;
     public userRequiredRoles: String | Array<Snowflake>;
@@ -222,7 +222,8 @@ declare module 'gcommands' {
     public setName(name: string): CommandBuilder;
     public setDescription(description: string): CommandBuilder;
     public setCooldown(cooldown: string): CommandBuilder;
-    public setArgs(args: Object): CommandBuilder;
+    public addArg(arg: CommandArgsOption): CommandBuilder;
+    public addArgs(args: Array<CommandArgsOption>): CommandBuilder;
     public setClientRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
     public setUserRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
     public setUserRequiredRoles(permissions: string | Array<Snowflake>): CommandBuilder;
@@ -239,6 +240,26 @@ declare module 'gcommands' {
     public setSlash(slash: GCommandsOptionsCommandsSlash): CommandBuilder;
     public setContext(context: GCommandsOptionsCommandsContext): CommandBuilder;
     public toJSON(): CommandBuilder
+  }
+
+  export class CommandArgBuilder {
+    constructor(data: Object);
+    private setup(data: Object);
+
+    public name: String;
+    public description: String;
+    public type: String;
+    public prompt: String;
+    public required: Boolean;
+    public choices: Array;
+
+    public setName(name: String): CommandArgBuilder;
+    public setDescription(description: String): CommandArgBuilder;
+    public setType(type: String): CommandArgBuilder;
+    public setPrompt(prompt: String): CommandArgBuilder;
+    public setRequired(required: Boolean): CommandArgBuilder;
+    public addChoice(choice: CommandArgsChoice): CommandArgBuilder;
+    public addChoices(choices: Array<CommandArgsChoice>): CommandArgBuilder;
   }
 
   export class MessageActionRow {
@@ -468,7 +489,7 @@ declare module 'gcommands' {
     name: string;
     description: string;
     cooldown?: string;
-    args?: string;
+    args?: Array<Object>;
     userRequiredPermissions?: Array<string> | String;
     userRequiredRoles?: Array<Snowflake> | String;
     clientRequiredPermissions?: Array<string> | String;
