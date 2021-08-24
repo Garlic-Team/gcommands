@@ -278,6 +278,19 @@ declare module 'gcommands' {
     public toJSON(): CommandArgChoiceBuilder;
   }
 
+  export enum ArgumentType {
+    SUB_COMMAND,
+    SUB_COMMAND_GROUP,
+    STRING,
+    INTEGER,
+    BOOLEAN,
+    USER,
+    CHANNEL,
+    ROLE,
+    MENTIONABLE,
+    NUMBER
+  }
+
   export class MessageActionRow {
     constructor(data: MessageActionRow)
     public type: number;
