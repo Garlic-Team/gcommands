@@ -25,6 +25,7 @@ module.exports = config({
       logo: '/gcommands.png',
       nav: [
           {text:"Guide", link:"/guide/"},
+          {text:"Voice", link:"/voice/"},
           {text:"Docs", link:"https://gcommands.js.org/docs/"},
           {text:"Discord", link:"https://discord.gg/fV8EgwSpgN"}
       ],
@@ -92,6 +93,24 @@ module.exports = config({
             ]
           }
         ],
+        '/voice/': [
+          {
+            title: 'Home',
+            collapsable: false,
+            children: [
+              '/guide/'
+            ]
+          },
+          {
+            title: 'Beginner',
+            collapsable: false,
+            children: [
+              'beginner/faq',
+              'beginner/setup',
+              'beginner/example'
+            ]
+          }
+        ]
       },
     },
     configureWebpack: {
