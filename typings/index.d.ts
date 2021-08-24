@@ -222,6 +222,7 @@ declare module 'gcommands' {
     public setName(name: string): CommandBuilder;
     public setDescription(description: string): CommandBuilder;
     public setCooldown(cooldown: string): CommandBuilder;
+    public setArgs(args: Object): CommandBuilder;
     public setClientRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
     public setUserRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
     public setUserRequiredRoles(permissions: string | Array<Snowflake>): CommandBuilder;
@@ -237,6 +238,7 @@ declare module 'gcommands' {
     public setUsage(usage: string): CommandBuilder;
     public setSlash(slash: GCommandsOptionsCommandsSlash): CommandBuilder;
     public setContext(context: GCommandsOptionsCommandsContext): CommandBuilder;
+    public toJSON(): CommandBuilder
   }
 
   export class MessageActionRow {

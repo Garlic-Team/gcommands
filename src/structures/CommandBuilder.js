@@ -38,6 +38,12 @@ class CommandBuilder {
        this.usage = 'usage' in data ? resolveString(data.usage) : null;
 
        /**
+         * Args
+         * @type {string}
+        */
+       this.args = 'args' in data ? data.args : null;
+
+       /**
          * Cooldown
          * @type {string}
         */
@@ -127,7 +133,7 @@ class CommandBuilder {
         */
        this.context = 'context' in data ? data.context : null;
 
-       return this;
+       return this.toJSON();
     }
 
     /**
@@ -154,6 +160,15 @@ class CommandBuilder {
     */
     setUsage(usage) {
       this.usage = resolveString(usage);
+      return this;
+    }
+
+    /**
+     * Method to setArgs
+     * @param {String} usage
+    */
+    setArgs(args) {
+      this.args = args;
       return this;
     }
 
@@ -290,6 +305,33 @@ class CommandBuilder {
     setContext(context) {
       this.context = context;
       return this;
+    }
+
+    /**
+     * Method to toJSON
+     * @returns {Object}
+    */
+    toJSON() {
+      return {
+        name: this.name,
+        description: this.description,
+        usage: this.usage,
+        cooldown: this.cooldown,
+        category: this.category,
+        aliases: this.aliases,
+        userRequiredPermissions: this.userRequiredPermissions,
+        userRequiredRoles: this.userRequiredRoles,
+        clientRequiredPermissions: this.clientRequiredPermissions,
+        userOnly: this.userOnly,
+        channelOnly: this.channelOnly,
+        guildOnly: this.guildOnly,
+        channelTextOnly: this.channelTextOnly,
+        channelNewsOnly: this.channelNewsOnly,
+        channelThreadOnly: this.channelThreadOnly,
+        nsfw: this.nsfw,
+        slash: this.slash,
+        context: this.context,
+      };
     }
 }
 
