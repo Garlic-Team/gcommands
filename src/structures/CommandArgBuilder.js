@@ -51,9 +51,15 @@ class CommandArgBuilder {
 
         /**
          * Choices
-         * @type {}
+         * @type {Array<CommandArgsChoice>}
         */
         this.choices = 'choices' in data ? data.choises : null;
+
+        /**
+         * Args
+         * @type {Array<CommandArgsOption>}
+        */
+         this.args = 'args' in data ? data.args : null;
 
         return this.toJSON();
     }
@@ -123,6 +129,27 @@ class CommandArgBuilder {
         }
         return this;
     }
+
+    /**
+     * Method to addArg
+     * @param {CommandArgsOption} arg
+    */
+     addArg(arg) {
+        if (!Array.isArray(this.args)) this.args = [];
+        this.args.push(arg);
+        return this;
+      }
+
+      /**
+       * Method to addArgs
+       * @param {Array<CommandArgsOption>} args
+      */
+      addArgs(args) {
+        for (const arg of Object.values(args)) {
+          this.addArg(arg);
+        }
+        return this;
+      }
 
     /**
      * Method to toJSON

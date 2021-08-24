@@ -252,6 +252,7 @@ declare module 'gcommands' {
     public prompt: String;
     public required: Boolean;
     public choices: Array;
+    public args: Array<CommandArgsOption>;
 
     public setName(name: String): CommandArgBuilder;
     public setDescription(description: String): CommandArgBuilder;
@@ -260,6 +261,8 @@ declare module 'gcommands' {
     public setRequired(required: Boolean): CommandArgBuilder;
     public addChoice(choice: CommandArgsChoice): CommandArgBuilder;
     public addChoices(choices: Array<CommandArgsChoice>): CommandArgBuilder;
+    public addArg(arg: CommandArgsOption): CommandArgBuilder;
+    public addArgs(args: Array<CommandArgsOption>): CommandArgBuilder;
     public toJSON(): CommandArgBuilder;
   }
 
