@@ -195,6 +195,50 @@ declare module 'gcommands' {
     public get endReason(): string;
   }
 
+  export class CommandBuilder {
+    constructor(data: CommandOptions)
+    private setup(data: CommandOptions)
+
+    public name: string;
+    public description: string;
+    public cooldown: string;
+    public args: Array<object>;
+    public clientRequiredPermissions: String | Array<string>;
+    public userRequiredPermissions: String | Array<string>;
+    public userRequiredRoles: String | Array<Snowflake>;
+    public userOnly: Snowflake | Array<Snowflake>;
+    public channelOnly: Snowflake | Array<Snowflake>;
+    public channelTextOnly: Boolean;
+    public channelNewsOnly: Boolean;
+    public channelThreadOnly: Boolean;
+    public guildOnly: Snowflake | String;
+    public nsfw: boolean;
+    public aliases: Array<string>;
+    public category: string;
+    public usage: string;
+    public slash: GCommandsOptionsCommandsSlash;
+    public context: GCommandsOptionsCommandsContext;
+
+    public setName(name: string): CommandBuilder;
+    public setDescription(description: string): CommandBuilder;
+    public setCooldown(cooldown: string): CommandBuilder;
+    public setClientRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
+    public setUserRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
+    public setUserRequiredRoles(permissions: string | Array<Snowflake>): CommandBuilder;
+    public setUserOnly(userOnly: Snowflake | Array<Snowflake>): CommandBuilder;
+    public setChannelOnly(channelOnly: Snowflake | Array<Snowflake>): CommandBuilder;
+    public setChannelTextOnly(channelTextOnly: Boolean): CommandBuilder;
+    public setChannelNewsOnly(channelNewsOnly: Boolean): CommandBuilder;
+    public setChannelThreadOnly(channelThreadOnly: Boolean): CommandBuilder;
+    public setGuildOnly(guildOnly: Snowflake | string): CommandBuilder;
+    public setNsfw(nsfw: Boolean): CommandBuilder;
+    public setAliases(aliases: Array<string>): CommandBuilder;
+    public setCategory(category: string): CommandBuilder;
+    public setUsage(usage: string): CommandBuilder;
+    public setSlash(slash: GCommandsOptionsCommandsSlash): CommandBuilder;
+    public setContext(context: GCommandsOptionsCommandsContext): CommandBuilder;
+  }
+
   export class MessageActionRow {
     constructor(data: MessageActionRow)
     public type: number;
