@@ -39,7 +39,7 @@ class CommandBuilder {
 
        /**
          * Args
-         * @type {string}
+         * @type {Array}
         */
        this.args = 'args' in data ? data.args : null;
 
