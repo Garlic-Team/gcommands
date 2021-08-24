@@ -195,6 +195,89 @@ declare module 'gcommands' {
     public get endReason(): string;
   }
 
+  export class CommandBuilder {
+    constructor(data: CommandOptions)
+    private setup(data: CommandOptions)
+
+    public name: string;
+    public description: string;
+    public cooldown: string;
+    public args: Array<CommandArgsOption>;
+    public clientRequiredPermissions: String | Array<string>;
+    public userRequiredPermissions: String | Array<string>;
+    public userRequiredRoles: String | Array<Snowflake>;
+    public userOnly: Snowflake | Array<Snowflake>;
+    public channelOnly: Snowflake | Array<Snowflake>;
+    public channelTextOnly: Boolean;
+    public channelNewsOnly: Boolean;
+    public channelThreadOnly: Boolean;
+    public guildOnly: Snowflake | String;
+    public nsfw: boolean;
+    public aliases: Array<string>;
+    public category: string;
+    public usage: string;
+    public slash: GCommandsOptionsCommandsSlash;
+    public context: GCommandsOptionsCommandsContext;
+
+    public setName(name: string): CommandBuilder;
+    public setDescription(description: string): CommandBuilder;
+    public setCooldown(cooldown: string): CommandBuilder;
+    public addArg(arg: CommandArgsOption): CommandBuilder;
+    public addArgs(args: Array<CommandArgsOption>): CommandBuilder;
+    public setClientRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
+    public setUserRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
+    public setUserRequiredRoles(permissions: string | Array<Snowflake>): CommandBuilder;
+    public setUserOnly(userOnly: Snowflake | Array<Snowflake>): CommandBuilder;
+    public setChannelOnly(channelOnly: Snowflake | Array<Snowflake>): CommandBuilder;
+    public setChannelTextOnly(channelTextOnly: Boolean): CommandBuilder;
+    public setChannelNewsOnly(channelNewsOnly: Boolean): CommandBuilder;
+    public setChannelThreadOnly(channelThreadOnly: Boolean): CommandBuilder;
+    public setGuildOnly(guildOnly: Snowflake | string): CommandBuilder;
+    public setNsfw(nsfw: Boolean): CommandBuilder;
+    public setAliases(aliases: Array<string>): CommandBuilder;
+    public setCategory(category: string): CommandBuilder;
+    public setUsage(usage: string): CommandBuilder;
+    public setSlash(slash: GCommandsOptionsCommandsSlash): CommandBuilder;
+    public setContext(context: GCommandsOptionsCommandsContext): CommandBuilder;
+    public toJSON(): CommandBuilder
+  }
+
+  export class CommandArgBuilder {
+    constructor(data: Object);
+    private setup(data: Object);
+
+    public name: String;
+    public description: String;
+    public type: String;
+    public prompt: String;
+    public required: Boolean;
+    public choices: Array;
+    public args: Array<CommandArgsOption>;
+
+    public setName(name: String): CommandArgBuilder;
+    public setDescription(description: String): CommandArgBuilder;
+    public setType(type: String): CommandArgBuilder;
+    public setPrompt(prompt: String): CommandArgBuilder;
+    public setRequired(required: Boolean): CommandArgBuilder;
+    public addChoice(choice: CommandArgsChoice): CommandArgBuilder;
+    public addChoices(choices: Array<CommandArgsChoice>): CommandArgBuilder;
+    public addArg(arg: CommandArgsOption): CommandArgBuilder;
+    public addArgs(args: Array<CommandArgsOption>): CommandArgBuilder;
+    public toJSON(): CommandArgBuilder;
+  }
+
+  export class CommandArgChoiceBuilder {
+    constructor(data: Object);
+    private setup(data: Object);
+
+    public name: String;
+    public value: any;
+
+    public setName(name: String): CommandArgChoiceBuilder;
+    public setValue(value: any): CommandArgChoiceBuilder;
+    public toJSON(): CommandArgChoiceBuilder;
+  }
+
   export class MessageActionRow {
     constructor(data: MessageActionRow)
     public type: number;
@@ -422,7 +505,7 @@ declare module 'gcommands' {
     name: string;
     description: string;
     cooldown?: string;
-    args?: string;
+    args?: Array<Object>;
     userRequiredPermissions?: Array<string> | String;
     userRequiredRoles?: Array<Snowflake> | String;
     clientRequiredPermissions?: Array<string> | String;
