@@ -260,6 +260,19 @@ declare module 'gcommands' {
     public setRequired(required: Boolean): CommandArgBuilder;
     public addChoice(choice: CommandArgsChoice): CommandArgBuilder;
     public addChoices(choices: Array<CommandArgsChoice>): CommandArgBuilder;
+    public toJSON(): CommandArgBuilder;
+  }
+
+  export class CommandArgChoiceBuilder {
+    constructor(data: Object);
+    private setup(data: Object);
+
+    public name: String;
+    public value: any;
+
+    public setName(name: String): CommandArgChoiceBuilder;
+    public setValue(value: any): CommandArgChoiceBuilder;
+    public toJSON(): CommandArgChoiceBuilder;
   }
 
   export class MessageActionRow {

@@ -170,7 +170,6 @@ class CommandBuilder {
     addArg(arg) {
       if (!Array.isArray(this.args)) this.args = [];
       this.args.push(arg);
-      console.log(this.args);
       return this;
     }
 
@@ -179,9 +178,8 @@ class CommandBuilder {
      * @param {Array<CommandArgsChoice>} args
     */
     addArgs(args) {
-      if (!Array.isArray(this.args)) this.args = [];
       for (const arg of Object.values(args)) {
-        this.args.push(arg);
+        this.addArg(arg);
       }
       return this;
     }

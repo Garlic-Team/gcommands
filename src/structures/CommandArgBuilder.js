@@ -107,7 +107,9 @@ class CommandArgBuilder {
      * Method to addChoice
      * @param {CommandArgsChoice} choice
     */
-    addChoice() {
+    addChoice(choice) {
+        if (!Array.isArray(this.choices)) this.choices = [];
+        this.choices.push(choice);
         return this;
     }
 
@@ -115,7 +117,10 @@ class CommandArgBuilder {
      * Method to addChoices
      * @param {Array<CommandArgsChoice>} choices
     */
-    addChoices() {
+    addChoices(choices) {
+        for (const choice of Object.values(choices)) {
+            this.addChoice(choice);
+        }
         return this;
     }
 

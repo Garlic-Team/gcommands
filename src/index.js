@@ -20,6 +20,7 @@ module.exports = {
     GThreadChannel: require('./structures/ThreadChannel'),
     CommandBuilder: require('./structures/CommandBuilder'),
     CommandArgBuilder: require('./structures/CommandArgBuilder'),
+    CommandArgChoiceBuilder: require('./structures/CommandArgChoiceBuilder'),
     MessageButton: require('./structures/MessageButton'),
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
