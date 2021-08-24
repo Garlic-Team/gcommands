@@ -100,9 +100,15 @@ class Argument {
             };
         }
 
+        let content = resFirst.content;
+        if (this.choices) {
+            const choice = this.choices.find(ch => ch.name === resFirst.content.toLowerCase());
+            if (choice) content = choice.value;
+        }
+
         return {
             valid: true,
-            content: resFirst.content,
+            content: content,
         };
     }
 
