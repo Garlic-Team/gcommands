@@ -74,7 +74,7 @@ class GCommandLoader {
         await this.__loadSlashCommands();
         await this.__loadContextMenuCommands();
 
-        this.client.emit(Events.COMMANDS_LOADED, client.gcommands)
+        this.client.emit(Events.COMMANDS_LOADED, this.client.gcommands);
     }
 
     /**

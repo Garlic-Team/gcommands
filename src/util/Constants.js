@@ -24,7 +24,7 @@ exports.Events = {
     LOG: 'log',
     COMMAND_EXECUTE: 'commandExecute',
     COMMAND_ERROR: 'commandError',
-    COMMANDS_LOADED: 'commandsLoaded'
+    COMMANDS_LOADED: 'commandsLoaded',
 };
 
 /**
