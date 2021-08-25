@@ -78,7 +78,7 @@ class GMessage {
                         this.attachments = new Collection(this.attachemnts);
                     }
 
-                    if ('sticker_items' in data || 'stickers' in data || !partial && ifDjsV13) {
+                    if (ifDjsV13 && ('sticker_items' in data || 'stickers' in data || !partial)) {
                         const { Sticker } = require('discord.js');
                         this.stickers = new Collection(
                             (data.sticker_items || data.stickers) ? (data.sticker_items || data.stickers).map(s => [s.id, new Sticker(this.client, s)]) : null,

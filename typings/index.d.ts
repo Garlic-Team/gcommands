@@ -58,7 +58,8 @@ declare module 'discord.js' {
     GInteraction: [GInteraction | InteractionEvent];
     commandPrefixChange: [Guild, string];
     commandExecute: [Command, GuildMember];
-    commandError: [Command, GuildMember, String]
+    commandError: [Command, GuildMember, String];
+    commandsLoaded: [Collection<Command>];
     log: [string];
     debug: [string];
 
