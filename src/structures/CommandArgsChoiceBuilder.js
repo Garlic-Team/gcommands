@@ -1,17 +1,23 @@
 const { resolveString } = require('../util/util');
 
 /**
- * The CommandArgChoiceBuilder class
+ * The CommandArgsChoiceBuilder class
  */
-class CommandArgChoiceBuilder {
+class CommandArgsChoiceBuilder {
     /**
-     * Creates new CommandArgChoiceBuilder instance
-     * @param {Object} data
+     * Creates new CommandArgsChoiceBuilder instance
+     * @param {CommandArgsChoice} data
     */
      constructor(data = {}) {
         this.setup(data);
     }
 
+    /**
+     * Setup
+     * @param {CommandArgsChoice} data
+     * @returns {CommandArgsChoice}
+     * @private
+     */
     setup(data) {
         /**
          * Name
@@ -58,4 +64,4 @@ class CommandArgChoiceBuilder {
       }
 }
 
-module.exports = CommandArgChoiceBuilder;
+module.exports = CommandArgsChoiceBuilder;
