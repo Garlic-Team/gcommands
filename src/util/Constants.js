@@ -16,6 +16,7 @@
  * * log
  * * commandExecute
  * * commandError
+ * * commandsLoaded
  * @type {Object}
  */
 exports.Events = {
@@ -23,6 +24,7 @@ exports.Events = {
     LOG: 'log',
     COMMAND_EXECUTE: 'commandExecute',
     COMMAND_ERROR: 'commandError',
+    COMMANDS_LOADED: 'commandsLoaded'
 };
 
 /**
