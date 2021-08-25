@@ -278,7 +278,7 @@ declare module 'gcommands' {
     public toJSON(): CommandArgsChoiceBuilder;
   }
 
-  export class EventBuilder {
+  export class EventOptionsBuilder {
     constructor(data: EventOptions);
     private setup(data: EventOptions);
 
