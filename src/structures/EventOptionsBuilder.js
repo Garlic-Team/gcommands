@@ -1,11 +1,11 @@
 const { resolveString } = require('../util/util');
 
 /**
- * The EventBuilder class
+ * The EventOptionsBuilder class
  */
-class EventBuilder {
+class EventOptionsBuilder {
     /**
-     * Creates new EventBuilder instance
+     * Creates new EventOptionsBuilder instance
      * @param {EventOptions} data
     */
      constructor(data = {}) {
@@ -80,4 +80,4 @@ class EventBuilder {
       }
 }
 
-module.exports = EventBuilder;
+module.exports = EventOptionsBuilder;

@@ -21,7 +21,7 @@ module.exports = {
     CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),
     CommandArgsOptionBuilder: require('./structures/CommandArgsOptionBuilder'),
     CommandArgsChoiceBuilder: require('./structures/CommandArgsChoiceBuilder'),
-    EventOptionsBuilder: require('./structures/EventBuilder'),
+    EventOptionsBuilder: require('./structures/EventOptionsBuilder'),
     MessageButton: require('./structures/MessageButton'),
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
