@@ -18,10 +18,6 @@ module.exports = {
     GTextChannel: require('./structures/TextChannel'),
     GDMChannel: require('./structures/DMChannel'),
     GThreadChannel: require('./structures/ThreadChannel'),
-    CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),
-    CommandArgsOptionBuilder: require('./structures/CommandArgsOptionBuilder'),
-    CommandArgsChoiceBuilder: require('./structures/CommandArgsChoiceBuilder'),
-    EventOptionsBuilder: require('./structures/EventOptionsBuilder'),
     MessageButton: require('./structures/MessageButton'),
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
@@ -43,6 +39,12 @@ module.exports = {
     MessageComponentInteraction: require('./structures/MessageComponentInteraction'),
     BaseMessageComponent: require('./structures/BaseMessageComponent'),
     GError: require('./structures/GError'),
+
+    // Builders
+    CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),
+    CommandArgsOptionBuilder: require('./structures/CommandArgsOptionBuilder'),
+    CommandArgsChoiceBuilder: require('./structures/CommandArgsChoiceBuilder'),
+    EventOptionsBuilder: require('@gcommands/events').EventOptionsBuilder,
 
     // Other
     Color: require('./structures/Color'),

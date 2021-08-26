@@ -279,20 +279,6 @@ declare module 'gcommands' {
     public toJSON(): CommandArgsChoiceBuilder;
   }
 
-  export class EventOptionsBuilder {
-    constructor(data: EventOptions);
-    private setup(data: EventOptions);
-
-    public name: String;
-    public once: Boolean;
-    public ws: Boolean;
-
-    public setName(): EventBuilder;
-    public setOnce(): EventBuilder;
-    public setWs(): EventBuilder;
-    public toJSON(): EventBuilder;
-  }
-
   export enum ArgumentType {
     SUB_COMMAND,
     SUB_COMMAND_GROUP,
@@ -446,6 +432,20 @@ declare module 'gcommands' {
     public ws: boolean;
 
     public run(client: Client, ...args): void;
+  }
+
+  export class EventOptionsBuilder {
+    constructor(data: EventOptions);
+    private setup(data: EventOptions);
+
+    public name: String;
+    public once: Boolean;
+    public ws: Boolean;
+
+    public setName(): EventBuilder;
+    public setOnce(): EventBuilder;
+    public setWs(): EventBuilder;
+    public toJSON(): EventBuilder;
   }
 
   export class GPayload {

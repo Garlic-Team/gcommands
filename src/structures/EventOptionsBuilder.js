@@ -1,83 +1,51 @@
-const { resolveString } = require('../util/util');
+// ONLY FOR DOCS
+const GEvents = require('@gcommands/events');
 
 /**
  * The EventOptionsBuilder class
  */
-class EventOptionsBuilder {
-    /**
-     * Creates new EventOptionsBuilder instance
-     * @param {EventOptions} data
-    */
-     constructor(data = {}) {
-        this.setup(data);
-    }
+class EventOptionsBuilder extends null { }
 
-    /**
-     * Setup
-     * @param {EventOptions} data
-     * @returns {EventOptionss}
-     * @private
-     */
-    setup(data) {
-        /**
-         * Name
-         * @type {string}
-        */
-        this.name = 'name' in data ? resolveString(data.name) : null;
+/**
+ * Name
+ * @type {string}
+*/
+EventOptionsBuilder.name = GEvents.EventOptionsBuilder.name;
 
-        /**
-         * Once
-         * @type {boolean}
-        */
-        this.once = 'once' in data ? Boolean(data.value) : null;
+/**
+ * Once
+ * @type {boolean}
+*/
+EventOptionsBuilder.once = GEvents.EventOptionsBuilder.once;
 
-        /**
-         * Ws
-         * @type {boolean}
-        */
-         this.ws = 'ws' in data ? Boolean(data.ws) : null;
+/**
+ * Ws
+ * @type {boolean}
+*/
+EventOptionsBuilder.ws = GEvents.EventOptionsBuilder.ws;
 
-        return this.toJSON();
-    }
+/**
+ * Method to setName
+ * @param {String} name
+*/
+EventOptionsBuilder.setName = () => GEvents.EventOptionsBuilder.setName;
 
-    /**
-     * Method to setName
-     * @param {String} name
-    */
-    setName(name) {
-        this.name = resolveString(name);
-        return this;
-    }
+/**
+ * Method to setOnce
+ * @param {boolean} once
+*/
+EventOptionsBuilder.setOnce = () => GEvents.EventOptionsBuilder.setOnce;
 
-    /**
-     * Method to setOnce
-     * @param {boolean} once
-    */
-    setOnce(once) {
-        this.once = Boolean(once);
-        return this;
-    }
+/**
+ * Method to setWs
+ * @param {boolean} ws
+*/
+EventOptionsBuilder.setWs = () => GEvents.EventOptionsBuilder.setWs;
 
-    /**
-     * Method to setWs
-     * @param {boolean} ws
-    */
-     setWs(ws) {
-        this.ws = Boolean(ws);
-        return this;
-    }
-
-    /**
-     * Method to toJSON
-     * @returns {Object}
-    */
-     toJSON() {
-        return {
-          name: this.name,
-          once: this.once,
-          ws: this.ws,
-        };
-      }
-}
+/**
+ * Method to toJSON
+ * @returns {Object}
+*/
+EventOptionsBuilder.toJSON = () => GEvents.EventOptionsBuilder.toJSON;
 
 module.exports = EventOptionsBuilder;
