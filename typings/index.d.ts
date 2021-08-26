@@ -196,7 +196,7 @@ declare module 'gcommands' {
     public get endReason(): string;
   }
 
-  export class CommandBuilder {
+  export class CommandOptionsBuilder {
     constructor(data: CommandOptions)
     private setup(data: CommandOptions)
 
@@ -220,32 +220,32 @@ declare module 'gcommands' {
     public slash: GCommandsOptionsCommandsSlash;
     public context: GCommandsOptionsCommandsContext;
 
-    public setName(name: string): CommandBuilder;
-    public setDescription(description: string): CommandBuilder;
-    public setCooldown(cooldown: string): CommandBuilder;
-    public addArg(arg: CommandArgsOption): CommandBuilder;
-    public addArgs(args: Array<CommandArgsOption>): CommandBuilder;
-    public setClientRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
-    public setUserRequiredPermissions(permissions: string | Array<string>): CommandBuilder;
-    public setUserRequiredRoles(permissions: string | Array<Snowflake>): CommandBuilder;
-    public setUserOnly(userOnly: Snowflake | Array<Snowflake>): CommandBuilder;
-    public setChannelOnly(channelOnly: Snowflake | Array<Snowflake>): CommandBuilder;
-    public setChannelTextOnly(channelTextOnly: Boolean): CommandBuilder;
-    public setChannelNewsOnly(channelNewsOnly: Boolean): CommandBuilder;
-    public setChannelThreadOnly(channelThreadOnly: Boolean): CommandBuilder;
-    public setGuildOnly(guildOnly: Snowflake | string): CommandBuilder;
-    public setNsfw(nsfw: Boolean): CommandBuilder;
-    public setAliases(aliases: Array<string>): CommandBuilder;
-    public setCategory(category: string): CommandBuilder;
-    public setUsage(usage: string): CommandBuilder;
-    public setSlash(slash: GCommandsOptionsCommandsSlash): CommandBuilder;
-    public setContext(context: GCommandsOptionsCommandsContext): CommandBuilder;
-    public toJSON(): CommandBuilder
+    public setName(name: string): CommandOptionsBuilder;
+    public setDescription(description: string): CommandOptionsBuilder;
+    public setCooldown(cooldown: string): CommandOptionsBuilder;
+    public addArg(arg: CommandArgsOption): CommandOptionsBuilder;
+    public addArgs(args: Array<CommandArgsOption>): CommandOptionsBuilder;
+    public setClientRequiredPermissions(permissions: string | Array<string>): CommandOptionsBuilder;
+    public setUserRequiredPermissions(permissions: string | Array<string>): CommandOptionsBuilder;
+    public setUserRequiredRoles(permissions: string | Array<Snowflake>): CommandOptionsBuilder;
+    public setUserOnly(userOnly: Snowflake | Array<Snowflake>): CommandOptionsBuilder;
+    public setChannelOnly(channelOnly: Snowflake | Array<Snowflake>): CommandOptionsBuilder;
+    public setChannelTextOnly(channelTextOnly: Boolean): CommandOptionsBuilder;
+    public setChannelNewsOnly(channelNewsOnly: Boolean): CommandOptionsBuilder;
+    public setChannelThreadOnly(channelThreadOnly: Boolean): CommandOptionsBuilder;
+    public setGuildOnly(guildOnly: Snowflake | string): CommandOptionsBuilder;
+    public setNsfw(nsfw: Boolean): CommandOptionsBuilder;
+    public setAliases(aliases: Array<string>): CommandOptionsBuilder;
+    public setCategory(category: string): CommandOptionsBuilder;
+    public setUsage(usage: string): CommandOptionsBuilder;
+    public setSlash(slash: GCommandsOptionsCommandsSlash): CommandOptionsBuilder;
+    public setContext(context: GCommandsOptionsCommandsContext): CommandOptionsBuilder;
+    public toJSON(): CommandOptionsBuilder
   }
 
-  export class CommandArgBuilder {
-    constructor(data: Object);
-    private setup(data: Object);
+  export class CommandArgsOptionBuilder {
+    constructor(data: CommandArgsOption);
+    private setup(data: CommandArgsOption);
 
     public name: String;
     public description: String;
@@ -255,28 +255,28 @@ declare module 'gcommands' {
     public choices: Array;
     public args: Array<CommandArgsOption>;
 
-    public setName(name: String): CommandArgBuilder;
-    public setDescription(description: String): CommandArgBuilder;
-    public setType(type: String): CommandArgBuilder;
-    public setPrompt(prompt: String): CommandArgBuilder;
-    public setRequired(required: Boolean): CommandArgBuilder;
-    public addChoice(choice: CommandArgsChoice): CommandArgBuilder;
-    public addChoices(choices: Array<CommandArgsChoice>): CommandArgBuilder;
-    public addArg(arg: CommandArgsOption): CommandArgBuilder;
-    public addArgs(args: Array<CommandArgsOption>): CommandArgBuilder;
-    public toJSON(): CommandArgBuilder;
+    public setName(name: String): CommandArgsOptionBuilder;
+    public setDescription(description: String): CommandArgsOptionBuilder;
+    public setType(type: String): CommandArgsOptionBuilder;
+    public setPrompt(prompt: String): CommandArgsOptionBuilder;
+    public setRequired(required: Boolean): CommandArgsOptionBuilder;
+    public addChoice(choice: CommandArgsChoice): CommandArgsOptionBuilder;
+    public addChoices(choices: Array<CommandArgsChoice>): CommandArgsOptionBuilder;
+    public addArg(arg: CommandArgsOption): CommandArgsOptionBuilder;
+    public addArgs(args: Array<CommandArgsOption>): CommandArgsOptionBuilder;
+    public toJSON(): CommandArgsOptionBuilder;
   }
 
-  export class CommandArgChoiceBuilder {
-    constructor(data: Object);
-    private setup(data: Object);
+  export class CommandArgsChoiceBuilder {
+    constructor(data: CommandArgsChoice);
+    private setup(data: CommandArgsChoice);
 
     public name: String;
     public value: any;
 
-    public setName(name: String): CommandArgChoiceBuilder;
-    public setValue(value: any): CommandArgChoiceBuilder;
-    public toJSON(): CommandArgChoiceBuilder;
+    public setName(name: String): CommandArgsChoiceBuilder;
+    public setValue(value: any): CommandArgsChoiceBuilder;
+    public toJSON(): CommandArgsChoiceBuilder;
   }
 
   export enum ArgumentType {
@@ -432,6 +432,20 @@ declare module 'gcommands' {
     public ws: boolean;
 
     public run(client: Client, ...args): void;
+  }
+
+  export class EventOptionsBuilder {
+    constructor(data: EventOptions);
+    private setup(data: EventOptions);
+
+    public name: String;
+    public once: Boolean;
+    public ws: Boolean;
+
+    public setName(): EventBuilder;
+    public setOnce(): EventBuilder;
+    public setWs(): EventBuilder;
+    public toJSON(): EventBuilder;
   }
 
   export class GPayload {

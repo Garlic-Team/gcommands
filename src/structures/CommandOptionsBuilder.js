@@ -1,12 +1,12 @@
 const { resolveString } = require('../util/util');
 
 /**
- * The CommandBuilder class
+ * The CommandOptionsBuilder class
  */
-class CommandBuilder {
+class CommandOptionsBuilder {
     /**
-     * Creates new CommandBuilder instance
-     * @param {Object} data
+     * Creates new CommandOptionsBuilder instance
+     * @param {CommandOptions} data
     */
     constructor(data = {}) {
         this.setup(data);
@@ -14,7 +14,7 @@ class CommandBuilder {
 
     /**
      * Setup
-     * @param {Object} data
+     * @param {CommandOptions} data
      * @returns {CommandOptions}
      * @private
      */
@@ -347,4 +347,4 @@ class CommandBuilder {
     }
 }
 
-module.exports = CommandBuilder;
+module.exports = CommandOptionsBuilder;
