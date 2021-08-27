@@ -80,7 +80,7 @@ class GCommandsDispatcher {
     /**
      * Internal method to getGuildPrefix
      * @param {Snowflake} guildId
-     * @param {Boolean} cache
+     * @param {boolean} cache
      * @returns {string}
     */
     async getGuildPrefix(guildId, cache = true) {
@@ -105,7 +105,7 @@ class GCommandsDispatcher {
      * @param {Snowflake} guildId
      * @param {Snowflake} userId
      * @param {Command} command
-     * @returns {String}
+     * @returns {string}
     */
     async getCooldown(guildId, userId, command) {
         if (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
@@ -199,7 +199,7 @@ class GCommandsDispatcher {
     /**
      * Internal method to getGuildLanguage
      * @param {Snowflake} guildId
-     * @param {Boolean} cache
+     * @param {boolean} cache
      * @returns {boolean}
     */
     async getGuildLanguage(guildId, cache = true) {

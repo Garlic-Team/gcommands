@@ -53,7 +53,7 @@ class MessageButton extends BaseMessageComponent {
 
         /**
          * Disabled
-         * @type {Boolean}
+         * @type {boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
@@ -76,7 +76,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setStyle
-     * @param {String} style
+     * @param {string} style
     */
     setStyle(style) {
         this.style = this.resolveStyle(resolveString(style.toLowerCase()));
@@ -85,7 +85,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setLabel
-     * @param {String} label
+     * @param {string} label
     */
     setLabel(label) {
         this.label = resolveString(label);
@@ -94,7 +94,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setEmoji
-     * @param {String} emoji
+     * @param {string} emoji
     */
     setEmoji(emoji) {
         this.emoji = parseEmoji(`${emoji}`);
@@ -103,7 +103,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setDisabled
-     * @param {String} boolean
+     * @param {string} boolean
     */
     setDisabled(boolean = true) {
         this.disabled = Boolean(boolean);
@@ -112,7 +112,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setURL
-     * @param {String} url
+     * @param {string} url
     */
     setURL(url) {
         this.url = resolveString(url);

@@ -57,8 +57,8 @@ class MessageActionRow extends BaseMessageComponent {
 
     /**
      * Method to removeComponents
-     * @param {Number} index
-     * @param {Number} deleteCount
+     * @param {number} index
+     * @param {number} deleteCount
      * @param {MessageButton[] | MessageSelectMenu[]} components
     */
     removeComponents(index, deleteCount, ...components) {

@@ -14,20 +14,20 @@ Event.name = GEvents.Event.name;
 
 /**
  * Once
- * @type {Boolean}
+ * @type {boolean}
  */
 Event.once = GEvents.Event.once;
 
 /**
  * Ws
- * @type {Boolean}
+ * @type {boolean}
  */
 Event.ws = GEvents.Event.ws;
 
 /**
  * Run function
  * @param {Client}
- * @param {String}
+ * @param {string}
  */
 Event.run = () => GEvents.Event.run;
 

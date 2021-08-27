@@ -7,8 +7,8 @@ const { InteractionTypes, MessageComponentTypes } = require('./Constants');
 class Util {
     /**
      * Internal method to resolveString
-     * @param {String | Array} data
-     * @returns {String}
+     * @param {string | Array} data
+     * @returns {string}
     */
     static resolveString(data) {
         if (typeof data === 'string') return data;
@@ -18,7 +18,7 @@ class Util {
 
     /**
      * Internal method to msToSeconds
-     * @param {Number} ms
+     * @param {number} ms
      * @returns {number}
     */
     static msToSeconds(ms) {
@@ -28,7 +28,7 @@ class Util {
 
     /**
      * Internal method to parseEmoji
-     * @param {String} text
+     * @param {string} text
      * @returns {Object}
     */
     static parseEmoji(text) {
@@ -119,7 +119,7 @@ class Util {
     /**
      * Internal method to deleteCmd
      * @param {Client} client
-     * @param {Number} commandId
+     * @param {number} commandId
      * @private
     */
     static async __deleteCmd(client, commandId, guildId = undefined) {
@@ -138,7 +138,7 @@ class Util {
     /**
      * Internal method to getAllCommands
      * @param {Client} client
-     * @param {Number} guildId
+     * @param {number} guildId
      * @private
     */
     static async __getAllCommands(client, guildId = undefined) {
@@ -166,8 +166,8 @@ class Util {
 
     /**
      * Internal method to checkDjsVersion
-     * @param {Number} needVer
-     * @returns {Boolean}
+     * @param {number} needVer
+     * @returns {boolean}
      * @private
     */
     static checkDjsVersion(needVer) {

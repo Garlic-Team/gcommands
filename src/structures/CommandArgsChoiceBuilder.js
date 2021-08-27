@@ -36,7 +36,7 @@ class CommandArgsChoiceBuilder {
 
     /**
      * Method to setName
-     * @param {String} name
+     * @param {string} name
     */
     setName(name) {
         this.name = resolveString(name);

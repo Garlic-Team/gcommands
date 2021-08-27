@@ -67,7 +67,7 @@ class Argument {
     /**
      * Method to obtain
      * @param {Message|Object}
-     * @param {String}
+     * @param {string}
      */
     async obtain(message, prompt = this.prompt) {
         if (message.author.bot) return;

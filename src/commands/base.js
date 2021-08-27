@@ -37,7 +37,7 @@ class Command {
 
         /**
          * ExpectedArgs
-         * @type {String | Array}
+         * @type {string | Array}
          * @deprecated
          */
         this.expectedArgs = options.expectedArgs;
@@ -50,26 +50,26 @@ class Command {
 
         /**
          * MinArgs
-         * @type {Number}
+         * @type {number}
          * @deprecated use args
          */
         this.minArgs = Number(options.minArgs);
 
         /**
          * UserRequiredPermissions
-         * @type {String | Array}
+         * @type {string | Array}
          */
         this.userRequiredPermissions = options.userRequiredPermissions;
 
         /**
          * UserRequiredRoles
-         * @type {String | Array}
+         * @type {string | Array}
          */
         this.userRequiredRoles = options.userRequiredRoles;
 
         /**
          * ClientRequiredPermissions
-         * @type {String | Array}
+         * @type {string | Array}
          */
         this.clientRequiredPermissions = options.clientRequiredPermissions;
 
@@ -87,19 +87,19 @@ class Command {
 
         /**
          * ChannelTextOnly
-         * @type {Boolean}
+         * @type {boolean}
          */
         this.channelTextOnly = options.channelTextOnly;
 
         /**
          * ChannelNewsOnly
-         * @type {Boolean}
+         * @type {boolean}
          */
         this.channelNewsOnly = options.channelNewsOnly;
 
         /**
          * ChannelThreadOnly
-         * @type {Boolean}
+         * @type {boolean}
          */
         this.channelThreadOnly = options.channelThreadOnly;
 
@@ -111,13 +111,13 @@ class Command {
 
         /**
          * Nsfw
-         * @type {Boolean}
+         * @type {boolean}
          */
         this.nsfw = options.nsfw;
 
         /**
          * Slash
-         * @type {Boolean}
+         * @type {boolean}
          */
         this.slash = options.slash;
 

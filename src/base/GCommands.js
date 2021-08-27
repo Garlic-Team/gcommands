@@ -43,14 +43,14 @@ class GCommands extends EventEmitter {
 
         /**
          * CaseSensitiveCommands
-         * @type {Boolean}
+         * @type {boolean}
          * @default true
         */
         this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true;
 
         /**
          * CaseSensitivePrefixes
-         * @type {Boolean}
+         * @type {boolean}
          * @default true
         */
         this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true;
@@ -70,7 +70,7 @@ class GCommands extends EventEmitter {
 
         /**
          * AutoTyping
-         * @type {Boolean}
+         * @type {boolean}
          * @default false
         */
         this.autoTyping = options.autoTyping;
@@ -136,7 +136,7 @@ class GCommands extends EventEmitter {
 
         /**
          * DefaultCooldown
-         * @type {Number}
+         * @type {number}
          * @default 0
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
