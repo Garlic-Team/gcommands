@@ -167,7 +167,7 @@ class GInteraction {
 
     /**
      * Method to defer
-     * @param {Boolean} ephemeral
+     * @param {boolean} ephemeral
     */
     async defer(ephemeral) {
         if (this._replied) throw new GError('[ALREADY REPLY]','This interaction already has a reply');
@@ -188,7 +188,7 @@ class GInteraction {
 
     /**
      * Method to think
-     * @param {Boolean} ephemeral
+     * @param {boolean} ephemeral
     */
     async think(ephemeral) {
         if (this._replied) throw new GError('[ALREADY REPLY]','This interaction already has a reply');

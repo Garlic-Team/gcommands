@@ -33,7 +33,7 @@ class CommandArgsOptionBuilder {
 
         /**
          * Type
-         * @type {Number}
+         * @type {number}
         */
         this.type = 'type' in data ? Number(data.type) : null;
 
@@ -45,7 +45,7 @@ class CommandArgsOptionBuilder {
 
         /**
          * Required
-         * @type {Boolean}
+         * @type {boolean}
         */
         this.required = 'required' in data ? Boolean(data.required) : null;
 
@@ -66,7 +66,7 @@ class CommandArgsOptionBuilder {
 
     /**
      * Method to setName
-     * @param {String} name
+     * @param {string} name
     */
     setName(name) {
         this.name = resolveString(name);
@@ -75,7 +75,7 @@ class CommandArgsOptionBuilder {
 
     /**
      * Method to setDescription
-     * @param {String} description
+     * @param {string} description
     */
     setDescription(description) {
         this.description = resolveString(description);
@@ -84,7 +84,7 @@ class CommandArgsOptionBuilder {
 
     /**
      * Method to setType
-     * @param {String} type
+     * @param {string} type
     */
     setType(type) {
         this.type = Number(type);
@@ -93,7 +93,7 @@ class CommandArgsOptionBuilder {
 
     /**
      * Method to setPrompt
-     * @param {String} prompt
+     * @param {string} prompt
     */
     setPrompt(prompt) {
         this.prompt = resolveString(prompt);
@@ -102,7 +102,7 @@ class CommandArgsOptionBuilder {
 
     /**
      * Method to setRequired
-     * @param {Boolean} required
+     * @param {boolean} required
     */
     setRequired(required) {
         this.required = Boolean(required);

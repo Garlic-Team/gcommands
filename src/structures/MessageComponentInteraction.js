@@ -17,13 +17,13 @@ class MessageComponentInteraction extends GInteraction {
 
         /**
          * The component's type
-         * @type {Number}
+         * @type {number}
          */
         this.componentType = MessageComponentTypes[data.data.component_type];
 
         /**
          * The component's customId
-         * @type {Number}
+         * @type {number}
          */
         this.customId = data.data.custom_id;
 

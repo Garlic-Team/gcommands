@@ -35,14 +35,14 @@ class GCommandsClient extends Client {
 
         /**
          * CaseSensitiveCommands
-         * @type {Boolean}
+         * @type {boolean}
          * @default true
         */
         this.caseSensitiveCommands = options.caseSensitiveCommands ? Boolean(options.caseSensitiveCommands) : true;
 
         /**
          * CaseSensitivePrefixes
-         * @type {Boolean}
+         * @type {boolean}
          * @default true
         */
         this.caseSensitivePrefixes = options.caseSensitivePrefixes ? Boolean(options.caseSensitivePrefixes) : true;
@@ -62,7 +62,7 @@ class GCommandsClient extends Client {
 
         /**
          * AutoTyping
-         * @type {Boolean}
+         * @type {boolean}
          * @default false
         */
         this.autoTyping = options.autoTyping;
@@ -128,7 +128,7 @@ class GCommandsClient extends Client {
 
         /**
          * DefaultCooldown
-         * @type {Number}
+         * @type {number}
          * @default 0
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;

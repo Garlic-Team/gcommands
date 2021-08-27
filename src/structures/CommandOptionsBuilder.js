@@ -99,37 +99,37 @@ class CommandOptionsBuilder {
 
        /**
          * ChannelTextOnly
-         * @type {Boolean}
+         * @type {boolean}
         */
        this.channelTextOnly = 'channelTextOnly' in data ? Boolean(data.channelTextOnly) : null;
 
        /**
          * ChannelNewsOnly
-         * @type {Boolean}
+         * @type {boolean}
         */
        this.channelNewsOnly = 'channelNewsOnly' in data ? Boolean(data.channelNewsOnly) : null;
 
        /**
          * ChannelThreadOnly
-         * @type {Boolean}
+         * @type {boolean}
         */
        this.channelThreadOnly = 'channelThreadOnly' in data ? Boolean(data.channelThreadOnly) : null;
 
        /**
          * Nsfw
-         * @type {Boolean}
+         * @type {boolean}
         */
        this.nsfw = 'nsfw' in data ? Boolean(data.nsfw) : null;
 
        /**
          * Slash
-         * @type {Boolean}
+         * @type {boolean}
         */
        this.slash = 'slash' in data ? Boolean(data.slash) : null;
 
        /**
          * Context
-         * @type {string | Boolean}
+         * @type {string | boolean}
         */
        this.context = 'context' in data ? data.context : null;
 
@@ -138,7 +138,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setName
-     * @param {String} name
+     * @param {string} name
     */
     setName(name) {
         this.name = resolveString(name);
@@ -147,7 +147,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setDescription
-     * @param {String} description
+     * @param {string} description
     */
     setDescription(description) {
         this.description = resolveString(description);
@@ -156,7 +156,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setUsage
-     * @param {String} usage
+     * @param {string} usage
     */
     setUsage(usage) {
       this.usage = resolveString(usage);
@@ -186,7 +186,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setCooldown
-     * @param {String} cooldown
+     * @param {string} cooldown
     */
     setCooldown(cooldown) {
       this.cooldown = resolveString(cooldown);
@@ -195,7 +195,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setCategory
-     * @param {String} category
+     * @param {string} category
     */
     setCategory(category) {
       this.category = resolveString(category);
@@ -267,7 +267,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setChannelTextOnly
-     * @param {Boolean} channelTextOnly
+     * @param {boolean} channelTextOnly
     */
     setChannelTextOnly(channelTextOnly) {
       this.channelTextOnly = Boolean(channelTextOnly);
@@ -276,7 +276,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setChannelNewsOnly
-     * @param {Boolean} channelNewsOnly
+     * @param {boolean} channelNewsOnly
     */
     setChannelNewsOnly(channelNewsOnly) {
       this.channelNewsOnly = Boolean(channelNewsOnly);
@@ -285,7 +285,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setChannelThreadOnly
-     * @param {Boolean} channelThreadOnly
+     * @param {boolean} channelThreadOnly
     */
     setChannelThreadOnly(channelThreadOnly) {
       this.channelThreadOnly = Boolean(channelThreadOnly);
@@ -294,7 +294,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setNsfw
-     * @param {Boolean} nsfw
+     * @param {boolean} nsfw
     */
     setNsfw(nsfw) {
       this.nsfw = Boolean(nsfw);
@@ -303,7 +303,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setSlash
-     * @param {Boolean} slash
+     * @param {boolean} slash
     */
     setSlash(slash) {
       this.slash = Boolean(slash);
@@ -312,7 +312,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setContext
-     * @param {String | Boolean} context
+     * @param {string | boolean} context
     */
     setContext(context) {
       this.context = Boolean(context);

@@ -38,7 +38,7 @@ const { Guild } = require('discord.js');
     /* eslint-disable no-empty-function */
     /**
      * Method to getCommandPrefix
-     * @param {Boolean} cache
+     * @param {boolean} cache
      * @returns {Promise}
     */
     getCommandPrefix() {}
@@ -52,7 +52,7 @@ const { Guild } = require('discord.js');
 
     /**
      * Method to getLanguage
-     * @param {Boolean} cache
+     * @param {boolean} cache
      * @returns {Promise}
     */
     getLanguage() {}

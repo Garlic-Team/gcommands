@@ -185,9 +185,9 @@ function createEnum(keys) {
  * @property {MessageEmbed[]} embeds
  * @property {MessageActionRow[]} components
  * @property {MessageAttachment[]} attachments
- * @property {Boolean} ephemeral
+ * @property {boolean} ephemeral
  * @property {Object} allowedMentions
- * @property {(string | Boolean)} inlineReply
+ * @property {(string | boolean)} inlineReply
  * @property {(string | Array)} stickers
  * @example .send({
  *  content: 'hello',

@@ -26,7 +26,7 @@ EventOptionsBuilder.ws = GEvents.EventOptionsBuilder.ws;
 
 /**
  * Method to setName
- * @param {String} name
+ * @param {string} name
 */
 EventOptionsBuilder.setName = () => GEvents.EventOptionsBuilder.setName;
 

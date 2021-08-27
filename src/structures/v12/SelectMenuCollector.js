@@ -26,7 +26,7 @@ const { Events } = require('discord.js').Constants;
 
     /**
      * Total
-     * @type {Number}
+     * @type {number}
      */
     this.total = 0;
 

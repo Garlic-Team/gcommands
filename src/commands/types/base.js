@@ -7,7 +7,7 @@ class ArgumentType {
     /**
      * The ArgumentType class
      * @param {Client}
-     * @param {String} type
+     * @param {string} type
      */
     constructor(client, type) {
         if (!client) throw new GError('[ARGUMENTS]','You must specify the client');
