@@ -215,7 +215,7 @@ class GEventHandling {
                         let editedMsg = await botMessage.edit(options);
                         return editedMsg;
                     },
-                }, args, subCommands, objectArgs);
+                }, args, objectArgs, subCommands);
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, commandos, message.member, e);
                 this.GCommandsClient.emit(Events.DEBUG, e);
