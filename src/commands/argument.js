@@ -1,3 +1,5 @@
+const SubCommandArgumentType = require('./types/sub_command');
+const SubCommandGroupArgumentType = require('./types/sub_command_group');
 const StringArgumentType = require('./types/string');
 const IntegerArgumentType = require('./types/integer');
 const BooleanArgumentType = require('./types/boolean');
@@ -118,6 +120,8 @@ class Argument {
      * @param {Argument}
      */
     determineArgument(client, argument) {
+        if (argument.type === 1) return new SubCommandArgumentType(client, argument);
+        if (argument.type === 2) return new SubCommandGroupArgumentType(client, argument);
         if (argument.type === 3) return new StringArgumentType(client, argument);
         if (argument.type === 4) return new IntegerArgumentType(client, argument);
         if (argument.type === 5) return new BooleanArgumentType(client, argument);
