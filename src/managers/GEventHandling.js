@@ -145,7 +145,7 @@ class GEventHandling {
 
                 let validArg = async (arg, prompt) => {
                     let final = await arg.obtain(message, prompt);
-                    if (!final.valid) return validArg(prompt);
+                    if (!final.valid) return validArg(arg, prompt);
 
                     return final;
                 };
@@ -155,7 +155,7 @@ class GEventHandling {
                 const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
                 if (Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
                     const argument = {
-                        name: 'subcommand',
+                        name: 'command',
                         type: ArgumentType.SUB_COMMAND,
                         subcommands: cmdsubcommands,
                         required: true,
