@@ -41,8 +41,8 @@ Then, paste this code in:
 const { Intents } = require("discord.js");
 const { GCommandsClient } = require("gcommands");
 const client = new GCommandsClient({
-  cmdDir: "commands/",
-  eventDir: "events/",
+  cmdDir: __dirname + "/commands",
+  eventDir: __dirname + "/events",
   caseSensitiveCommands: false, // true or false | whether to match the commands' caps
   caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
   unkownCommandMessage: false, // true or false | send unkownCommand Message
