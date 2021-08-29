@@ -341,6 +341,9 @@ class GEventHandling {
                     if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
                 }
 
+                let subcommands = [];
+                if (interaction.subcommands) subcommands = interaction.subcommands.map(sc => sc.name);
+
                 try {
                     const client = this.client, bot = this.client;
                     commandos.run({
@@ -360,7 +363,7 @@ class GEventHandling {
                         edit: result => interaction.reply.edit(result),
                         args: interaction.arrayArguments,
                         objectArgs: interaction.objectArguments,
-                        subcommands: interaction.subcommands,
+                        subcommands: subcommands,
                     });
                 } catch (e) {
                     this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
