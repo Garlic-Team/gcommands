@@ -391,9 +391,9 @@ declare module 'gcommands' {
   export class GCommandsClient extends Client {
     constructor(options: GCommandsOptions | ClientOptions)
 
-    public on<K extends keyof GEvents>(event: K, listener: (...args: GEvents[K]) => void): this;
+    public on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
     public on<S extends string | symbol>(
-      event: Exclude<S, keyof GEvents>,
+      event: Exclude<S, keyof ClientEvents>,
       listener: (...args: any[]) => void,
     ): this;
   }
