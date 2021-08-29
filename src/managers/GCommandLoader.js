@@ -1,10 +1,9 @@
-const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
+const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw, ArgumentType } = require('../util/Constants');
 const axios = require('axios');
 const fs = require('fs');
 const ms = require('ms');
 const { isClass, __deleteCmd, __getAllCommands, comparable } = require('../util/util');
 const Command = require('../commands/base');
-
 /**
  * The GCommandLoader class
  */
@@ -48,12 +47,12 @@ class GCommandLoader {
      * @returns {void}
      * @private
      */
-     async __loadCommandFiles() {
+    async __loadCommandFiles() {
         for await (let file of (await fs.readdirSync(this.cmdDir))) {
             const fileName = file.split('.').reverse()[1] || file;
             const fileType = file.split('.').reverse()[0];
 
-            if (!['js','ts'].includes(fileType)) {
+            if (!['js', 'ts'].includes(fileType)) {
                 await this.__loadCommandCategoryFiles(file);
                 continue;
             }
@@ -61,7 +60,7 @@ class GCommandLoader {
             file = await require(`${this.cmdDir}/${file}`);
             if (isClass(file)) {
                 file = await new file(this.client);
-                if (!(file instanceof Command)) throw new GError('[COMMAND]',`Command ${fileName} doesnt belong in Commands.`);
+                if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
             file._path = `${this.cmdDir}/${fileName}.${fileType}`;
@@ -90,7 +89,7 @@ class GCommandLoader {
             file = await require(`${this.cmdDir}/${categoryFolder}/${file}`);
             if (isClass(file)) {
                 file = await new file(this.client);
-                if (!(file instanceof Command)) throw new GError('[COMMAND]',`Command ${fileName} doesnt belong in Commands.`);
+                if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
             file._path = `${this.cmdDir}/${categoryFolder}/${fileName}.${fileType}`;
@@ -130,10 +129,18 @@ class GCommandLoader {
 
             const args = cmd.args ? JSON.parse(JSON.stringify(cmd.args)) : [];
 
-            for (const key in args) {
-                if (args[key].args) {
-                    args[key].options = args[key].args;
-                    delete args[key].args;
+            for (const arg of args) {
+                if (arg.args) {
+                    if (arg.type === ArgumentType.SUB_COMMAND_GROUP) {
+                        for (const subArg of arg.args) {
+                            if (subArg.args) {
+                                subArg.options = subArg.args;
+                                delete subArg.args;
+                            }
+                        }
+                    }
+                    arg.options = arg.args;
+                    delete arg.args;
                 }
             }
 
@@ -155,25 +162,25 @@ class GCommandLoader {
             axios(config).then(() => {
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
             })
-            .catch(error => {
-                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                .catch(error => {
+                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                if (error.response) {
-                    if (error.response.status === 429) {
-                        setTimeout(() => {
-                            this.__tryAgain(cmd, config, 'Slash');
-                        }, (error.response.data.retry_after) * 1000);
-                    } else {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color([
-                            '&a----------------------',
-                            '  &d[GCommands Debug] &3',
-                            `&aCode: &b${error.response.data.code}`,
-                            `&aMessage: &b${error.response.data.message}`,
-                            '&a----------------------',
-                        ]).getText());
+                    if (error.response) {
+                        if (error.response.status === 429) {
+                            setTimeout(() => {
+                                this.__tryAgain(cmd, config, 'Slash');
+                            }, (error.response.data.retry_after) * 1000);
+                        } else {
+                            this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                '&a----------------------',
+                                '  &d[GCommands Debug] &3',
+                                `&aCode: &b${error.response.data.code}`,
+                                `&aMessage: &b${error.response.data.message}`,
+                                '&a----------------------',
+                            ]).getText());
+                        }
                     }
-                }
-            });
+                });
         }
     }
 
@@ -228,25 +235,25 @@ class GCommandLoader {
                     this.__tryAgain(cmd, config, 'Context Menu (message)');
                 }
             })
-            .catch(error => {
-                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                .catch(error => {
+                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                if (error.response) {
-                    if (error.response.status === 429) {
-                        setTimeout(() => {
-                            this.__tryAgain(cmd, config, 'Context Menu');
-                        }, (error.response.data.retry_after) * 1000);
-                    } else {
-                        this.GCommandsClient.emit(Events.DEBUG, new Color([
-                            '&a----------------------',
-                            '  &d[GCommands Debug] &3',
-                            `&aCode: &b${error.response.data.code}`,
-                            `&aMessage: &b${error.response.data.message}`,
-                            '&a----------------------',
-                        ]).getText());
+                    if (error.response) {
+                        if (error.response.status === 429) {
+                            setTimeout(() => {
+                                this.__tryAgain(cmd, config, 'Context Menu');
+                            }, (error.response.data.retry_after) * 1000);
+                        } else {
+                            this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                '&a----------------------',
+                                '  &d[GCommands Debug] &3',
+                                `&aCode: &b${error.response.data.code}`,
+                                `&aMessage: &b${error.response.data.message}`,
+                                '&a----------------------',
+                            ]).getText());
+                        }
                     }
-                }
-            });
+                });
         }
     }
 
@@ -259,17 +266,17 @@ class GCommandLoader {
         axios(config).then(() => {
             this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText());
         })
-        .catch(error => {
-            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+            .catch(error => {
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-            if (error.response) {
-                if (error.response.status === 429) {
-                    setTimeout(() => {
-                        this.__tryAgain(cmd, config, type);
-                    }, (error.response.data.retry_after) * 1000);
+                if (error.response) {
+                    if (error.response.status === 429) {
+                        setTimeout(() => {
+                            this.__tryAgain(cmd, config, type);
+                        }, (error.response.data.retry_after) * 1000);
+                    }
                 }
-            }
-        });
+            });
     }
 
     /**

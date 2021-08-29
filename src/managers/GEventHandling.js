@@ -150,17 +150,13 @@ class GEventHandling {
                     return final;
                 };
 
-                let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
-                const subcommands = [];
-                const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
-                if (Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
-                    const argument = {
-                        name: 'command',
-                        type: ArgumentType.SUB_COMMAND,
-                        subcommands: cmdsubcommands,
+                let getSubCommand = async (type, cmdSubcommands) => {
+                    const options = {
+                        type: type,
+                        subcommands: cmdSubcommands,
                         required: true,
                     };
-                    const arg = new Argument(this.client, argument);
+                    const arg = new Argument(this.client, options);
                     let subcommandInput;
                     if (args[0]) {
                         let subcommandInvalid = await arg.argument.validate(arg, { content: args[0], guild: message.guild });
@@ -170,7 +166,7 @@ class GEventHandling {
 
                             if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                         } else {
-                            subcommandInput = { content: cmdsubcommands.find(sc => sc.name === args[0].toLowerCase()) };
+                            subcommandInput = { content: cmdSubcommands.find(sc => sc.name === args[0].toLowerCase()) };
                         }
                     } else {
                         subcommandInput = await arg.obtain(message);
@@ -183,9 +179,23 @@ class GEventHandling {
                         subcommands.push(subcommandInput.content.name);
                         if (args[0]) args.shift();
                     }
+                };
+
+
+                let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
+                const subcommands = [];
+
+                const cmdsubcommandgroups = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP);
+                if (Array.isArray(cmdsubcommandgroups) && cmdsubcommandgroups[0]) {
+                    await getSubCommand(ArgumentType.SUB_COMMAND_GROUP, cmdsubcommandgroups);
                 }
 
-                let objectArgs = {};
+                const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
+                if (Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
+                    await getSubCommand(ArgumentType.SUB_COMMAND, cmdsubcommands);
+                }
+
+                const objectArgs = {};
                 for (let i in cmdArgs) {
                     let arg = new Argument(this.client, cmdArgs[i]);
                     if (arg.type === 'invalid') continue;
@@ -201,6 +211,8 @@ class GEventHandling {
                                 args[i] = argInput.content;
                                 objectArgs[arg.name] = argInput.content;
                             }
+                        } else {
+                            objectArgs[arg.name] = args[i];
                         }
 
                         continue;
@@ -216,6 +228,8 @@ class GEventHandling {
                         objectArgs[arg.name] = argInput.content;
                     }
                 }
+
+                console.log(objectArgs);
 
                 this.client.emit(Events.COMMAND_EXECUTE, commandos, member);
 
@@ -343,7 +357,14 @@ class GEventHandling {
                 }
 
                 let subcommands = [];
-                if (interaction.subcommands) subcommands = interaction.subcommands.map(sc => sc.name);
+                if (interaction.subcommands[0]) {
+                    subcommands.push(interaction.subcommands[0].name);
+                    interaction.arrayArguments.shift();
+                    if (interaction.subcommands[0].options) {
+                        subcommands.push(interaction.subcommands[0].options[0].name);
+                        interaction.arrayArguments.shift();
+                    }
+                }
 
                 try {
                     const client = this.client, bot = this.client;
