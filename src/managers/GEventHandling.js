@@ -150,8 +150,9 @@ class GEventHandling {
                     return final;
                 };
 
+                let cmdArgs = JSON.parse(JSON.stringify(commandos.args));
                 const subcommands = [];
-                const cmdsubcommands = commandos.args.filter(a => a.type === ArgumentType.SUB_COMMAND);
+                const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
                 if (Array.isArray(cmdsubcommands)) {
                     const argument = {
                         name: 'subcommand',
@@ -178,15 +179,15 @@ class GEventHandling {
                         if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                     }
                     if (subcommandInput && typeof subcommandInput.content === 'object') {
-                        commandos.args = subcommandInput.content.args;
+                        cmdArgs = subcommandInput.content.args;
                         subcommands.push(subcommandInput.content.name);
                         if (args[0]) args.shift();
                     }
                 }
 
                 let objectArgs = {};
-                for (let i in commandos.args) {
-                    let arg = new Argument(this.client, commandos.args[i]);
+                for (let i in cmdArgs) {
+                    let arg = new Argument(this.client, cmdArgs[i]);
                     if (arg.type === 'invalid') continue;
 
                     if (args[i]) {
