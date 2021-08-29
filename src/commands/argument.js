@@ -63,6 +63,12 @@ class Argument {
         */
         this.choices = argument.choices;
 
+        /**
+         * SubCommands
+         * @type {Array<Object>}
+        */
+         this.subcommands = argument.subcommands;
+
         return this;
     }
 
@@ -106,6 +112,10 @@ class Argument {
         if (this.choices) {
             const choice = this.choices.find(ch => ch.name === resFirst.content.toLowerCase());
             if (choice) content = choice.value;
+        }
+        if (this.subcommands) {
+            const subcommand = this.subcommands.find(sc => sc.name === resFirst.content.toLowerCase());
+            if (subcommand) content = subcommand;
         }
 
         return {

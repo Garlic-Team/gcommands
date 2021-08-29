@@ -130,6 +130,13 @@ class GCommandLoader {
                 continue;
             }
 
+            for (const [key, value] of Object.entries(cmd.args)) {
+                if (value.args) {
+                    cmd.args[key].options = value.args;
+                    delete cmd.args[key].args;
+                }
+            }
+
             let config = {
                 method: 'POST',
                 headers: {

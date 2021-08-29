@@ -66,19 +66,6 @@ class GEventHandling {
 
                 if (!commandos || String(commandos.slash) === 'true') return;
 
-                const subCommands = [];
-                const hasSubCommands = commandos.args.find(a => a.type === ArgumentType.SUB_COMMAND);
-                if (Array.isArray(hasSubCommands) || typeof hasSubCommands === 'object') {
-                    let subCommand;
-                    if (typeof hasSubCommands === 'object') subCommand = hasSubCommands;
-                    else subCommand = hasSubCommands.find(sc => sc.name === args[0]);
-                    if (!subCommand) subCommand = hasSubCommands[0];
-
-                    commandos.args = subCommand.args;
-                    subCommands.push(subCommand.name);
-                    args.shift();
-                }
-
                 let member = message.member, guild = message.guild, channel = message.channel;
                 let botMessageInhibit;
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
@@ -98,7 +85,8 @@ class GEventHandling {
                         let editedMsg = await botMessageInhibit.edit(options);
                         return editedMsg;
                     },
-                }, args, args);
+                    args: args,
+                });
                 if (inhibitReturn === false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
@@ -155,23 +143,57 @@ class GEventHandling {
                     }
                 }
 
+                let validArg = async (arg, prompt) => {
+                    let final = await arg.obtain(message, prompt);
+                    if (!final.valid) return validArg(prompt);
+
+                    return final;
+                };
+
+                const subcommands = [];
+                const cmdsubcommands = commandos.args.filter(a => a.type === ArgumentType.SUB_COMMAND);
+                if (Array.isArray(cmdsubcommands)) {
+                    const argument = {
+                        name: 'subcommand',
+                        type: ArgumentType.SUB_COMMAND,
+                        subcommands: cmdsubcommands,
+                        required: true,
+                    };
+                    const arg = new Argument(this.client, argument);
+                    let subcommandInput;
+                    if (args[0]) {
+                        let subcommandInvalid = await arg.argument.validate(arg, { content: args[0], guild: message.guild });
+                        if (subcommandInvalid) {
+                            subcommandInput = await arg.obtain(message, subcommandInvalid);
+                            if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
+
+                            if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                        } else {
+                            subcommandInput = cmdsubcommands.find(sc => sc.name === args[0].toLowerCase());
+                        }
+                    } else {
+                        subcommandInput = await arg.obtain(message);
+                        if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
+
+                        if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                    }
+                    if (subcommandInput && typeof subcommandInput.content === 'object') {
+                        commandos.args = subcommandInput.content.args;
+                        subcommands.push(subcommandInput.content.name);
+                        if (args[0]) args.shift();
+                    }
+                }
+
                 let objectArgs = {};
                 for (let i in commandos.args) {
                     let arg = new Argument(this.client, commandos.args[i]);
                     if (arg.type === 'invalid') continue;
 
-                    let validArg = async prompt => {
-                        let final = await arg.obtain(message, prompt);
-                        if (!final.valid) return validArg(prompt);
-
-                        return final;
-                    };
-
                     if (args[i]) {
                         let argInvalid = await arg.argument.validate(arg, { content: args[i], guild: message.guild });
                         if (argInvalid) {
                             let argInput = await arg.obtain(message, argInvalid);
-                            if (!argInput.valid) argInput = await validArg(argInput.prompt);
+                            if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
 
                             if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                             if (argInput.content !== 'skip') {
@@ -184,7 +206,7 @@ class GEventHandling {
                     }
 
                     let argInput = await arg.obtain(message);
-                    if (!argInput.valid) argInput = await validArg(argInput.prompt);
+                    if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
 
                     if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
 
@@ -215,7 +237,10 @@ class GEventHandling {
                         let editedMsg = await botMessage.edit(options);
                         return editedMsg;
                     },
-                }, args, objectArgs, subCommands);
+                    args: args,
+                    objectArgs: objectArgs,
+                    subcommands: subcommands,
+                });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, commandos, message.member, e);
                 this.GCommandsClient.emit(Events.DEBUG, e);
@@ -254,7 +279,9 @@ class GEventHandling {
                     channel: interaction.channel,
                     respond: result => interaction.reply.send(result),
                     edit: result => interaction.reply.edit(result),
-                }, interaction.arrayArguments, interaction.objectArguments);
+                    args: interaction.arrayArguments,
+                    objectArgs: interaction.objectArguments,
+                });
                 if (inhibitReturn === false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
@@ -331,7 +358,10 @@ class GEventHandling {
                          */
                         respond: result => interaction.reply.send(result),
                         edit: result => interaction.reply.edit(result),
-                    }, interaction.arrayArguments, interaction.objectArguments);
+                        args: interaction.arrayArguments,
+                        objectArgs: interaction.objectArguments,
+                        subcommands: interaction.subcommands,
+                    });
                 } catch (e) {
                     this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
                     this.GCommandsClient.emit(Events.DEBUG, e);

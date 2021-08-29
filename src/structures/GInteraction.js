@@ -76,6 +76,12 @@ class GInteraction {
         this.member = data.guild_id ? ifDjsV13 ? this.guild.members._add(data.member) || data.member : this.guild.members.add(data.member) || data.member : null;
 
         /**
+         * The interaction's subcommands
+         * @type {Array<string> | null}
+         */
+        this.subcommands = data.command.options.getSubCommand() ? data.command.options.getSubCommand() : null;
+
+        /**
          * Replied
          * @type {boolean}
          * @private
