@@ -153,7 +153,7 @@ class GEventHandling {
                 let cmdArgs = JSON.parse(JSON.stringify(commandos.args));
                 const subcommands = [];
                 const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
-                if (Array.isArray(cmdsubcommands)) {
+                if (Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
                     const argument = {
                         name: 'subcommand',
                         type: ArgumentType.SUB_COMMAND,
