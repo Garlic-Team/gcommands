@@ -169,7 +169,7 @@ class GEventHandling {
 
                             if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                         } else {
-                            subcommandInput = cmdsubcommands.find(sc => sc.name === args[0].toLowerCase());
+                            subcommandInput = { content: cmdsubcommands.find(sc => sc.name === args[0].toLowerCase()) };
                         }
                     } else {
                         subcommandInput = await arg.obtain(message);
