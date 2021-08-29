@@ -229,9 +229,7 @@ class GEventHandling {
                     }
                 }
 
-                console.log(objectArgs);
-
-                this.client.emit(Events.COMMAND_EXECUTE, commandos, member);
+                this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member, channel: message.channel, guild: message.guild });
 
                 const client = this.client, bot = this.client;
                 let botMessage;
@@ -257,7 +255,7 @@ class GEventHandling {
                     subcommands: subcommands,
                 });
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, commandos, message.member, e);
+                this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         };
@@ -388,13 +386,13 @@ class GEventHandling {
                         subcommands: subcommands,
                     });
                 } catch (e) {
-                    this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
+                    this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
                     this.GCommandsClient.emit(Events.DEBUG, e);
                 }
 
-                this.client.emit(Events.COMMAND_EXECUTE, commandos, interaction.member);
+                this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
+                this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         });
