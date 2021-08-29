@@ -150,7 +150,7 @@ class GEventHandling {
                     return final;
                 };
 
-                let cmdArgs = JSON.parse(JSON.stringify(commandos.args));
+                let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
                 const subcommands = [];
                 const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
                 if (Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {

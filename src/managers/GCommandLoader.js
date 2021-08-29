@@ -128,7 +128,7 @@ class GCommandLoader {
                 continue;
             }
 
-            const args = JSON.parse(JSON.stringify(cmd.args));
+            const args = cmd.args ? JSON.parse(JSON.stringify(cmd.args)) : [];
 
             for (const key in args) {
                 if (args[key].args) {
