@@ -116,8 +116,6 @@ class GCommandLoader {
             const cmd = this.client.gcommands.get(commandName);
             if (String(cmd.slash) === 'false') continue;
 
-            if (cmd.expectedArgs) cmd.args = cmd.expectedArgs;
-
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
 
@@ -130,10 +128,12 @@ class GCommandLoader {
                 continue;
             }
 
-            for (const [key, value] of Object.entries(cmd.args)) {
-                if (value.args) {
-                    cmd.args[key].options = value.args;
-                    delete cmd.args[key].args;
+            const args = JSON.parse(JSON.stringify(cmd.args));
+
+            for (const key in args) {
+                if (args[key].args) {
+                    args[key].options = args[key].args;
+                    delete args[key].args;
                 }
             }
 
@@ -146,7 +146,7 @@ class GCommandLoader {
                 data: JSON.stringify({
                     name: cmd.name,
                     description: cmd.description,
-                    options: cmd.args || [],
+                    options: args,
                     type: 1,
                 }),
                 url,
