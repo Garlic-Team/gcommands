@@ -229,6 +229,8 @@ function createEnum(keys) {
  * @property {TextChannel | NewsChannel} channel
  * @property {GPayloadOptions} respond
  * @property {GPayloadOptions} edit
+ * @property {Array} args
+ * @property {Object} objectArgs
  * @typedef {(Object)} Inhibitor
  */
 

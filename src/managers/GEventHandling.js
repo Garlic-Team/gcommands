@@ -86,6 +86,7 @@ class GEventHandling {
                         return editedMsg;
                     },
                     args: args,
+                    objectArgs: args,
                 });
                 if (inhibitReturn === false) return;
 
