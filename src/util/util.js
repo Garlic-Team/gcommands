@@ -187,6 +187,23 @@ class Util {
     static comparable(o) {
         return (typeof o !== 'object' || !o) ? o : (Object.keys(o).sort().reduce((c, key) => (c[key] = Util.comparable(o[key]), c), {})); // eslint-disable-line no-return-assign, no-sequences
     }
+
+    /**
+     * Unescape
+     * @param {String} a
+     * @param {String} b
+     * @param {String} c
+     * @returns {Object | Array}
+    */
+    static unescape(a, b, c) {
+        a = a.split(b || '-')
+            .map(x =>
+            x[0].toUpperCase() + x.slice(1).toLowerCase()
+            )
+            .join(c || ' ');
+
+        return a;
+    }
 }
 
 module.exports = Util;

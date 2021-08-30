@@ -2,7 +2,7 @@ const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const ArgumentType = require('../util/Constants').ArgumentType;
 const GError = require('../structures/GError'), { Events } = require('../util/Constants');
-const { inhibit, interactionRefactor, channelTypeRefactor } = require('../util/util');
+const { inhibit, interactionRefactor, channelTypeRefactor, unescape } = require('../util/util');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
@@ -119,7 +119,7 @@ class GEventHandling {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
+                        let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
                         return message.reply(permsNeed);
                     }
                 }
@@ -128,7 +128,7 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!member.permissions.has(commandos.userRequiredPermissions)) {
-                        let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
+                        let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
                         return message.reply(permsNeed);
                     }
                 }
@@ -328,9 +328,8 @@ class GEventHandling {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        return interaction.reply.send({
-                            content:
-                                this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true,
+                        return interaction.reply.send({ content:
+                            this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
                         });
                     }
                 }
@@ -339,9 +338,8 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
-                        return interaction.reply.send({
-                            content:
-                                this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true,
+                        return interaction.reply.send({ content:
+                            this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
                         });
                     }
                 }
