@@ -275,6 +275,7 @@ function createEnum(keys) {
  * @property {string} prompt
  * @property {boolean} required
  * @property {CommandArgsChoice[]} choices
+ * @property {CommandArgsOption} args
  * @typedef {(Object)} CommandArgsOption
  */
 
