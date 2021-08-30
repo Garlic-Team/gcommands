@@ -355,7 +355,7 @@ class GEventHandling {
                 }
 
                 let subcommands = [];
-                if (interaction.subcommands[0]) {
+                if (interaction.subcommands && Array.isArray(interaction.subcommands) && interaction.subcommands[0]) {
                     subcommands.push(interaction.subcommands[0].name);
                     interaction.arrayArguments.shift();
                     if (interaction.subcommands[0].options) {
