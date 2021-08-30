@@ -197,9 +197,7 @@ class Util {
     */
     static unescape(a, b, c) {
         a = a.split(b || '-')
-            .map(x =>
-            x[0].toUpperCase() + x.slice(1).toLowerCase()
-            )
+            .map(x => x[0].toUpperCase() + x.slice(1).toLowerCase()) // eslint-disable-line comma-dangle
             .join(c || ' ');
 
         return a;
