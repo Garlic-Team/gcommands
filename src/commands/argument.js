@@ -84,7 +84,7 @@ class Argument {
 		const wait = 30000;
 
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
-        if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', ')); ;
+        if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
         message.reply(prompt);
 
         const filter = msg => msg.author.id === message.author.id;
