@@ -212,6 +212,9 @@ function createEnum(keys) {
  * @property {TextChannel | NewsChannel} channel
  * @property {GPayloadOptions} respond
  * @property {GPayloadOptions} edit
+ * @property {Array} args
+ * @property {Object} objectArgs
+ * @property {Array<string>} subcommands
  * @typedef {(Object)} CommandRunOptions
 */
 
@@ -226,6 +229,8 @@ function createEnum(keys) {
  * @property {TextChannel | NewsChannel} channel
  * @property {GPayloadOptions} respond
  * @property {GPayloadOptions} edit
+ * @property {Array} args
+ * @property {Object} objectArgs
  * @typedef {(Object)} Inhibitor
  */
 
@@ -272,6 +277,7 @@ function createEnum(keys) {
  * @property {string} prompt
  * @property {boolean} required
  * @property {CommandArgsChoice[]} choices
+ * @property {CommandArgsOption} args
  * @typedef {(Object)} CommandArgsOption
  */
 

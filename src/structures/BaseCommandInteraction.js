@@ -19,6 +19,12 @@ class BaseCommandInteraction extends GInteraction {
          * @type {string}
          */
         this.commandName = data.data.name;
+
+        /**
+         * The interaction's subcommands
+         * @type {Array<string> | null}
+         */
+        this.subcommands = data.data && data.data.options ? data.data.options : null;
     }
 }
 

@@ -1,5 +1,6 @@
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
+const ArgumentType = require('../util/Constants').ArgumentType;
 const GError = require('../structures/GError'), { Events } = require('../util/Constants');
 const { inhibit, interactionRefactor, channelTypeRefactor, unescape } = require('../util/util');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
@@ -70,7 +71,7 @@ class GEventHandling {
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
                     message, member, guild, channel,
                     author: message.author,
-                     respond: async (options = undefined) => {
+                    respond: async (options = undefined) => {
                         if (this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
                         let msg = await message.reply(options);
@@ -80,11 +81,13 @@ class GEventHandling {
                         return msg;
                     },
                     edit: async (options = undefined) => {
-                        if (!botMessageInhibit) throw new GError('[NEED RESPOND]',`First you need to send a respond.`);
+                        if (!botMessageInhibit) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
                         let editedMsg = await botMessageInhibit.edit(options);
                         return editedMsg;
                     },
-                }, args, args);
+                    args: args,
+                    objectArgs: args,
+                });
                 if (inhibitReturn === false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
@@ -141,36 +144,83 @@ class GEventHandling {
                     }
                 }
 
-                let objectArgs = {};
-                for (let i in commandos.args) {
-                    let arg = new Argument(this.client, commandos.args[i]);
-                    if (arg.type === 'invalid') continue;
+                let validArg = async (arg, prompt) => {
+                    let final = await arg.obtain(message, prompt);
+                    if (!final.valid) return validArg(arg, prompt);
 
-                    let validArg = async prompt => {
-                        let final = await arg.obtain(message, prompt);
-                        if (!final.valid) return validArg(prompt);
+                    return final;
+                };
 
-                        return final;
+                let getSubCommand = async (type, cmdSubcommands) => {
+                    const options = {
+                        type: type,
+                        subcommands: cmdSubcommands,
+                        required: true,
                     };
+                    const arg = new Argument(this.client, options);
+                    let subcommandInput;
+                    if (args[0]) {
+                        let subcommandInvalid = await arg.argument.validate(arg, { content: args[0], guild: message.guild });
+                        if (subcommandInvalid) {
+                            subcommandInput = await arg.obtain(message, subcommandInvalid);
+                            if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
+
+                            if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                        } else {
+                            subcommandInput = { content: cmdSubcommands.find(sc => sc.name === args[0].toLowerCase()) };
+                        }
+                    } else {
+                        subcommandInput = await arg.obtain(message);
+                        if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
+
+                        if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                    }
+                    if (subcommandInput && typeof subcommandInput.content === 'object') {
+                        cmdArgs = subcommandInput.content.args;
+                        subcommands.push(subcommandInput.content.name);
+                        if (args[0]) args.shift();
+                    }
+                };
+
+
+                let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
+                const subcommands = [];
+
+                const cmdsubcommandgroups = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP);
+                if (Array.isArray(cmdsubcommandgroups) && cmdsubcommandgroups[0]) {
+                    await getSubCommand(ArgumentType.SUB_COMMAND_GROUP, cmdsubcommandgroups);
+                }
+
+                const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
+                if (Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
+                    await getSubCommand(ArgumentType.SUB_COMMAND, cmdsubcommands);
+                }
+
+                const objectArgs = {};
+                for (let i in cmdArgs) {
+                    let arg = new Argument(this.client, cmdArgs[i]);
+                    if (arg.type === 'invalid') continue;
 
                     if (args[i]) {
                         let argInvalid = await arg.argument.validate(arg, { content: args[i], guild: message.guild });
                         if (argInvalid) {
                             let argInput = await arg.obtain(message, argInvalid);
-                            if (!argInput.valid) argInput = await validArg(argInput.prompt);
+                            if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
 
                             if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                             if (argInput.content !== 'skip') {
                                 args[i] = argInput.content;
                                 objectArgs[arg.name] = argInput.content;
                             }
+                        } else {
+                            objectArgs[arg.name] = args[i];
                         }
 
                         continue;
                     }
 
                     let argInput = await arg.obtain(message);
-                    if (!argInput.valid) argInput = await validArg(argInput.prompt);
+                    if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
 
                     if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
 
@@ -197,11 +247,14 @@ class GEventHandling {
                         return msg;
                     },
                     edit: async (options = undefined) => {
-                        if (!botMessage) throw new GError('[NEED RESPOND]',`First you need to send a respond.`);
+                        if (!botMessage) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
                         let editedMsg = await botMessage.edit(options);
                         return editedMsg;
                     },
-                }, args, objectArgs);
+                    args: args,
+                    objectArgs: objectArgs,
+                    subcommands: subcommands,
+                });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
                 this.GCommandsClient.emit(Events.DEBUG, e);
@@ -240,7 +293,9 @@ class GEventHandling {
                     channel: interaction.channel,
                     respond: result => interaction.reply.send(result),
                     edit: result => interaction.reply.edit(result),
-                }, interaction.arrayArguments, interaction.objectArguments);
+                    args: interaction.arrayArguments,
+                    objectArgs: interaction.objectArguments,
+                });
                 if (inhibitReturn === false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
@@ -298,6 +353,16 @@ class GEventHandling {
                     if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
                 }
 
+                let subcommands = [];
+                if (interaction.subcommands && Array.isArray(interaction.subcommands) && interaction.subcommands[0]) {
+                    subcommands.push(interaction.subcommands[0].name);
+                    interaction.arrayArguments.shift();
+                    if (interaction.subcommands[0].options) {
+                        subcommands.push(interaction.subcommands[0].options[0].name);
+                        interaction.arrayArguments.shift();
+                    }
+                }
+
                 try {
                     const client = this.client, bot = this.client;
                     commandos.run({
@@ -315,7 +380,10 @@ class GEventHandling {
                          */
                         respond: result => interaction.reply.send(result),
                         edit: result => interaction.reply.edit(result),
-                    }, interaction.arrayArguments, interaction.objectArguments);
+                        args: interaction.arrayArguments,
+                        objectArgs: interaction.objectArguments,
+                        subcommands: subcommands,
+                    });
                 } catch (e) {
                     this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
                     this.GCommandsClient.emit(Events.DEBUG, e);

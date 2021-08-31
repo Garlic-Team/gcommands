@@ -500,6 +500,9 @@ declare module 'gcommands' {
     message: Message;
     guild: Guild;
     channel: TextChannel | NewsChannel;
+    args: Array;
+    objectArgs: Object;
+    subcommands: Array<string>;
 
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;

@@ -180,5 +180,19 @@
         "indonesian": "Argumen ini opsional, jadi Anda bisa menggunakan `skip` untuk melewati argumen ini.",
         "italian": "Questo argomento è opzionale, quindi puoi usare `skip` per saltare questo argomento.",
         "french": "Cet argument est optionnel, vous pouvez utiliser `skip` pour le passer."
+    },
+    "ARGS_COMMAND": {
+        "english": "Please select one of the following subcommands: {choices}.",
+        "spanish": "Seleccione uno de los siguientes subcomandos: {choices}.",
+        "portuguese": "Favor selecionar um dos seguintes subcomandos: {choices}.",
+        "russian": "Пожалуйста, выберите одну из следующих подкоманд: {choices}.",
+        "german": "Bitte wählen Sie einen der folgenden Unterbefehle: {choices}.",
+        "czech": "Vyberte jeden z následujících dílčích příkazů: {choices}.",
+        "slovak": "Izberite enega od naslednjih podnaročil: {choices}.",
+        "turkish": "Lütfen aşağıdaki alt komutlardan birini seçin: {choices}.",
+        "polish": "Proszę wybrać jedno z następujących podpoleceń: {choices}.",
+        "indonesian": "Silakan pilih salah satu dari sub-perintah berikut: {choices}.",
+        "italian": "Seleziona uno dei seguenti sottocomandi: {choices}.",
+        "french": "Veuillez sélectionner l'une des sous-commandes suivantes: {choices}."
     }
 }
