@@ -63,6 +63,7 @@ module.exports = config({
             children: [
               'commands/firstcmd.md',
               'commands/usingargs.md',
+              'commands/usingsubcmd.md',
             ]
           },
           {
