@@ -58,10 +58,11 @@ module.exports = config({
             ]
           },
           {
-            title: 'Arguments',
+            title: 'Commands',
             collapsable: false,
             children: [
-              'arguments/usingargsincmd'
+              'commands/firstcmd.md',
+              'commands/usingargs.md',
             ]
           },
           {
@@ -86,6 +87,7 @@ module.exports = config({
             title: 'Additionals',
             collapsable: false,
             children: [
+              'additional/fromv6tov7',
               'additional/fromv5tov6',
               'additional/fromv4tov5',
               'additional/fromv3tov4',
