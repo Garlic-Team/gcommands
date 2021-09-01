@@ -54,6 +54,14 @@ module.exports = class extends Command {
 
 <div is="dis-messages">
     <dis-messages>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="hyro" :command="true">hello</discord-interaction>
+            </template>
+            Hello <b>Hyro#8938</b>!
+        </dis-message>
+    </dis-messages>
+    <dis-messages>
         <dis-message profile="izboxo">
             .hello
         </dis-message>
