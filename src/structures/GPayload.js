@@ -56,7 +56,7 @@ class GPayload {
             this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : [];
         } else { this.data.content = this.options.content || null; }
 
-        this.data.allowed_mentions = this.options.allowedMentions ? this.options.allowedMentions : { parse: [], repliedUser: true };
+        this.data.allowed_mentions = this.options.allowedMentions ? this.options.allowedMentions : {};
         this.data.flags = this.options.ephemeral ? 64 : null;
 
         if (this.options.components) this.data.components = !Array.isArray(this.options.components) ? Array(this.options.components) : this.options.components;
