@@ -17,16 +17,33 @@ ArgumentType.STRING; // 3
 ArgumentType.SUB_COMMAND_GROUP; // 2
 ArgumentType.SUB_COMMAND; // 1
 ```
+Learn more about SUB_COMMAND and SUB_COMMAND_GROUP [here]().
 
 ## Basic arguments
 
-### Setting up the arguments
+### Create a new command with arguments
+
+This is the template command we are going to use.
 ```javascript
 const { Command, ArgumentType } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
+      name: "hug",
+      description: "Hugs someone!",
+    });
+  }
+}
+```
+
+Next we need to add the arguments to the command.
+```javascript
+const { Command, ArgumentType } = require("gcommands");
+
+module.exports = class extends Command {
+  constructor(client) {
+    super(client, {
       name: "hug",
       description: "Hugs someone!",
       args: [
@@ -42,14 +59,17 @@ module.exports = class extends Command {
   }
 }
 ```
+This creates a command with the argument "user".
 
 ### Using the arguments
+
+Now we need to create the `run()` function.
 ```javascript
 const { Command, ArgumentType } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "hug",
       description: "Hugs someone!",
       cooldown: "2s",
@@ -65,7 +85,7 @@ module.exports = class extends Command {
     });
   }
 
-  run({ author, client, respond }, args) {
+  run({ author, client, respond, args }) {
     // Fetch the mentioned user
     let user = args[0]
       ? args[0].match(/[0-9]+/g)
@@ -116,14 +136,16 @@ module.exports = class extends Command {
 
 ## Advanced arguments
 
-### Setting up the arguments
+### Creating a new command with arguments
+
+This time, we have some advanced stuff.
 ```javascript
 const { ArgumentType, Command } = require("gcommands");
 const wait = require("util").promisify(setTimeout);
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "bake",
       description: "Bakes a product!",
       cooldown: "2s,
@@ -159,6 +181,7 @@ module.exports = class extends Command {
   }
 }
 ```
+This creates a new command with the "product" and "amount" argument. The "product" argument has 2 values to pick from: "Chocolate Chip Cookie" and "Chocolate Muffin".
 
 ### Using the arguments
 ```javascript
@@ -166,8 +189,8 @@ const { ArgumentType, Command } = require("gcommands");
 const wait = require("util").promisify(setTimeout);
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "bake",
       description: "Bakes a product!",
       cooldown: "2s,
