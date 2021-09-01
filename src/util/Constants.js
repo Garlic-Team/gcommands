@@ -1,6 +1,6 @@
 /**
  * Debug Event
- * @event GCommands#debug
+ * @event GCommandsClient#debug
  * @param {string} info The message that was emitted.
  * @example
  * client.on('debug', (info) => { console.log(info); });
@@ -8,10 +8,35 @@
 
 /**
  * Log Event
- * @event GCommands#log
+ * @event GCommandsClient#log
  * @param {string} info The message that was emitted.
  * @example
  * client.on('log', (info) => { console.log(info); });
+*/
+
+/**
+ * commandExecute
+ * @event GCommandsClient#commandExecute
+ * @param {string} info Running the command.
+ * @example
+ * client.on('commandExecute', (info) => { console.log(info); });
+*/
+
+/**
+ * commandError
+ * @event GCommandsClient#commandError
+ * @param {string} info Error from command
+ * @example
+ * client.on('commandError', (info) => { console.log(info); });
+*/
+
+
+/**
+ * commandsLoaded
+ * @event GCommandsClient#commandsLoaded
+ * @param {string} info All commands loaded
+ * @example
+ * client.on('commandsLoaded', (info) => { console.log(info); });
 */
 
 /**
