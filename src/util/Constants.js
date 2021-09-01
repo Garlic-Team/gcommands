@@ -1,13 +1,17 @@
 /**
  * Debug Event
  * @event GCommands#debug
- * @example client.on('debug', (info) => { console.log(info); });
+ * @param {string} info The message that was emitted.
+ * @example
+ * client.on('debug', (info) => { console.log(info); });
 */
 
 /**
  * Log Event
  * @event GCommands#log
- * @example client.on('log', (info) => { console.log(info); });
+ * @param {string} info The message that was emitted.
+ * @example
+ * client.on('log', (info) => { console.log(info); });
 */
 
 /**
