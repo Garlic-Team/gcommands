@@ -1,8 +1,25 @@
 # Creating your first command
 
-Let's say you want a command that simply sends "hello"!
+## Creating a new command
+Let's start by creating a new file in your commands directory and initializing a new class extending from the `Command` class.
 
-## Giving your command a name
+```js
+const { Command } = require('gcommands');
+
+module.exports = class extends Command {}
+
+// or
+const { Command } = require('gcommands');
+
+class Hello extends Command {}
+
+module.exports = Hello;
+```
+
+This creates a new class extending from the `Command` class, and exports it for use.
+
+Next we need to set the `name` and `description` of the command, we can do this by using the `constructor()` and `super()`.
+You can also create new `CommandOptions` by using the `CommandOptionsBuilder`, explained [here]().
 
 ```javascript
 const { Command } = require('gcommands');
@@ -17,7 +34,7 @@ module.exports = class extends Command {
 }
 ```
 
-## Responding to the command
+Now we need to actualy respond to the user. We can do this by creating the `run()` function in our command.
 
 ```javascript
 const { Command } = require('gcommands');
@@ -30,7 +47,18 @@ module.exports = class extends Command {
     });
   }
   run({ respond, author }) {
-    respond(`Hello ${author}!`);
+    respond(`Hello ${author.tag}!`); // Send a response
   }
 }
 ```
+
+<div is="dis-messages">
+    <dis-messages>
+        <dis-message profile="izboxo">
+            .hello
+        </dis-message>
+        <dis-message profile="gcommands">
+            Hello <b>iZboxo#2828</b>!
+        </dis-message>
+    </dis-messages>
+</div>
