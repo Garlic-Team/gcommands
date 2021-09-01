@@ -49,7 +49,7 @@ class GCommandLoader {
      */
     async __loadCommandFiles() {
         for await (let file of (await fs.readdirSync(this.cmdDir))) {
-            const fileTypeIndex = (file.lastIndexOf(".") - 1 >>> 0) + 2;
+            const fileTypeIndex = (file.lastIndexOf('.') - 1 >>> 0) + 2;
             const fileName = file.slice(0, fileTypeIndex - 1);
             const fileType = file.slice(fileTypeIndex);
 
