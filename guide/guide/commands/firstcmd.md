@@ -18,6 +18,8 @@ module.exports = Hello;
 
 This creates a new class extending from the `Command` class, and exports it for use.
 
+## Setting the name and description of the command
+
 Next we need to set the `name` and `description` of the command, we can do this by using the `constructor()` and `super()`.
 You can also create new `CommandOptions` by using the `CommandOptionsBuilder`, explained [here]().
 
@@ -33,6 +35,8 @@ module.exports = class extends Command {
   }
 }
 ```
+
+## Responding to the command
 
 Now we need to actualy respond to the user. We can do this by creating the `run()` function in our command.
 
