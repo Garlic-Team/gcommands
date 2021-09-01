@@ -51,7 +51,7 @@ module.exports = class extends Command {
     });
   }
   run({ respond, author }) {
-    respond(`Hello ${author.tag}!`); // Send a response
+    respond(`Hello **${author.tag}**!`); // Send a response
   }
 }
 ```
