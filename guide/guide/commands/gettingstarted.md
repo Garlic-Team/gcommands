@@ -4,7 +4,6 @@
 
 We can set the path to the commands directory by using `path`.
 
-::: note The `path` package is already installed. :::
 ```js
 const { join } = require('path');
 
@@ -16,9 +15,11 @@ new GCommandsClient({
 
 ## Commands options
 
-We can set options for the commands like this.
+::: warning
+You must invite the bot with the `application.commands` scope for slash commands to work.
+:::
 
-::: note `slash` must be one of: "both", "true" (slash only) or "false" (message only) :::
+We can set options for the commands like this.
 
 ```js
 new GCommandsClient({
@@ -29,3 +30,9 @@ new GCommandsClient({
     }
 });
 ```
+
+| TYPE  | DESCRIPTION     |
+| ----- | --------------- |
+| both  | Message + Slash |
+| true  | Only slash      |
+| false | Only message    |

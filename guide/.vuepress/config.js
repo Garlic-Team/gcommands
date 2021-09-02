@@ -72,7 +72,6 @@ module.exports = config({
             title: 'Interactions',
             collapsable: false,
             children: [
-              'interactions/slashcommands',
               'interactions/contextmenus',
               'interactions/messagecomponents'
             ]

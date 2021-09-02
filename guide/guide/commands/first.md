@@ -21,7 +21,7 @@ This creates a new class extending from the `Command` class, and exports it for 
 ## Setting the name and description of the command
 
 Next we need to set the `name` and `description` of the command, we can do this by using the `constructor()` and `super()`.
-You can also create new `CommandOptions` by using the `CommandOptionsBuilder`, explained [here]().
+You can also create new `CommandOptions` by using the `CommandOptionsBuilder`, explained [here](https://gcommands.js.org/guide/guide/commands/usingbuilders/).
 
 ```javascript
 const { Command } = require('gcommands');
@@ -38,6 +38,10 @@ module.exports = class extends Command {
 
 ## Responding to the command
 Now we need to actualy respond to the user. We can do this by creating the `run()` function in our command.
+
+::: warning
+Ephemeral messages only work on slash commands.
+:::
 
 ```javascript
 run({ respond, author }) {
@@ -63,6 +67,9 @@ run({ respond, author }) {
         </dis-message>
     </dis-messages>
 </div>
+
+The `respond` function allows you to send responses with message, slash and context menu commands.  
+The respond function works the same way as `TextBasedChannel.send` function but has more options. You can find them [here](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GPayloadOptions)
 
 ## Resulting code
 
