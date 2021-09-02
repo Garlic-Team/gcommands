@@ -62,9 +62,9 @@ module.exports = config({
             collapsable: false,
             children: [
               'commands/gettingstarted.md',
-              'commands/firstcmd.md',
+              'commands/first.md',
               'commands/usingargs.md',
-              'commands/usingsubcmd.md',
+              'commands/usingsub.md',
               'commands/usingbuilders.md'
             ]
           },
