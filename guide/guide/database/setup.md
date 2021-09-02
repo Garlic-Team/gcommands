@@ -1,4 +1,4 @@
-# Database setup
+# Setup
 
 First, you need to add a database parameter to `GCommandsClient` with one of the following options:
 

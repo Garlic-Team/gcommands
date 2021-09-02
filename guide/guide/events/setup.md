@@ -1,4 +1,4 @@
-# Events
+# Setup
 
 If you want to use event handler with GCommands, just add `eventDir` to `GCommandsClient`
 
