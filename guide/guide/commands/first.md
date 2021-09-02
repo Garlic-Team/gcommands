@@ -37,22 +37,11 @@ module.exports = class extends Command {
 ```
 
 ## Responding to the command
-
 Now we need to actualy respond to the user. We can do this by creating the `run()` function in our command.
 
 ```javascript
-const { Command } = require('gcommands');
-
-module.exports = class extends Command {
-  constructor(client) {
-    super(client, {
-      name: 'hello',
-      description: 'Hello!',
-    });
-  }
-  run({ respond, author }) {
-    respond(`Hello **${author.tag}**!`); // Send a response
-  }
+run({ respond, author }) {
+  respond(`Hello **${author.tag}**!`); // Send a response
 }
 ```
 
@@ -74,3 +63,21 @@ module.exports = class extends Command {
         </dis-message>
     </dis-messages>
 </div>
+
+## Resulting code
+
+```javascript
+const { Command } = require('gcommands');
+
+module.exports = class extends Command {
+  constructor(client) {
+    super(client, {
+      name: 'hello',
+      description: 'Hello!',
+    });
+  }
+  run({ respond, author }) {
+    respond(`Hello **${author.tag}**!`);
+  }
+}
+```

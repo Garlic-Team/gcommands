@@ -17,6 +17,7 @@ ArgumentType.STRING; // 3
 ArgumentType.SUB_COMMAND_GROUP; // 2
 ArgumentType.SUB_COMMAND; // 1
 ```
+
 Learn more about SUB_COMMAND and SUB_COMMAND_GROUP [here]().
 
 ## Basic arguments
@@ -24,6 +25,7 @@ Learn more about SUB_COMMAND and SUB_COMMAND_GROUP [here]().
 ### Create a new command with arguments
 
 This is the template command we are going to use.
+
 ```javascript
 const { Command, ArgumentType } = require("gcommands");
 
@@ -37,70 +39,42 @@ module.exports = class extends Command {
 }
 ```
 
-Next we need to add the arguments to the command.
-```javascript
-const { Command, ArgumentType } = require("gcommands");
+Next we need to add the arguments to the command. We can do this by adding the `args` option to the command.
 
-module.exports = class extends Command {
-  constructor(client) {
-    super(client, {
-      name: "hug",
-      description: "Hugs someone!",
-      args: [
-        {
-          name: "user", // Set the name of the argument
-          type: ArgumentType.USER, // Set the type of the argument
-          description: "The user to hug!", // Set the description of the argument
-          prompt: "Who do you want to hug?", // Set the prompt for the argument
-          required: true, // Set if the argument is required or not
-        },
-      ],
-    });
-  }
-}
+```javascript
+args: [
+  {
+    name: "user", // Set the name of the argument
+    type: ArgumentType.USER, // Set the type of the argument
+    description: "The user to hug!", // Set the description of the argument
+    prompt: "Who do you want to hug?", // Set the prompt for the argument (not required)
+    required: true, // Set if the argument is required or not
+  },
+],
 ```
+
 This creates a command with the argument "user".
 
 ### Using the arguments
 
 Now we need to create the `run()` function.
+
 ```javascript
-const { Command, ArgumentType } = require("gcommands");
+run({ author, client, respond, args }) {
+  // Fetch the mentioned user
+  let user = args[0]
+    ? args[0].match(/[0-9]+/g)
+      ? client.users.cache.get(args[0].match(/[0-9]+/g)[0]) || author
+      : author
+    : author;
 
-module.exports = class extends Command {
-  constructor(client) {
-    super(client, {
-      name: "hug",
-      description: "Hugs someone!",
-      cooldown: "2s",
-      args: [
-        {
-          name: "user",
-          type: ArgumentType.USER,
-          description: "The user to hug!",
-          prompt: "Who do you want to hug?",
-          required: true,
-        },
-      ],
-    });
+  // If the user didn't mention anyone/mentioned themselves
+  if (user.id === author.id)
+    return respond({ content: `**${user.tag}** needs a hug!` });
+
+  // If everything works
+  respond({ content: `**${author.tag}** hugs **${user.tag}**, aww!` });
   }
-
-  run({ author, client, respond, args }) {
-    // Fetch the mentioned user
-    let user = args[0]
-      ? args[0].match(/[0-9]+/g)
-        ? client.users.cache.get(args[0].match(/[0-9]+/g)[0]) || author
-        : author
-      : author;
-
-    // If the user didn't mention anyone/mentioned themselves
-    if (user.id === author.id)
-      return respond({ content: `**${user.tag}** needs a hug!` });
-
-    // If everything works
-    respond({ content: `**${author.tag}** hugs **${user.tag}**, aww!` });
-  }
-};
 ```
 
 <div is="dis-messages">
@@ -134,11 +108,51 @@ module.exports = class extends Command {
     </dis-messages>
 </div>
 
+### Resulting code
+
+```javascript
+
+const { Command, ArgumentType } = require("gcommands");
+
+module.exports = class extends Command {
+  constructor(client) {
+    super(client, {
+      name: "hug",
+      description: "Hugs someone!",
+      cooldown: "2s",
+      args: [
+        {
+          name: "user",
+          type: ArgumentType.USER,
+          description: "The user to hug!",
+          prompt: "Who do you want to hug?",
+          required: true,
+        },
+      ],
+    });
+  }
+
+  run({ author, client, respond, args }) {
+    let user = args[0]
+      ? args[0].match(/[0-9]+/g)
+        ? client.users.cache.get(args[0].match(/[0-9]+/g)[0]) || author
+        : author
+      : author;
+
+    if (user.id === author.id)
+      return respond({ content: `**${user.tag}** needs a hug!` });
+
+    respond({ content: `**${author.tag}** hugs **${user.tag}**, aww!` });
+  }
+};
+```
+
 ## Advanced arguments
 
 ### Creating a new command with arguments
 
 This time, we have some advanced stuff.
+
 ```javascript
 const { ArgumentType, Command } = require("gcommands");
 const wait = require("util").promisify(setTimeout);
@@ -148,7 +162,7 @@ module.exports = class extends Command {
     super(client, {
       name: "bake",
       description: "Bakes a product!",
-      cooldown: "2s,
+      cooldown: "2s",
       args: [
         {
           name: "product",
@@ -184,83 +198,46 @@ module.exports = class extends Command {
 This creates a new command with the "product" and "amount" argument. The "product" argument has 2 values to pick from: "Chocolate Chip Cookie" and "Chocolate Muffin".
 
 ### Using the arguments
+
+The `args` can be accesed in the `CommandRunOptions`.
+
 ```javascript
-const { ArgumentType, Command } = require("gcommands");
-const wait = require("util").promisify(setTimeout);
+async run({ member, respond, edit, args }) {
+  // Cap the amount
+  args[1] =
+    parseInt(args[1]) > 25
+      ? 25
+      : parseInt(args[1]) < 0
+      ? 0
+      : parseInt(args[1]);
 
-module.exports = class extends Command {
-  constructor(client) {
-    super(client, {
-      name: "bake",
-      description: "Bakes a product!",
-      cooldown: "2s,
-      args: [
-        {
-          name: "product",
-          type: ArgumentType.STRING,
-          description: "The product to bake!",
-          prompt: `What would you like to bake? (muffin/cookie)`,
-          choices: [
-            {
-              name: "cookie",
-              value: "Chocolate Chip Cookie",
-            },
-            {
-              name: "muffin",
-              value: "Chocolate Muffin",
-            },
-          ],
-          required: true,
-        },
-        {
-          name: "amount",
-          type: ArgumentType.INTEGER, // Integer only allows full numbers
-          description:
-            "The amount of products to bake! You can only bake a maximum of 25 products at once",
-          prompt:
-            "How many products would you like to bake? You can only bake a maximum of 25 products at once",
-          required: true,
-        },
-      ],
-    });
-  }
-  async run({ member, respond, edit }, args) {
-    // Cap the amount
-    args[1] =
-      parseInt(args[1]) > 25
-        ? 25
-        : parseInt(args[1]) < 0
-        ? 0
-        : parseInt(args[1]);
+  // Format the user's choices
+  let product = `${args[1]} Delicious ${args[0][0].toUpperCase() +
+    args[0].slice(1).toLowerCase()}${args[1] === 1 ? "" : "s"}`;
 
-    // Format the user's choices
-    let product = `${args[1]} Delicious ${args[0][0].toUpperCase() +
-      args[0].slice(1).toLowerCase()}${args[1] === 1 ? "" : "s"}`;
+  // Send the response
+  let m = await respond({
+    content: `You decide to bake ${product}. You put it in the oven and wait.`,
+  });
+  // Wait for the product to "cook"
+  await wait(Math.floor(Math.random() * (5000 - 3000)) + 3000);
 
-    // Send the response
-    let m = await respond({
-      content: `You decide to bake ${product}. You put it in the oven and wait...`,
-    });
-    // Wait for the product to "cook"
-    await wait(Math.floor(Math.random() * (5000 - 3000)) + 3000);
+  // Decide if the product is burnt (50% chance)
+  let isBurnt = Math.random() < 0.5;
 
-    // Decide if the product is burnt (50% chance)
-    let isBurnt = Math.random() < 0.5;
+  // Add a response
+  if (isBurnt)
+    m.content += `\n\nOh no! Your ${product} ${
+      args[1] === 1 ? "was" : "were"
+    } left in the oven for too long and burnt! Try again.`;
+  else
+    m.content += `\n\nYou successfully baked your ${product} and gave ${
+      args[1] === 1 ? "it" : "them"
+    } to your friends. They like it!`;
 
-    // Add a response
-    if (isBurnt)
-      m.content += `\n\nOh no! Your ${product} ${
-        args[1] === 1 ? "was" : "were"
-      } left in the oven for too long and burnt! Try again.`;
-    else
-      m.content += `\n\nYou successfully baked your ${product} and gave ${
-        args[1] === 1 ? "it" : "them"
-      } to your friends. They like it!`;
-
-    // Edit the message
-    await edit({ content: m.content });
-  }
-};
+  // Edit the message
+  await edit({ content: m.content });
+}
 ```
 
 <div is="dis-messages">
@@ -297,3 +274,77 @@ module.exports = class extends Command {
         </dis-message>
     </dis-messages>
 </div>
+
+### Resulting code
+
+```javascript
+
+const { ArgumentType, Command } = require("gcommands");
+const wait = require("util").promisify(setTimeout);
+
+module.exports = class extends Command {
+  constructor(client) {
+    super(client, {
+      name: "bake",
+      description: "Bakes a product!",
+      cooldown: "2s",
+      args: [
+        {
+          name: "product",
+          type: ArgumentType.STRING,
+          description: "The product to bake!",
+          prompt: `What would you like to bake? (muffin/cookie)`,
+          choices: [
+            {
+              name: "Chocolate Chip Cookie",
+              value: "cookie",
+            },
+            {
+              name: "Chocolate Muffin",
+              value: "muffin",
+            },
+          ],
+          required: true,
+        },
+        {
+          name: "amount",
+          type: ArgumentType.INTEGER,
+          description: "The amount of products to bake! You can only bake a maximum of 25 products at once",
+          prompt: "How many products would you like to bake? You can only bake maximum of 25 products at once",
+          required: true,
+        },
+      ],
+    });
+  }
+  async run({ member, respond, edit, args }) {
+    args[1] =
+      parseInt(args[1]) > 25
+        ? 25
+        : parseInt(args[1]) < 0
+        ? 0
+        : parseInt(args[1]);
+
+    let product = `${args[1]} Delicious ${args[0][0].toUpperCase() +
+      args[0].slice(1).toLowerCase()}${args[1] === 1 ? "" : "s"}`;
+
+    let m = await respond({
+      content: `You decide to bake ${product}. You put it in the oven and wait.`,
+    });
+    await wait(Math.floor(Math.random() * (5000 - 3000)) + 3000);
+
+    let isBurnt = Math.random() < 0.5;
+
+    if (isBurnt)
+      m.content += `\n\nOh no! Your ${product} ${
+        args[1] === 1 ? "was" : "were"
+      } left in the oven for too long and burnt! Try again.`;
+    else
+      m.content += `\n\nYou successfully baked your ${product} and gave ${
+        args[1] === 1 ? "it" : "them"
+      } to your friends. They like it!`;
+
+    await edit({ content: m.content });
+  }
+}
+```
+
