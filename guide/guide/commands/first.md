@@ -21,7 +21,7 @@ This creates a new class extending from the `Command` class, and exports it for 
 ## Setting the name and description of the command
 
 Next we need to set the `name` and `description` of the command, we can do this by using the `constructor()` and `super()`.
-You can also create new `CommandOptions` by using the `CommandOptionsBuilder`, explained [here](https://gcommands.js.org/guide/guide/commands/usingbuilders/).
+You can also create new `CommandOptions` by using the `CommandOptionsBuilder`, explained [here](./usingbuilders.md).
 
 ```javascript
 const { Command } = require('gcommands');

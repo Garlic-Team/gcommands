@@ -18,7 +18,7 @@ ArgumentType.SUB_COMMAND_GROUP; // 2
 ArgumentType.SUB_COMMAND; // 1
 ```
 
-Learn more about SUB_COMMAND and SUB_COMMAND_GROUP [here](https://gcommands.js.org/guide/guide/commands/gettingstarted/#).
+Learn more about SUB_COMMAND and SUB_COMMAND_GROUP [here](./usingsub.md).
 
 ## Basic arguments
 

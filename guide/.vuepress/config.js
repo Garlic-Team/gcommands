@@ -52,8 +52,6 @@ module.exports = config({
             collapsable: false,
             children: [
               'beginner/basicbot',
-              'beginner/events',
-              'beginner/database',
               'beginner/additionalfeatures'
             ]
           },
@@ -74,6 +72,24 @@ module.exports = config({
             children: [
               'interactions/contextmenus',
               'interactions/messagecomponents'
+            ]
+          },
+          {
+            title: 'Events',
+            collapsable: false,
+            children: [
+              'events/setup',
+              'events/create',
+              'events/usingbuilder'
+            ]
+          },
+          {
+            title: 'Database',
+            collapsable: false,
+            children: [
+              'database/setup',
+              'database/prefix',
+              'database/guildlanguage'
             ]
           },
           {
