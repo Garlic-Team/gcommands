@@ -1,4 +1,4 @@
-# Creating a event handler
+# Creating a event
 
 You can create events simular too commands. A event must be a class extending from the `Event` class.
 

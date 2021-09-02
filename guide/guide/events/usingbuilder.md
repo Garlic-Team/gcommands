@@ -1,4 +1,4 @@
-# Using the EventOptionsBuilder
+# Using the event builder
 
 The `EventOptionsBuilder` can be used to create EventOptions, like the name of the event.
 

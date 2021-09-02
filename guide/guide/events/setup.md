@@ -7,6 +7,7 @@ const { GCommandsClient } = require("gcommands");
 const { join } = require("path");
 
 const client = new GCommandsClient({
+    ...options,
     eventDir: join(__dirname, "events")
 })
 ```
