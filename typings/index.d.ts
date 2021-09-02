@@ -421,7 +421,7 @@ declare module 'gcommands' {
     public slash: GCommandsOptionsCommandsSlash;
     public context: GCommandsOptionsCommandsContext;
 
-    public run(options: CommandRunOptions, args: Array<string>, args2: Object): void;
+    public run(options: CommandRunOptions): void;
   }
 
   export class Event {
@@ -442,10 +442,10 @@ declare module 'gcommands' {
     public once: Boolean;
     public ws: Boolean;
 
-    public setName(): EventBuilder;
-    public setOnce(): EventBuilder;
-    public setWs(): EventBuilder;
-    public toJSON(): EventBuilder;
+    public setName(): EventOptionsBuilder;
+    public setOnce(): EventOptionsBuilder;
+    public setWs(): EventOptionsBuilder;
+    public toJSON(): EventOptionsBuilder;
   }
 
   export class GPayload {
