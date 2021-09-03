@@ -150,17 +150,17 @@ class GEventHandling {
 
                 let getArgsObject = (options) => {
                     if (!Array.isArray(options)) return {};
-                    let args = {};
+                    let oargs = {};
             
                     for (let o of options) {
                       if([1, 2].includes(o.type)) {
-                        args[o.name] = getArgsObject(o.options)
+                        oargs[o.name] = getArgsObject(o.options)
                       } else {
-                        args[o.name] = o.value;
+                        oargs[o.name] = o.value;
                       }
                     }
             
-                    return args;
+                    return oargs;
                 }
 
                 let validArg = async (arg, prompt) => {
@@ -304,7 +304,7 @@ class GEventHandling {
                         return editedMsg;
                     },
                     args: finalArgs,
-                    objectArgs: getArgsObject(objectArgs)
+                    objectArgs: getArgsObject(objectArgs),
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
@@ -422,7 +422,7 @@ class GEventHandling {
                         respond: result => interaction.reply.send(result),
                         edit: result => interaction.reply.edit(result),
                         args: interaction.arrayArguments,
-                        objectArgs: interaction.objectArguments
+                        objectArgs: interaction.objectArguments,
                     });
                 } catch (e) {
                     this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });

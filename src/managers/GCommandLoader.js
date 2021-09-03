@@ -124,7 +124,7 @@ class GCommandLoader {
             if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
             else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
-            if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[8] || Object.values(cmd)[10]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined))) && ifAlready[0].description === cmd.description  && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) {
+            if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[8] || Object.values(cmd)[10]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 continue;
             }
