@@ -34,7 +34,7 @@ module.exports = class extends Event {
 Next we add the run function.
 
 ```js
-run(client, message) {
+async run(client, message) {
     console.log(`${message.author.tag} -> ${message.content}`)
 }
 ```
@@ -53,7 +53,7 @@ module.exports = class extends Event {
         })
     }
 
-    run(client, message) {
+    async run(client, message) {
         console.log(`${message.author.tag} -> ${message.content}`)
     }
 };

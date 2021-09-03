@@ -31,17 +31,22 @@ const client = new GCommandsClient({
 ### SUB_COMMAND and SUB_COMMAND_GROUP
 GCommands now supports the SUB_COMMAND and SUB_COMMAND_GROUP type! 
 
-For both slash commands and message commands.
+See [here](../commands/usingsub.md) for more information.
 
 ### Choices
 Choices were fixed for message based commands.
 This means that the value of the choice, will be the returned argument.
 
 ```javascript
-const choice = {
-  name: "1", // This will be the option for the user.
-  value: 1, // This will be the returned argument.
+const choices = {
+  name: "True", // This will be the option for the user.
+  value: true, // This will be the returned argument.
 };
+
+// In the command
+run({ args }) {
+  console.log(args) // [ true ]
+}
 ```
 
 ## Commands

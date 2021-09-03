@@ -19,6 +19,10 @@ new GCommandsClient({
 You must invite the bot with the `application.commands` scope for slash commands to work.
 :::
 
+::: danger
+It may take up to 1 hour for global commands to appear. guildOnly commands update instantly, and is advised to be used during development.
+:::
+
 We can set options for the commands like this.
 
 ```js

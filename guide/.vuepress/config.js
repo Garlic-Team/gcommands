@@ -39,36 +39,28 @@ module.exports = config({
       sidebar: {
         '/guide/': [
           {
-            title: 'Home',
-            collapsable: false,
+            title: 'Getting started',
+            collapsable: true,
             children: [
-              '',
-              'setup',
-              'faq'
-            ]
-          },
-          {
-            title: 'Beginner',
-            collapsable: false,
-            children: [
-              'beginner/basicbot',
-              'beginner/additionalfeatures'
+              'gettingstarted/installation',
+              'gettingstarted/basicbot'
             ]
           },
           {
             title: 'Commands',
-            collapsable: false,
+            collapsable: true,
             children: [
-              'commands/gettingstarted.md',
-              'commands/first.md',
-              'commands/usingargs.md',
-              'commands/usingsub.md',
-              'commands/usingbuilders.md'
+              'commands/gettingstarted',
+              'commands/first',
+              'commands/usingargs',
+              'commands/usingsub',
+              'commands/usingbuilders',
+              'commands/additionalfeatures'
             ]
           },
           {
             title: 'Interactions',
-            collapsable: false,
+            collapsable: true,
             children: [
               'interactions/contextmenus',
               'interactions/messagecomponents'
@@ -76,16 +68,17 @@ module.exports = config({
           },
           {
             title: 'Events',
-            collapsable: false,
+            collapsable: true,
             children: [
               'events/setup',
               'events/create',
-              'events/usingbuilder'
+              'events/usingbuilder',
+              'events/moreevents'
             ]
           },
           {
             title: 'Database',
-            collapsable: false,
+            collapsable: true,
             children: [
               'database/setup',
               'database/prefix',
@@ -93,17 +86,26 @@ module.exports = config({
             ]
           },
           {
-            title: 'Miscellaneous',
-            collapsable: false,
+            title: 'Other',
+            collapsable: true,
             children: [
-              'miscellaneous/mentions',
-              'miscellaneous/inhibitor',
-              'miscellaneous/moreevents'
+              'other/customlanguagefile',
+              'other/inhibitor',
+              'other/mentions'
+            ]
+          },
+          {
+            title: 'Common quistions',
+            collapsable: true,
+            children: [
+              'quistions/commandrunoptions',
+              'quistions/guildundefined',
+              'quistions/missingacces'
             ]
           },
           {
             title: 'Additionals',
-            collapsable: false,
+            collapsable: true,
             children: [
               'additional/fromv6tov7',
               'additional/fromv5tov6',
