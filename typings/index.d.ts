@@ -253,7 +253,7 @@ declare module 'gcommands' {
     public prompt: String;
     public required: Boolean;
     public choices: Array;
-    public args: Array<CommandArgsOption>;
+    public options: Array<CommandArgsOption>;
 
     public setName(name: String): CommandArgsOptionBuilder;
     public setDescription(description: String): CommandArgsOptionBuilder;
@@ -262,8 +262,8 @@ declare module 'gcommands' {
     public setRequired(required: Boolean): CommandArgsOptionBuilder;
     public addChoice(choice: CommandArgsChoice): CommandArgsOptionBuilder;
     public addChoices(choices: Array<CommandArgsChoice>): CommandArgsOptionBuilder;
-    public addArg(arg: CommandArgsOption): CommandArgsOptionBuilder;
-    public addArgs(args: Array<CommandArgsOption>): CommandArgsOptionBuilder;
+    public addOption(option: CommandArgsOption): CommandArgsOptionBuilder;
+    public addOptions(options: Array<CommandArgsOption>): CommandArgsOptionBuilder;
     public toJSON(): CommandArgsOptionBuilder;
   }
 
@@ -502,7 +502,6 @@ declare module 'gcommands' {
     channel: TextChannel | NewsChannel;
     args: Array;
     objectArgs: Object;
-    subcommands: Array<string>;
 
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;
@@ -554,7 +553,7 @@ declare module 'gcommands' {
     context?: GCommandsOptionsCommandsContext;
   }
 
-  type GCommandsOptionsCommandsSlash = 'both' | 'true' | 'false';
+  type GCommandsOptionsCommandsSlash = 'both' | 'slash' | 'message' | 'false';
   type GCommandsOptionsCommandsContext = 'both' | 'user' | 'message' | 'false';
 
   interface EventOptions {

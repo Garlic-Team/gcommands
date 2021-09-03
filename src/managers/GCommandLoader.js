@@ -108,14 +108,13 @@ class GCommandLoader {
      * @private
      */
     async __loadSlashCommands() {
-        if (String(this.client.slash) === 'false') return;
-
         let keys = Array.from(this.client.gcommands.keys());
         this.__deleteNonExistCommands(keys);
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (String(cmd.slash) === 'false') continue;
+            if (['false', 'message'].includes(String(cmd.slash))) continue;
+            if (!cmd.slash && ['false', 'message'].includes(String(this.client.slash))) continue;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands`;
@@ -124,7 +123,8 @@ class GCommandLoader {
             if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
             else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
-            if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[8] || Object.values(cmd)[10]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
+            // eslint-disable-next-line max-len
+            if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[8] || Object.values(cmd)[10]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) {
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 continue;
             }
@@ -165,8 +165,8 @@ class GCommandLoader {
             axios(config).then(() => {
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
             })
-            .catch(error => {
-                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                .catch(error => {
+                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                 if (error.response) {
                     if (error.response.status === 429) {
@@ -183,7 +183,7 @@ class GCommandLoader {
                             `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                         ]).getText());
 
-                        if(error.response.data.errors) {
+                        if (error.response.data.errors) {
                             getAllObjects(this.GCommandsClient, error.response.data.errors);
 
                             this.GCommandsClient.emit(Events.DEBUG, new Color([
@@ -202,13 +202,12 @@ class GCommandLoader {
      * @private
      */
     async __loadContextMenuCommands() {
-        if (String(this.client.context) === 'false') return;
-
         const keys = Array.from(this.client.gcommands.keys());
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
             if (String(cmd.context) === 'false') continue;
+            if (!cmd.context && String(this.client.context) === 'false') continue;
 
             if (cmd.expectedArgs) cmd.args = cmd.expectedArgs;
 
@@ -247,8 +246,8 @@ class GCommandLoader {
                     this.__tryAgain(cmd, config, 'Context Menu (message)');
                 }
             })
-            .catch(error => {
-                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                .catch(error => {
+                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                 if (error.response) {
                     if (error.response.status === 429) {
@@ -265,7 +264,7 @@ class GCommandLoader {
                             `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                         ]).getText());
 
-                        if(error.response.data.errors) {
+                        if (error.response.data.errors) {
                             getAllObjects(this.GCommandsClient, error.response.data.errors);
 
                             this.GCommandsClient.emit(Events.DEBUG, new Color([
@@ -357,10 +356,10 @@ class GCommandLoader {
                                 '',
                                 `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                             ]).getText());
-    
-                            if(error.response.data.errors) {
+
+                            if (error.response.data.errors) {
                                 getAllObjects(this.GCommandsClient, error.response.data.errors);
-    
+
                                 this.GCommandsClient.emit(Events.DEBUG, new Color([
                                     `&a----------------------`,
                                 ]).getText());

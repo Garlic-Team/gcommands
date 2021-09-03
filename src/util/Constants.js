@@ -194,7 +194,8 @@ function createEnum(keys) {
 /**
  * The GCommandsOptionsCommandsSlash
  * * both
- * * true
+ * * slash
+ * * message
  * * false
  * @typedef {(string | boolean)} GCommandsOptionsCommandsSlash
  */
@@ -243,7 +244,6 @@ function createEnum(keys) {
  * @property {GPayloadOptions} edit
  * @property {Array} args
  * @property {Object} objectArgs
- * @property {Array<string>} subcommands
  * @typedef {(Object)} CommandRunOptions
 */
 
@@ -292,7 +292,7 @@ function createEnum(keys) {
  * @property {boolean} channelNewsOnly
  * @property {boolean} channelThreadOnly
  * @property {boolean} nsfw
- * @property {boolean} slash
+ * @property {GCommandsOptionsCommandsSlash} slash
  * @property {GCommandsOptionsCommandsContext} context
  * @typedef {(Object)} CommandOptions
  */
@@ -306,7 +306,7 @@ function createEnum(keys) {
  * @property {string} prompt
  * @property {boolean} required
  * @property {CommandArgsChoice[]} choices
- * @property {CommandArgsOption} args
+ * @property {CommandArgsOption} options
  * @typedef {(Object)} CommandArgsOption
  */
 
