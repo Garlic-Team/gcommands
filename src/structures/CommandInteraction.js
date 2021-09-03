@@ -68,17 +68,17 @@ class CommandInteraction extends BaseCommandInteraction {
         if (!Array.isArray(options)) return {};
         let args = {};
 
-        let fill = (options) => {
+        let fill = options => {
           for (let o of options) {
-            if([1, 2].includes(o.type)) {
-              fill(o.options)
+            if ([1, 2].includes(o.type)) {
+              fill(o.options);
             } else {
               args[o.name] = o.value;
             }
           }
-        }
+        };
 
-        fill(options)
+        fill(options);
 
         return args;
     }
@@ -93,7 +93,7 @@ class CommandInteraction extends BaseCommandInteraction {
 
       let check = option => {
         if (!option) return;
-        if(![1, 2].includes(option.type)) return;
+        if (![1, 2].includes(option.type)) return;
         this.arrayArguments.shift();
 
         if (option.value) args.push(option.value);
