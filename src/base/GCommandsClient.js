@@ -38,14 +38,14 @@ class GCommandsClient extends Client {
          * @type {boolean}
          * @default true
         */
-         this.caseSensitiveCommands = options.caseSensitiveCommands ? options.caseSensitiveCommands : true;
+         this.caseSensitiveCommands = options.caseSensitiveCommands;
 
          /**
           * CaseSensitivePrefixes
           * @type {boolean}
           * @default true
          */
-         this.caseSensitivePrefixes = options.caseSensitivePrefixes ? options.caseSensitivePrefixes : true;
+         this.caseSensitivePrefixes = options.caseSensitivePrefixes;
 
         /**
          * CmdDir
