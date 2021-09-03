@@ -176,7 +176,7 @@ class GEventHandling {
                         if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                     }
                     if (subcommandInput && typeof subcommandInput.content === 'object') {
-                        cmdArgs = subcommandInput.content.args;
+                        cmdArgs = subcommandInput.content.options;
                         subcommands.push(subcommandInput.content.name);
                         if (args[0]) args.shift();
                     }
@@ -253,7 +253,7 @@ class GEventHandling {
                     },
                     args: args,
                     objectArgs: objectArgs,
-                    subcommands: subcommands,
+                    subCommands: subcommands,
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
@@ -353,16 +353,6 @@ class GEventHandling {
                     if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
                 }
 
-                let subcommands = [];
-                if (interaction.subcommands && Array.isArray(interaction.subcommands) && interaction.subcommands[0]) {
-                    subcommands.push(interaction.subcommands[0].name);
-                    interaction.arrayArguments.shift();
-                    if (interaction.subcommands[0].options) {
-                        subcommands.push(interaction.subcommands[0].options[0].name);
-                        interaction.arrayArguments.shift();
-                    }
-                }
-
                 try {
                     const client = this.client, bot = this.client;
                     commandos.run({
@@ -382,7 +372,7 @@ class GEventHandling {
                         edit: result => interaction.reply.edit(result),
                         args: interaction.arrayArguments,
                         objectArgs: interaction.objectArguments,
-                        subcommands: subcommands,
+                        subCommands: interaction.subCommands,
                     });
                 } catch (e) {
                     this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });

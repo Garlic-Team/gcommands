@@ -19,6 +19,13 @@ class CommandInteraction extends BaseCommandInteraction {
          * @type {object}
          */
         this.objectArguments = this.getArgsObject(data.data.options);
+
+
+        /**
+         * The interaction's subCommands
+         * @type {Array<string> | null}
+         */
+        this.subCommands = this.getSubCommands(data.data.options);
     }
 
     /**
@@ -73,6 +80,27 @@ class CommandInteraction extends BaseCommandInteraction {
 
         return args;
     }
+
+    /**
+     * Internal method to getSubCommands
+     * @returns {object}
+     * @private
+    */
+    getSubCommands(options, suboption = false) {
+      if (!Array.isArray(options)) return {};
+      let args = {};
+
+      for (let o of options) {
+        if ([1, 2].includes(o.type)) {
+          this.arrayArguments.shift();
+          args[o.name] = this.getSubCommands(o.options || [], true);
+        } else if (suboption) {
+          args[o.name] = o.value;
+        }
+      }
+
+      return args;
+  }
 }
 
 module.exports = CommandInteraction;
