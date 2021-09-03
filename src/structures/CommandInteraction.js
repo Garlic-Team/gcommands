@@ -62,8 +62,8 @@ class CommandInteraction extends BaseCommandInteraction {
         let args = {};
 
         for (let o of options) {
-          if([1, 2].includes(o.type)) {
-            args[o.name] = this.getArgsObject(o.options)
+          if ([1, 2].includes(o.type)) {
+            args[o.name] = this.getArgsObject(o.options);
           } else {
             args[o.name] = o.value;
           }
