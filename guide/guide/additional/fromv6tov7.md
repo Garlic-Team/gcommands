@@ -58,6 +58,9 @@ The `args` and `objectArgs` have been moved to the `CommandRunOptions`.
 run({ args, objectArgs, etc }) {}
 ```
 
+### Permissions
+Slash commands automaticly grey out if the `userRequiredRoles` or `userOnly` requirements are not met.
+
 ## Inhibitors
 The `args` and `objectArgs` in inhibitors have been moved. You can now acces them like this:
 

@@ -2,7 +2,7 @@
 
 ## The CommandOptionsBuilder
 
-The `CommandOptionsBuilder` can be used to create CommandOptions, like the name or description of a command.
+The [`CommandOptionsBuilder`](https://gcommands.js.org/docs/#/docs/main/main/class/CommandOptionsBuilder) can be used to create CommandOptions, like the name or description of a command.
 
 ```js
 const { Command, CommandOptionsBuilder } = require("gcommands");
@@ -22,7 +22,7 @@ module.exports = class extends Command {
 
 ## The CommandArgsOptionBuilder
 
-The `CommandArgsOptionBuilder` can be used to create new arguments.
+The [`CommandArgsOptionBuilder`](https://gcommands.js.org/docs/#/docs/main/main/class/CommandArgsOptionBuilder) can be used to create new arguments.
 
 ```js
 const { Command, ArgumentType, CommandOptionsBuilder, CommandArgsOptionBuilder } = require("gcommands");
@@ -54,7 +54,7 @@ module.exports = class extends Command {
 
 ## The CommandArgsChoiceOptionBuilder
 
-The `CommandArgsChoiceBuilder` can be used to create new argument choices.
+The [`CommandArgsChoiceBuilder`](https://gcommands.js.org/docs/#/docs/main/main/class/CommandArgsChoiceBuilder) can be used to create new argument choices.
 
 ```js
 const { Command, ArgumentType, CommandOptionsBuilder, CommandArgsOptionBuilder, CommandArgsChoiceBuilder } = require("gcommands");
