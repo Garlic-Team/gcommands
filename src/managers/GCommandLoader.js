@@ -272,12 +272,12 @@ class GCommandLoader {
             const cmd = this.client.gcommands.get(keys[commandName]);
             const allKeys = Object.keys(cmd);
 
-            if (!['userRequiredRoles', 'userOnly'].some(o => allKeys.includes(o))) return;
+            if (!['userRequiredRoles', 'userOnly'].some(o => allKeys.includes(o))) continue;
 
             let apiCommands = cmd.guildOnly ? (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name) : (await this._allGlobalCommands).filter(c => c.name === cmd.name);
 
             for (const apiCommand of apiCommands) {
-                if (![1].includes(apiCommand.type)) return;
+                if (![1].includes(apiCommand.type)) continue;
 
                 let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands/${apiCommand.id}/permissions`;
                 if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands/${apiCommand.id}/permissions`;
