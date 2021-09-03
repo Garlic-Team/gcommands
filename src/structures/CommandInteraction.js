@@ -68,15 +68,17 @@ class CommandInteraction extends BaseCommandInteraction {
         if (!Array.isArray(options)) return {};
         let args = {};
 
-        for (let o of options) {
-          if (o.type === 1) {
-            args[o.name] = this.getArgsObject(o.options || []);
-          } else if (o.type === 2) {
-            args[o.name] = this.getArgsObject(o.options || []);
-          } else {
-            args[o.name] = o.value;
+        let fill = (options) => {
+          for (let o of options) {
+            if([1, 2].includes(o.type)) {
+              fill(o.options)
+            } else {
+              args[o.name] = o.value;
+            }
           }
         }
+
+        fill(options)
 
         return args;
     }
@@ -86,21 +88,34 @@ class CommandInteraction extends BaseCommandInteraction {
      * @returns {object}
      * @private
     */
-    getSubCommands(options, suboption = false) {
-      if (!Array.isArray(options)) return {};
-      let args = {};
+    getSubCommands(options) {
+      let args = [];
 
-      for (let o of options) {
-        if ([1, 2].includes(o.type)) {
-          this.arrayArguments.shift();
-          args[o.name] = this.getSubCommands(o.options || [], true);
-        } else if (suboption) {
-          args[o.name] = o.value;
+      let check = option => {
+        if (!option) return;
+        if(![1, 2].includes(option.type)) return;
+        this.arrayArguments.shift();
+
+        if (option.value) args.push(option.value);
+        else args.push(option.name);
+
+        if (option.options) {
+          for (let o = 0; o < option.options.length; o++) {
+            check(option.options[o]);
+          }
         }
+      };
+
+      if (Array.isArray(options)) {
+        for (let o = 0; o < options.length; o++) {
+          check(options[o]);
+        }
+      } else {
+        check(options);
       }
 
       return args;
-  }
+    }
 }
 
 module.exports = CommandInteraction;
