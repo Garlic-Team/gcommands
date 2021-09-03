@@ -157,7 +157,7 @@ class GCommandLoader {
                     description: cmd.description,
                     options: args,
                     type: 1,
-                    default_permission: !!['userRequiredRoles', 'userOnly'].includes(cmd),
+                    default_permission: !!['userRequiredRoles', 'userOnly'].some(o => Object.keys(cmd).includes(o)),
                 }),
                 url,
             };
