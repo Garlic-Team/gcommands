@@ -10,8 +10,8 @@ const { Command, MessageActionRow } = require("gcommands");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
     });
@@ -56,8 +56,8 @@ Spam is one of the things you want your bot to avoid. GCommands has added a cool
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       cooldown: "1s", // String | can also be: 1m, 1h, 1d, ...
@@ -81,8 +81,8 @@ You can either:
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       cooldown: "1s",
@@ -116,8 +116,8 @@ Aliases can help users find your command more easily, or just save them a few wo
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       aliases: ["pong", "pingpong"],
@@ -140,8 +140,8 @@ GCommands has also added a `userRequiredPermissions` key to commands, so you can
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       aliases: ["pong", "pingpong"],
@@ -165,8 +165,8 @@ Along with `userRequiredPermissions`, GCommands has also added a `clientRequired
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       aliases: ["pong", "pingpong"],
@@ -191,8 +191,8 @@ The `userRequiredRoles` property only allows members who have a specific role to
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       aliases: ["pong", "pingpong"],
@@ -218,8 +218,8 @@ This property makes the command only create/work on a specific guildId. This is 
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       aliases: ["pong", "pingpong"],
@@ -246,8 +246,8 @@ This property only allows a specific user(s) to run the command.
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       aliases: ["pong", "pingpong"],
@@ -275,8 +275,8 @@ This property makes the command only be runnable in a specific channel(s).
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       aliases: ["pong", "pingpong"],
@@ -305,8 +305,8 @@ module.exports = class extends Command {
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Shows the bot's ping",
       aliases: ["pong", "pingpong"],

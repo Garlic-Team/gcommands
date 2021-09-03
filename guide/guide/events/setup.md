@@ -35,8 +35,8 @@ Then you just create a file in the `events` folder or you can also create a cate
 const { Event } = require("gcommands")
 
 module.exports = class Ping extends Event {
-    constructor(...args) {
-        super(...args, {
+    constructor(client) {
+        super(client, {
             name: "message",
             once: false,
             ws: false

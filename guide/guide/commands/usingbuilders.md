@@ -28,8 +28,8 @@ The [`CommandArgsOptionBuilder`](https://gcommands.js.org/docs/#/docs/main/main/
 const { Command, ArgumentType, CommandOptionsBuilder, CommandArgsOptionBuilder } = require("gcommands");
 
 module.exports = class extends Command {
-    constructor(...args) {
-        super(...args, new CommandOptionsBuilder()
+    constructor(client) {
+        super(client, new CommandOptionsBuilder()
             // Add one argument
             .addArg(new CommandArgsOptionBuilder()
                 .setName('message')
@@ -60,8 +60,8 @@ The [`CommandArgsChoiceBuilder`](https://gcommands.js.org/docs/#/docs/main/main/
 const { Command, ArgumentType, CommandOptionsBuilder, CommandArgsOptionBuilder, CommandArgsChoiceBuilder } = require("gcommands");
 
 module.exports = class extends Command {
-    constructor(...args) {
-        super(...args, new CommandOptionsBuilder()
+    constructor(client) {
+        super(client, new CommandOptionsBuilder()
             .addArg(new CommandArgsOptionBuilder()
                 // Add one choice
                 .addChoice(new CommandArgsChoiceBuilder()
