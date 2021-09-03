@@ -73,6 +73,7 @@ class GCommandLoader {
 
         await this.__loadSlashCommands();
         await this.__loadContextMenuCommands();
+        await this.__loadCommandPermissions();
 
         this.client.emit(Events.COMMANDS_LOADED, this.client.gcommands);
     }
@@ -156,6 +157,7 @@ class GCommandLoader {
                     description: cmd.description,
                     options: args,
                     type: 1,
+                    default_permission: ['userRequiredRoles', 'userOnly'].includes(cmd) ? true : false
                 }),
                 url,
             };
@@ -163,25 +165,25 @@ class GCommandLoader {
             axios(config).then(() => {
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
             })
-                .catch(error => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+            .catch(error => {
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                    if (error.response) {
-                        if (error.response.status === 429) {
-                            setTimeout(() => {
-                                this.__tryAgain(cmd, config, 'Slash');
-                            }, (error.response.data.retry_after) * 1000);
-                        } else {
-                            this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                '&a----------------------',
-                                '  &d[GCommands Debug] &3',
-                                `&aCode: &b${error.response.data.code}`,
-                                `&aMessage: &b${error.response.data.message}`,
-                                '&a----------------------',
-                            ]).getText());
-                        }
+                if (error.response) {
+                    if (error.response.status === 429) {
+                        setTimeout(() => {
+                            this.__tryAgain(cmd, config, 'Slash');
+                        }, (error.response.data.retry_after) * 1000);
+                    } else {
+                        this.GCommandsClient.emit(Events.DEBUG, new Color([
+                            '&a----------------------',
+                            '  &d[GCommands Debug] &3',
+                            `&aCode: &b${error.response.data.code}`,
+                            `&aMessage: &b${error.response.data.message}`,
+                            '&a----------------------',
+                        ]).getText());
                     }
-                });
+                }
+            });
         }
     }
 
@@ -193,7 +195,7 @@ class GCommandLoader {
     async __loadContextMenuCommands() {
         if (String(this.client.context) === 'false') return;
 
-        let keys = Array.from(this.client.gcommands.keys());
+        const keys = Array.from(this.client.gcommands.keys());
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
@@ -236,25 +238,106 @@ class GCommandLoader {
                     this.__tryAgain(cmd, config, 'Context Menu (message)');
                 }
             })
-                .catch(error => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+            .catch(error => {
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                    if (error.response) {
-                        if (error.response.status === 429) {
-                            setTimeout(() => {
-                                this.__tryAgain(cmd, config, 'Context Menu');
-                            }, (error.response.data.retry_after) * 1000);
-                        } else {
-                            this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                '&a----------------------',
-                                '  &d[GCommands Debug] &3',
-                                `&aCode: &b${error.response.data.code}`,
-                                `&aMessage: &b${error.response.data.message}`,
-                                '&a----------------------',
-                            ]).getText());
-                        }
+                if (error.response) {
+                    if (error.response.status === 429) {
+                        setTimeout(() => {
+                            this.__tryAgain(cmd, config, 'Context Menu');
+                        }, (error.response.data.retry_after) * 1000);
+                    } else {
+                        this.GCommandsClient.emit(Events.DEBUG, new Color([
+                            '&a----------------------',
+                            '  &d[GCommands Debug] &3',
+                            `&aCode: &b${error.response.data.code}`,
+                            `&aMessage: &b${error.response.data.message}`,
+                            '&a----------------------',
+                        ]).getText());
                     }
-                });
+                }
+            });
+        }
+    }
+
+    /**
+     * Internal method to loadCommandPermissions
+     * @returns {void}
+     * @private
+     */
+    async __loadCommandPermissions() {
+        const keys = Array.from(this.client.gcommands.keys());
+
+        for(commandName in keys) {
+            const cmd = this.client.gcommands.get(commandName);
+
+            if(!['userRequiredRoles', 'userOnly'].includes(cmd)) return;
+
+            let apiCommand = cmd.guildOnly ? (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name) : (await this._allGlobalCommands).filter(c => c.name === cmd.name);
+
+            let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands/${apiCommand.id}/permissions`;
+            if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands/${apiCommand.id}/permissions`;
+
+            let finalData = [];
+
+            if(cmd.userRequiredRoles) {
+                if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
+
+                for await(roleId of cmd.userRequiredRoles) {
+                    finalData.push({
+                        id: roleId,
+                        type: 1,
+                        permission: true
+                    })
+                }
+            }
+
+            if(cmd.userOnly) {
+                if (!Array.isArray(commandos.userOnly)) commandos.userOnly = [commandos.userOnly];
+
+                for await(userId of cmd.userOnly) {
+                    finalData.push({
+                        id: userId,
+                        type: 2,
+                        permission: true
+                    })
+                }
+            }
+
+            let config = {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bot ${this.client.token}`,
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify({
+                    permissions: finalData
+                }),
+                url,
+            };
+
+            axios(config).then(() => {
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
+            })
+            .catch(error => {
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+
+                if (error.response) {
+                    if (error.response.status === 429) {
+                        setTimeout(() => {
+                            this.__tryAgain(cmd, config, 'Permission');
+                        }, (error.response.data.retry_after) * 1000);
+                    } else {
+                        this.GCommandsClient.emit(Events.DEBUG, new Color([
+                            '&a----------------------',
+                            '  &d[GCommands Debug] &3',
+                            `&aCode: &b${error.response.data.code}`,
+                            `&aMessage: &b${error.response.data.message}`,
+                            '&a----------------------',
+                        ]).getText());
+                    }
+                }
+            });
         }
     }
 
