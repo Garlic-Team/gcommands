@@ -422,8 +422,7 @@ class GEventHandling {
                         respond: result => interaction.reply.send(result),
                         edit: result => interaction.reply.edit(result),
                         args: interaction.arrayArguments,
-                        objectArgs: interaction.objectArguments,
-                        subCommands: interaction.subCommands,
+                        objectArgs: interaction.objectArguments
                     });
                 } catch (e) {
                     this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
