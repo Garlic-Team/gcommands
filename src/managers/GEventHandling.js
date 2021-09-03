@@ -148,20 +148,20 @@ class GEventHandling {
                 const finalArgs = [];
                 const missingInput = [];
 
-                let getArgsObject = (options) => {
+                let getArgsObject = options => {
                     if (!Array.isArray(options)) return {};
                     let args = {};
-            
+
                     for (let o of options) {
-                      if([1, 2].includes(o.type)) {
-                        args[o.name] = getArgsObject(o.options)
+                      if ([1, 2].includes(o.type)) {
+                        args[o.name] = getArgsObject(o.options);
                       } else {
                         args[o.name] = o.value;
                       }
                     }
-            
+
                     return args;
-                }
+                };
 
                 let validArg = async (arg, prompt) => {
                     let final = await arg.obtain(message, prompt);
@@ -199,14 +199,14 @@ class GEventHandling {
                         cmdArgs = subcommandInput.content.options;
 
                         finalArgs.push(subcommandInput.content.name);
-                        
-                        if(subcommandInput.content.options.filter(o => o.type === 1).length === 0) objectArgs.push(subcommandInput.content);
-                        for(const option of subcommandInput.content.options) {
-                            if(option.type === 1) {
-                                objectArgs.push(subcommandInput.content)
+
+                        if (subcommandInput.content.options.filter(o => o.type === 1).length === 0) objectArgs.push(subcommandInput.content);
+                        for (const option of subcommandInput.content.options) {
+                            if (option.type === 1) {
+                                objectArgs.push(subcommandInput.content);
                             } else {
-                                for(const missingOption of subcommandInput.content.options) {
-                                    missingInput.push(missingOption)
+                                for (const missingOption of subcommandInput.content.options) {
+                                    missingInput.push(missingOption);
                                 }
                             }
                         }
@@ -242,21 +242,21 @@ class GEventHandling {
 
                             if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                             if (argInput.content !== 'skip') {
-                                finalArgs.push(argInput.content)
+                                finalArgs.push(argInput.content);
 
                                 args[i] = argInput.content;
 
-                                for(const input of missingInput) {
-                                    if(input.name === arg.name) {
+                                for (const input of missingInput) {
+                                    if (input.name === arg.name) {
                                         input.value = argInput.content;
                                     }
                                 }
                             }
                         } else {
-                            finalArgs.push(args[i])
+                            finalArgs.push(args[i]);
 
-                            for(const input of missingInput) {
-                                if(input.name === arg.name) {
+                            for (const input of missingInput) {
+                                if (input.name === arg.name) {
                                     input.value = args[i];
                                 }
                             }
@@ -271,11 +271,11 @@ class GEventHandling {
                     if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
 
                     if (argInput.content !== 'skip') {
-                        finalArgs.push(argInput.content)
+                        finalArgs.push(argInput.content);
 
                         args[i] = argInput.content;
-                        for(const input of missingInput) {
-                            if(input.name === arg.name) {
+                        for (const input of missingInput) {
+                            if (input.name === arg.name) {
                                 input.value = argInput.content;
                             }
                         }
