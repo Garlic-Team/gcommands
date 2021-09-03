@@ -21,7 +21,9 @@ module.exports = config({
       editLinks: true,
       lastUpdated: true,
       blog: false,
-      repo: 'garlic-team/gcommands#master',
+      repo: 'Garlic-Team/GCommands',
+      docsDir: 'guide',
+      docsBranch: 'docs',
       logo: '/gcommands.png',
       nav: [
           {text:"Guide", link:"/guide/"},
