@@ -46,14 +46,14 @@ class GCommands extends EventEmitter {
          * @type {boolean}
          * @default true
         */
-        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true;
+         this.caseSensitiveCommands = options.caseSensitiveCommands ? options.caseSensitiveCommands : true;
 
-        /**
-         * CaseSensitivePrefixes
-         * @type {boolean}
-         * @default true
-        */
-        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true;
+         /**
+          * CaseSensitivePrefixes
+          * @type {boolean}
+          * @default true
+         */
+         this.caseSensitivePrefixes = options.caseSensitivePrefixes ? options.caseSensitivePrefixes : true;
 
         /**
          * CmdDir
