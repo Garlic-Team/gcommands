@@ -124,7 +124,7 @@ class GCommandLoader {
             if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
             else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
-            if (ifAlready.length > 0 && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) {
+            if (ifAlready.length > 0 && ifAlready[0].description === cmd.description && (!ifAlready[0].default_permission && ['userRequiredRoles', 'userOnly'].some(o => Object.keys(cmd).includes(o))) && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) {
                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 continue;
             }
