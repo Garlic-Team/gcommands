@@ -144,6 +144,25 @@ class GEventHandling {
                     }
                 }
 
+                const objectArgs = [];
+                const finalArgs = [];
+                const missingInput = [];
+
+                let getArgsObject = (options) => {
+                    if (!Array.isArray(options)) return {};
+                    let args = {};
+            
+                    for (let o of options) {
+                      if([1, 2].includes(o.type)) {
+                        args[o.name] = getArgsObject(o.options)
+                      } else {
+                        args[o.name] = o.value;
+                      }
+                    }
+            
+                    return args;
+                }
+
                 let validArg = async (arg, prompt) => {
                     let final = await arg.obtain(message, prompt);
                     if (!final.valid) return validArg(arg, prompt);
@@ -159,6 +178,7 @@ class GEventHandling {
                     };
                     const arg = new Argument(this.client, options);
                     let subcommandInput;
+
                     if (args[0]) {
                         let subcommandInvalid = await arg.argument.validate(arg, { content: args[0], guild: message.guild });
                         if (subcommandInvalid) {
@@ -177,14 +197,28 @@ class GEventHandling {
                     }
                     if (subcommandInput && typeof subcommandInput.content === 'object') {
                         cmdArgs = subcommandInput.content.options;
-                        subcommands.push(subcommandInput.content.name);
+
+                        finalArgs.push(subcommandInput.content.name);
+                        
+                        if(subcommandInput.content.options.filter(o => o.type === 1).length === 0) objectArgs.push(subcommandInput.content);
+                        for(const option of subcommandInput.content.options) {
+                            if(option.type === 1) {
+                                objectArgs.push(subcommandInput.content)
+                            } else {
+                                for(const missingOption of subcommandInput.content.options) {
+                                    missingInput.push(missingOption)
+                                }
+                            }
+                        }
+
                         if (args[0]) args.shift();
+
+                        return subcommandInput.content.options;
                     }
                 };
 
 
                 let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
-                const subcommands = [];
 
                 const cmdsubcommandgroups = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP);
                 if (Array.isArray(cmdsubcommandgroups) && cmdsubcommandgroups[0]) {
@@ -196,7 +230,6 @@ class GEventHandling {
                     await getSubCommand(ArgumentType.SUB_COMMAND, cmdsubcommands);
                 }
 
-                const objectArgs = {};
                 for (let i in cmdArgs) {
                     let arg = new Argument(this.client, cmdArgs[i]);
                     if (arg.type === 'invalid') continue;
@@ -209,11 +242,24 @@ class GEventHandling {
 
                             if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                             if (argInput.content !== 'skip') {
+                                finalArgs.push(argInput.content)
+
                                 args[i] = argInput.content;
-                                objectArgs[arg.name] = argInput.content;
+
+                                for(const input of missingInput) {
+                                    if(input.name === arg.name) {
+                                        input.value = argInput.content;
+                                    }
+                                }
                             }
                         } else {
-                            objectArgs[arg.name] = args[i];
+                            finalArgs.push(args[i])
+
+                            for(const input of missingInput) {
+                                if(input.name === arg.name) {
+                                    input.value = args[i];
+                                }
+                            }
                         }
 
                         continue;
@@ -225,8 +271,14 @@ class GEventHandling {
                     if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
 
                     if (argInput.content !== 'skip') {
+                        finalArgs.push(argInput.content)
+
                         args[i] = argInput.content;
-                        objectArgs[arg.name] = argInput.content;
+                        for(const input of missingInput) {
+                            if(input.name === arg.name) {
+                                input.value = argInput.content;
+                            }
+                        }
                     }
                 }
 
@@ -251,9 +303,8 @@ class GEventHandling {
                         let editedMsg = await botMessage.edit(options);
                         return editedMsg;
                     },
-                    args: args,
-                    objectArgs: objectArgs,
-                    subCommands: subcommands,
+                    args: finalArgs,
+                    objectArgs: getArgsObject(objectArgs)
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });

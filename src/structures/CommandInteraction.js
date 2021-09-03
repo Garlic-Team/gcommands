@@ -19,13 +19,6 @@ class CommandInteraction extends BaseCommandInteraction {
          * @type {object}
          */
         this.objectArguments = this.getArgsObject(data.data.options);
-
-
-        /**
-         * The interaction's subCommands
-         * @type {Array<string> | null}
-         */
-        this.subCommands = this.getSubCommands(data.data.options);
     }
 
     /**
@@ -33,7 +26,7 @@ class CommandInteraction extends BaseCommandInteraction {
      * @returns {Array}
      * @private
     */
-     getArgs(options) {
+    getArgs(options) {
         let args = [];
 
         let check = option => {
@@ -64,57 +57,19 @@ class CommandInteraction extends BaseCommandInteraction {
      * @returns {object}
      * @private
     */
-     getArgsObject(options) {
+    getArgsObject(options) {
         if (!Array.isArray(options)) return {};
         let args = {};
 
-        let fill = (options) => {
-          for (let o of options) {
-            if([1, 2].includes(o.type)) {
-              fill(o.options)
-            } else {
-              args[o.name] = o.value;
-            }
+        for (let o of options) {
+          if([1, 2].includes(o.type)) {
+            args[o.name] = this.getArgsObject(o.options)
+          } else {
+            args[o.name] = o.value;
           }
         }
-
-        fill(options)
 
         return args;
-    }
-
-    /**
-     * Internal method to getSubCommands
-     * @returns {object}
-     * @private
-    */
-    getSubCommands(options) {
-      let args = [];
-
-      let check = option => {
-        if (!option) return;
-        if(![1, 2].includes(option.type)) return;
-        this.arrayArguments.shift();
-
-        if (option.value) args.push(option.value);
-        else args.push(option.name);
-
-        if (option.options) {
-          for (let o = 0; o < option.options.length; o++) {
-            check(option.options[o]);
-          }
-        }
-      };
-
-      if (Array.isArray(options)) {
-        for (let o = 0; o < options.length; o++) {
-          check(options[o]);
-        }
-      } else {
-        check(options);
-      }
-
-      return args;
     }
 }
 
