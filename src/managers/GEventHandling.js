@@ -151,17 +151,17 @@ class GEventHandling {
                 let getArgsObject = options => {
                     if (!Array.isArray(options)) return {};
                     let oargs = {};
-            
+
                     for (let o of options) {
-                      if([1, 2].includes(o.type)) {
-                        oargs[o.name] = getArgsObject(o.options)
+                      if ([1, 2].includes(o.type)) {
+                        oargs[o.name] = getArgsObject(o.options);
                       } else {
                         oargs[o.name] = o.value;
                       }
                     }
-            
+
                     return oargs;
-                }
+                };
 
                 let validArg = async (arg, prompt) => {
                     let final = await arg.obtain(message, prompt);
