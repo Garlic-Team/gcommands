@@ -40,7 +40,7 @@ module.exports = config({
         '/guide/': [
           {
             title: 'Getting started',
-            collapsable: true,
+            collapsable: false,
             children: [
               'gettingstarted/installation',
               'gettingstarted/basicbot'
@@ -48,7 +48,7 @@ module.exports = config({
           },
           {
             title: 'Commands',
-            collapsable: true,
+            collapsable: false,
             children: [
               'commands/gettingstarted',
               'commands/first',
@@ -60,7 +60,7 @@ module.exports = config({
           },
           {
             title: 'Interactions',
-            collapsable: true,
+            collapsable: false,
             children: [
               'interactions/contextmenus',
               'interactions/messagecomponents'
