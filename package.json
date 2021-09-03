@@ -12,10 +12,10 @@
   "devDependencies": {
     "@discordjs/docgen": "^0.10.0",
     "@types/node": "^16.3.3",
-    "eslint": "^7.29.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-prettier": "^3.4.0"
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-prettier": "^3.4.1"
   },
   "repository": {
     "type": "git",

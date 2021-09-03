@@ -157,7 +157,7 @@ class GCommandLoader {
                     description: cmd.description,
                     options: args,
                     type: 1,
-                    default_permission: ['userRequiredRoles', 'userOnly'].includes(cmd) ? true : false
+                    default_permission: !!['userRequiredRoles', 'userOnly'].includes(cmd),
                 }),
                 url,
             };
@@ -268,46 +268,46 @@ class GCommandLoader {
     async __loadCommandPermissions() {
         const keys = Array.from(this.client.gcommands.keys());
 
-        for(const commandName in keys) {
+        for (const commandName in keys) {
             const cmd = this.client.gcommands.get(keys[commandName]);
-            const allKeys= Object.keys(cmd);
-            
-            if(!['userRequiredRoles', 'userOnly'].some(o => allKeys.includes(o))) return;
+            const allKeys = Object.keys(cmd);
+
+            if (!['userRequiredRoles', 'userOnly'].some(o => allKeys.includes(o))) return;
 
             let apiCommands = cmd.guildOnly ? (await __getAllCommands(this.client, cmd.guildOnly)).filter(c => c.name === cmd.name) : (await this._allGlobalCommands).filter(c => c.name === cmd.name);
 
-            for(const apiCommand of apiCommands) {
-                if(![1].includes(apiCommand.type)) return;
+            for (const apiCommand of apiCommands) {
+                if (![1].includes(apiCommand.type)) return;
 
                 let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands/${apiCommand.id}/permissions`;
                 if (cmd.guildOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${cmd.guildOnly}/commands/${apiCommand.id}/permissions`;
-    
+
                 let finalData = [];
-    
-                if(cmd.userRequiredRoles) {
+
+                if (cmd.userRequiredRoles) {
                     if (!Array.isArray(cmd.userRequiredRoles)) cmd.userRequiredRoles = [cmd.userRequiredRoles];
-    
-                    for await(const roleId of cmd.userRequiredRoles) {
+
+                    for await (const roleId of cmd.userRequiredRoles) {
                         finalData.push({
-                            'id': roleId,
-                            'type': 1,
-                            'permission': true
-                        })
+                            id: roleId,
+                            type: 1,
+                            permission: true,
+                        });
                     }
                 }
-    
-                if(cmd.userOnly) {
+
+                if (cmd.userOnly) {
                     if (!Array.isArray(cmd.userOnly)) cmd.userOnly = [cmd.userOnly];
-    
-                    for await(const userId of cmd.userOnly) {
+
+                    for await (const userId of cmd.userOnly) {
                         finalData.push({
-                            'id': userId,
-                            'type': 2,
-                            'permission': true
-                        })
+                            id: userId,
+                            type: 2,
+                            permission: true,
+                        });
                     }
                 }
-    
+
                 let config = {
                     method: 'PUT',
                     headers: {
@@ -315,17 +315,17 @@ class GCommandLoader {
                         'Content-Type': 'application/json',
                     },
                     data: JSON.stringify({
-                        permissions: finalData
+                        permissions: finalData,
                     }),
                     url,
                 };
-    
+
                 axios(config).then(() => {
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
                 })
                 .catch(error => {
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
-    
+
                     if (error.response) {
                         if (error.response.status === 429) {
                             setTimeout(() => {
