@@ -56,8 +56,8 @@ This creates a command with the "user" and "role" subcommand. The subcommands bo
 Next we want to get the permissions of a role of member. We start by checking if the "role" or "user" subcommand is used.
 
 ```js
-run({ respond, guild, args, subcommands, member }) {
-    if (subcommands[0] === 'user') {
+run({ respond, guild, args, subCommands, member }) {
+    if (subCommands[0] === 'user') {
         // Get the member from the arguments
         member = args[0]
             ? args[0].match(/[0-9]+/g)
@@ -74,7 +74,7 @@ run({ respond, guild, args, subcommands, member }) {
         // Send the permissions
         respond({ content: perms });
 
-    } else if (subcommands[0] === 'role') {
+    } else if (subCommands[0] === 'role') {
         // Get the role from the arguments
         const role = args[0]
             ? args[0].match(/[0-9]+/g)
@@ -161,8 +161,8 @@ module.exports = class extends Command {
             ]
         });
     }
-    run({ respond, guild, args, subcommands, member }) {
-        if (subcommands[0] === 'user') {
+    run({ respond, guild, args, subCommands, member }) {
+        if (subCommands[0] === 'user') {
             member = args[0]
                 ? args[0].match(/[0-9]+/g)
                     ? guild.members.cache.get(args[0].match(/[0-9]+/g)[0]) || member
@@ -176,7 +176,7 @@ module.exports = class extends Command {
 
             respond({ content: perms });
 
-        } else if (subcommands[0] === 'role') {
+        } else if (subCommands[0] === 'role') {
             const role = args[0]
                 ? args[0].match(/[0-9]+/g)
                     ? guild.roles.cache.get(args[0].match(/[0-9]+/g)[0]) || null
