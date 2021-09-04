@@ -162,6 +162,7 @@ class GCommandLoader {
                     url,
                 };
 
+                this.GCommandsClient.emit(Events.DEBUG, url);
                 axios(config).then(() => {
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 })
