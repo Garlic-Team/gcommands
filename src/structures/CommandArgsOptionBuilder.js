@@ -144,7 +144,7 @@ class CommandArgsOptionBuilder {
        * Method to addOptions
        * @param {Array<CommandArgsOption>} options
       */
-      addArgs(options) {
+      addOptions(options) {
         for (const option of Object.values(options)) {
           this.addOption(option);
         }
