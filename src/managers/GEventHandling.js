@@ -94,7 +94,7 @@ class GEventHandling {
                 let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos);
                 if (cooldown.cooldown) return message.reply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
 
-                if (commandos.guildOnly && message.guild.id !== commandos.guildOnly) return;
+                if (commandos.guildOnly && !commandos.guildOnly.includes(message.guild.id)) return;
 
                 if (commandos.userOnly) {
                     if (typeof commandos.userOnly === 'object') {
