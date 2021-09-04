@@ -143,6 +143,7 @@ class GEventHandling {
                     }
                 }
 
+                let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
                 const objectArgs = [];
                 const finalArgs = [];
                 const missingInput = [];
@@ -199,7 +200,7 @@ class GEventHandling {
 
                         finalArgs.push(subcommandInput.content.name);
 
-                        if (subcommandInput.content.options.filter(o => o.type === 1).length === 0) objectArgs.push(subcommandInput.content);
+                        if (commandos.args.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP).length === 0 && subcommandInput.content.options.filter(o => o.type === 1).length === 0) objectArgs.push(subcommandInput.content);
                         for (const option of subcommandInput.content.options) {
                             if (option.type === 1) {
                                 objectArgs.push(subcommandInput.content);
@@ -216,8 +217,7 @@ class GEventHandling {
                     }
                 };
 
-
-                let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
+                const ifNotSubOrGroup = cmdArgs.filter(a => [ArgumentType.SUB_COMMAND, ArgumentType.SUB_COMMAND_GROUP].includes(a.type)).length === 0;
 
                 const cmdsubcommandgroups = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP);
                 if (Array.isArray(cmdsubcommandgroups) && cmdsubcommandgroups[0]) {
@@ -245,6 +245,8 @@ class GEventHandling {
 
                                 args[i] = argInput.content;
 
+                                if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
+
                                 for (const input of missingInput) {
                                     if (input.name === arg.name) {
                                         input.value = argInput.content;
@@ -253,6 +255,8 @@ class GEventHandling {
                             }
                         } else {
                             finalArgs.push(args[i]);
+
+                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: args[i], type: arg.type });
 
                             for (const input of missingInput) {
                                 if (input.name === arg.name) {
@@ -273,6 +277,9 @@ class GEventHandling {
                         finalArgs.push(argInput.content);
 
                         args[i] = argInput.content;
+
+                        if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
+
                         for (const input of missingInput) {
                             if (input.name === arg.name) {
                                 input.value = argInput.content;
