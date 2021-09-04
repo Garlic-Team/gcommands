@@ -246,7 +246,7 @@ class GEventHandling {
 
                                 args[i] = argInput.content;
 
-                                if(ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type })
+                                if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
 
                                 for (const input of missingInput) {
                                     if (input.name === arg.name) {
@@ -257,7 +257,7 @@ class GEventHandling {
                         } else {
                             finalArgs.push(args[i]);
 
-                            if(ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: args[i], type: arg.type })
+                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: args[i], type: arg.type });
 
                             for (const input of missingInput) {
                                 if (input.name === arg.name) {
@@ -279,7 +279,7 @@ class GEventHandling {
 
                         args[i] = argInput.content;
 
-                        if(ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type })
+                        if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
 
                         for (const input of missingInput) {
                             if (input.name === arg.name) {
