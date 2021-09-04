@@ -25,26 +25,26 @@ args: [
         name: 'user',
         description: 'View permissions of a user',
         type: ArgumentType.SUB_COMMAND,
-        args: [
+        options: [
             {
                 name: 'target',
-                description: 'The role to target',
+                description: 'The user to target',
                 type: ArgumentType.USER,
             }
-        ] // Add arguments to the subcommand
+        ]
     },
     {
         name: 'role',
         description: 'View permissions of a role',
         type: ArgumentType.SUB_COMMAND,
-        args: [
+        options: [
             {
                 name: 'target',
                 description: 'The role to target',
                 type: ArgumentType.ROLE,
                 required: true,
             }
-        ] // Add arguments to the subcommand
+        ]
     }
 ]
 ```
@@ -56,49 +56,49 @@ This creates a command with the "user" and "role" subcommand. The subcommands bo
 Next we want to get the permissions of a role of member. We start by checking if the "role" or "user" subcommand is used.
 
 ```js
-run({ respond, guild, args, subCommands, member }) {
-    if (subCommands[0] === 'user') {
-        // Get the member from the arguments
-        member = args[0]
-            ? args[0].match(/[0-9]+/g)
-                ? guild.members.cache.get(args[0].match(/[0-9]+/g)[0]) || member
+run({ respond, guild, args, objectArgs, member }) {
+    if (objectArgs.user) {
+        member = objectArgs.user.target
+            ? objectArgs.user.target.match(/[0-9]+/g)
+                ? guild.members.cache.get(objectArgs.user.target.match(/[0-9]+/g)[0]) || member
                 : member
             : member;
 
-        // Get the permissions and make it readable
         const perms = member.permissions.toArray()
             .join(', ')
             .replaceAll('_', ' ')
             .toLowerCase();
 
-        // Send the permissions
         respond({ content: perms });
 
-    } else if (subCommands[0] === 'role') {
-        // Get the role from the arguments
-        const role = args[0]
-            ? args[0].match(/[0-9]+/g)
-                ? guild.roles.cache.get(args[0].match(/[0-9]+/g)[0]) || null
+    } else if (objectArgs.role) {
+        const role = objectArgs.role.target
+            ? objectArgs.role.target.match(/[0-9]+/g)
+                ? guild.roles.cache.get(objectArgs.role.target.match(/[0-9]+/g)[0]) || null
                 : null
             : null;
 
-        // Respond if no role was found
         if (!role) return respond({ content: 'Could not find that role' });
 
-        // Get the permissions and make it readable
         const perms = role.permissions.toArray()
             .join(', ')
             .replaceAll('_', ' ')
             .toLowerCase();
 
-        // Send the permissions
         respond({ content: perms });
-        }
     }
 }
 ```
 
 <div is="dis-messages">
+    <dis-messages>
+        <dis-message profile="gcommands">
+            <template #interactions>
+                <discord-interaction profile="hyro" :command="true">perms</discord-interaction>
+            </template>
+            create instant invite, manage channels, add reactions, stream, send messages, embed links, attach files, read message history, mention everyone, use external emojis, connect, speak, use vad, change nickname, use application commands, request to speak
+        </dis-message>
+    </dis-messages>
     <dis-messages>
         <dis-message profile="izboxo">
             .perms
@@ -131,13 +131,12 @@ module.exports = class extends Command {
         super(client, {
             name: 'perms',
             description: 'Permissions for a user or role',
-            context: false,
             args: [
                 {
                     name: 'user',
                     description: 'View permissions of a user',
                     type: ArgumentType.SUB_COMMAND,
-                    args: [
+                    options: [
                         {
                             name: 'target',
                             description: 'The user to target',
@@ -149,7 +148,7 @@ module.exports = class extends Command {
                     name: 'role',
                     description: 'View permissions of a role',
                     type: ArgumentType.SUB_COMMAND,
-                    args: [
+                    options: [
                         {
                             name: 'target',
                             description: 'The role to target',
@@ -161,11 +160,11 @@ module.exports = class extends Command {
             ]
         });
     }
-    run({ respond, guild, args, subCommands, member }) {
-        if (subCommands[0] === 'user') {
-            member = args[0]
-                ? args[0].match(/[0-9]+/g)
-                    ? guild.members.cache.get(args[0].match(/[0-9]+/g)[0]) || member
+    run({ respond, guild, args, objectArgs, member }) {
+        if (objectArgs.user) {
+            member = objectArgs.user.target
+                ? objectArgs.user.target.match(/[0-9]+/g)
+                    ? guild.members.cache.get(objectArgs.user.target.match(/[0-9]+/g)[0]) || member
                     : member
                 : member;
 
@@ -176,10 +175,10 @@ module.exports = class extends Command {
 
             respond({ content: perms });
 
-        } else if (subCommands[0] === 'role') {
-            const role = args[0]
-                ? args[0].match(/[0-9]+/g)
-                    ? guild.roles.cache.get(args[0].match(/[0-9]+/g)[0]) || null
+        } else if (objectArgs.role) {
+            const role = objectArgs.role.target
+                ? objectArgs.role.target.match(/[0-9]+/g)
+                    ? guild.roles.cache.get(objectArgs.role.target.match(/[0-9]+/g)[0]) || null
                     : null
                 : null;
 
