@@ -71,6 +71,10 @@ client.on("log", console.log);
 client.login("TOKEN");
 ```
 
+::: warning
+`commands.slash` and `commands.context` are default options. Any options set in commands will overwrite these options.
+:::
+
 Below are all the available options for [`GCommandsClient`](https://gcommands.js.org/docs/#/docs/main/main/typedef/GCommandsOptions):
 
 | PARAMETER             | REQUIRED | FUNCTIONALITY                                                                                                                                                                                                                                                                                          |
@@ -81,7 +85,7 @@ Below are all the available options for [`GCommandsClient`](https://gcommands.js
 | caseSensitivePrefixes | ❌       | If set to true, prefixes will be case sensitive                                                                                                                                                                                                                                                        |
 | unkownCommandMessage  | ❌       | If set to true, the bot will respond with an error message if a command the user tried to use doesn't exist                                                                                                                                                                                            |
 | language              | ✅       | The default language used to sends messages in                                                                                                                                                                                                                                                         |
-| commands.slash        | ✅       | If set to true, the bot will only register slash commands. If set to false, the bot will only register message commands. If set to both, the bot will register both                                                                                                                                    |
+| commands.slash        | ✅       | If set to slash, the bot will only register slash commands. If set to message, the bot will only register message commands. If set to both, the bot will register both and if set to false, the bot will not register any.                                                                                                                              |
 | commands.context      | ✅       | If set to user, the bot will register user context commands. If set to false, the bot will only register message commands. If set to message, the bot will register message context commands. If set to both, the bot will register both |
 | commands.prefix       | ❌       | The prefix the bot will use in message commands                                                                                                                                                                                                                                                        |
 | defaultCooldown       | ❌       | The default cooldown for commands                                                                                                                                                                                                                                                                      |

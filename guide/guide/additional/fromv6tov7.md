@@ -1,4 +1,4 @@
-# Updating from V6 to V7
+# Updating from v6 to v7
 
 ## GCommandsOptions
 
@@ -25,6 +25,39 @@ const client = new GCommandsClient({
   eventDir: join(__dirname, 'events'),
 });
 ```
+
+### commands
+The slash/context set in the client are now default options, and will be overwriten by options in the command. For example:
+
+```js
+const client = new GCommandsClient({
+  ...options,
+  commands: {
+    slash: 'false',
+    context: 'false',
+  }
+});
+
+// And in the command
+
+class extends Command {
+  constructor(client) {
+    super(client, {
+      ...options,
+      slash: 'both', // This will now create a slash and message command.
+    })
+  }
+}
+```
+
+### commands#slash
+This was changed to turn of message/slash commands completly. (mainly for context menu's)
+| TYPE  | DESCRIPTION     |
+| ----- | --------------- |
+| both  | Message + Slash |
+| slash  | Only slash      |
+| message | Only message    |
+| false | None    |
 
 ## Arguments
 

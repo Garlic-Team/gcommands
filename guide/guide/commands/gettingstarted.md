@@ -38,5 +38,6 @@ new GCommandsClient({
 | TYPE  | DESCRIPTION     |
 | ----- | --------------- |
 | both  | Message + Slash |
-| true  | Only slash      |
-| false | Only message    |
+| slash  | Only slash      |
+| message | Only message    |
+| false | None    |
