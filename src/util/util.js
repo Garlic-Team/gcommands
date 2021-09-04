@@ -205,17 +205,17 @@ class Util {
     }
 
     /**
-     * getAllObjects from object
+     * GetAllObjects from object
      * @param {GCommandsClient} GCommandsClient
      * @param {Object} ob
      * @returns {String}
     */
     static getAllObjects(GCommandsClient, ob) {
-        for(let v of Object.values(ob)) {
-            if(Array.isArray(v)) {
-                getAllObjects(v[0])
-            } else if(typeof v === 'object') {
-                getAllObjects(v)
+        for (let v of Object.values(ob)) {
+            if (Array.isArray(v)) {
+                getAllObjects(v[0]);
+            } else if (typeof v === 'object') {
+                getAllObjects(v);
             } else {
                 GCommandsClient.emit(Events.DEBUG, new Color([
                     `&b${v}`,
