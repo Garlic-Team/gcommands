@@ -135,13 +135,13 @@ class GCommandLoader {
                     Authorization: `Bot ${this.client.token}`,
                     'Content-Type': 'application/json',
                 },
-                data: JSON.stringify({
+                data: {
                     name: cmd.name,
                     description: cmd.description,
                     options: cmd.args,
                     type: 1,
                     default_permission: (Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined,
-                }),
+                },
                 url,
             };
 
@@ -213,10 +213,10 @@ class GCommandLoader {
                     Authorization: `Bot ${this.client.token}`,
                     'Content-Type': 'application/json',
                 },
-                data: JSON.stringify({
+                data: {
                     name: cmd.name,
                     type: type === 4 ? 2 : type,
-                }),
+                },
                 url,
             };
 
@@ -313,9 +313,9 @@ class GCommandLoader {
                         Authorization: `Bot ${this.client.token}`,
                         'Content-Type': 'application/json',
                     },
-                    data: JSON.stringify({
+                    data: {
                         permissions: finalData,
-                    }),
+                    },
                     url,
                 };
 
