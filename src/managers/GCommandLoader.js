@@ -119,7 +119,7 @@ class GCommandLoader {
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
 
-            const loadSlashCommand = (guildOnly) => {
+            const loadSlashCommand = async (guildOnly) => {
                 let ifAlready;
                 if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
                 else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
