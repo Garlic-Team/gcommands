@@ -126,7 +126,7 @@ class GCommandLoader {
 
                 if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[8] || Object.values(cmd)[10]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
-                    continue;
+                    return;
                 }
 
                 const args = cmd.args ? JSON.parse(JSON.stringify(cmd.args)) : [];
@@ -228,7 +228,7 @@ class GCommandLoader {
 
                 if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
-                    continue;
+                    return;
                 }
 
                 let type = cmd.context ? ApplicationCommandTypesRaw[cmd.context] : ApplicationCommandTypesRaw[this.client.context];
