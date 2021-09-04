@@ -1,5 +1,5 @@
 const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
-const { Color } = require('../structures/Color');
+const Color = require('../structures/Color');
 const { InteractionTypes, MessageComponentTypes, Events } = require('./Constants');
 
 /**
@@ -213,9 +213,9 @@ class Util {
     static getAllObjects(GCommandsClient, ob) {
         for (let v of Object.values(ob)) {
             if (Array.isArray(v)) {
-                getAllObjects(v[0]);
+                Util.getAllObjects(v[0]);
             } else if (typeof v === 'object') {
-                getAllObjects(v);
+                Util.getAllObjects(v);
             } else {
                 GCommandsClient.emit(Events.DEBUG, new Color([
                     `&b${v}`,
