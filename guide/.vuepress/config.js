@@ -95,12 +95,12 @@ module.exports = config({
             ]
           },
           {
-            title: 'Common quistions',
+            title: 'Common questions',
             collapsable: true,
             children: [
-              'quistions/commandrunoptions',
-              'quistions/guildundefined',
-              'quistions/missingacces'
+              'questions/commandrunoptions',
+              'questions/guildundefined',
+              'questions/missingacces'
             ]
           },
           {
