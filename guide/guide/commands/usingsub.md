@@ -56,7 +56,7 @@ This creates a command with the "user" and "role" subcommand. The subcommands bo
 Next we want to get the permissions of a role of member. We start by checking if the "role" or "user" subcommand is used.
 
 ```js
-run({ respond, guild, args, objectArgs, member }) {
+run({ respond, guild, objectArgs, member }) {
     if (objectArgs.user) {
         member = objectArgs.user.target
             ? objectArgs.user.target.match(/[0-9]+/g)
@@ -160,7 +160,7 @@ module.exports = class extends Command {
             ]
         });
     }
-    run({ respond, guild, args, objectArgs, member }) {
+    run({ respond, guild, objectArgs, member }) {
         if (objectArgs.user) {
             member = objectArgs.user.target
                 ? objectArgs.user.target.match(/[0-9]+/g)
