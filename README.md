@@ -1,5 +1,8 @@
 <div align="center">
-    <h1><b>GCommands</b></h1>
+    
+   # <img src="https://cdn.discordapp.com/avatars/834822955229380619/7d0142158babe0375e7cc633e87c06d4.png" height="30"> GCommands
+    
+  <br />
   <p>
     <a href="https://www.npmjs.com/package/gcommands"><img src="https://img.shields.io/npm/v/gcommands?maxAge=3600" alt="NPM version" /></a>
     <a href="https://www.npmjs.com/package/gcommands"><img src="https://img.shields.io/npm/dt/gcommands?maxAge=3600" alt="NPM downloads" /></a>
@@ -9,9 +12,9 @@
     <a href="https://www.npmjs.com/package/gcommands"><img src="https://nodei.co/npm/gcommands.png?downloads=true&stars=true" alt="NPM Banner"></a>
   </p>
   <p>
-    <a href="https://ko-fi.com/H2H05FNRL"><img src="https://garlic-team.github.io/GarMod/sources/support-ko-fi.svg" height="30" /></a>
-    <a href="https://github.com/Garlic-Team/GCommands"><img src="https://garlic-team.github.io/GarMod/sources/open-source.svg" height="30" /></a>
-    <img src="https://forthebadge.com/images/badges/made-with-javascript.svg" height="30" />
+    <a href="https://ko-fi.com/H2H05FNRL"><img src="https://img.shields.io/badge/Kofi-Donate-yellow?style=for-the-badge" height="30" /></a>
+    <a href="https://github.com/Garlic-Team/GCommands"><img src="https://img.shields.io/badge/Open-Source-blue?style=for-the-badge" height="30" /></a>
+    <img src="https://img.shields.io/badge/Made%20With-JavaScript-red?style=for-the-badge" height="30" />
   </p>
 </div>
 
