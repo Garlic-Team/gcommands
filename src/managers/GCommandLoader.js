@@ -1,4 +1,4 @@
-const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw, ArgumentType } = require('../util/Constants');
+const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
 const axios = require('axios');
 const fs = require('fs');
 const ms = require('ms');
@@ -129,23 +129,6 @@ class GCommandLoader {
                 continue;
             }
 
-            const args = cmd.args ? JSON.parse(JSON.stringify(cmd.args)) : [];
-
-            for (const arg of args) {
-                if (arg.args) {
-                    if (arg.type === ArgumentType.SUB_COMMAND_GROUP) {
-                        for (const subArg of arg.args) {
-                            if (subArg.args) {
-                                subArg.options = subArg.args;
-                                delete subArg.args;
-                            }
-                        }
-                    }
-                    arg.options = arg.args;
-                    delete arg.args;
-                }
-            }
-
             let config = {
                 method: 'POST',
                 headers: {
@@ -155,7 +138,7 @@ class GCommandLoader {
                 data: JSON.stringify({
                     name: cmd.name,
                     description: cmd.description,
-                    options: args,
+                    options: cmd.args,
                     type: 1,
                     default_permission: (Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined,
                 }),
