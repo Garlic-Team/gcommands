@@ -1,4 +1,5 @@
 const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
+const { Color } = require('../structures/Color');
 const { InteractionTypes, MessageComponentTypes, Events } = require('./Constants');
 
 /**
