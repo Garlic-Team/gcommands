@@ -2,7 +2,7 @@ const Color = require('../structures/Color'), GError = require('../structures/GE
 const axios = require('axios');
 const fs = require('fs');
 const ms = require('ms');
-const { isClass, __deleteCmd, __getAllCommands, comparable } = require('../util/util');
+const { isClass, __deleteCmd, __getAllCommands, comparable, getAllObjects } = require('../util/util');
 const Command = require('../commands/base');
 /**
  * The GCommandLoader class
@@ -179,8 +179,17 @@ class GCommandLoader {
                             '  &d[GCommands Debug] &3',
                             `&aCode: &b${error.response.data.code}`,
                             `&aMessage: &b${error.response.data.message}`,
-                            '&a----------------------',
+                            '',
+                            `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                         ]).getText());
+
+                        if(error.response.data.errors) {
+                            getAllObjects(this.GCommandsClient, error.response.data.errors);
+
+                            this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                `&a----------------------`,
+                            ]).getText());
+                        }
                     }
                 }
             });
@@ -252,8 +261,17 @@ class GCommandLoader {
                             '  &d[GCommands Debug] &3',
                             `&aCode: &b${error.response.data.code}`,
                             `&aMessage: &b${error.response.data.message}`,
-                            '&a----------------------',
+                            '',
+                            `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                         ]).getText());
+
+                        if(error.response.data.errors) {
+                            getAllObjects(this.GCommandsClient, error.response.data.errors);
+
+                            this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                `&a----------------------`,
+                            ]).getText());
+                        }
                     }
                 }
             });
@@ -336,8 +354,17 @@ class GCommandLoader {
                                 '  &d[GCommands Debug] &3',
                                 `&aCode: &b${error.response.data.code}`,
                                 `&aMessage: &b${error.response.data.message}`,
-                                '&a----------------------',
+                                '',
+                                `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                             ]).getText());
+    
+                            if(error.response.data.errors) {
+                                getAllObjects(this.GCommandsClient, error.response.data.errors);
+    
+                                this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                    `&a----------------------`,
+                                ]).getText());
+                            }
                         }
                     }
                 });

@@ -1,5 +1,5 @@
 const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
-const { InteractionTypes, MessageComponentTypes } = require('./Constants');
+const { InteractionTypes, MessageComponentTypes, Events } = require('./Constants');
 
 /**
  * The Util class
@@ -201,6 +201,26 @@ class Util {
             .join(c || ' ');
 
         return a;
+    }
+
+    /**
+     * getAllObjects from object
+     * @param {GCommandsClient} GCommandsClient
+     * @param {Object} ob
+     * @returns {String}
+    */
+    static getAllObjects(GCommandsClient, ob) {
+        for(let v of Object.values(ob)) {
+            if(Array.isArray(v)) {
+                getAllObjects(v[0])
+            } else if(typeof v === 'object') {
+                getAllObjects(v)
+            } else {
+                GCommandsClient.emit(Events.DEBUG, new Color([
+                    `&b${v}`,
+                ]).getText());
+            }
+        }
     }
 }
 
