@@ -107,7 +107,7 @@ class Command {
          * GuildOnly
          * @type {Snowflake | Array}
          */
-        this.guildOnly = options.guildOnly;
+        this.guildOnly = Array.isArray(options.guildOnly) ? options.guildOnly : Array(options.guildOnly);
 
         /**
          * Nsfw

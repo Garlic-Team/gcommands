@@ -95,7 +95,7 @@ class CommandOptionsBuilder {
          * GuildOnly
          * @type {Snowflake}
         */
-       this.guildOnly = 'guildOnly' in data ? resolveString(data.guildOnly) : null;
+       this.guildOnly = 'guildOnly' in data ? data.guildOnly : null;
 
        /**
          * ChannelTextOnly
@@ -258,7 +258,7 @@ class CommandOptionsBuilder {
 
     /**
      * Method to setGuildOnly
-     * @param {Snowflake} guildOnly
+     * @param {Snowflake | Array} guildOnly
     */
     setGuildOnly(guildOnly) {
       this.guildOnly = guildOnly;

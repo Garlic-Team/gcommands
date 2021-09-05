@@ -287,7 +287,7 @@ function createEnum(keys) {
  * @property {string | Array} clientRequiredPermissions
  * @property {Snowflake | Array} userOnly
  * @property {Snowflake | Array} channelOnly
- * @property {Snowflake} guildOnly
+ * @property {Snowflake | Array} guildOnly
  * @property {boolean} channelTextOnly
  * @property {boolean} channelNewsOnly
  * @property {boolean} channelThreadOnly
