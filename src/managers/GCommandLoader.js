@@ -1,4 +1,4 @@
-const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw, ArgumentType } = require('../util/Constants');
+const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
 const axios = require('axios');
 const fs = require('fs');
 const ms = require('ms');
@@ -108,18 +108,17 @@ class GCommandLoader {
      * @private
      */
     async __loadSlashCommands() {
-        if (String(this.client.slash) === 'false') return;
-
         let keys = Array.from(this.client.gcommands.keys());
         this.__deleteNonExistCommands(keys);
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (String(cmd.slash) === 'false') continue;
+            if (['false', 'message'].includes(String(cmd.slash))) continue;
+            if (!cmd.slash && ['false', 'message'].includes(String(this.client.slash))) continue;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
 
-            const loadSlashCommand = async (guildOnly) => {
+            const loadSlashCommand = async guildOnly => {
                 let ifAlready;
                 if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
                 else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
@@ -127,23 +126,6 @@ class GCommandLoader {
                 if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[8] || Object.values(cmd)[10]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                     return;
-                }
-
-                const args = cmd.args ? JSON.parse(JSON.stringify(cmd.args)) : [];
-
-                for (const arg of args) {
-                    if (arg.args) {
-                        if (arg.type === ArgumentType.SUB_COMMAND_GROUP) {
-                            for (const subArg of arg.args) {
-                                if (subArg.args) {
-                                    subArg.options = subArg.args;
-                                    delete subArg.args;
-                                }
-                            }
-                        }
-                        arg.options = arg.args;
-                        delete arg.args;
-                    }
                 }
 
                 let config = {
@@ -155,7 +137,7 @@ class GCommandLoader {
                     data: {
                         name: cmd.name,
                         description: cmd.description,
-                        options: args,
+                        options: cmd.args || [],
                         type: 1,
                         default_permission: (Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined,
                     },
@@ -166,42 +148,42 @@ class GCommandLoader {
                 axios(config).then(() => {
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 })
-                .catch(error => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                    .catch(error => {
+                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                    if (error.response) {
-                        if (error.response.status === 429) {
-                            setTimeout(() => {
-                                this.__tryAgain(cmd, config, 'Slash');
-                            }, (error.response.data.retry_after) * 1000);
-                        } else {
-                            this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                '&a----------------------',
-                                '  &d[GCommands Debug] &3',
-                                `&aCode: &b${error.response.data.code}`,
-                                `&aMessage: &b${error.response.data.message}`,
-                                '',
-                                `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
-                            ]).getText());
-
-                            if(error.response.data.errors) {
-                                getAllObjects(this.GCommandsClient, error.response.data.errors);
-
+                        if (error.response) {
+                            if (error.response.status === 429) {
+                                setTimeout(() => {
+                                    this.__tryAgain(cmd, config, 'Slash');
+                                }, (error.response.data.retry_after) * 1000);
+                            } else {
                                 this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                    `&a----------------------`,
+                                    '&a----------------------',
+                                    '  &d[GCommands Debug] &3',
+                                    `&aCode: &b${error.response.data.code}`,
+                                    `&aMessage: &b${error.response.data.message}`,
+                                    '',
+                                    `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                                 ]).getText());
+
+                                if (error.response.data.errors) {
+                                    getAllObjects(this.GCommandsClient, error.response.data.errors);
+
+                                    this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                        `&a----------------------`,
+                                    ]).getText());
+                                }
                             }
                         }
-                    }
-                });
-            }
+                    });
+            };
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
                     url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${guildOnly}/commands`;
                     await loadSlashCommand(guildOnly);
                 }
-            } else await loadSlashCommand();
+            } else { await loadSlashCommand(); }
         }
     }
 
@@ -211,18 +193,17 @@ class GCommandLoader {
      * @private
      */
     async __loadContextMenuCommands() {
-        if (String(this.client.context) === 'false') return;
-
         const keys = Array.from(this.client.gcommands.keys());
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
             if (String(cmd.context) === 'false') continue;
+            if (!cmd.context && String(this.client.context) === 'false') continue;
 
             if (cmd.expectedArgs) cmd.args = cmd.expectedArgs;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
-            const loadContextMenu = async (guildOnly) => {
+            const loadContextMenu = async guildOnly => {
                 let ifAlready;
                 if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
                 else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
@@ -255,42 +236,44 @@ class GCommandLoader {
                         this.__tryAgain(cmd, config, 'Context Menu (message)');
                     }
                 })
-                .catch(error => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                    .catch(error => {
+                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                    if (error.response) {
-                        if (error.response.status === 429) {
-                            setTimeout(() => {
-                                this.__tryAgain(cmd, config, 'Context Menu');
-                            }, (error.response.data.retry_after) * 1000);
-                        } else {
-                            this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                '&a----------------------',
-                                '  &d[GCommands Debug] &3',
-                                `&aCode: &b${error.response.data.code}`,
-                                `&aMessage: &b${error.response.data.message}`,
-                                '',
-                                `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
-                            ]).getText());
-
-                            if(error.response.data.errors) {
-                                getAllObjects(this.GCommandsClient, error.response.data.errors);
-
+                        if (error.response) {
+                            if (error.response.status === 429) {
+                                setTimeout(() => {
+                                    this.__tryAgain(cmd, config, 'Context Menu');
+                                }, (error.response.data.retry_after) * 1000);
+                            } else {
                                 this.GCommandsClient.emit(Events.DEBUG, new Color([
-                                    `&a----------------------`,
+                                    '&a----------------------',
+                                    '  &d[GCommands Debug] &3',
+                                    `&aCode: &b${error.response.data.code}`,
+                                    `&aMessage: &b${error.response.data.message}`,
+                                    '',
+                                    `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                                 ]).getText());
+
+                                if (error.response.data.errors) {
+                                    getAllObjects(this.GCommandsClient, error.response.data.errors);
+
+                                    this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                        `&a----------------------`,
+                                    ]).getText());
+                                }
                             }
                         }
-                    }
-                });
-            }
+                    });
+            };
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
                     url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${guildOnly}/commands`;
                     await loadContextMenu();
                 }
-            } else await loadContextMenu();
+            } else {
+                await loadContextMenu();
+            }
         }
     }
 
@@ -307,56 +290,56 @@ class GCommandLoader {
 
             if ((Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined) continue;
 
-            const loadCommandPermission = async (apiCommands, guildOnly) => {
+            const loadCommandPermission = async apiCommands => {
                 for (const apiCommand of apiCommands) {
                     if (![1].includes(apiCommand.type)) continue;
-                    
+
                     let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands/${apiCommand.id}/permissions`;
                     const loadApiCmd = async () => {
                         let finalData = [];
-                        
-                            if (cmd.userRequiredRoles) {
-                                if (!Array.isArray(cmd.userRequiredRoles)) cmd.userRequiredRoles = [cmd.userRequiredRoles];
-    
-                                for await (const roleId of cmd.userRequiredRoles) {
-                                    finalData.push({
-                                        id: roleId,
-                                        type: 1,
-                                        permission: true,
-                                    });
-                                }
+
+                        if (cmd.userRequiredRoles) {
+                            if (!Array.isArray(cmd.userRequiredRoles)) cmd.userRequiredRoles = [cmd.userRequiredRoles];
+
+                            for await (const roleId of cmd.userRequiredRoles) {
+                                finalData.push({
+                                    id: roleId,
+                                    type: 1,
+                                    permission: true,
+                                });
                             }
-    
-                            if (cmd.userOnly) {
-                                if (!Array.isArray(cmd.userOnly)) cmd.userOnly = [cmd.userOnly];
-    
-                                for await (const userId of cmd.userOnly) {
-                                    finalData.push({
-                                        id: userId,
-                                        type: 2,
-                                        permission: true,
-                                    });
-                                }
+                        }
+
+                        if (cmd.userOnly) {
+                            if (!Array.isArray(cmd.userOnly)) cmd.userOnly = [cmd.userOnly];
+
+                            for await (const userId of cmd.userOnly) {
+                                finalData.push({
+                                    id: userId,
+                                    type: 2,
+                                    permission: true,
+                                });
                             }
-    
-                            let config = {
-                                method: 'PUT',
-                                headers: {
-                                    Authorization: `Bot ${this.client.token}`,
-                                    'Content-Type': 'application/json',
-                                },
-                                data: {
-                                    permissions: finalData,
-                                },
-                                url,
-                            };
-    
-                            axios(config).then(() => {
-                                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
-                            })
+                        }
+
+                        let config = {
+                            method: 'PUT',
+                            headers: {
+                                Authorization: `Bot ${this.client.token}`,
+                                'Content-Type': 'application/json',
+                            },
+                            data: {
+                                permissions: finalData,
+                            },
+                            url,
+                        };
+
+                        axios(config).then(() => {
+                            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
+                        })
                             .catch(error => {
                                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
-    
+
                                 if (error.response) {
                                     if (error.response.status === 429) {
                                         setTimeout(() => {
@@ -371,10 +354,10 @@ class GCommandLoader {
                                             '',
                                             `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
                                         ]).getText());
-                
-                                        if(error.response.data.errors) {
+
+                                        if (error.response.data.errors) {
                                             getAllObjects(this.GCommandsClient, error.response.data.errors);
-                
+
                                             this.GCommandsClient.emit(Events.DEBUG, new Color([
                                                 `&a----------------------`,
                                             ]).getText());
@@ -382,8 +365,7 @@ class GCommandLoader {
                                     }
                                 }
                             });
-
-                    }
+                    };
 
                     if (apiCommand.guildOnly) {
                         for (let gOnly of apiCommand.guildOnly) {
@@ -394,7 +376,7 @@ class GCommandLoader {
                         await loadApiCmd();
                     }
                 }
-            }
+            };
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {

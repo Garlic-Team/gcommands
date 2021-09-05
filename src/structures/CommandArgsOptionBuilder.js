@@ -56,10 +56,10 @@ class CommandArgsOptionBuilder {
         this.choices = 'choices' in data ? data.choises : null;
 
         /**
-         * Args
+         * Options
          * @type {Array<CommandArgsOption>}
         */
-         this.args = 'args' in data ? data.args : null;
+         this.options = 'options' in data ? data.options : null;
 
         return this.toJSON();
     }
@@ -131,22 +131,22 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to addArg
-     * @param {CommandArgsOption} arg
+     * Method to addOption
+     * @param {CommandArgsOption} option
     */
-     addArg(arg) {
-        if (!Array.isArray(this.args)) this.args = [];
-        this.args.push(arg);
+     addOption(option) {
+        if (!Array.isArray(this.options)) this.options = [];
+        this.options.push(option);
         return this;
       }
 
       /**
-       * Method to addArgs
-       * @param {Array<CommandArgsOption>} args
+       * Method to addOptions
+       * @param {Array<CommandArgsOption>} options
       */
-      addArgs(args) {
-        for (const arg of Object.values(args)) {
-          this.addArg(arg);
+      addOptions(options) {
+        for (const option of Object.values(options)) {
+          this.addOption(option);
         }
         return this;
       }
@@ -163,6 +163,7 @@ class CommandArgsOptionBuilder {
           prompt: this.prompt,
           required: this.required,
           choises: this.choices,
+          options: this.options,
         };
       }
 }

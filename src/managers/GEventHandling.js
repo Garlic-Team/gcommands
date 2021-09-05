@@ -37,8 +37,6 @@ class GEventHandling {
      * @private
     */
     messageEvent() {
-        if (String(this.client.slash) === 'true') return;
-
         this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
             messageEventUse(message);
         });
@@ -64,7 +62,8 @@ class GEventHandling {
                 commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
                 if (!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
 
-                if (!commandos || String(commandos.slash) === 'true') return;
+                if (!commandos || ['false', 'slash'].includes(String(commandos.slash))) return;
+                if (!commandos.slash && ['false', 'slash'].includes(String(this.client.slash))) return;
 
                 let member = message.member, guild = message.guild, channel = message.channel;
                 let botMessageInhibit;
@@ -120,7 +119,7 @@ class GEventHandling {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
+                        let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
                         return message.reply(permsNeed);
                     }
                 }
@@ -129,7 +128,7 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!member.permissions.has(commandos.userRequiredPermissions)) {
-                        let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
+                        let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
                         return message.reply(permsNeed);
                     }
                 }
@@ -326,13 +325,8 @@ class GEventHandling {
      * @private
     */
     slashEvent() {
-        if (String(this.client.slash) === 'false') return;
-
         this.client.on('GInteraction', async interaction => {
             if (!interaction.isApplication()) return;
-
-            if (interaction.isCommand() && String(this.client.slash) === 'false') return;
-            if (interaction.isContextMenu() && String(this.client.context) === 'false') return;
 
             if (!interaction.guild) return;
 
@@ -340,8 +334,10 @@ class GEventHandling {
             try {
                 commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
                 if (!commandos) return;
-                if (interaction.isCommand() && String(commandos.slash) === 'false') return;
+                if (interaction.isCommand() && ['false', 'message'].includes(String(commandos.slash))) return;
+                if (interaction.isCommand() && !commandos.slash && ['false', 'message'].includes(String(this.client.slash))) return;
                 if (interaction.isContextMenu() && String(commandos.context) === 'false') return;
+                if (interaction.isContextMenu() && !commandos.context && String(this.client.context) === 'false') return;
 
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
                     interaction,
@@ -387,8 +383,9 @@ class GEventHandling {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        return interaction.reply.send({ content:
-                            this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
+                        return interaction.reply.send({
+                            content:
+                                this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
                         });
                     }
                 }
@@ -397,8 +394,9 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
-                        return interaction.reply.send({ content:
-                            this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
+                        return interaction.reply.send({
+                            content:
+                                this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
                         });
                     }
                 }
