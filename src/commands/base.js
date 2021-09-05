@@ -24,6 +24,12 @@ class Command {
         this.name = resolveString(options.name);
 
         /**
+         * ContextMenuName
+         * @type {string}
+         */
+        this.contextMenuName = resolveString(options.contextMenuName);
+
+        /**
          * Description
          * @type {string}
          */

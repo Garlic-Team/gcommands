@@ -221,7 +221,7 @@ class GCommandLoader {
                         'Content-Type': 'application/json',
                     },
                     data: {
-                        name: cmd.name,
+                        name: cmd.contextMenuName || cmd.name,
                         type: type === 4 ? 2 : type,
                     },
                     url,
