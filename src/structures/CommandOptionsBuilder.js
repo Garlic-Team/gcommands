@@ -26,6 +26,12 @@ class CommandOptionsBuilder {
        this.name = 'name' in data ? resolveString(data.name) : null;
 
        /**
+         * contextMenuName
+         * @type {string}
+        */
+       this.contextMenuName = 'contextMenuName' in data ? resolveString(data.contextMenuName) : null;
+
+       /**
          * Description
          * @type {string}
         */
@@ -143,6 +149,15 @@ class CommandOptionsBuilder {
     setName(name) {
         this.name = resolveString(name);
         return this;
+    }
+
+    /**
+     * Method to setContextMenuName
+     * @param {string} contextMenuName
+    */
+    setContextMenuName(contextMenuName) {
+      this.contextMenuName = resolveString(contextMenuName);
+      return this;
     }
 
     /**

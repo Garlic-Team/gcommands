@@ -201,6 +201,7 @@ declare module 'gcommands' {
     private setup(data: CommandOptions)
 
     public name: string;
+    public contextMenuName: String;
     public description: string;
     public cooldown: string;
     public args: Array<CommandArgsOption>;
@@ -221,6 +222,7 @@ declare module 'gcommands' {
     public context: GCommandsOptionsCommandsContext;
 
     public setName(name: string): CommandOptionsBuilder;
+    public setContextMenuName(name: string): CommandOptionsBuilder;
     public setDescription(description: string): CommandOptionsBuilder;
     public setCooldown(cooldown: string): CommandOptionsBuilder;
     public addArg(arg: CommandArgsOption): CommandOptionsBuilder;
@@ -402,6 +404,7 @@ declare module 'gcommands' {
     constructor(client: Client, options: CommandOptions)
 
     public name: string;
+    public contextMenuName: string;
     public description: string;
     public cooldown: string;
     public args: Array<object>;
@@ -533,6 +536,7 @@ declare module 'gcommands' {
 
   interface CommandOptions {
     name: string;
+    contextMenuName: string;
     description: string;
     cooldown?: string;
     args?: Array<Object>;
