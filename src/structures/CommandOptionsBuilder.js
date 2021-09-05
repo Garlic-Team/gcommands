@@ -26,7 +26,7 @@ class CommandOptionsBuilder {
        this.name = 'name' in data ? resolveString(data.name) : null;
 
        /**
-         * contextMenuName
+         * ContextMenuName
          * @type {string}
         */
        this.contextMenuName = 'contextMenuName' in data ? resolveString(data.contextMenuName) : null;
