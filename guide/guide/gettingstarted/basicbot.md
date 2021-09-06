@@ -39,9 +39,10 @@ Then, paste this code in:
 
 ```js
 const { GCommandsClient } = require("gcommands");
+const { join } = require('path');
 const client = new GCommandsClient({
-  cmdDir: __dirname + "/commands",
-  eventDir: __dirname + "events",
+  cmdDir: join(__dirname, 'commands'),
+  eventDir: join(__dirname, 'events'),
   caseSensitiveCommands: false, // true or false | whether to match the commands' caps
   caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
   unkownCommandMessage: false, // true or false | send unkownCommand Message
