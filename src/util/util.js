@@ -211,6 +211,7 @@ class Util {
      * @returns {String}
     */
     static getAllObjects(GCommandsClient, ob) {
+	if (typeof ob !== 'object') GCommandsClient.emit(Events.DEBUG, new Color(`&b${ob}`).getText());
         for (let v of Object.values(ob)) {
             if (Array.isArray(v)) {
                 Util.getAllObjects(v[0]);
