@@ -1,4 +1,4 @@
-# Updating from v5 to v6 & v7
+# Updating from v5 to v6
 
 ## Before you start
 v6 requires discord.js v12 or v13, so make sure you have these versions of discord.js and not others.  
@@ -25,14 +25,6 @@ The `new GCommands` is deprecated, and should already use the `new GCommandsClie
 
 #### GCommandsOptions#language
 New languages `indonesian`, `italian` have been added.
-
-#### v7 changes
-
-##### GCommandsOptions#cmdDir
-In cmdDir, you must also specify the path. For example: `__dirname + "/commands"`
-
-##### GCommandsOptions#eventDir
-In eventDir, you must also specify the path. For example: `__dirname + "/events"`
 
 ### Interactions
 `<Interaction>.id` has been replaced with `<Interaction.customId>`. The `<Interaction>.id` is currently the discord interaction id, not the customId.  
