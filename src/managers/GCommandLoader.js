@@ -288,7 +288,7 @@ class GCommandLoader {
         for (const commandName in keys) {
             const cmd = this.client.gcommands.get(keys[commandName]);
 
-            if ((Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined) continue;
+            if ((Object.values(cmd)[9] || Object.values(cmd)[11]) === undefined) continue;
 
             const loadCommandPermission = async apiCommands => {
                 for (const apiCommand of apiCommands) {
@@ -338,6 +338,7 @@ class GCommandLoader {
                             this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
                         })
                             .catch(error => {
+                                console.log(error.response.data)
                                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                                 if (error.response) {
@@ -367,8 +368,8 @@ class GCommandLoader {
                             });
                     };
 
-                    if (apiCommand.guildOnly) {
-                        for (let gOnly of apiCommand.guildOnly) {
+                    if (cmd.guildOnly) {
+                        for (let gOnly of cmd.guildOnly) {
                             url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${gOnly}/commands/${apiCommand.id}/permissions`;
                             await loadApiCmd();
                         }
