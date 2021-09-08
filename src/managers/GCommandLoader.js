@@ -139,7 +139,7 @@ class GCommandLoader {
                         description: cmd.description,
                         options: cmd.args || [],
                         type: 1,
-                        default_permission: (Object.values(cmd)[8] || Object.values(cmd)[10]) === undefined,
+                        default_permission: (Object.values(cmd)[9] || Object.values(cmd)[11]) === undefined,
                     },
                     url,
                 };
