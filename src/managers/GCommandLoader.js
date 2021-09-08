@@ -338,7 +338,6 @@ class GCommandLoader {
                             this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
                         })
                             .catch(error => {
-                                console.log(error.response.data)
                                 this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                                 if (error.response) {
