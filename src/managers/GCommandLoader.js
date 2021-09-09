@@ -179,7 +179,10 @@ class GCommandLoader {
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
-                    if (!guildOnly) continue;
+                    if (!guildOnly) {
+                        await loadSlashCommand();
+                        continue;
+                    }
 
                     url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${guildOnly}/commands`;
                     await loadSlashCommand(guildOnly);
@@ -269,7 +272,10 @@ class GCommandLoader {
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
-                    if (!guildOnly) continue;
+                    if (!guildOnly) {
+                        await loadContextMenu();
+                        continue;
+                    }
 
                     url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${guildOnly}/commands`;
                     await loadContextMenu();
@@ -383,7 +389,10 @@ class GCommandLoader {
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
-                    if (!guildOnly) continue;
+                    if (!guildOnly) {
+                        await loadCommandPermissions(apiCommands);
+                        continue;
+                    }
 
                     let apiCommands = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name);
                     await loadCommandPermission(apiCommands, guildOnly);
