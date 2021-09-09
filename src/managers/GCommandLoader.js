@@ -390,7 +390,7 @@ class GCommandLoader {
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
                     if (!guildOnly) {
-                        await loadCommandPermissions(apiCommands);
+                        await loadCommandPermission(apiCommands);
                         continue;
                     }
 
