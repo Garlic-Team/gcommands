@@ -120,7 +120,7 @@ class GCommandLoader {
 
             const loadSlashCommand = async guildOnly => {
                 let ifAlready;
-                if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
+                if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
                 else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
                 if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[9] || Object.values(cmd)[11]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[9] || Object.values(cmd)[11]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
@@ -144,7 +144,6 @@ class GCommandLoader {
                     url,
                 };
 
-                this.GCommandsClient.emit(Events.DEBUG, url);
                 axios(config).then(() => {
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 })
@@ -180,6 +179,8 @@ class GCommandLoader {
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
+                    if (!guildOnly) continue;
+
                     url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${guildOnly}/commands`;
                     await loadSlashCommand(guildOnly);
                 }
@@ -205,7 +206,7 @@ class GCommandLoader {
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             const loadContextMenu = async guildOnly => {
                 let ifAlready;
-                if (cmd.guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
+                if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
                 else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
 
                 if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
@@ -268,6 +269,8 @@ class GCommandLoader {
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
+                    if (!guildOnly) continue;
+
                     url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${guildOnly}/commands`;
                     await loadContextMenu();
                 }
@@ -380,6 +383,8 @@ class GCommandLoader {
 
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
+                    if (!guildOnly) continue;
+
                     let apiCommands = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name);
                     await loadCommandPermission(apiCommands, guildOnly);
                 }
