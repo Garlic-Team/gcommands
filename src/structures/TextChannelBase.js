@@ -23,7 +23,7 @@ module.exports = {
             const m = await this.client.api.channels[this.id].messages.post({
                 data: GPayloadResult.data,
                 files: GPayloadResult.files,
-            })
+            });
 
             const existing = this.messages.cache.get(m.id);
             if (existing) {
