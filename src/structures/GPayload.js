@@ -52,8 +52,8 @@ class GPayload {
         this.channel_id = this.channel.id;
 
         if (this.options.content && typeof this.options.content === 'object') {
-            this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
-            this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : [];
+          this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : this.options.embeds || [];
+          this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : this.options.attachments || [];
         } else { this.data.content = this.options.content || null; }
 
         this.data.allowed_mentions = this.options.allowedMentions ? { replied_user: this.options.allowedMentions.repliedUser, parse: this.options.allowedMentions.parse, roles: this.options.allowedMentions.roles, users: this.options.allowedMentions.users } : { parse: [], replied_user: true };
