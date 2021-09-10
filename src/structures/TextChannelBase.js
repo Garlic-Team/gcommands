@@ -20,11 +20,18 @@ module.exports = {
                 .resolveData()
                 .resolveFiles();
 
-            return this.client.api.channels[this.id].messages.post({
+            const m = await this.client.api.channels[this.id].messages.post({
                 data: GPayloadResult.data,
                 files: GPayloadResult.files,
             })
-            .then(d => this.client.actions.MessageCreate.handle(d).message);
+
+            const existing = this.messages.cache.get(m.id);
+            if (existing) {
+              const clone = existing._clone();
+              clone._patch(m);
+              return clone;
+            }
+            return this.messages._add(m);
         },
     },
 
