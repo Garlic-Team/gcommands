@@ -378,7 +378,7 @@ class GCommandLoader {
 
                     if (cmd.guildOnly) {
                         for (let gOnly of cmd.guildOnly) {
-                            url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${gOnly}/commands/${apiCommand.id}/permissions`;
+                            if (gOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${gOnly}/commands/${apiCommand.id}/permissions`;
                             await loadApiCmd();
                         }
                     } else {
@@ -390,7 +390,9 @@ class GCommandLoader {
             if (cmd.guildOnly) {
                 for (let guildOnly of cmd.guildOnly) {
                     if (!guildOnly) {
-                        await loadCommandPermission(apiCommands);
+                        let apiCommandsNoGuild = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
+
+                        await loadCommandPermission(apiCommandsNoGuild);
                         continue;
                     }
 
