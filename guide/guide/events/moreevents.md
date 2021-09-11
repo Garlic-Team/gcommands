@@ -181,10 +181,10 @@ client.on("clickButton", (button) => {
 
 ## Commands
 ```js
-client.on("commandExecute", (command, member) => {
+client.on("commandExecute", ({ command, member, guild, channel }) => {
   console.log(command, member);
 });
-client.on("commandError", (command, member, error) => {
+client.on("commandError", ({ command, error, member, guild, channel }) => {
   console.log(command, member, error);
 });
 ```

@@ -42,8 +42,8 @@ const { Command } = require("gcommands");
 const wait = require("util").promisify(setTimeout);
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "ping",
       description: "Pongs the bot",
     });
@@ -66,8 +66,8 @@ module.exports = class extends Command {
 const { Event } = require("gcommands");
 
 module.exports = class extends Event {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "message",
       once: false,
       ws: false,

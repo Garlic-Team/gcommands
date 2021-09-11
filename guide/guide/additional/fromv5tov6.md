@@ -110,6 +110,10 @@ Fixed a `prefix` option that didn't allow to have multiple character prefixes.
 - GCommandsOptions.slash
 + GCommandsOptions.commands
 
+[-] GCommands v7
++ GCommandsOptions.cmdDir - need provide path, __dirname + "/commands"
++ GCommandsOptions.eventDir - need provide path, __dirname + "/events"
+
 [-] Collectors
 
 - createButtonCollector

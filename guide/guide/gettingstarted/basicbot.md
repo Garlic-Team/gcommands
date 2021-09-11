@@ -1,49 +1,55 @@
-# Installing Node.js and GCommands
+# Making a basic bot
 
-## Installing Node.js
+## Create Application
 
-Don't have Node.js yet? Go to [NodeJS.org](https://nodejs.org) and install it!
-Don't have an editor? Check out [Visual Studio Code](https://code.visualstudio.com).
+First, you need to create an application in Discord's Developer Portal. Head to the [Applications Page](https://discord.com/developers/applications) and press the `New Application` button. A popup will appear asking to enter the application's name. You can name it whatever you want.
 
-### Installing on Windows
+![New Application](https://gcommands.js.org/guide/createapp.png)
 
-If you have a Windows OS, it's as simple as installing any other program. Go to the [Node.js website](https://nodejs.org), download the latest version, open the download file, and follow the steps in the installer.
+Go to the `Bot` section on the left and click `Add Bot`. It'll ask you for confirmation (you cannot delete the bot afterwards). Just click on `Yes, do it!`, after you're done contemplating your life choices.
 
-### Installing on macOS
+![Add Bot](https://gcommands.js.org/guide/addbot.png)
 
-If you have macOS, you have a two options. You can:
+And your bot was successfully created! You can now invite the bot to your server.  
+Go to the `OAuth2` tab and select the `bot` scope. You can also scroll down a bit, and select whatever permissions you want.
 
-- go to the [Node.js website](https://nodejs.org), download the latest version, open the download file, and follow the steps in the installer.
-- use a package manager like [Homebrew](https://brew.sh)
+![OAuth2](https://gcommands.js.org/guide/oauth2.png)
 
-### Installing on Linux
+## Getting the bot token
 
-If you have a Linux OS, you should go to [this page](https://nodejs.org/en/download/package-manager/), to determine how to install Node.
+A token is something like a password, which every Discord user has. You can use it to login to your bot.
+
+Go back to the `Bot` page, and press the `Copy Token` button. The token will be copied to your clipboard. You can also `Click to Reveal Token`.
+
+![Token](https://gcommands.js.org/guide/token.png)
 
 ::: warning
-Make sure you upgrade to the needed Node.js version for discord.js.
+Tokens should never be shared with anyone! A token gives complete access to a bot, which can be abused badly.
+:::
 
-- **discord.js@12** requires `NodeJS@12+`
-- **discord.js@13** requires `NodeJS@16+`
-  :::
+::: tip
+In case you forgot your token, or someone else has got your token, the best way is to regenerate it using the `Regenerate` button.
+:::
 
-## Installing GCommands
+## Writing code
 
-Use `npm i gcommands` to download the latest stable version.  
-Use `npm i gcommands@dev` to install the dev version.
+Let's actually start writing code!  
+Create your main file and call it something like `index.js`.  
+Then, paste this code in:
 
 ```js
 const { GCommandsClient } = require("gcommands");
+const { join } = require('path');
 const client = new GCommandsClient({
-  cmdDir: "commands/",
-  eventDir: "events/",
+  cmdDir: join(__dirname, 'commands'),
+  eventDir: join(__dirname, 'events'),
   caseSensitiveCommands: false, // true or false | whether to match the commands' caps
   caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
   unkownCommandMessage: false, // true or false | send unkownCommand Message
   language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
   commands: {
-    slash: "both", // https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsSlash
-    context: "false", // https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsContext
+    slash: "both", // https://gcommands.js.org/docs/#/docs/main/main/typedef/GCommandsOptionsCommandsSlash
+    context: "false", // https://gcommands.js.org/docs/#/docs/main/main/typedef/GCommandsOptionsCommandsContext
     prefix: ".", // for normal commands
   },
   defaultCooldown: "3s",
@@ -66,7 +72,11 @@ client.on("log", console.log);
 client.login("TOKEN");
 ```
 
-Below are all the available options for [`GCommandsClient`](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptions):
+::: warning
+`commands.slash` and `commands.context` are default options. Any options set in commands will overwrite these options.
+:::
+
+Below are all the available options for [`GCommandsClient`](https://gcommands.js.org/docs/#/docs/main/main/typedef/GCommandsOptions):
 
 | PARAMETER             | REQUIRED | FUNCTIONALITY                                                                                                                                                                                                                                                                                          |
 | --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -76,7 +86,7 @@ Below are all the available options for [`GCommandsClient`](https://gcommands.js
 | caseSensitivePrefixes | ❌       | If set to true, prefixes will be case sensitive                                                                                                                                                                                                                                                        |
 | unkownCommandMessage  | ❌       | If set to true, the bot will respond with an error message if a command the user tried to use doesn't exist                                                                                                                                                                                            |
 | language              | ✅       | The default language used to sends messages in                                                                                                                                                                                                                                                         |
-| commands.slash        | ✅       | If set to true, the bot will only register slash commands. If set to false, the bot will only register message commands. If set to both, the bot will register both                                                                                                                                    |
+| commands.slash        | ✅       | If set to slash, the bot will only register slash commands. If set to message, the bot will only register message commands. If set to both, the bot will register both and if set to false, the bot will not register any.                                                                                                                              |
 | commands.context      | ✅       | If set to user, the bot will register user context commands. If set to false, the bot will only register message commands. If set to message, the bot will register message context commands. If set to both, the bot will register both |
 | commands.prefix       | ❌       | The prefix the bot will use in message commands                                                                                                                                                                                                                                                        |
 | defaultCooldown       | ❌       | The default cooldown for commands                                                                                                                                                                                                                                                                      |
@@ -85,3 +95,20 @@ Below are all the available options for [`GCommandsClient`](https://gcommands.js
 ::: warning
 You need to have `discord.js@12+`
 :::
+
+
+::: tip
+Use `node .` in the console to start the bot!
+:::
+
+For further setup see:
+
+- [Commands](../commands/gettingstarted.md)
+- [Database](../database/setup.md)
+- [Events](../events/setup.md)
+
+Coding your Bot:
+
+- [Commands](../commands/first.md)
+- [Events](../events/create.md)
+- [Inhibitors](../other/inhibitor.md)

@@ -27,14 +27,14 @@ Here's a basic example:
 const { Command } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "parse",
       slash: false,
     });
   }
 
-  async run({ respond, interaction }, arrayArgs, objectArgs) {
+  async run({ respond, interaction, objectArgs }) {
     if (objectArgs.user) {
       respond(`Name: ${objectArgs.user.username}`);
     } else if (objectArgs.message) {
@@ -50,8 +50,8 @@ Here's an example with every command type mixed:
 const { Command, ArgumentType } = require("gcommands");
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: "parse",
       descriptions: "Parses user/message info",
       args: [
@@ -71,7 +71,7 @@ module.exports = class extends Command {
     });
   }
 
-  async run({ client, interaction, respond, channel }, args, objectArgs) {
+  async run({ client, interaction, respond, channel, args, objectArgs }) {
     if (interaction && interaction.isContextMenu()) {
       if (objectArgs.user)
         respond({

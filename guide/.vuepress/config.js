@@ -21,7 +21,9 @@ module.exports = config({
       editLinks: true,
       lastUpdated: true,
       blog: false,
-      repo: 'garlic-team/gcommands#master',
+      repo: 'Garlic-Team/GCommands',
+      docsDir: 'guide',
+      docsBranch: 'docs',
       logo: '/gcommands.png',
       nav: [
           {text:"Guide", link:"/guide/"},
@@ -39,53 +41,75 @@ module.exports = config({
       sidebar: {
         '/guide/': [
           {
-            title: 'Home',
+            title: 'Getting started',
             collapsable: false,
             children: [
-              '',
-              'setup',
-              'faq'
+              'gettingstarted/installation',
+              'gettingstarted/basicbot'
             ]
           },
           {
-            title: 'Beginner',
+            title: 'Commands',
             collapsable: false,
             children: [
-              'beginner/basicbot',
-              'beginner/events',
-              'beginner/database',
-              'beginner/additionalfeatures'
-            ]
-          },
-          {
-            title: 'Arguments',
-            collapsable: false,
-            children: [
-              'arguments/usingargsincmd'
+              'commands/gettingstarted',
+              'commands/first',
+              'commands/usingargs',
+              'commands/usingsub',
+              'commands/usingbuilders',
+              'commands/additionalfeatures'
             ]
           },
           {
             title: 'Interactions',
             collapsable: false,
             children: [
-              'interactions/slashcommands',
               'interactions/contextmenus',
               'interactions/messagecomponents'
             ]
           },
           {
-            title: 'Miscellaneous',
-            collapsable: false,
+            title: 'Events',
+            collapsable: true,
             children: [
-              'miscellaneous/mentions',
-              'miscellaneous/inhibitor',
-              'miscellaneous/moreevents'
+              'events/setup',
+              'events/create',
+              'events/usingbuilder',
+              'events/moreevents'
+            ]
+          },
+          {
+            title: 'Database',
+            collapsable: true,
+            children: [
+              'database/setup',
+              'database/prefix',
+              'database/guildlanguage'
+            ]
+          },
+          {
+            title: 'Other',
+            collapsable: true,
+            children: [
+              'other/customlanguagefile',
+              'other/inhibitor',
+              'other/mentions'
+            ]
+          },
+          {
+            title: 'Common questions',
+            collapsable: true,
+            children: [
+              'questions/commandrunoptions',
+              'questions/guildundefined',
+              'questions/missingacces'
             ]
           },
           {
             title: 'Additionals',
-            collapsable: false,
+            collapsable: true,
             children: [
+              'additional/fromv6tov7',
               'additional/fromv5tov6',
               'additional/fromv4tov5',
               'additional/fromv3tov4',

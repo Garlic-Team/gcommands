@@ -19,17 +19,17 @@ const { MessageActionRow, MessageButton } = require("gcommands");
 let row = new MessageActionRow().addComponents([
   new MessageButton()
     .setLabel("Primary (Blurple)")
-    .setID("blurple")
+    .setCustomId("blurple")
     .setStyle("PRIMARY"),
 
   new MessageButton()
     .setLabel("Secondary (Gray)")
-    .setID("gray")
+    .setCustomId("gray")
     .setStyle("SECONDARY"),
 
   new MessageButton()
     .setLabel("Danger (Red)")
-    .setID("red")
+    .setCustomId("red")
     .setStyle("DANGER"),
 ]);
 
@@ -38,7 +38,7 @@ let msg = await channel.send({
   components: row,
 });
 let filter = (interaction) =>
-  interaction.isButton() && btn.author.id === author.id;
+  interaction.isButton() && interaction.author.id === author.id;
 let collector = msg.createMessageComponentCollector(filter, {
   max: 3,
   time: 120000,
@@ -46,11 +46,11 @@ let collector = msg.createMessageComponentCollector(filter, {
 
 collector.on("collect", (btn) => {
   btn.reply.send({
-    content: `${btn.clicker.user.toString()}, you clicked ${btn.custom_id}!`,
+    content: `${btn.user.toString()}, you clicked ${btn.customId}!`,
   });
 });
-collector.on("end", () => {
-  btn.reply.send({
+collector.on("end", (btn) => {
+  msg.reply({
     content: `Time ran out!`,
   });
 });
@@ -103,17 +103,17 @@ const { MessageActionRow, MessageButton } = require("gcommands");
 let row = new MessageActionRow().addComponents([
   new MessageButton()
     .setLabel("Primary (Blurple)")
-    .setID("blurple")
+    .setCustomId("blurple")
     .setStyle("PRIMARY"),
 
   new MessageButton()
     .setLabel("Secondary (Gray)")
-    .setID("gray")
+    .setCustomId("gray")
     .setStyle("SECONDARY"),
 
   new MessageButton()
     .setLabel("Danger (Red)")
-    .setID("red")
+    .setCustomId("red")
     .setStyle("DANGER"),
 ]);
 

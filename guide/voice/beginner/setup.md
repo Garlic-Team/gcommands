@@ -34,10 +34,11 @@ Use `npm i @gcommands/voice` to download the latest stable version.
 const { Client } = require("discord.js");
 const { AudioPlayerStatus } = require("@discordjs/voice");
 const { GVoice } = require("@gcommands/voice");
+const ytdl = require("ytdl-core");
 const client = new Client({intents: ["GUILDS","GUILD_MESSAGES"]})
 
 new GVoice();
-client.on("ready", () => {
+client.on("ready", async() => {
     const channel = client.channels.cache.get("VOICE/STAGE CHANNEL ID");
 
     const connection = channel.join();

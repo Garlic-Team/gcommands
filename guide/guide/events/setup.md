@@ -1,16 +1,13 @@
-# Events
+# Setup
 
 If you want to use event handler with GCommands, just add `eventDir` to `GCommandsClient`
-
-::: warning
-Since `@gcommands/events` 2.x, the path for `eventDir` is used. If you have `gcommands` 6.x you can update events, or just use `events/`
-:::
 
 ```js
 const { GCommandsClient } = require("gcommands");
 const { join } = require("path");
 
 const client = new GCommandsClient({
+    ...options,
     eventDir: join(__dirname, "events")
 })
 ```
@@ -38,8 +35,8 @@ Then you just create a file in the `events` folder or you can also create a cate
 const { Event } = require("gcommands")
 
 module.exports = class Ping extends Event {
-    constructor(...args) {
-        super(...args, {
+    constructor(client) {
+        super(client, {
             name: "message",
             once: false,
             ws: false
