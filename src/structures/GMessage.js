@@ -78,7 +78,7 @@ class GMessage {
                         this.attachments = new Collection(this.attachemnts);
                     }
 
-                    if ('sticker_items' in data || 'stickers' in data || !partial && ifDjsV13) {
+                    if (ifDjsV13 && ('sticker_items' in data || 'stickers' in data || !partial)) {
                         const { Sticker } = require('discord.js');
                         this.stickers = new Collection(
                             (data.sticker_items || data.stickers) ? (data.sticker_items || data.stickers).map(s => [s.id, new Sticker(this.client, s)]) : null,
@@ -146,7 +146,6 @@ class GMessage {
                     }
 
                     if ('thread' in data && data.thread !== null) {
-                        console.log(data.thread);
                         ifDjsV13 ? this.client.channels._add(data.thread, this.guild) : this.client.channels.add(data.thread, this.guild);
                     }
 
@@ -183,7 +182,7 @@ class GMessage {
                         this.interaction = {
                             id: data.interaction.id,
                             type: InteractionTypes[data.interaction.type],
-                            commandName: data.interaction.name,
+                            commandName: data.interaction.name || data.interaction.commandName,
                             user: ifDjsV13 ? this.client.users._add(data.interaction.user) : this.client.users.add(data.interaction.user),
                         };
                     } else if (!this.interaction) {
@@ -211,6 +210,7 @@ class GMessage {
                         data: GPayloadResult.data,
                     }));
 
+                    apiMessage.channel_id = this.channel.id;
                     return new Message(this.client, apiMessage, this.channel);
                 },
             },
@@ -249,11 +249,11 @@ class GMessage {
             createMessageComponentCollector: {
                 value: function(filter, options = {}) {
                     options.messageId = this.id;
-                    options.guildId = this.guild.id;
+                    options.guildId = this.guild ? this.guild.id : null;
 
                     if (ifDjsV13) {
                         options.filter = filter;
-                        return new InteractionCollectorV13(this.client, options, options);
+                        return new InteractionCollectorV13(this.client, filter, options);
                     } else {
                         return new InteractionCollectorV12(this.client, filter, options);
                     }

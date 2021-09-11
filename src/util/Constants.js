@@ -1,13 +1,42 @@
 /**
  * Debug Event
- * @event GCommands#debug
- * @example client.on('debug', (info) => { console.log(info); });
+ * @event GCommandsClient#debug
+ * @param {string} info The message that was emitted.
+ * @example
+ * client.on('debug', (info) => { console.log(info); });
 */
 
 /**
  * Log Event
- * @event GCommands#log
- * @example client.on('log', (info) => { console.log(info); });
+ * @event GCommandsClient#log
+ * @param {string} info The message that was emitted.
+ * @example
+ * client.on('log', (info) => { console.log(info); });
+*/
+
+/**
+ * commandExecute
+ * @event GCommandsClient#commandExecute
+ * @param {string} info Running the command.
+ * @example
+ * client.on('commandExecute', (info) => { console.log(info); });
+*/
+
+/**
+ * commandError
+ * @event GCommandsClient#commandError
+ * @param {string} info Error from command
+ * @example
+ * client.on('commandError', (info) => { console.log(info); });
+*/
+
+
+/**
+ * commandsLoaded
+ * @event GCommandsClient#commandsLoaded
+ * @param {string} info All commands loaded
+ * @example
+ * client.on('commandsLoaded', (info) => { console.log(info); });
 */
 
 /**
@@ -16,6 +45,7 @@
  * * log
  * * commandExecute
  * * commandError
+ * * commandsLoaded
  * @type {Object}
  */
 exports.Events = {
@@ -23,6 +53,7 @@ exports.Events = {
     LOG: 'log',
     COMMAND_EXECUTE: 'commandExecute',
     COMMAND_ERROR: 'commandError',
+    COMMANDS_LOADED: 'commandsLoaded',
 };
 
 /**
@@ -147,6 +178,7 @@ function createEnum(keys) {
  * * polish
  * * indonesian
  * * italian
+ * * french
  * @typedef {(string)} GCommandsOptionsLanguage
  */
 
@@ -162,7 +194,8 @@ function createEnum(keys) {
 /**
  * The GCommandsOptionsCommandsSlash
  * * both
- * * true
+ * * slash
+ * * message
  * * false
  * @typedef {(string | boolean)} GCommandsOptionsCommandsSlash
  */
@@ -182,9 +215,9 @@ function createEnum(keys) {
  * @property {MessageEmbed[]} embeds
  * @property {MessageActionRow[]} components
  * @property {MessageAttachment[]} attachments
- * @property {Boolean} ephemeral
+ * @property {boolean} ephemeral
  * @property {Object} allowedMentions
- * @property {(string | Boolean)} inlineReply
+ * @property {(string | boolean)} inlineReply
  * @property {(string | Array)} stickers
  * @example .send({
  *  content: 'hello',
@@ -209,6 +242,8 @@ function createEnum(keys) {
  * @property {TextChannel | NewsChannel} channel
  * @property {GPayloadOptions} respond
  * @property {GPayloadOptions} edit
+ * @property {Array} args
+ * @property {Object} objectArgs
  * @typedef {(Object)} CommandRunOptions
 */
 
@@ -223,6 +258,8 @@ function createEnum(keys) {
  * @property {TextChannel | NewsChannel} channel
  * @property {GPayloadOptions} respond
  * @property {GPayloadOptions} edit
+ * @property {Array} args
+ * @property {Object} objectArgs
  * @typedef {(Object)} Inhibitor
  */
 
@@ -233,15 +270,6 @@ function createEnum(keys) {
  * @property {User} user
  * @property {Snowflake} id
  * @typedef {(Object)} InteractionEventClicker
- */
-
-/**
- * The GInteractionInteraction
- *
- * @property {string} name
- * @property {Array} options
- * @property {number} id
- * @typedef {(Object)} GInteractionInteraction
  */
 
 /**
@@ -259,12 +287,13 @@ function createEnum(keys) {
  * @property {string | Array} clientRequiredPermissions
  * @property {Snowflake | Array} userOnly
  * @property {Snowflake | Array} channelOnly
- * @property {Snowflake} guildOnly
+ * @property {Snowflake | Array} guildOnly
  * @property {boolean} channelTextOnly
  * @property {boolean} channelNewsOnly
  * @property {boolean} channelThreadOnly
  * @property {boolean} nsfw
- * @property {boolean} slash
+ * @property {GCommandsOptionsCommandsSlash} slash
+ * @property {GCommandsOptionsCommandsContext} context
  * @typedef {(Object)} CommandOptions
  */
 
@@ -277,6 +306,7 @@ function createEnum(keys) {
  * @property {string} prompt
  * @property {boolean} required
  * @property {CommandArgsChoice[]} choices
+ * @property {CommandArgsOption} options
  * @typedef {(Object)} CommandArgsOption
  */
 

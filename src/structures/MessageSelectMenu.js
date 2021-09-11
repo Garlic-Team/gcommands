@@ -1,7 +1,7 @@
 const { MessageComponentTypes } = require('../util/Constants');
 const { resolveString } = require('../util/util');
 const BaseMessageComponent = require('./BaseMessageComponent');
-const Color = require('./Color');
+const GError = require('./GError');
 
 /**
  * The MessageSelectMenu class
@@ -59,7 +59,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 
         /**
          * Disabled
-         * @type {Boolean}
+         * @type {boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
@@ -68,7 +68,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 
     /**
      * Method to setDisabled
-     * @param {String} boolean
+     * @param {string} boolean
     */
     setPlaceholder(string) {
         this.placeholder = resolveString(string);
@@ -77,7 +77,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 
     /**
      * Method to setMaxValues
-     * @param {Number} int
+     * @param {number} int
     */
     setMaxValues(int = 1) {
         this.max_values = Number(int);
@@ -86,7 +86,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 
     /**
      * Method to setMinValues
-     * @param {Number} int
+     * @param {number} int
     */
     setMinValues(int = 1) {
         this.min_values = Number(int);
@@ -95,7 +95,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 
     /**
      * Method to setID
-     * @param {String} id
+     * @param {string} id
      * @deprecated
     */
     setID(id) {
@@ -114,7 +114,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 
     /**
      * Method to setDisabled
-     * @param {String} boolean
+     * @param {string} boolean
     */
     setDisabled(boolean = true) {
         this.disabled = Boolean(boolean);
@@ -126,7 +126,7 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @param {MessageSelectMenuOption} MessageSelectMenuOption
     */
     addOption(option) {
-        if (typeof option !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText());
+        if (typeof option !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
         this.options.push(option);
         return this;
     }
@@ -136,19 +136,19 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption
     */
     addOptions(...options) {
-        if (typeof options !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText());
+        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
         this.options.push(...options.flat(Infinity).map(o => o));
         return this;
     }
 
     /**
      * Method to removeOptions
-     * @param {Number} index
-     * @param {Number} deleteCount
+     * @param {number} index
+     * @param {number} deleteCount
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption[]
     */
     removeOptions(index, deleteCount, ...options) {
-        if (typeof options !== 'object') return console.log(new Color('&d[GCommands] &cNeed provide MessageSelectOption!').getText());
+        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
         this.components.splice(index, deleteCount, ...options.flat(Infinity).map(o => o));
         return this;
     }

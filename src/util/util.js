@@ -1,5 +1,6 @@
 const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
-const { InteractionTypes, MessageComponentTypes } = require('./Constants');
+const Color = require('../structures/Color');
+const { InteractionTypes, MessageComponentTypes, Events } = require('./Constants');
 
 /**
  * The Util class
@@ -7,8 +8,8 @@ const { InteractionTypes, MessageComponentTypes } = require('./Constants');
 class Util {
     /**
      * Internal method to resolveString
-     * @param {String | Array} data
-     * @returns {String}
+     * @param {string | Array} data
+     * @returns {string}
     */
     static resolveString(data) {
         if (typeof data === 'string') return data;
@@ -18,7 +19,7 @@ class Util {
 
     /**
      * Internal method to msToSeconds
-     * @param {Number} ms
+     * @param {number} ms
      * @returns {number}
     */
     static msToSeconds(ms) {
@@ -28,7 +29,7 @@ class Util {
 
     /**
      * Internal method to parseEmoji
-     * @param {String} text
+     * @param {string} text
      * @returns {Object}
     */
     static parseEmoji(text) {
@@ -62,6 +63,11 @@ class Util {
             InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
             MessageComponentTypes[interaction.componentType] === MessageComponentTypes.SELECT_MENU
         );
+
+        if (interaction.isCommand() && !interaction.isApplication()) {
+            interaction.commandName = cmd.name;
+            interaction.commandId = null;
+        }
 
         return interaction;
     }
@@ -114,7 +120,7 @@ class Util {
     /**
      * Internal method to deleteCmd
      * @param {Client} client
-     * @param {Number} commandId
+     * @param {number} commandId
      * @private
     */
     static async __deleteCmd(client, commandId, guildId = undefined) {
@@ -133,7 +139,7 @@ class Util {
     /**
      * Internal method to getAllCommands
      * @param {Client} client
-     * @param {Number} guildId
+     * @param {number} guildId
      * @private
     */
     static async __getAllCommands(client, guildId = undefined) {
@@ -161,16 +167,61 @@ class Util {
 
     /**
      * Internal method to checkDjsVersion
-     * @param {Number} needVer
-     * @returns {Boolean}
+     * @param {number} needVer
+     * @returns {boolean}
      * @private
     */
-     static checkDjsVersion(needVer) {
+    static checkDjsVersion(needVer) {
         let ver = parseInt(version.split('')[0] + version.split('')[1]);
         if (ver === parseInt(needVer)) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Determine equality for two JavaScript objects
+     * @param {Object | Array} o
+     * @returns {Object | Array}
+    */
+    static comparable(o) {
+        return (typeof o !== 'object' || !o) ? o : (Object.keys(o).sort().reduce((c, key) => (c[key] = Util.comparable(o[key]), c), {})); // eslint-disable-line no-return-assign, no-sequences
+    }
+
+    /**
+     * Unescape
+     * @param {String} a
+     * @param {String} b
+     * @param {String} c
+     * @returns {Object | Array}
+    */
+    static unescape(a, b, c) {
+        a = a.split(b || '-')
+            .map(x => x[0].toUpperCase() + x.slice(1).toLowerCase()) // eslint-disable-line comma-dangle
+            .join(c || ' ');
+
+        return a;
+    }
+
+    /**
+     * GetAllObjects from object
+     * @param {GCommandsClient} GCommandsClient
+     * @param {Object} ob
+     * @returns {String}
+    */
+    static getAllObjects(GCommandsClient, ob) {
+	if (typeof ob !== 'object') return;
+        for (let v of Object.values(ob)) {
+            if (Array.isArray(v)) {
+                Util.getAllObjects(v[0]);
+            } else if (typeof v === 'object') {
+                Util.getAllObjects(v);
+            } else {
+                GCommandsClient.emit(Events.DEBUG, new Color([
+                    `&b${v}`,
+                ]).getText());
+            }
         }
     }
 }

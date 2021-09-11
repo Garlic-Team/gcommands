@@ -80,7 +80,7 @@ class GCommandsDispatcher {
     /**
      * Internal method to getGuildPrefix
      * @param {Snowflake} guildId
-     * @param {Boolean} cache
+     * @param {boolean} cache
      * @returns {string}
     */
     async getGuildPrefix(guildId, cache = true) {
@@ -89,7 +89,7 @@ class GCommandsDispatcher {
         if (!this.client.database) return this.client.prefix;
 
         let guild = this.client.guilds.cache.get(guildId);
-        if (guild.prefix && !Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix);
+        if (guild && guild.prefix && !Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix);
         else cache = false;
 
         if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
@@ -97,7 +97,7 @@ class GCommandsDispatcher {
         let guildData = await this.client.database.get(`guild_${guildId}`) || {};
         if (guildData.prefix && !Array.isArray(guildData.prefix)) guildData.prefix = Array(guildData.prefix);
 
-        return guildData ? guildData.prefix : this.client.prefix;
+        return guildData ? guildData.prefix || this.client.prefix : this.client.prefix;
     }
 
     /**
@@ -105,7 +105,7 @@ class GCommandsDispatcher {
      * @param {Snowflake} guildId
      * @param {Snowflake} userId
      * @param {Command} command
-     * @returns {String}
+     * @returns {string}
     */
     async getCooldown(guildId, userId, command) {
         if (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
@@ -199,15 +199,19 @@ class GCommandsDispatcher {
     /**
      * Internal method to getGuildLanguage
      * @param {Snowflake} guildId
-     * @param {Boolean} cache
+     * @param {boolean} cache
      * @returns {boolean}
     */
     async getGuildLanguage(guildId, cache = true) {
         if (!this.client.database) return this.client.language;
-        if (cache) return this.client.guilds.cache.get(guildId).language ? this.client.guilds.cache.get(guildId).language : this.client.language;
 
-        let guildData = await this.client.database.get(`guild_${guildId}`);
-        return guildData ? guildData.language : this.client.language;
+        let guild = this.client.guilds.cache.get(guildId);
+        if (!guild || !guild.language) cache = false;
+
+        if (cache) return guild.language ? guild.language : this.client.language;
+
+        let guildData = await this.client.database.get(`guild_${guildId}`) || {};
+        return guildData ? guildData.language || this.client.language : this.client.language;
     }
 
     /**

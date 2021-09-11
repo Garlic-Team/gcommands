@@ -2,7 +2,7 @@
 const { resolveString, parseEmoji } = require('../util/util');
 const { MessageComponentTypes } = require('../util/Constants');
 const BaseMessageComponent = require('./BaseMessageComponent');
-const Color = require('./Color');
+const GError = require('./GError');
 const styles = {
     blurple: 1,
     gray: 2,
@@ -53,7 +53,7 @@ class MessageButton extends BaseMessageComponent {
 
         /**
          * Disabled
-         * @type {Boolean}
+         * @type {boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
@@ -76,7 +76,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setStyle
-     * @param {String} style
+     * @param {string} style
     */
     setStyle(style) {
         this.style = this.resolveStyle(resolveString(style.toLowerCase()));
@@ -85,7 +85,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setLabel
-     * @param {String} label
+     * @param {string} label
     */
     setLabel(label) {
         this.label = resolveString(label);
@@ -94,7 +94,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setEmoji
-     * @param {String} emoji
+     * @param {string} emoji
     */
     setEmoji(emoji) {
         this.emoji = parseEmoji(`${emoji}`);
@@ -103,7 +103,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setDisabled
-     * @param {String} boolean
+     * @param {string} boolean
     */
     setDisabled(boolean = true) {
         this.disabled = Boolean(boolean);
@@ -112,7 +112,7 @@ class MessageButton extends BaseMessageComponent {
 
     /**
      * Method to setURL
-     * @param {String} url
+     * @param {string} url
     */
     setURL(url) {
         this.url = resolveString(url);
@@ -155,9 +155,9 @@ class MessageButton extends BaseMessageComponent {
     }
 
     resolveStyle(style) {
-        if (!style || style === undefined || style === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText());
+        if (!style || style === undefined || style === null) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
 
-        if (!styles[style] || styles[style] === undefined || styles[style] === null) return console.log(new Color('&d[GCommands] &cAn invalid button styles was provided').getText());
+        if (!styles[style] || styles[style] === undefined || styles[style] === null) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
 
         return styles[style] || style;
     }

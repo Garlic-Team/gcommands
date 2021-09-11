@@ -49,13 +49,14 @@ class GPayload {
         if (type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options };
 
         this.options.inlineReply = this.options.inlineReply === undefined ? false : this.options.inlineReply;
+        this.channel_id = this.channel.id;
 
         if (this.options.content && typeof this.options.content === 'object') {
-            this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : [];
-            this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : [];
+          this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : this.options.embeds || [];
+          this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : this.options.attachments || [];
         } else { this.data.content = this.options.content || null; }
 
-        this.data.allowed_mentions = this.options.allowedMentions ? this.options.allowedMentions : { parse: [], repliedUser: true };
+        this.data.allowed_mentions = this.options.allowedMentions ? { replied_user: this.options.allowedMentions.repliedUser, parse: this.options.allowedMentions.parse, roles: this.options.allowedMentions.roles, users: this.options.allowedMentions.users } : { parse: [], replied_user: true };
         this.data.flags = this.options.ephemeral ? 64 : null;
 
         if (this.options.components) this.data.components = !Array.isArray(this.options.components) ? Array(this.options.components) : this.options.components;

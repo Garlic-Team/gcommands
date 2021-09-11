@@ -26,7 +26,7 @@ class ButtonCollector extends Collector {
 
     /**
      * Total
-     * @type {Number}
+     * @type {number}
      */
     this.total = 0;
 

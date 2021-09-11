@@ -38,6 +38,13 @@ module.exports = {
     BaseCommandInteraction: require('./structures/BaseCommandInteraction'),
     MessageComponentInteraction: require('./structures/MessageComponentInteraction'),
     BaseMessageComponent: require('./structures/BaseMessageComponent'),
+    GError: require('./structures/GError'),
+
+    // Builders
+    CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),
+    CommandArgsOptionBuilder: require('./structures/CommandArgsOptionBuilder'),
+    CommandArgsChoiceBuilder: require('./structures/CommandArgsChoiceBuilder'),
+    EventOptionsBuilder: require('@gcommands/events').EventOptionsBuilder,
 
     // Other
     Color: require('./structures/Color'),

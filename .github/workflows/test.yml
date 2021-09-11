@@ -1,5 +1,5 @@
 name: Testing
-on: [push, pull_request]
+on: [pull_request]
 jobs:
   lint:
     name: ESLint
@@ -18,3 +18,20 @@ jobs:
 
       - name: Run ESLint
         run: npm run test
+        id: eslint
+        continue-on-error: true
+
+      - name: Success
+        if: ${{ steps.eslint.outcome == 'success' }}
+        uses: Garlic-Team/Auto-Review@1.0.4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_TYPE: APPROVE
+          MESSAGE: 'Everything is fine.'
+      - name: Failure
+        if: ${{ steps.eslint.outcome != 'success' }}
+        uses: Garlic-Team/Auto-Review@1.0.4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_TYPE: REQUEST_CHANGES
+          MESSAGE: 'ESLint found errors. Please correct them. https://github.com/Garlic-Team/GCommands/actions/runs/${{ github.run_id }}'

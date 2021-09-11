@@ -1,14 +1,13 @@
 const GCommandLoader = require('../managers/GCommandLoader'),
-    Color = require('../structures/Color'),
     GCommandsDispatcher = require('./GCommandsDispatcher'),
     { GEvents: GEventLoader } = require('@gcommands/events'),
     GEventHandling = require('../managers/GEventHandling'),
     GDatabaseLoader = require('../managers/GDatabaseLoader'),
-    { Events } = require('../util/Constants'),
     GUpdater = require('../util/updater');
 
 const { Collection, Client } = require('discord.js');
 const fs = require('fs');
+const GError = require('../structures/GError');
 
 /**
  * The main GCommandsClient class
@@ -22,13 +21,13 @@ class GCommandsClient extends Client {
     constructor(options = {}) {
         super(options);
 
-        if (!options.cmdDir) return console.log(new Color('&d[GCommands] &cNo default options provided! (cmdDir)',{ json: false }).getText());
-        if (!options.language) return console.log(new Color('&d[GCommands] &cNo default options provided! (language)',{ json: false }).getText());
-        if (String(options.commands.slash) !== 'false' && !options.commands.prefix) return console.log(new Color('&d[GCommands] &cNo default options provided! (commands#prefix)',{ json: false }).getText());
+        if (!options.cmdDir) throw new GError('[DEFAULT OPTIONS]','You must specify the cmdDir');
+        if (!options.language) throw new GError('[DEFAULT OPTIONS]','You must specify the language');
+        if (String(options.commands.slash) !== 'false' && !options.commands.prefix) throw new GError('[DEFAULT OPTIONS]','You must specify the commands#prefix');
 
         /**
          * GCommandsClient
-         * @type {GCommands}
+         * @type {GCommandsClient}
         */
         this.GCommandsClient = this;
         this.GCommandsClient.client = this;
@@ -36,17 +35,17 @@ class GCommandsClient extends Client {
 
         /**
          * CaseSensitiveCommands
-         * @type {Boolean}
+         * @type {boolean}
          * @default true
         */
-        this.caseSensitiveCommands = options.caseSensitiveCommands ? Boolean(options.caseSensitiveCommands) : true;
+         this.caseSensitiveCommands = options.caseSensitiveCommands;
 
-        /**
-         * CaseSensitivePrefixes
-         * @type {Boolean}
-         * @default true
-        */
-        this.caseSensitivePrefixes = options.caseSensitivePrefixes ? Boolean(options.caseSensitivePrefixes) : true;
+         /**
+          * CaseSensitivePrefixes
+          * @type {boolean}
+          * @default true
+         */
+         this.caseSensitivePrefixes = options.caseSensitivePrefixes;
 
         /**
          * CmdDir
@@ -63,7 +62,7 @@ class GCommandsClient extends Client {
 
         /**
          * AutoTyping
-         * @type {Boolean}
+         * @type {boolean}
          * @default false
         */
         this.autoTyping = options.autoTyping;
@@ -92,7 +91,7 @@ class GCommandsClient extends Client {
          * Gcategories
          * @type {Array}
          */
-        this.gcategories = fs.readdirSync(`./${this.cmdDir}`);
+        this.gcategories = fs.readdirSync(this.cmdDir);
 
         /**
          * Gcommands
@@ -129,7 +128,7 @@ class GCommandsClient extends Client {
 
         /**
          * DefaultCooldown
-         * @type {Number}
+         * @type {number}
          * @default 0
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
@@ -140,11 +139,6 @@ class GCommandsClient extends Client {
          * @readonly
          */
         this.dispatcher = new GCommandsDispatcher(this.GCommandsClient, true);
-
-        process.on('uncaughtException', error => {
-            this.emit(Events.LOG, new Color(`&d[GCommands Errors] &eHandled: &a${error} ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
-            setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
-        });
 
         new GDatabaseLoader(this.GCommandsClient);
 

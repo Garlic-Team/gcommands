@@ -1,5 +1,5 @@
 const { resolveString, isClass } = require('../util/util');
-const Color = require('../structures/Color');
+const GError = require('../structures/GError');
 
 /**
  * The Command class
@@ -24,6 +24,12 @@ class Command {
         this.name = resolveString(options.name);
 
         /**
+         * ContextMenuName
+         * @type {string}
+         */
+        this.contextMenuName = resolveString(options.contextMenuName);
+
+        /**
          * Description
          * @type {string}
          */
@@ -37,7 +43,7 @@ class Command {
 
         /**
          * ExpectedArgs
-         * @type {String | Array}
+         * @type {string | Array}
          * @deprecated
          */
         this.expectedArgs = options.expectedArgs;
@@ -50,26 +56,26 @@ class Command {
 
         /**
          * MinArgs
-         * @type {Number}
+         * @type {number}
          * @deprecated use args
          */
         this.minArgs = Number(options.minArgs);
 
         /**
          * UserRequiredPermissions
-         * @type {String | Array}
+         * @type {string | Array}
          */
         this.userRequiredPermissions = options.userRequiredPermissions;
 
         /**
          * UserRequiredRoles
-         * @type {String | Array}
+         * @type {string | Array}
          */
         this.userRequiredRoles = options.userRequiredRoles;
 
         /**
          * ClientRequiredPermissions
-         * @type {String | Array}
+         * @type {string | Array}
          */
         this.clientRequiredPermissions = options.clientRequiredPermissions;
 
@@ -87,39 +93,39 @@ class Command {
 
         /**
          * ChannelTextOnly
-         * @type {Boolean}
+         * @type {boolean}
          */
-        this.channelTextOnly = options.channelTextOnly ? Boolean(options.channelTextOnly) : null;
+        this.channelTextOnly = options.channelTextOnly;
 
         /**
          * ChannelNewsOnly
-         * @type {Boolean}
+         * @type {boolean}
          */
-        this.channelNewsOnly = options.channelNewsOnly ? Boolean(options.channelNewsOnly) : null;
+        this.channelNewsOnly = options.channelNewsOnly;
 
         /**
          * ChannelThreadOnly
-         * @type {Boolean}
+         * @type {boolean}
          */
-        this.channelThreadOnly = options.channelThreadOnly ? Boolean(options.channelThreadOnly) : null;
+        this.channelThreadOnly = options.channelThreadOnly;
 
         /**
          * GuildOnly
          * @type {Snowflake | Array}
          */
-        this.guildOnly = options.guildOnly;
+        this.guildOnly = options.guildOnly ? Array.isArray(options.guildOnly) ? options.guildOnly : Array(options.guildOnly) : undefined;
 
         /**
          * Nsfw
-         * @type {Boolean}
+         * @type {boolean}
          */
-        this.nsfw = options.nsfw ? Boolean(options.nsfw) : null;
+        this.nsfw = options.nsfw;
 
         /**
          * Slash
-         * @type {Boolean}
+         * @type {boolean}
          */
-        this.slash = options.slash ? Boolean(options.slash) : null;
+        this.slash = options.slash;
 
         /**
          * Context
@@ -151,6 +157,12 @@ class Command {
          * @private
          */
         this._path;
+
+        /**
+         * Options, ability to add own options
+         * @type {Object}
+         */
+        this._options = options;
     }
 
     /**
@@ -160,7 +172,7 @@ class Command {
      * @param {Object} objectArgs
      */
     async run(options, arrayArgs, objectArgs) { // eslint-disable-line no-unused-vars, require-await
-        return console.log(new Color(`&d[GCommands] &cCommand ${this.name} doesn't provide a run method!`).getText());
+        throw new GError('[COMMAND]',`Command ${this.name} doesn't provide a run method!`);
     }
 
 	/**
@@ -174,13 +186,13 @@ class Command {
 
         let newCommand = await require(cmdPath);
 
-        if (!isClass(newCommand)) return console.log(new Color('&d[GCommands] &cThe command must be class!').getText());
+        if (!isClass(newCommand)) throw new GError('[COMMAND]',`Command ${this.name} must be class!`);
         else newCommand = new newCommand(this.client);
 
-        if (!(newCommand instanceof Command)) return console.log(new Color(`&d[GCommands] &cCommand ${newCommand.name} doesnt belong in Commands.`).getText());
+        if (!(newCommand instanceof Command)) throw new GError('[COMMAND]',`Command ${newCommand.name} doesnt belong in Commands.`);
 
-        if (newCommand.name !== this.name) return console.log(new Color('&d[GCommands] &cCommand name cannot change.').getText());
-        if (newCommand.guildOnly !== this.guildOnly) return console.log(new Color('&d[GCommands] &cCommand guildOnly cannot change.').getText());
+        if (newCommand.name !== this.name) throw new GError('[COMMAND]','Command name cannot change.');
+        if (newCommand.guildOnly !== this.guildOnly) throw new GError('[COMMAND]','Command guildOnly cannot change.');
 
         newCommand._path = cmdPath;
         this.client.gcommands.set(newCommand.name, newCommand);

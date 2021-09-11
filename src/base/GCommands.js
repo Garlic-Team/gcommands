@@ -5,7 +5,6 @@ const GCommandLoader = require('../managers/GCommandLoader'),
     { GEvents: GEventLoader } = require('@gcommands/events'),
     GEventHandling = require('../managers/GEventHandling'),
     GDatabaseLoader = require('../managers/GDatabaseLoader'),
-    { Events } = require('../util/Constants'),
     GUpdater = require('../util/updater');
 
 const { Collection } = require('discord.js');
@@ -13,6 +12,7 @@ const fs = require('fs');
 
 /**
  * The main GCommands class
+ * @deprecated
  */
 class GCommands extends EventEmitter {
     /**
@@ -43,17 +43,17 @@ class GCommands extends EventEmitter {
 
         /**
          * CaseSensitiveCommands
-         * @type {Boolean}
+         * @type {boolean}
          * @default true
         */
-        this.caseSensitiveCommands = Boolean(options.caseSensitiveCommands) || true;
+         this.caseSensitiveCommands = options.caseSensitiveCommands;
 
-        /**
-         * CaseSensitivePrefixes
-         * @type {Boolean}
-         * @default true
-        */
-        this.caseSensitivePrefixes = Boolean(options.caseSensitivePrefixes) || true;
+         /**
+          * CaseSensitivePrefixes
+          * @type {boolean}
+          * @default true
+         */
+         this.caseSensitivePrefixes = options.caseSensitivePrefixes;
 
         /**
          * CmdDir
@@ -70,7 +70,7 @@ class GCommands extends EventEmitter {
 
         /**
          * AutoTyping
-         * @type {Boolean}
+         * @type {boolean}
          * @default false
         */
         this.autoTyping = options.autoTyping;
@@ -99,7 +99,7 @@ class GCommands extends EventEmitter {
          * Gcategories
          * @type {Array}
          */
-        this.gcategories = fs.readdirSync(`./${this.cmdDir}`);
+        this.gcategories = fs.readdirSync(this.cmdDir);
 
         /**
          * Gcommands
@@ -136,7 +136,7 @@ class GCommands extends EventEmitter {
 
         /**
          * DefaultCooldown
-         * @type {Number}
+         * @type {number}
          * @default 0
          */
         this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
@@ -159,11 +159,6 @@ class GCommands extends EventEmitter {
         this.client.gcategories = this.gcategories;
         this.client.galiases = this.galiases;
         this.client.gcommands = this.gcommands;
-
-        process.on('uncaughtException', error => {
-            this.emit(Events.LOG, new Color(`&d[GCommands Errors] &eHandled: &a${error} ${error.response ? error.response.data.message : ''} ${error.response ? error.response.data.code : ''} | use debug for full error`).getText());
-            setTimeout(() => { this.emit(Events.DEBUG, error); }, 1000);
-        });
 
         process.emitWarning('GCommands is deprecated and GCommandsClient is used which is a discordjs client linked directly to gcommands.');
 

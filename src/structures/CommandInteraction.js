@@ -26,7 +26,7 @@ class CommandInteraction extends BaseCommandInteraction {
      * @returns {Array}
      * @private
     */
-     getArgs(options) {
+    getArgs(options) {
         let args = [];
 
         let check = option => {
@@ -57,15 +57,13 @@ class CommandInteraction extends BaseCommandInteraction {
      * @returns {object}
      * @private
     */
-     getArgsObject(options) {
+    getArgsObject(options) {
         if (!Array.isArray(options)) return {};
         let args = {};
 
         for (let o of options) {
-          if (o.type === 1) {
-            args[o.name] = this.getArgsObject(o.options || []);
-          } else if (o.type === 2) {
-            args[o.name] = this.getArgsObject(o.options || []);
+          if ([1, 2].includes(o.type)) {
+            args[o.name] = this.getArgsObject(o.options);
           } else {
             args[o.name] = o.value;
           }

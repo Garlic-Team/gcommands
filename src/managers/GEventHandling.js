@@ -1,7 +1,8 @@
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
-const Color = require('../structures/Color'), { Events } = require('../util/Constants');
-const { inhibit, interactionRefactor, channelTypeRefactor } = require('../util/util');
+const ArgumentType = require('../util/Constants').ArgumentType;
+const GError = require('../structures/GError'), { Events } = require('../util/Constants');
+const { inhibit, interactionRefactor, channelTypeRefactor, unescape } = require('../util/util');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
@@ -36,8 +37,6 @@ class GEventHandling {
      * @private
     */
     messageEvent() {
-        if (String(this.client.slash) === 'true') return;
-
         this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
             messageEventUse(message);
         });
@@ -63,13 +62,15 @@ class GEventHandling {
                 commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
                 if (!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
 
-                if (!commandos || String(commandos.slash) === 'true') return;
+                if (!commandos || ['false', 'slash'].includes(String(commandos.slash))) return;
+                if (!commandos.slash && ['false', 'slash'].includes(String(this.client.slash))) return;
 
                 let member = message.member, guild = message.guild, channel = message.channel;
                 let botMessageInhibit;
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
                     message, member, guild, channel,
-                     respond: async (options = undefined) => {
+                    author: message.author,
+                    respond: async (options = undefined) => {
                         if (this.client.autoTyping) channel.startTyping(this.client.autoTyping);
 
                         let msg = await message.reply(options);
@@ -79,18 +80,20 @@ class GEventHandling {
                         return msg;
                     },
                     edit: async (options = undefined) => {
-                        if (!botMessageInhibit) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
+                        if (!botMessageInhibit) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
                         let editedMsg = await botMessageInhibit.edit(options);
                         return editedMsg;
                     },
-                }, args, args);
+                    args: args,
+                    objectArgs: args,
+                });
                 if (inhibitReturn === false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(message.guild.id);
                 let cooldown = await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos);
-                if (cooldown.cooldown) return message.inlineReply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
+                if (cooldown.cooldown) return message.reply(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
 
-                if (commandos.guildOnly && message.guild.id !== commandos.guildOnly) return;
+                if (commandos.guildOnly && !commandos.guildOnly.includes(message.guild.id)) return;
 
                 if (commandos.userOnly) {
                     if (typeof commandos.userOnly === 'object') {
@@ -116,7 +119,7 @@ class GEventHandling {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
+                        let permsNeed = this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
                         return message.reply(permsNeed);
                     }
                 }
@@ -125,7 +128,7 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!member.permissions.has(commandos.userRequiredPermissions)) {
-                        let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', '));
+                        let permsNeed = this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
                         return message.reply(permsNeed);
                     }
                 }
@@ -140,28 +143,125 @@ class GEventHandling {
                     }
                 }
 
-                let objectArgs = {};
-                for (let i in commandos.args) {
-                    let arg = new Argument(this.client, commandos.args[i]);
-                    if (arg.type === 'invalid') continue;
+                let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
+                const objectArgs = [];
+                const finalArgs = [];
+                const missingInput = [];
 
-                    let validArg = async prompt => {
-                        let final = await arg.obtain(message, prompt);
-                        if (!final.valid) return validArg(message, prompt);
+                let getArgsObject = options => {
+                    if (!Array.isArray(options)) return {};
+                    let oargs = {};
 
-                        return final;
+                    for (let o of options) {
+                      if ([1, 2].includes(o.type)) {
+                        oargs[o.name] = getArgsObject(o.options);
+                      } else {
+                        oargs[o.name] = o.value;
+                      }
+                    }
+
+                    return oargs;
+                };
+
+                let validArg = async (arg, prompt) => {
+                    let final = await arg.obtain(message, prompt);
+                    if (!final.valid) return validArg(arg, prompt);
+
+                    return final;
+                };
+
+                let getSubCommand = async (type, cmdSubcommands) => {
+                    const options = {
+                        type: type,
+                        subcommands: cmdSubcommands,
+                        required: true,
                     };
+                    const arg = new Argument(this.client, options);
+                    let subcommandInput;
+
+                    if (args[0]) {
+                        let subcommandInvalid = await arg.argument.validate(arg, { content: args[0], guild: message.guild });
+                        if (subcommandInvalid) {
+                            subcommandInput = await arg.obtain(message, subcommandInvalid);
+                            if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
+
+                            if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                        } else {
+                            subcommandInput = { content: cmdSubcommands.find(sc => sc.name === args[0].toLowerCase()) };
+                        }
+                    } else {
+                        subcommandInput = await arg.obtain(message);
+                        if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
+
+                        if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
+                    }
+                    if (subcommandInput && typeof subcommandInput.content === 'object') {
+                        cmdArgs = subcommandInput.content.options;
+
+                        finalArgs.push(subcommandInput.content.name);
+
+                        if (commandos.args.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP).length === 0 && subcommandInput.content.options.filter(o => o.type === 1).length === 0) objectArgs.push(subcommandInput.content);
+                        for (const option of subcommandInput.content.options) {
+                            if (option.type === 1) {
+                                objectArgs.push(subcommandInput.content);
+                            } else {
+                                for (const missingOption of subcommandInput.content.options) {
+                                    missingInput.push(missingOption);
+                                }
+                            }
+                        }
+
+                        if (args[0]) args.shift();
+
+                        return subcommandInput.content.options;
+                    }
+                };
+
+                const ifNotSubOrGroup = cmdArgs.filter(a => [ArgumentType.SUB_COMMAND, ArgumentType.SUB_COMMAND_GROUP].includes(a.type)).length === 0;
+
+                const cmdsubcommandgroups = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP);
+                if (Array.isArray(cmdsubcommandgroups) && cmdsubcommandgroups[0]) {
+                    await getSubCommand(ArgumentType.SUB_COMMAND_GROUP, cmdsubcommandgroups);
+                }
+
+                const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
+                if (Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
+                    await getSubCommand(ArgumentType.SUB_COMMAND, cmdsubcommands);
+                }
+
+                for (let i in cmdArgs) {
+                    let arg = new Argument(this.client, cmdArgs[i]);
+                    if (arg.type === 'invalid') continue;
 
                     if (args[i]) {
                         let argInvalid = await arg.argument.validate(arg, { content: args[i], guild: message.guild });
                         if (argInvalid) {
                             let argInput = await arg.obtain(message, argInvalid);
-                            if (!argInput.valid) argInput = await validArg(argInput.prompt);
+                            if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
 
                             if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                             if (argInput.content !== 'skip') {
+                                finalArgs.push(argInput.content);
+
                                 args[i] = argInput.content;
-                                objectArgs[arg.name] = argInput.content;
+
+                                if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
+
+                                for (const input of missingInput) {
+                                    if (input.name === arg.name) {
+                                        input.value = argInput.content;
+                                    }
+                                }
+                            }
+                        } else {
+                            finalArgs.push(args[i]);
+
+                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: args[i], type: arg.type });
+
+                            for (const input of missingInput) {
+                                if (input.name === arg.name) {
+                                    input.value = args[i];
+                                }
                             }
                         }
 
@@ -169,22 +269,32 @@ class GEventHandling {
                     }
 
                     let argInput = await arg.obtain(message);
-                    if (!argInput.valid) argInput = await validArg(argInput.prompt);
+                    if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
 
                     if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
 
                     if (argInput.content !== 'skip') {
+                        finalArgs.push(argInput.content);
+
                         args[i] = argInput.content;
-                        objectArgs[arg.name] = argInput.content;
+
+                        if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
+
+                        for (const input of missingInput) {
+                            if (input.name === arg.name) {
+                                input.value = argInput.content;
+                            }
+                        }
                     }
                 }
 
-                this.client.emit(Events.COMMAND_EXECUTE, commandos, member);
+                this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member, channel: message.channel, guild: message.guild });
 
                 const client = this.client, bot = this.client;
                 let botMessage;
                 commandos.run({
                     client, bot, message, member, guild, channel,
+                    author: message.author,
                     respond: async (options = undefined) => {
                         if (this.client.autoTyping) ifDjsV13 ? channel.sendTyping() : channel.startTyping();
 
@@ -195,13 +305,15 @@ class GEventHandling {
                         return msg;
                     },
                     edit: async (options = undefined) => {
-                        if (!botMessage) return console.log(new Color('&d[GCommands Errors] &cFirst you need to send a respond.'));
+                        if (!botMessage) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
                         let editedMsg = await botMessage.edit(options);
                         return editedMsg;
                     },
-                }, args, objectArgs);
+                    args: finalArgs,
+                    objectArgs: getArgsObject(objectArgs),
+                });
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, commandos, message.member, e);
+                this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         };
@@ -213,15 +325,19 @@ class GEventHandling {
      * @private
     */
     slashEvent() {
-        if (String(this.client.slash) === 'false') return;
-
         this.client.on('GInteraction', async interaction => {
             if (!interaction.isApplication()) return;
+
+            if (!interaction.guild) return;
 
             let commandos;
             try {
                 commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
-                if (!commandos || String(commandos.slash) === 'false') return;
+                if (!commandos) return;
+                if (interaction.isCommand() && ['false', 'message'].includes(String(commandos.slash))) return;
+                if (interaction.isCommand() && !commandos.slash && ['false', 'message'].includes(String(this.client.slash))) return;
+                if (interaction.isContextMenu() && String(commandos.context) === 'false') return;
+                if (interaction.isContextMenu() && !commandos.context && String(this.client.context) === 'false') return;
 
                 let inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
                     interaction,
@@ -231,7 +347,9 @@ class GEventHandling {
                     channel: interaction.channel,
                     respond: result => interaction.reply.send(result),
                     edit: result => interaction.reply.edit(result),
-                }, interaction.arrayArguments, interaction.objectArguments);
+                    args: interaction.arrayArguments,
+                    objectArgs: interaction.objectArguments,
+                });
                 if (inhibitReturn === false) return;
 
                 let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
@@ -265,8 +383,9 @@ class GEventHandling {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        return interaction.reply.send({ content:
-                            this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.clientRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true,
+                        return interaction.reply.send({
+                            content:
+                                this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
                         });
                     }
                 }
@@ -275,8 +394,9 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
-                        return interaction.reply.send({ content:
-                            this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}',commandos.userRequiredPermissions.map(v => v.split(' ').map(vv => vv[0].toUpperCase() + vv.slice(1).toLowerCase()).join(' ')).join(', ')), ephemeral: true,
+                        return interaction.reply.send({
+                            content:
+                                this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
                         });
                     }
                 }
@@ -285,7 +405,7 @@ class GEventHandling {
                     if (commandos.userRequiredRole) commandos.userRequiredRoles = commandos.userRequiredRole;
                     if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
 
-                    let roles = commandos.userRequiredRoles.some(v => interaction.member.roles.includes(v));
+                    let roles = commandos.userRequiredRoles.some(v => interaction.member._roles.includes(v));
                     if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
                 }
 
@@ -306,15 +426,17 @@ class GEventHandling {
                          */
                         respond: result => interaction.reply.send(result),
                         edit: result => interaction.reply.edit(result),
-                    }, interaction.arrayArguments, interaction.objectArguments);
+                        args: interaction.arrayArguments,
+                        objectArgs: interaction.objectArguments,
+                    });
                 } catch (e) {
-                    this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
+                    this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
                     this.GCommandsClient.emit(Events.DEBUG, e);
                 }
 
-                this.client.emit(Events.COMMAND_EXECUTE, commandos, interaction.member);
+                this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, commandos, interaction.member, e);
+                this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
                 this.GCommandsClient.emit(Events.DEBUG, e);
             }
         });

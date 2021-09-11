@@ -3,8 +3,11 @@ const Collection = require('discord.js').Collection;
 const { Events } = require('discord.js').Constants;
 
 class ButtonCollector extends Collector {
-  constructor(message, filter, options = {}) {
-    super(message.client, filter, options);
+  constructor(message, filter, options) {
+    if (typeof filter === 'function') options.filter = filter;
+    else options = filter;
+
+    super(message.client, options);
 
     this.message = message;
 

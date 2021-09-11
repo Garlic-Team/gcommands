@@ -45,7 +45,7 @@ class MessageSelectMenuOption {
 
         /**
          * Default
-         * @type {Boolean}
+         * @type {boolean}
         */
         this.default = 'default' in data ? Boolean(data.default) : false;
 
@@ -54,7 +54,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setLabel
-     * @param {String} label
+     * @param {string} label
     */
     setLabel(label) {
         this.label = resolveString(label);
@@ -63,7 +63,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setValue
-     * @param {String} value
+     * @param {string} value
     */
     setValue(value) {
         this.value = resolveString(value);
@@ -72,7 +72,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setValue
-     * @param {String} desc
+     * @param {string} desc
     */
     setDescription(desc) {
         this.description = resolveString(desc);
@@ -81,7 +81,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setEmoji
-     * @param {String} emoji
+     * @param {string} emoji
     */
     setEmoji(emoji) {
         this.emoji = parseEmoji(`${emoji}`);
@@ -90,7 +90,7 @@ class MessageSelectMenuOption {
 
     /**
      * Method to setDefault
-     * @param {Boolean} default
+     * @param {boolean} default
     */
     setDefault(def = true) {
         this.default = Boolean(def);

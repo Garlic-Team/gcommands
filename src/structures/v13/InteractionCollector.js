@@ -4,8 +4,11 @@ const { Events } = require('discord.js').Constants;
 const { MessageComponentTypes, InteractionTypes } = require('../../util/Constants');
 
 class InteractionCollector extends Collector {
-  constructor(client, filter, options = {}) {
-    super(client, filter, options);
+  constructor(client, filter, options) {
+    if (typeof filter === 'function') options.filter = filter;
+    else options = filter;
+
+    super(client, options);
 
     this.messageId = options.messageId || null;
     this.channelId = options.channelId || null;
@@ -62,9 +65,9 @@ class InteractionCollector extends Collector {
   collect(interaction) {
     if (this.interactionType && interaction.type !== this.interactionType) return null;
     if (this.componentType && interaction.componentType !== this.componentType) return null;
-    if (this.messageId && interaction.message.id !== this.messageId) return null;
-    if (this.channelId && interaction.channel.id !== this.channelId) return null;
-    if (this.guildId && interaction.guild.id !== this.guildId) return null;
+    if (this.messageId && interaction.message && interaction.message.id !== this.messageId) return null;
+    if (this.channelId && interaction.channel && interaction.channel.id !== this.channelId) return null;
+    if (this.guildId && interaction.guild && interaction.guild.id !== this.guildId) return null;
 
     return interaction.id;
   }
@@ -72,9 +75,9 @@ class InteractionCollector extends Collector {
   dispose(interaction) {
     if (this.type && interaction.type !== this.type) return null;
     if (this.componentType && interaction.componentType !== this.componentType) return null;
-    if (this.messageId && interaction.message.id !== this.messageId) return null;
-    if (this.channelId && interaction.channel.id !== this.channelId) return null;
-    if (this.guildId && interaction.guild.id !== this.guildId) return null;
+    if (this.messageId && interaction.message && interaction.message.id !== this.messageId) return null;
+    if (this.channelId && interaction.channel && interaction.channel.id !== this.channelId) return null;
+    if (this.guildId && interaction.guild && interaction.guild.id !== this.guildId) return null;
 
     return interaction.id;
   }

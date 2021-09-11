@@ -10,7 +10,8 @@
         "turkish": "Bu komutu kullanabilmek için {PERMISSION} yetkisine sahip olmak zorundasın.",
         "polish": "Musisz posiadać permisję {PERMISSION} aby użyć tej komendy.",
         "indonesian": "Anda harus memiliki izin {PERMISSION} untuk menggunakan command ini.",
-        "italian": "Devi avere il permesso {PERMISSION} per usare questo comando."
+        "italian": "Devi avere il permesso {PERMISSION} per usare questo comando.",
+        "french": "Vous devez disposer de l'autorisation {PERMISSION} pour utiliser cette commande."
     },
     "MISSING_CLIENT_PERMISSIONS": {
         "english": "The client must have {PERMISSION} permission to use this command.",
@@ -23,7 +24,8 @@
         "turkish": "Bu komutu kullanabilmek için Client'in {PERMISSION} yetkisine sahip olması gerekiyor.",
         "polish": "Klient musi posiadać permisje {PERMISSION} aby użyć tej komendy.",
         "indonesian": "Client harus memiliki izin {PERMISSION} untuk menggunakan command ini.",
-        "italian": "Il cliente deve avere il permesso {PERMISSION} per usare questo comando."
+        "italian": "Il cliente deve avere il permesso {PERMISSION} per usare questo comando.",
+        "french": "Le client doit disposer de l'autorisation {PERMISSION} pour utiliser cette commande."
     },
     "MISSING_ROLES": {
         "english": "You do not have the required roles to use this command! You need one of the following: {ROLES}",
@@ -36,7 +38,8 @@
         "turkish": "Bu komutu kullanabilmek için gerekli rollerden birisine sahip değilsin! Şu rollerden birisine sahip olman gerekiyor: {ROLES}",
         "polish": "Nie posiadasz wymaganych ról aby użyć tej komendy! Potrzebujesz jednej z podanych: {ROLES}",
         "indonesian": "Anda tidak memiliki salah satu peran yang diperlukan untuk menggunakan command ini! Anda memerlukan salah satu peran dari yang berikut: {ROLES}",
-        "italian": "Non hai uno dei ruoli richiesti per usare questo comando! Hai bisogno di uno dei seguenti: {ROLES}."
+        "italian": "Non hai uno dei ruoli richiesti per usare questo comando! Hai bisogno di uno dei seguenti: {ROLES}",
+        "french": "Vous n'avez pas le rôle requis pour utiliser cette commande ! Vous avez besoin d'un des rôles suivants : {ROLES}"
     },
     "COOLDOWN": {
         "english": "You must wait {COOLDOWN} before using that command again.",
@@ -49,7 +52,8 @@
         "turkish": "Bu komutu kullanabilmek için {COOLDOWN} beklemelisin.",
         "polish": "Musisz poczekać {COOLDOWN} sekund przed ponownym użyciem komendy.",
         "indonesian": "Anda harus menunggu {COOLDOWN} lagi sebelum menggunakan command itu lagi.",
-        "italian": "Devi aspettare ancora {COOLDOWN} prima di usare questo comando di nuovo."
+        "italian": "Devi aspettare ancora {COOLDOWN} prima di usare questo comando di nuovo.",
+        "french": "Vous devez patienter {COOLDOWN} avant de réutiliser cette commande."
     },
     "UNKNOWN_COMMAND": {
         "english": "Could not find command {COMMAND}!",
@@ -62,7 +66,8 @@
         "turkish": "{COMMAND} adındaki komutu bulamadım!",
         "polish": "Nie mogę znaleźć komendy {COMMAND}!",
         "indonesian": "Tidak bisa mencari command {COMMAND}!",
-        "italian": "Non è stato possibile trovare il comando {COMMAND}."
+        "italian": "Non è stato possibile trovare il comando {COMMAND}!",
+        "french": "Impossible de trouver la commande {COMMAND} !"
     },
     "CHANNEL_TEXT_ONLY": {
         "english": "You can only run this command in text channels.",
@@ -75,7 +80,8 @@
         "turkish": "Bu komutu yalnızca metin kanallarında çalıştırabilirsiniz.",
         "polish": "Możesz uruchomić to polecenie tylko w kanałach tekstowych.",
         "indonesian": "Anda hanya bisa menjalankan command di channel teks saja.",
-        "italian": "Puoi usare questo comando solo in canali da testo."
+        "italian": "Puoi usare questo comando solo in canali da testo.",
+        "french": "Vous ne pouvez lancer cette commande que dans les salons textuels."
     },
     "CHANNEL_NEWS_ONLY": {
         "english": "You can only run this command in news channels.",
@@ -88,7 +94,8 @@
         "turkish": "Bu komutu sadece haber kanallarında çalıştırabilirsiniz.",
         "polish": "To polecenie można uruchomić tylko w kanałach informacyjnych.",
         "indonesian": "Anda hanya bisa menjalankan command ini di channel berita saja.",
-        "italian": "Puoi usare questo comando solo in canali da notizie."
+        "italian": "Puoi usare questo comando solo in canali da notizie.",
+        "french": "Vous ne pouvez lancer cette commande que dans les salons d'information."
     },
     "CHANNEL_THREAD_ONLY": {
         "english": "You can only run this command in threads.",
@@ -101,8 +108,8 @@
         "turkish": "Bu komutu sadece haber kanallarında çalıştırabilirsiniz.",
         "polish": "To polecenie można uruchomić tylko w kanałach informacyjnych.",
         "indonesian": "Anda hanya bisa menjalankan command ini di sebuah thread saja.",
-        "italian": "Puoi usare questo comando solo in canali da discussione."
-
+        "italian": "Puoi usare questo comando solo in canali da discussione.",
+        "french": "Vous ne pouvez lancer cette commande que dans les fils de discussion."
     },
     "NSFW": {
         "english": "You can only use this command in nsfw channels.",
@@ -115,7 +122,8 @@
         "turkish": "Bu komutu sadece nsfw kanalında kullanabilirsiniz.",
         "polish": "Tej komendy możesz użyć tylko na kanale NSFW.",
         "indonesian": "Anda hanya bisa menjalankan command ini di sebuah channel NSFW saja.",
-        "italian": "Puoi usare questo comando solo in canali da NSFW."
+        "italian": "Puoi usare questo comando solo in canali da NSFW.",
+        "french": "Vous ne pouvez lancer cette commande que dans les salons NSFW."
     },
     "ARGS_TIME_LIMIT": {
         "english": "You have no time left to answer. You must run the command again.",
@@ -128,12 +136,13 @@
         "turkish": "Cevaplamak için zamanınız kalmadı. Komutu tekrar çalıştırmanız gerekir.",
         "polish": "Nie masz już czasu na odpowiedź. Musisz ponownie uruchomić polecenie.",
         "indonesian": "Anda tidak punya waktu lagi untuk menjawab. Anda harus menjalankan command ini lagi.",
-        "italian": "Non ti resta nessun tempo per rispondere. Devi usare il comando di nuovo."
+        "italian": "Non ti resta nessun tempo per rispondere. Devi usare il comando di nuovo.",
+        "french": "Le temps de réponse est dépassé. Vous devez relancer la commande."
     },        
     "ARGS_MUST_CONTAIN": {
         "english": "The argument `{argument}` must contain a {type}.",
         "spanish": "El argumento `{argument}` debe contener un {type}.",
-        "portuguese": "O argumento ``{argument}` deve conter um {type}.",
+        "portuguese": "O argumento `{argument}` deve conter um {type}.",
         "russian": "Аргумент `{argument}` должен содержать {type}.",
         "german": "Das Argument `{argument}` muss einen {type} enthalten.",
         "czech": "Argument `{argument}` musí obsahovat {type}.",
@@ -141,7 +150,8 @@
         "turkish": "`{argument}` bağımsız değişkeni bir {type} içermelidir.",
         "polish": "Argument `{argument}` musi zawierać {type}.",
         "indonesian": "Argumen `{argument}` harus memiliki sebuah {type}.",
-        "italian": "L'argomento {argument} deve contenere a {type}."
+        "italian": "L'argomento {argument} deve contenere a {type}.",
+        "french": "L'argument `{argument}` doit contenir un {type}."
     },
     "ARGS_CHOICES": {
         "english": "Please enter one of the following options: {choices}.",
@@ -154,7 +164,8 @@
         "turkish": "Lütfen aşağıdaki seçeneklerden birini girin: {choices}.",
         "polish": "Proszę wprowadzić jedną z poniższych opcji: {choices}.",
         "indonesian": "Silahkan isi salah satu opsi berikut: {choices}",
-        "italian": "Per favore introduca una delle seguenti opzioni: {choices}."
+        "italian": "Per favore introduca una delle seguenti opzioni: {choices}.",
+        "french": "Veuillez entrer l'une des options suivantes : {choices}."
     },
     "ARGS_OPTIONAL": {
         "english": "This argument is optional, so you can use `skip` to skip this argument.",
@@ -167,6 +178,21 @@
         "turkish": "Bu argüman isteğe bağlıdır, dolayısıyla bu argümanı atlamak için `skip` yı kullanabilirsiniz.",
         "polish": "Ten argument jest opcjonalny, więc możesz użyć `skip` aby pominąć ten argument.",
         "indonesian": "Argumen ini opsional, jadi Anda bisa menggunakan `skip` untuk melewati argumen ini.",
-        "italian": "Questo argomento è opzionale, quindi puoi usare `skip` per saltare questo argomento."
+        "italian": "Questo argomento è opzionale, quindi puoi usare `skip` per saltare questo argomento.",
+        "french": "Cet argument est optionnel, vous pouvez utiliser `skip` pour le passer."
+    },
+    "ARGS_COMMAND": {
+        "english": "Please select one of the following subcommands: {choices}.",
+        "spanish": "Seleccione uno de los siguientes subcomandos: {choices}.",
+        "portuguese": "Favor selecionar um dos seguintes subcomandos: {choices}.",
+        "russian": "Пожалуйста, выберите одну из следующих подкоманд: {choices}.",
+        "german": "Bitte wählen Sie einen der folgenden Unterbefehle: {choices}.",
+        "czech": "Vyberte jeden z následujících dílčích příkazů: {choices}.",
+        "slovak": "Izberite enega od naslednjih podnaročil: {choices}.",
+        "turkish": "Lütfen aşağıdaki alt komutlardan birini seçin: {choices}.",
+        "polish": "Proszę wybrać jedno z następujących podpoleceń: {choices}.",
+        "indonesian": "Silakan pilih salah satu dari sub-perintah berikut: {choices}.",
+        "italian": "Seleziona uno dei seguenti sottocomandi: {choices}.",
+        "french": "Veuillez sélectionner l'une des sous-commandes suivantes: {choices}."
     }
 }

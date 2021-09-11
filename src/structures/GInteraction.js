@@ -1,5 +1,5 @@
 const { Message, SnowflakeUtil } = require('discord.js');
-const Color = require('../structures/Color');
+const GError = require('../structures/GError');
 const GPayload = require('./GPayload');
 const { InteractionTypes, MessageComponentTypes } = require('../util/Constants');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
@@ -167,10 +167,10 @@ class GInteraction {
 
     /**
      * Method to defer
-     * @param {Boolean} ephemeral
+     * @param {boolean} ephemeral
     */
     async defer(ephemeral) {
-        if (this._replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
+        if (this._replied) throw new GError('[ALREADY REPLY]','This interaction already has a reply');
         await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: 6,
@@ -179,15 +179,19 @@ class GInteraction {
                 },
             },
         });
+
         this._replied = true;
+
+        let awaitMessage = await this.reply.fetch();
+        return awaitMessage;
     }
 
     /**
      * Method to think
-     * @param {Boolean} ephemeral
+     * @param {boolean} ephemeral
     */
     async think(ephemeral) {
-        if (this._replied) return console.log(new Color('&d[GCommands] &cThis interaction already has a reply').getText());
+        if (this._replied) throw new GError('[ALREADY REPLY]','This interaction already has a reply');
         await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: 5,
@@ -196,22 +200,18 @@ class GInteraction {
                 },
             },
         });
+
         this._replied = true;
+
+        let awaitMessage = await this.reply.fetch();
+        return awaitMessage;
     }
 
     /**
      * Method to edit
      * @param {Object} options
     */
-    async edit(result) {
-        if (result.autoDefer === true) {
-            await this.client.api.interactions(this.id, this.token).callback.post({
-                data: {
-                    type: 6,
-                },
-            });
-        }
-
+    edit(result) {
         this.replyEdit(result);
     }
 
@@ -219,15 +219,7 @@ class GInteraction {
      * Method to update
      * @param {Object} options
     */
-    async update(result) {
-        if (result.autoDefer === true) {
-            await this.client.api.interactions(this.id, this.token).callback.post({
-                data: {
-                    type: 6,
-                },
-            });
-        }
-
+    update(result) {
         this.replyEdit(result, true);
     }
 
@@ -252,7 +244,7 @@ class GInteraction {
          * @memberof reply
         */
         let _edit = result => {
-            if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
+            if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.');
             return this.replyEdit(result);
         };
 
@@ -262,7 +254,7 @@ class GInteraction {
          * @memberof reply
         */
         let _update = result => {
-            if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
+            if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.');
             return this.replyEdit(result, true);
         };
 
@@ -272,9 +264,10 @@ class GInteraction {
          * @memberof reply
         */
         let _fetch = async () => {
-            if (!this._replied) return console.log(new Color('&d[GCommands] &cThis button has no reply.').getText());
+            if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.');
             let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
 
+            apiMessage.channel_id = this.channel.id;
             return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
         };
 
@@ -300,8 +293,7 @@ class GInteraction {
         });
 
         let apiMessage = await this.reply.fetch();
-
-        return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
+        return apiMessage;
     }
 
     async replyEdit(result, update) {
@@ -311,20 +303,20 @@ class GInteraction {
 
         let apiMessage = {};
         if (update) {
-            apiMessage = this.client.api.interactions(this.id, this.token).callback.post({
+            apiMessage = (await this.client.api.interactions(this.id, this.token).callback.post({
                 data: {
                     type: 7,
                     data: GPayloadResult.data,
                 },
-            });
+            }));
         } else {
             apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[result.messageId ? result.messageId : '@original'].patch({
                 data: GPayloadResult.data,
             }));
         }
 
-        if (typeof apiMessage !== 'object') apiMessage = apiMessage.toJSON();
-        return new Message(this.client, apiMessage, this.channel);
+        apiMessage = await this.reply.fetch();
+        return apiMessage;
     }
 }
 
