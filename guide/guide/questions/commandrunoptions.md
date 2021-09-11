@@ -15,7 +15,6 @@ return {
   respond,
   edit,
   args,
-  objectArgs,
-  subcommands
+  objectArgs
 };
 ```
