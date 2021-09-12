@@ -55,6 +55,12 @@ class Command {
         this.args = options.args;
 
         /**
+         * AlwaysObtain
+         * @type {boolean}
+         */
+         this.alwaysObtain = options.alwaysObtain ? Boolean(options.alwaysObtain) : false;
+
+        /**
          * MinArgs
          * @type {number}
          * @deprecated use args
