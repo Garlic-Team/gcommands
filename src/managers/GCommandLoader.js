@@ -123,7 +123,7 @@ class GCommandLoader {
                 if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
                 else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
-                if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[9] || Object.values(cmd)[11]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[9] || Object.values(cmd)[11]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
+                if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                     return;
                 }
@@ -139,7 +139,7 @@ class GCommandLoader {
                         description: cmd.description,
                         options: cmd.args || [],
                         type: 1,
-                        default_permission: (Object.values(cmd)[9] || Object.values(cmd)[11]) === undefined,
+                        default_permission: (Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined,
                     },
                     url,
                 };
@@ -297,7 +297,7 @@ class GCommandLoader {
         for (const commandName in keys) {
             const cmd = this.client.gcommands.get(keys[commandName]);
 
-            if ((Object.values(cmd)[9] || Object.values(cmd)[11]) === undefined) continue;
+            if ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined) continue;
 
             const loadCommandPermission = async apiCommands => {
                 for (const apiCommand of apiCommands) {
