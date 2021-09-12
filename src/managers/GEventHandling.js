@@ -232,9 +232,10 @@ class GEventHandling {
                 for (let i in cmdArgs) {
                     let arg = new Argument(this.client, cmdArgs[i]);
                     if (arg.type === 'invalid') continue;
+                    const rawArg = cmdArgs[1] ? args[i] : args.join(' ');
 
-                    if (args[i] && !commandos.alwaysObtain) {
-                        let argInvalid = await arg.argument.validate(arg, { content: args[i], guild: message.guild });
+                    if (rawArg && !commandos.alwaysObtain) {
+                        let argInvalid = await arg.argument.validate(arg, { content: rawArg, guild: message.guild });
                         if (argInvalid) {
                             let argInput = await arg.obtain(message, argInvalid);
                             if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
@@ -254,13 +255,13 @@ class GEventHandling {
                                 }
                             }
                         } else {
-                            finalArgs.push(args[i]);
+                            finalArgs.push(rawArg);
 
-                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: args[i], type: arg.type });
+                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: rawArg, type: arg.type });
 
                             for (const input of missingInput) {
                                 if (input.name === arg.name) {
-                                    input.value = args[i];
+                                    input.value = rawArg;
                                 }
                             }
                         }
