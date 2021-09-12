@@ -205,6 +205,7 @@ declare module 'gcommands' {
     public description: string;
     public cooldown: string;
     public args: Array<CommandArgsOption>;
+    public alwaysObtain: boolean;
     public clientRequiredPermissions: String | Array<string>;
     public userRequiredPermissions: String | Array<string>;
     public userRequiredRoles: String | Array<Snowflake>;
@@ -227,6 +228,7 @@ declare module 'gcommands' {
     public setCooldown(cooldown: string): CommandOptionsBuilder;
     public addArg(arg: CommandArgsOption): CommandOptionsBuilder;
     public addArgs(args: Array<CommandArgsOption>): CommandOptionsBuilder;
+    public setAlwaysObtain(alwaysObtain: boolean): CommandOptionsBuilder;
     public setClientRequiredPermissions(permissions: string | Array<string>): CommandOptionsBuilder;
     public setUserRequiredPermissions(permissions: string | Array<string>): CommandOptionsBuilder;
     public setUserRequiredRoles(permissions: string | Array<Snowflake>): CommandOptionsBuilder;
@@ -408,6 +410,7 @@ declare module 'gcommands' {
     public description: string;
     public cooldown: string;
     public args: Array<object>;
+    public alwaysObtain: boolean;
     public clientRequiredPermissions: String | Array<string>;
     public userRequiredPermissions: String | Array<string>;
     public userRequiredRoles: String | Array<Snowflake>;
