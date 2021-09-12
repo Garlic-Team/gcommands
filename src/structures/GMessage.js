@@ -230,7 +230,7 @@ class GMessage {
             },
 
             reply: {
-                value: async function(result) {
+                value: async function(result = {}) {
                     if (typeof result === 'string') result = { content: result, inlineReply: this.id };
                     else if (result.inlineReply === undefined || result.inlineReply === true) result.inlineReply = this.id;
 

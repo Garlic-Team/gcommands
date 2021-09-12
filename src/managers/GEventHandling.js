@@ -233,7 +233,7 @@ class GEventHandling {
                     let arg = new Argument(this.client, cmdArgs[i]);
                     if (arg.type === 'invalid') continue;
 
-                    if (args[i]) {
+                    if (args[i] && !commandos.alwaysObtain) {
                         let argInvalid = await arg.argument.validate(arg, { content: args[i], guild: message.guild });
                         if (argInvalid) {
                             let argInput = await arg.obtain(message, argInvalid);
