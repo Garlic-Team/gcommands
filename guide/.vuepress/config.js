@@ -102,7 +102,8 @@ module.exports = config({
             children: [
               'questions/commandrunoptions',
               'questions/guildundefined',
-              'questions/missingacces'
+              'questions/missingacces',
+              'questions/alwaysobtain'
             ]
           },
           {
