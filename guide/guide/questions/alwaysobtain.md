@@ -4,7 +4,7 @@
 `alwaysObtain` only affects message commands.
 :::
 
-The `alwaysObtain` option does a simple thing. Arguments in the first message iniating the command do not count.
+The `alwaysObtain` option does a simple thing. Arguments in the first message initiating the command do not count.
 
 This example is to showcase in which cases `alwaysObtain` would be useful:
 
