@@ -6,7 +6,7 @@
 
 The `alwaysObtain` option does a simple thing. Arguments in the first message iniating the command do not count.
 
-This example is too showcase in which cases `alwaysObtain` would be usefull:
+This example is to showcase in which cases `alwaysObtain` would be useful:
 
 ```js
 const { Command, ArgumentType } = require("gcommands");
