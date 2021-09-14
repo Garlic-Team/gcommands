@@ -85,8 +85,9 @@ class GCommandLoader {
      */
     async __loadCommandCategoryFiles(categoryFolder) {
         for await (let file of (await fs.readdirSync(`${this.cmdDir}/${categoryFolder}`))) {
-            const fileName = file.split('.').reverse()[1];
-            const fileType = file.split('.').reverse()[0];
+            const fileTypeIndex = (file.lastIndexOf('.') - 1 >>> 0) + 2;
+            const fileName = file.slice(0, fileTypeIndex - 1);
+            const fileType = file.slice(fileTypeIndex);
 
             file = await require(`${this.cmdDir}/${categoryFolder}/${file}`);
             if (isClass(file)) {
