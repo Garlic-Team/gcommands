@@ -119,13 +119,15 @@ class GCommandLoader {
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
 
             const loadSlashCommand = async guildOnly => {
-                let ifAlready;
-                if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
-                else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
+                if (this.client.loadFromCache) {
+                    let ifAlready;
+                    if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
+                    else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
-                if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
-                    return;
+                    if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
+                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
+                        return;
+                    }
                 }
 
                 let config = {
@@ -139,7 +141,7 @@ class GCommandLoader {
                         description: cmd.description,
                         options: cmd.args || [],
                         type: 1,
-                        default_permission: (Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined,
+                        default_permission: (Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined ? guildOnly === undefined : true,
                     },
                     url,
                 };
@@ -148,7 +150,7 @@ class GCommandLoader {
                     this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 })
                     .catch(error => {
-                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error.response) {
                             if (error.response.status === 429) {
@@ -208,13 +210,15 @@ class GCommandLoader {
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             const loadContextMenu = async guildOnly => {
-                let ifAlready;
-                if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
-                else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
+                if (this.client.loadFromCache) {
+                    let ifAlready;
+                    if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
+                    else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
 
-                if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
-                    return;
+                    if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
+                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
+                        return;
+                    }
                 }
 
                 let type = cmd.context ? ApplicationCommandTypesRaw[cmd.context] : ApplicationCommandTypesRaw[this.client.context];
@@ -241,7 +245,7 @@ class GCommandLoader {
                     }
                 })
                     .catch(error => {
-                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error.response) {
                             if (error.response.status === 429) {
@@ -303,7 +307,7 @@ class GCommandLoader {
                 for (const apiCommand of apiCommands) {
                     if (![1].includes(apiCommand.type)) continue;
 
-                    let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands/${apiCommand.id}/permissions`;
+                    let url;
                     const loadApiCmd = async () => {
                         let finalData = [];
 
@@ -347,7 +351,7 @@ class GCommandLoader {
                             this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
                         })
                             .catch(error => {
-                                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                                 if (error.response) {
                                     if (error.response.status === 429) {
@@ -381,8 +385,6 @@ class GCommandLoader {
                             if (gOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${gOnly}/commands/${apiCommand.id}/permissions`;
                             await loadApiCmd();
                         }
-                    } else {
-                        await loadApiCmd();
                     }
                 }
             };
@@ -416,7 +418,7 @@ class GCommandLoader {
             this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText());
         })
             .catch(error => {
-                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                 if (error.response) {
                     if (error.response.status === 429) {
