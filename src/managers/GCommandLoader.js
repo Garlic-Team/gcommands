@@ -49,15 +49,16 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandFiles() {
-        for await (let file of (await fs.readdirSync(this.cmdDir))) {
+        for await (let fsDirent of (await fs.readdirSync(this.cmdDir, { withFileTypes: true }))) {
+            let file = fsDirent.name;
             // Note: fileName includes the extension (.)
             const fileName = path.basename(file);
             const fileType = path.extname(file);
 
-            if (!['js', 'ts'].includes(fileType)) {
+            if (fsDirent.isDirectory()) {
                 await this.__loadCommandCategoryFiles(file);
                 continue;
-            }
+            } else if (!['js', 'ts'].includes(fileType)) { continue; }
 
             file = await require(`${this.cmdDir}/${file}`);
             if (isClass(file)) {
@@ -85,10 +86,17 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandCategoryFiles(categoryFolder) {
-        for await (let file of (await fs.readdirSync(`${this.cmdDir}/${categoryFolder}`))) {
+        for await (let fsDirent of (await fs.readdirSync(`${this.cmdDir}/${categoryFolder}`, { withFileTypes: true }))) {
+            let file = fsDirent.name;
             // Note: fileName includes the extension (.)
             const fileName = path.basename(file);
             const fileType = path.extname(file);
+
+            if (fsDirent.isDirectory()) {
+                // Recursive scan
+                await this.__loadCommandCategoryFiles(`${categoryFolder}/${file}`);
+                continue;
+            } else if (!['js', 'ts'].includes(fileType)) { continue; }
 
             file = await require(`${this.cmdDir}/${categoryFolder}/${file}`);
             if (isClass(file)) {
