@@ -93,7 +93,8 @@ module.exports = config({
             children: [
               'other/customlanguagefile',
               'other/inhibitor',
-              'other/mentions'
+              'other/mentions',
+              'other/alwaysobtain'
             ]
           },
           {
