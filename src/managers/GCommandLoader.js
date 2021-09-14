@@ -1,5 +1,6 @@
 const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
 const axios = require('axios');
+const path = require('path');
 const fs = require('fs');
 const ms = require('ms');
 const { isClass, __deleteCmd, __getAllCommands, comparable, getAllObjects } = require('../util/util');
@@ -49,9 +50,9 @@ class GCommandLoader {
      */
     async __loadCommandFiles() {
         for await (let file of (await fs.readdirSync(this.cmdDir))) {
-            const fileTypeIndex = (file.lastIndexOf('.') - 1 >>> 0) + 2;
-            const fileName = file.slice(0, fileTypeIndex - 1);
-            const fileType = file.slice(fileTypeIndex);
+            // Note: fileName includes the extension (.)
+            const fileName = path.basename(file);
+            const fileType = path.extname(file);
 
             if (!['js', 'ts'].includes(fileType)) {
                 await this.__loadCommandCategoryFiles(file);
@@ -64,7 +65,7 @@ class GCommandLoader {
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `${this.cmdDir}/${fileName}.${fileType}`;
+            file._path = `${this.cmdDir}/${fileName}`;
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
@@ -85,8 +86,9 @@ class GCommandLoader {
      */
     async __loadCommandCategoryFiles(categoryFolder) {
         for await (let file of (await fs.readdirSync(`${this.cmdDir}/${categoryFolder}`))) {
-            const fileName = file.split('.').reverse()[1];
-            const fileType = file.split('.').reverse()[0];
+            // Note: fileName includes the extension (.)
+            const fileName = path.basename(file);
+            const fileType = path.extname(file);
 
             file = await require(`${this.cmdDir}/${categoryFolder}/${file}`);
             if (isClass(file)) {
@@ -94,7 +96,7 @@ class GCommandLoader {
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `${this.cmdDir}/${categoryFolder}/${fileName}.${fileType}`;
+            file._path = `${this.cmdDir}/${categoryFolder}/${fileName}`;
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
