@@ -93,7 +93,8 @@ module.exports = config({
             children: [
               'other/customlanguagefile',
               'other/inhibitor',
-              'other/mentions'
+              'other/mentions',
+              'other/alwaysobtain'
             ]
           },
           {
@@ -102,8 +103,7 @@ module.exports = config({
             children: [
               'questions/commandrunoptions',
               'questions/guildundefined',
-              'questions/missingacces',
-              'questions/alwaysobtain'
+              'questions/missingacces'
             ]
           },
           {

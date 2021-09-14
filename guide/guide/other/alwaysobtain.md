@@ -1,4 +1,4 @@
-# What does the alwaysObtain option in commands do?
+# The alwaysObtain option in commands
 
 :::tip
 `alwaysObtain` only affects message commands.
