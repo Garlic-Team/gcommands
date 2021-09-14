@@ -58,7 +58,7 @@ class GCommandLoader {
             if (fsDirent.isDirectory()) {
                 await this.__loadCommandCategoryFiles(file);
                 continue;
-            } else if (!['js', 'ts'].includes(fileType)) { continue; }
+            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
 
             file = await require(`${this.cmdDir}/${file}`);
             if (isClass(file)) {
@@ -96,7 +96,7 @@ class GCommandLoader {
                 // Recursive scan
                 await this.__loadCommandCategoryFiles(`${categoryFolder}/${file}`);
                 continue;
-            } else if (!['js', 'ts'].includes(fileType)) { continue; }
+            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
 
             file = await require(`${this.cmdDir}/${categoryFolder}/${file}`);
             if (isClass(file)) {
