@@ -59,8 +59,15 @@ class GEventHandling {
 
             let commandos;
             try {
-                commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd);
-                if (!commandos) commandos = this.client.gcommands.get(this.client.galiases.get(this.GCommandsClient.caseSensitiveCommands ? cmd.toLowerCase() : cmd));
+                commandos = this.client.gcommands.get(
+                    !this.GCommandsClient.caseSensitiveCommands ?
+                        cmd.toLowerCase() :
+                    cmd.name
+                ) || this.client.galiases.get(
+                    !this.GCommandsClient.caseSensitiveCommands ?
+                        cmd.toLowerCase() :
+                    cmd.name
+                );
 
                 if (!commandos || ['false', 'slash'].includes(String(commandos.slash))) return;
                 if (!commandos.slash && ['false', 'slash'].includes(String(this.client.slash))) return;
@@ -333,7 +340,11 @@ class GEventHandling {
 
             let commandos;
             try {
-                commandos = this.client.gcommands.get(this.GCommandsClient.caseSensitiveCommands ? interaction.commandName.toLowerCase() : interaction.commandName);
+                commandos = this.client.gcommands.find(cmd =>
+                    !this.GCommandsClient.caseSensitiveCommands ?
+                        (interaction.commandName.toLowerCase() === cmd.name.toLowerCase() || interaction.commandName.toLowerCase() === cmd.contextMenuName.toLowerCase()) :
+                    (interaction.commandName === cmd.name || interaction.commandName === cmd.contextMenuName)
+                );
                 if (!commandos) return;
                 if (interaction.isCommand() && ['false', 'message'].includes(String(commandos.slash))) return;
                 if (interaction.isCommand() && !commandos.slash && ['false', 'message'].includes(String(this.client.slash))) return;
