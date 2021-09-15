@@ -55,7 +55,7 @@ class GCommandLoader {
             const fileName = path.basename(file, fileType);
 
             if (fsDirent.isDirectory()) {
-                this.__loadCommandCategoryFiles(file);
+                await this.__loadCommandCategoryFiles(file);
                 continue;
             } else if (!['.js', '.ts'].includes(fileType)) { continue; }
 
@@ -92,7 +92,7 @@ class GCommandLoader {
 
             if (fsDirent.isDirectory()) {
                 // Recursive scan
-                this.__loadCommandCategoryFiles(`${categoryFolder}/${file}`);
+                await this.__loadCommandCategoryFiles(`${categoryFolder}/${file}`);
                 continue;
             } else if (!['.js', '.ts'].includes(fileType)) { continue; }
 
