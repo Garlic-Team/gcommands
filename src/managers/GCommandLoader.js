@@ -87,9 +87,8 @@ class GCommandLoader {
     async __loadCommandCategoryFiles(categoryFolder) {
         for await (let fsDirent of fs.readdirSync(`${this.cmdDir}/${categoryFolder}`, { withFileTypes: true })) {
             let file = fsDirent.name;
-            // Note: fileName includes the extension (.)
-            const fileName = path.basename(file);
             const fileType = path.extname(file);
+            const fileName = path.basename(file, fileType);
 
             if (fsDirent.isDirectory()) {
                 // Recursive scan
