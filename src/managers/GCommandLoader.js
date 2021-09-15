@@ -72,9 +72,9 @@ class GCommandLoader {
             this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
         }
 
-        this.__loadSlashCommands();
-        this.__loadContextMenuCommands();
-        this.__loadCommandPermissions();
+        await this.__loadSlashCommands();
+        await this.__loadContextMenuCommands();
+        await this.__loadCommandPermissions();
 
         this.client.emit(Events.COMMANDS_LOADED, this.client.gcommands);
     }
