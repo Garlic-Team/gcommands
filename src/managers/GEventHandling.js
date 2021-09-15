@@ -340,11 +340,11 @@ class GEventHandling {
 
             let commandos;
             try {
-                commandos = this.client.gcommands.find((cmd) =>
+                commandos = this.client.gcommands.find(cmd =>
                     !this.GCommandsClient.caseSensitiveCommands ?
                         (interaction.commandName.toLowerCase() === cmd.name.toLowerCase() || interaction.commandName.toLowerCase() === cmd.contextMenuName.toLowerCase()) :
                     (interaction.commandName === cmd.name || interaction.commandName === cmd.contextMenuName)
-                )
+                );
                 if (!commandos) return;
                 if (interaction.isCommand() && ['false', 'message'].includes(String(commandos.slash))) return;
                 if (interaction.isCommand() && !commandos.slash && ['false', 'message'].includes(String(this.client.slash))) return;
