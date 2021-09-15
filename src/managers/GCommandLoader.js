@@ -1,5 +1,6 @@
 const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
 const axios = require('axios');
+const path = require('path');
 const fs = require('fs');
 const ms = require('ms');
 const { isClass, __deleteCmd, __getAllCommands, comparable, getAllObjects } = require('../util/util');
@@ -48,19 +49,19 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandFiles() {
-        for await (let file of (await fs.readdirSync(this.cmdDir))) {
-            const fileTypeIndex = (file.lastIndexOf('.') - 1 >>> 0) + 2;
-            const fileName = file.slice(0, fileTypeIndex - 1);
-            const fileType = file.slice(fileTypeIndex);
+        for await (let fsDirent of fs.readdirSync(this.cmdDir, { withFileTypes: true })) {
+            let file = fsDirent.name;
+            const fileType = path.extname(file);
+            const fileName = path.basename(file, fileType);
 
-            if (!['js', 'ts'].includes(fileType)) {
-                await this.__loadCommandCategoryFiles(file);
+            if (fsDirent.isDirectory()) {
+                this.__loadCommandCategoryFiles(file);
                 continue;
-            }
+            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
 
-            file = await require(`${this.cmdDir}/${file}`);
+            file = require(`${this.cmdDir}/${file}`);
             if (isClass(file)) {
-                file = await new file(this.client);
+                file = new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
@@ -84,13 +85,20 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandCategoryFiles(categoryFolder) {
-        for await (let file of (await fs.readdirSync(`${this.cmdDir}/${categoryFolder}`))) {
-            const fileName = file.split('.').reverse()[1];
-            const fileType = file.split('.').reverse()[0];
+        for await (let fsDirent of fs.readdirSync(`${this.cmdDir}/${categoryFolder}`, { withFileTypes: true })) {
+            let file = fsDirent.name;
+            const fileType = path.extname(file);
+            const fileName = path.basename(file, fileType);
 
-            file = await require(`${this.cmdDir}/${categoryFolder}/${file}`);
+            if (fsDirent.isDirectory()) {
+                // Recursive scan
+                this.__loadCommandCategoryFiles(`${categoryFolder}/${file}`);
+                continue;
+            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
+
+            file = require(`${this.cmdDir}/${categoryFolder}/${file}`);
             if (isClass(file)) {
-                file = await new file(this.client);
+                file = new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
