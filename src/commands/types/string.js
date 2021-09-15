@@ -23,6 +23,13 @@ class StringArgumentType extends ArgumentType {
 
 		if (argument.choices && !argument.choices.some(ch => ch.name === message.content.toLowerCase())) { return this.client.languageFile.ARGS_CHOICES[guildLanguage].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', ')); }
 	}
+    get(argument, message) {
+        if (argument.choices) {
+            return argument.choices.find(ch => ch.name === message);
+        } else {
+            return message;
+        }
+    }
 }
 
 module.exports = StringArgumentType;

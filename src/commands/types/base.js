@@ -10,8 +10,8 @@ class ArgumentType {
      * @param {string} type
      */
     constructor(client, type) {
-        if (!client) throw new GError('[ARGUMENTS]','You must specify the client');
-        if (!type) throw new GError('[ARGUMENTS]','You must specify the argument type');
+        if (!client) throw new GError('[ARGUMENTS]', 'You must specify the client');
+        if (!type) throw new GError('[ARGUMENTS]', 'You must specify the argument type');
 
         /**
          * Type
@@ -34,7 +34,16 @@ class ArgumentType {
      * @param {Message|Object}
      */
     validate(argument, message) { // eslint-disable-line no-unused-vars, require-await
-        throw new GError('[ARGUMENTS]','Argument doesnt have provided validate() method');
+        throw new GError('[ARGUMENTS]', 'Argument doesnt have provided validate() method');
+    }
+
+    /**
+     * Method to get
+     * @param {Argument}
+     * @param {Message|Object}
+    */
+    get(argument, message) { // eslint-disable-line no-unused-vars, require-await
+        throw new GError('[ARGUMENTS]', 'Argument doesnt have provided get() method');
     }
 }
 

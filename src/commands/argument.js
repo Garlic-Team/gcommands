@@ -67,9 +67,7 @@ class Argument {
          * SubCommands
          * @type {Array<Object>}
         */
-         this.subcommands = argument.subcommands;
-
-        return this;
+        this.subcommands = argument.subcommands;
     }
 
     /**
@@ -81,7 +79,7 @@ class Argument {
         if (message.author.bot) return;
 
         const guildLanguage = await message.guild.getLanguage();
-		const wait = 30000;
+        const wait = 30000;
 
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
         if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
@@ -91,8 +89,8 @@ class Argument {
         const responses = await (ifDjsV13 ? message.channel.awaitMessages({ filter, max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait }));
         if (responses.size === 0) {
             return {
-                        valid: true,
-                        timeLimit: true,
+                valid: true,
+                timeLimit: true,
             };
         }
 
@@ -109,19 +107,9 @@ class Argument {
             };
         }
 
-        let content = resFirst.content;
-        if (this.choices) {
-            const choice = this.choices.find(ch => ch.name === resFirst.content.toLowerCase());
-            if (choice) content = choice.value;
-        }
-        if (this.subcommands) {
-            const subcommand = this.subcommands.find(sc => sc.name === resFirst.content.toLowerCase());
-            if (subcommand) content = subcommand;
-        }
-
         return {
             valid: true,
-            content: content,
+            content: this.get(resFirst),
         };
     }
 
@@ -142,6 +130,15 @@ class Argument {
         if (argument.type === 9) return new MentionableArgumentType(client, argument);
         if (argument.type === 10) return new NumberArgumentType(client, argument);
         else return { type: 'invalid' };
+    }
+
+    /**
+     * Method to get
+     * @param {object | string} message
+     */
+    get(message) {
+        if (typeof message === 'string') return this.argument.get(this, message.toLowerCase());
+        else return this.argument.get(this, message.content.toLowerCase());
     }
 }
 
