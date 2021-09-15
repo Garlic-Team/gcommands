@@ -141,7 +141,7 @@ class GCommandLoader {
                         description: cmd.description,
                         options: cmd.args || [],
                         type: 1,
-                        default_permission: (Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined ? guildOnly === undefined : true,
+                        default_permission: guildOnly ? (Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined : true,
                     },
                     url,
                 };
