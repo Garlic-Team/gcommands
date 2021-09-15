@@ -492,6 +492,7 @@ declare module 'gcommands' {
       slash: GCommandsOptionsCommandsSlash;
       context?: GCommandsOptionsCommandsContext;
       prefix?: string;
+      loadFromCache?: boolean;
     },
     caseSensitiveCommands?: boolean;
     caseSensitivePrefixes?: boolean;

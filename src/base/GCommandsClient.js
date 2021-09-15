@@ -127,6 +127,13 @@ class GCommandsClient extends Client {
         this.context = options.commands.context ? options.commands.context : false;
 
         /**
+         * LoadFromCache
+         * @type {boolean}
+         * @default true
+         */
+        this.loadFromCache = options.commands.loadFromCache !== undefined ? Boolean(options.commands.loadFromCache) : true;
+
+        /**
          * DefaultCooldown
          * @type {number}
          * @default 0
