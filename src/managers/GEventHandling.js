@@ -62,11 +62,11 @@ class GEventHandling {
                 commandos = this.client.gcommands.get(
                     !this.GCommandsClient.caseSensitiveCommands ?
                         cmd.toLowerCase() :
-                    cmd.name
+                        cmd.name,
                 ) || this.client.galiases.get(
                     !this.GCommandsClient.caseSensitiveCommands ?
                         cmd.toLowerCase() :
-                    cmd.name
+                        cmd.name,
                 );
 
                 if (!commandos || ['false', 'slash'].includes(String(commandos.slash))) return;
@@ -90,6 +90,14 @@ class GEventHandling {
                         if (!botMessageInhibit) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
                         let editedMsg = await botMessageInhibit.edit(options);
                         return editedMsg;
+                    },
+                    followUp: async (options = undefined) => {
+                        if (this.client.autoTyping) ifDjsV13 ? channel.sendTyping() : channel.startTyping();
+
+                        let msg = await message.reply(options);
+
+                        if (this.client.autoTyping && !ifDjsV13) channel.stopTyping(true);
+                        return msg;
                     },
                     args: args,
                     objectArgs: args,
@@ -160,11 +168,11 @@ class GEventHandling {
                     let oargs = {};
 
                     for (let o of options) {
-                      if ([1, 2].includes(o.type)) {
-                        oargs[o.name] = getArgsObject(o.options);
-                      } else {
-                        oargs[o.name] = o.value;
-                      }
+                        if ([1, 2].includes(o.type)) {
+                            oargs[o.name] = getArgsObject(o.options);
+                        } else {
+                            oargs[o.name] = o.value;
+                        }
                     }
 
                     return oargs;
@@ -317,6 +325,14 @@ class GEventHandling {
                         let editedMsg = await botMessage.edit(options);
                         return editedMsg;
                     },
+                    followUp: async (options = undefined) => {
+                        if (this.client.autoTyping) ifDjsV13 ? channel.sendTyping() : channel.startTyping();
+
+                        let msg = await message.reply(options);
+
+                        if (this.client.autoTyping && !ifDjsV13) channel.stopTyping(true);
+                        return msg;
+                    },
                     args: finalArgs,
                     objectArgs: getArgsObject(objectArgs),
                 });
@@ -343,7 +359,7 @@ class GEventHandling {
                 commandos = this.client.gcommands.find(cmd =>
                     !this.GCommandsClient.caseSensitiveCommands ?
                         (interaction.commandName.toLowerCase() === cmd.name.toLowerCase() || interaction.commandName.toLowerCase() === cmd.contextMenuName.toLowerCase()) :
-                    (interaction.commandName === cmd.name || interaction.commandName === cmd.contextMenuName)
+                        (interaction.commandName === cmd.name || interaction.commandName === cmd.contextMenuName),
                 );
                 if (!commandos) return;
                 if (interaction.isCommand() && ['false', 'message'].includes(String(commandos.slash))) return;
@@ -359,6 +375,7 @@ class GEventHandling {
                     channel: interaction.channel,
                     respond: result => interaction.reply.send(result),
                     edit: result => interaction.reply.edit(result),
+                    followUp: result => interaction.followUp(result),
                     args: interaction.arrayArguments,
                     objectArgs: interaction.objectArguments,
                 });
@@ -438,6 +455,7 @@ class GEventHandling {
                          */
                         respond: result => interaction.reply.send(result),
                         edit: result => interaction.reply.edit(result),
+                        followUp: result => interaction.followUp(result),
                         args: interaction.arrayArguments,
                         objectArgs: interaction.objectArguments,
                     });

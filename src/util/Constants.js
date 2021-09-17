@@ -240,8 +240,9 @@ function createEnum(keys) {
  * @property {Message | undefined} message
  * @property {Guild} guild
  * @property {TextChannel | NewsChannel} channel
- * @property {GPayloadOptions} respond
- * @property {GPayloadOptions} edit
+ * @property {string | GPayloadOptions} respond
+ * @property {string | GPayloadOptions} edit
+ * @property {string | GPayloadOptions} followUp
  * @property {Array} args
  * @property {Object} objectArgs
  * @typedef {(Object)} CommandRunOptions
@@ -256,8 +257,9 @@ function createEnum(keys) {
  * @property {GuildMember} member
  * @property {Guild} guild
  * @property {TextChannel | NewsChannel} channel
- * @property {GPayloadOptions} respond
- * @property {GPayloadOptions} edit
+ * @property {string | GPayloadOptions} respond
+ * @property {string | GPayloadOptions} edit
+ * @property {string | GPayloadOptions} followUp
  * @property {Array} args
  * @property {Object} objectArgs
  * @typedef {(Object)} Inhibitor
