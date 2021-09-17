@@ -28,6 +28,9 @@ class ChannelArgumentType extends ArgumentType {
 		let channel = this.client.channels.cache.get(matches[1]);
 		if (!channel) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'channel');
 	}
+    get(argument, message) {
+        return message.match(/([0-9]+)/)[0];
+    }
 }
 
 module.exports = ChannelArgumentType;

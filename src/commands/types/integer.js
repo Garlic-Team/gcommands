@@ -26,6 +26,9 @@ class IntegerArgumentType extends ArgumentType {
 
 		if (argument.choices && !argument.choices.some(ch => ch.name === message.content.toLowerCase())) { return this.client.languageFile.ARGS_CHOICES[guildLanguage].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', ')); }
 	}
+    get(argument, message) {
+        return parseInt(message);
+    }
 }
 
 module.exports = IntegerArgumentType;

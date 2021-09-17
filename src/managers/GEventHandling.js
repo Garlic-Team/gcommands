@@ -191,7 +191,7 @@ class GEventHandling {
                         subcommands: cmdSubcommands,
                         required: true,
                     };
-                    const arg = new Argument(this.client, options);
+                    let arg = new Argument(this.client, options);
                     let subcommandInput;
 
                     if (args[0]) {
@@ -202,7 +202,7 @@ class GEventHandling {
 
                             if (subcommandInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
                         } else {
-                            subcommandInput = { content: cmdSubcommands.find(sc => sc.name === args[0].toLowerCase()) };
+                            subcommandInput = { content: arg.get(args[0]) };
                         }
                     } else {
                         subcommandInput = await arg.obtain(message);
@@ -270,13 +270,13 @@ class GEventHandling {
                                 }
                             }
                         } else {
-                            finalArgs.push(rawArg);
+                            finalArgs.push(arg.get(rawArg));
 
-                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: rawArg, type: arg.type });
+                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: arg.get(rawArg), type: arg.type });
 
                             for (const input of missingInput) {
                                 if (input.name === arg.name) {
-                                    input.value = rawArg;
+                                    input.value = arg.get(rawArg);
                                 }
                             }
                         }

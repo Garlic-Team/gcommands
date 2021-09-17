@@ -29,6 +29,9 @@ class MentionableArgumentType extends ArgumentType {
 		let user = this.client.users.cache.get(matches[1]);
 		if ((!user) && (!role)) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'mention');
 	}
+    get(argument, message) {
+        return message.match(/([0-9]+)/)[0];
+    }
 }
 
 module.exports = MentionableArgumentType;
