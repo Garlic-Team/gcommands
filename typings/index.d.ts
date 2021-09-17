@@ -512,6 +512,7 @@ declare module 'gcommands' {
 
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;
+    followUp(options: string | GPayloadOptions): void;
   }
 
   interface GPayloadOptions {
