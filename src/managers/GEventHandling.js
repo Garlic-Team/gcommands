@@ -375,7 +375,7 @@ class GEventHandling {
                     channel: interaction.channel,
                     respond: result => interaction.reply.send(result),
                     edit: result => interaction.reply.edit(result),
-                    followUp: result => interaction.followUp(result),
+                    followUp: result => interaction.reply.followUp(result),
                     args: interaction.arrayArguments,
                     objectArgs: interaction.objectArguments,
                 });
@@ -455,7 +455,7 @@ class GEventHandling {
                          */
                         respond: result => interaction.reply.send(result),
                         edit: result => interaction.reply.edit(result),
-                        followUp: result => interaction.followUp(result),
+                        followUp: result => interaction.reply.followUp(result),
                         args: interaction.arrayArguments,
                         objectArgs: interaction.objectArguments,
                     });
