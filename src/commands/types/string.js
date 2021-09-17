@@ -21,11 +21,11 @@ class StringArgumentType extends ArgumentType {
 	async validate(argument, message) {
         const guildLanguage = await message.guild.getLanguage();
 
-		if (argument.choices && !argument.choices.some(ch => ch.name === message.content.toLowerCase())) { return this.client.languageFile.ARGS_CHOICES[guildLanguage].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', ')); }
+		if (argument.choices && !argument.choices.some(ch => ch.name.toLowerCase() === message.content.toLowerCase())) { return this.client.languageFile.ARGS_CHOICES[guildLanguage].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', ')); }
 	}
     get(argument, message) {
         if (argument.choices) {
-            return argument.choices.find(ch => ch.name === message);
+            return argument.choices.find(ch => ch.name.toLowerCase() === message);
         } else {
             return message;
         }
