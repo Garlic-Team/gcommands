@@ -149,8 +149,8 @@ class GInteraction {
      */
     isButton() {
         return (
-        InteractionTypes[this.type] === InteractionTypes.MESSAGE_COMPONENT &&
-        MessageComponentTypes[this.componentType] === MessageComponentTypes.BUTTON
+            InteractionTypes[this.type] === InteractionTypes.MESSAGE_COMPONENT &&
+            MessageComponentTypes[this.componentType] === MessageComponentTypes.BUTTON
         );
     }
 
@@ -160,8 +160,8 @@ class GInteraction {
      */
     isSelectMenu() {
         return (
-        InteractionTypes[this.type] === InteractionTypes.MESSAGE_COMPONENT &&
-        MessageComponentTypes[this.componentType] === MessageComponentTypes.SELECT_MENU
+            InteractionTypes[this.type] === InteractionTypes.MESSAGE_COMPONENT &&
+            MessageComponentTypes[this.componentType] === MessageComponentTypes.SELECT_MENU
         );
     }
 
@@ -170,7 +170,7 @@ class GInteraction {
      * @param {boolean} ephemeral
     */
     async defer(ephemeral) {
-        if (this._replied) throw new GError('[ALREADY REPLY]','This interaction already has a reply');
+        if (this._replied) throw new GError('[ALREADY REPLY]', 'This interaction already has a reply');
         await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: 6,
@@ -191,7 +191,7 @@ class GInteraction {
      * @param {boolean} ephemeral
     */
     async think(ephemeral) {
-        if (this._replied) throw new GError('[ALREADY REPLY]','This interaction already has a reply');
+        if (this._replied) throw new GError('[ALREADY REPLY]', 'This interaction already has a reply');
         await this.client.api.interactions(this.id, this.token).callback.post({
             data: {
                 type: 5,
@@ -244,7 +244,7 @@ class GInteraction {
          * @memberof reply
         */
         let _edit = result => {
-            if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.');
+            if (!this._replied) throw new GError('[NEED REPLY]', 'This interaction has no reply.');
             return this.replyEdit(result);
         };
 
@@ -254,18 +254,25 @@ class GInteraction {
          * @memberof reply
         */
         let _update = result => {
-            if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.');
+            if (!this._replied) throw new GError('[NEED REPLY]', 'This interaction has no reply.');
             return this.replyEdit(result, true);
         };
 
         /**
-         * Method to replyFetch
+         * Method to replyFollowUp
          * @param {Object} options
          * @memberof reply
         */
-        let _fetch = async () => {
-            if (!this._replied) throw new GError('[NEED REPLY]','This interaction has no reply.');
-            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages['@original'].get());
+        let _followUp = result => this.replyFollowUp(result);
+
+        /**
+         * Method to replyFetch
+         * @param {string} id
+         * @memberof reply
+        */
+        let _fetch = async id => {
+            if (!id && !this._replied) throw new GError('[NEED REPLY]', 'This interaction has no reply.');
+            let apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[id ? id : '@original'].get());
 
             apiMessage.channel_id = this.channel.id;
             return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
@@ -275,6 +282,7 @@ class GInteraction {
             send: _send,
             edit: _edit,
             update: _update,
+            followUp: _followUp,
             fetch: _fetch,
         };
     }
@@ -316,6 +324,20 @@ class GInteraction {
         }
 
         apiMessage = await this.reply.fetch();
+        return apiMessage;
+    }
+    async replyFollowUp(result) {
+        let GPayloadResult = await GPayload.create(this.channel, result)
+            .resolveData()
+            .resolveFiles();
+
+        const msg = await this.client.api.webhooks(this.client.user.id, this.token).post({
+            type: 4,
+            data: GPayloadResult.data,
+            files: GPayloadResult.files,
+        });
+
+        let apiMessage = await this.reply.fetch(msg.id);
         return apiMessage;
     }
 }
