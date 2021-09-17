@@ -263,7 +263,10 @@ class GInteraction {
          * @param {Object} options
          * @memberof reply
         */
-        let _followUp = result => this.replyFollowUp(result);
+        let _followUp = result => {
+            if (!this._replied) throw new GError('[NEED REPLY]', 'This interaction has no reply.');
+            return this.replyFollowUp(result);
+        };
 
         /**
          * Method to replyFetch
