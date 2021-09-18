@@ -45,9 +45,10 @@ class GPayload {
         if (this.data) return this;
         else this.data = {};
 
-        let type = typeof this.options;
+        const type = typeof this.options;
         if (type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options };
 
+        this.data.tts = Boolean(this.options.tts);
         this.options.inlineReply = this.options.inlineReply === undefined ? false : this.options.inlineReply;
         this.channel_id = this.channel.id;
 
