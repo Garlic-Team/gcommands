@@ -1,7 +1,7 @@
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const ArgumentType = require('../util/Constants').ArgumentType;
-const GError = require('../structures/GError'), { Events } = require('../util/Constants');
+const GError = require('../structures/GError'), { Events } = require('../util/Constants'), Color = require('../structures/Color');
 const { inhibit, interactionRefactor, channelTypeRefactor, unescape } = require('../util/util');
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
@@ -61,15 +61,15 @@ class GEventHandling {
             try {
                 commandos = this.client.gcommands.get(
                     !this.GCommandsClient.caseSensitiveCommands ?
-                        cmd.toLowerCase() :
-                        cmd.name,
+                        String(cmd).toLowerCase() :
+                        String(cmd.name),
                 ) || this.client.galiases.get(
                     !this.GCommandsClient.caseSensitiveCommands ?
-                        cmd.toLowerCase() :
-                        cmd.name,
+                        String(cmd).toLowerCase() :
+                        String(cmd.name),
                 );
-
-                if (!commandos || ['false', 'slash'].includes(String(commandos.slash))) return;
+                if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
+                if (['false', 'slash'].includes(String(commandos.slash))) return;
                 if (!commandos.slash && ['false', 'slash'].includes(String(this.client.slash))) return;
 
                 let member = message.member, guild = message.guild, channel = message.channel;
@@ -358,10 +358,10 @@ class GEventHandling {
             try {
                 commandos = this.client.gcommands.find(cmd =>
                     !this.GCommandsClient.caseSensitiveCommands ?
-                        (interaction.commandName.toLowerCase() === cmd.name.toLowerCase() || interaction.commandName.toLowerCase() === cmd.contextMenuName.toLowerCase()) :
-                        (interaction.commandName === cmd.name || interaction.commandName === cmd.contextMenuName),
+                        (String(interaction.commandName).toLowerCase() === String(cmd.name).toLowerCase() || String(interaction.commandName).toLowerCase() === String(cmd.contextMenuName).toLowerCase()) :
+                        (String(interaction.commandName) === String(cmd.name) || String(interaction.commandName) === String(cmd.contextMenuName)),
                 );
-                if (!commandos) return;
+                if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (slash): &e➜   &3${interaction.commandName ? String(interaction.commandName) : null}`, { json: false }).getText());
                 if (interaction.isCommand() && ['false', 'message'].includes(String(commandos.slash))) return;
                 if (interaction.isCommand() && !commandos.slash && ['false', 'message'].includes(String(this.client.slash))) return;
                 if (interaction.isContextMenu() && String(commandos.context) === 'false') return;
