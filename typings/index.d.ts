@@ -60,6 +60,7 @@ declare module 'discord.js' {
     commandExecute: [Command, GuildMember];
     commandError: [Command, GuildMember, String];
     commandsLoaded: [Collection<Command>];
+    commandNotFound: [string]
     log: [string];
     debug: [string];
 

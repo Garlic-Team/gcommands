@@ -30,7 +30,6 @@
  * client.on('commandError', (info) => { console.log(info); });
 */
 
-
 /**
  * commandsLoaded
  * @event GCommandsClient#commandsLoaded
@@ -40,12 +39,21 @@
 */
 
 /**
+ * commandNotFound
+ * @event GCommandsClient#commandNotFound
+ * @param {string} info Command not found
+ * @example
+ * client.on('commandNotFound', (info) => { console.log(info); });
+*/
+
+/**
  * Events
  * * debug
  * * log
  * * commandExecute
  * * commandError
  * * commandsLoaded
+ * * commandNotFound
  * @type {Object}
  */
 exports.Events = {
@@ -54,6 +62,7 @@ exports.Events = {
     COMMAND_EXECUTE: 'commandExecute',
     COMMAND_ERROR: 'commandError',
     COMMANDS_LOADED: 'commandsLoaded',
+    COMMAND_NOT_FOUND: 'commandNotFound',
 };
 
 /**
