@@ -65,7 +65,7 @@ class GCommandLoader {
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `${this.cmdDir}/${fileName}.${fileType}`;
+            file._path = `${this.cmdDir}/${fileName}${fileType}`;
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
