@@ -199,8 +199,9 @@ class Command {
 
         if (newCommand.name !== this.name) throw new GError('[COMMAND]','Command name cannot change.');
 
-        console.log(newCommand.guildOnly ? Array(newCommand.guildOnly) : undefined, this.guildOnly);
-        if ((newCommand.guildOnly ? Array(newCommand.guildOnly) : undefined) !== this.guildOnly) throw new GError('[COMMAND]','Command guildOnly cannot change.');
+        let nglds = newCommand.guildOnly ? Array.isArray(newCommand.guildOnly) ? newCommand.guildOnly : Array(newCommand.guildOnly) : undefined;
+        console.log(nglds);
+        if (nglds !== this.guildOnly) throw new GError('[COMMAND]','Command guildOnly cannot change.');
 
         newCommand._path = cmdPath;
         this.client.gcommands.set(newCommand.name, newCommand);
