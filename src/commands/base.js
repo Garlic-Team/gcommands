@@ -119,7 +119,7 @@ class Command {
          * GuildOnly
          * @type {Snowflake | Array}
          */
-        this.guildOnly = options.guildOnly ? Array.isArray(options.guildOnly) ? options.guildOnly : Array(options.guildOnly) : undefined;
+        this.guildOnly = options.guildOnly ? Array.isArray(options.guildOnly) : undefined;
 
         /**
          * Nsfw
@@ -198,7 +198,9 @@ class Command {
         if (!(newCommand instanceof Command)) throw new GError('[COMMAND]',`Command ${newCommand.name} doesnt belong in Commands.`);
 
         if (newCommand.name !== this.name) throw new GError('[COMMAND]','Command name cannot change.');
-        if (newCommand.guildOnly !== this.guildOnly) throw new GError('[COMMAND]','Command guildOnly cannot change.');
+
+        console.log(newCommand.guildOnly ? Array(newCommand.guildOnly) : undefined, this.guildOnly);
+        if ((newCommand.guildOnly ? Array(newCommand.guildOnly) : undefined) !== this.guildOnly) throw new GError('[COMMAND]','Command guildOnly cannot change.');
 
         newCommand._path = cmdPath;
         this.client.gcommands.set(newCommand.name, newCommand);
