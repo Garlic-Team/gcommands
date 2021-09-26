@@ -86,11 +86,15 @@ class Argument {
 
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
         if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
-        if (this.type === 'boolean') components = [new MessageActionRow().addComponents([
-            new MessageButton().setLabel('True').setStyle('green').setCustomId('booleanargument_true'),
-            new MessageButton().setLabel('False').setStyle('red').setCustomId('booleanargument_false')
-        ])]
-        
+        if (this.type === 'boolean') {
+ components = [new MessageActionRow().addComponents([
+            new MessageButton().setLabel('True').setStyle('green')
+.setCustomId('booleanargument_true'),
+            new MessageButton().setLabel('False').setStyle('red')
+.setCustomId('booleanargument_false')
+        ])];
+}
+
         message.reply({
             content: prompt,
             components: components
@@ -106,7 +110,7 @@ class Argument {
         }
 
         let resFirst = responses.first();
-        if(this.type === 'boolean') resFirst.content === resFirst.customId.split('_')[1];
+        if (this.type === 'boolean') resFirst.content === resFirst.customId.split('_')[1];
 
         let invalid;
         if (!this.required && resFirst.content === 'skip') invalid = false;

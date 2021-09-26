@@ -33,7 +33,7 @@ class BooleanArgumentType extends ArgumentType {
 			return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'boolean');
 		}
 	}
-    
+
     get(argument, message) {
         return Boolean(message);
     }

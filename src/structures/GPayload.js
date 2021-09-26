@@ -51,7 +51,7 @@ class GPayload {
         if (this.data) return this;
         else this.data = {};
 
-        /*const type = typeof this.options;
+        /* Const type = typeof this.options;
         if (type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options };
 
         this.data.tts = Boolean(this.options.tts);
@@ -84,29 +84,29 @@ class GPayload {
         const tts = Boolean(this.options.tts);
 
         let content;
-        if(typeof this.options.content === 'object') {
+        if (typeof this.options.content === 'object') {
           this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : this.options.embeds || [];
           this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : this.options.attachments || [];
         } else { content = this.options.content || null; }
 
-        if(this.options.components && !Array.isArray(this.options.components)) this.options.components = Array(this.options.components);
+        if (this.options.components && !Array.isArray(this.options.components)) this.options.components = Array(this.options.components);
         const components = this.options.components ? this.options.components.map(c => BaseMessageComponent.create(c).toJSON()) : [];
 
-        if(this.options.stickers && !Array.isArray(this.options.stickers)) this.options.stickers = Array(this.options.stickers);
+        if (this.options.stickers && !Array.isArray(this.options.stickers)) this.options.stickers = Array(this.options.stickers);
         const sticker_ids = this.options.stickers ? this.options.stickers.map(sticker => sticker.id || sticker) : [];
 
-        if(this.options.embeds && !Array.isArray(this.options.embeds)) this.options.embeds = Array(this.options.embeds);
+        if (this.options.embeds && !Array.isArray(this.options.embeds)) this.options.embeds = Array(this.options.embeds);
         const embeds = this.options.embeds ? this.options.embeds.map(embed => new MessageEmbed(embed).toJSON()) : [];
 
-        if(this.options.attachments && !Array.isArray(this.options.attachments)) this.options.attachments = Array(this.options.attachments);
-        if(this.options.files && !Array.isArray(this.options.files)) this.options.files = Array(this.options.files);
+        if (this.options.attachments && !Array.isArray(this.options.attachments)) this.options.attachments = Array(this.options.attachments);
+        if (this.options.files && !Array.isArray(this.options.files)) this.options.files = Array(this.options.files);
 
         let flags = this.options.ephemeral ? MessageFlags.FLAGS.EPHEMERAL : this.options.flags ? new MessageFlags(this.options.flags).bitfield : null;
 
         let allowedMentions =
           typeof this.options.allowedMentions === 'undefined'
             ? this.client.options.allowedMentions
-            : this.options.allowedMentions;  
+            : this.options.allowedMentions;
 
         if (allowedMentions) {
           allowedMentions = Object.assign({}, allowedMentions);
@@ -138,7 +138,7 @@ class GPayload {
           message_reference,
           attachments: this.options.attachments,
           sticker_ids
-        }
+        };
         return this;
     }
 
