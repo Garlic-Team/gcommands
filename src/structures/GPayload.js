@@ -64,13 +64,13 @@ class GPayload {
         } else { content = this.options.content || null; }
 
         if(this.options.components && !Array.isArray(this.options.components)) this.options.components = Array(this.options.components);
-        const components = this.options.components ? this.options.components.map(c => BaseMessageComponent.create(c).toJSON()) : [];
+        const components = this.options.components ? this.options.components.map(c => BaseMessageComponent.create(c).toJSON()) : undefined;
 
         if(this.options.stickers && !Array.isArray(this.options.stickers)) this.options.stickers = Array(this.options.stickers);
-        const sticker_ids = this.options.stickers ? this.options.stickers.map(sticker => sticker.id || sticker) : [];
+        const sticker_ids = this.options.stickers ? this.options.stickers.map(sticker => sticker.id || sticker) : undefined;
 
         if(this.options.embeds && !Array.isArray(this.options.embeds)) this.options.embeds = Array(this.options.embeds);
-        const embeds = this.options.embeds ? this.options.embeds.map(embed => new MessageEmbed(embed).toJSON()) : [];
+        const embeds = this.options.embeds ? this.options.embeds.map(embed => new MessageEmbed(embed).toJSON()) : undefined;
 
         if(this.options.attachments && !Array.isArray(this.options.attachments)) this.options.attachments = Array(this.options.attachments);
         if(this.options.files && !Array.isArray(this.options.files)) this.options.files = Array(this.options.files);
@@ -90,7 +90,7 @@ class GPayload {
 
         let message_reference;
         if (typeof this.options.reply === 'object' || this.options.inlineReply) {
-          const reference = this.options.reply.messageReference;
+          const reference = this.options.reply ? this.options.reply.messageReference : this.options.inlineReply;
           const message_id = reference.id || reference || typeof this.options.inlineReply === 'string' ? this.options.inlineReply : (this.channel.lastMessageID || this.channel.lastMessageId) || undefined;
           const fail_if_not_exists = this.options.inlineReply ? this.options.inlineReply.failIfNotExists || this.client.options.failIfNotExists : this.options.reply.failIfNotExists || this.client.options.failIfNotExists;
           if (message_id) {

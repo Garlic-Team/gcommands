@@ -82,21 +82,26 @@ class Argument {
 
         const guildLanguage = await message.guild.getLanguage();
         const wait = 30000;
-        let components = [];
+        let components = []
 
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
         if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
-        if (this.type === 'boolean') components = [new MessageActionRow().addComponents([
-            new MessageButton().setLabel('True').setStyle('green').setCustomId('booleanargument_true'),
-            new MessageButton().setLabel('False').setStyle('red').setCustomId('booleanargument_false')
-        ])]
-        
-        message.reply({
+        if (this.type === 'boolean') {
+            components = [new MessageActionRow().addComponents([
+                new MessageButton().setLabel('True').setStyle('green').setCustomId('booleanargument_true'),
+                new MessageButton().setLabel('False').setStyle('red').setCustomId('booleanargument_false'),
+                !this.required ? new MessageButton().setLabel('Skip').setStyle('grey').setCustomId('booleanargument_skip') : []
+            ])]
+        }
+
+        let msgReply = await message.reply({
             content: prompt,
             components: components
         });
 
-        const filter = msg => msg.author.id === message.author.id;
+        let filter = msg => msg.author.id === message.author.id && msg.id === msgReply.id;
+        if(this.type === 'boolean') filter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('booleanargument');
+
         const responses = await (this.type === 'boolean' ? message.channel.awaitMessageComponents({ filter, max: 1, time: wait }) : (ifDjsV13 ? message.channel.awaitMessages({ filter, max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait })));
         if (responses.size === 0) {
             return {
@@ -106,7 +111,12 @@ class Argument {
         }
 
         let resFirst = responses.first();
-        if(this.type === 'boolean') resFirst.content === resFirst.customId.split('_')[1];
+        if(this.type === 'boolean') {
+            resFirst.defer();
+            msgReply.edit({content: msgReply.content, components: []});
+
+            resFirst.content = resFirst.customId.split('_')[1];
+        }
 
         let invalid;
         if (!this.required && resFirst.content === 'skip') invalid = false;
