@@ -137,8 +137,8 @@ class Argument {
      * @param {object | string} message
      */
     get(message) {
-        if (typeof message === 'string') return this.argument.get(this, message.toLowerCase());
-        else return this.argument.get(this, message.content.toLowerCase());
+        if (typeof message === 'string') return this.argument.get(this, message);
+        else return this.argument.get(this, message.content);
     }
 }
 
