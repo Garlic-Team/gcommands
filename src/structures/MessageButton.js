@@ -156,8 +156,8 @@ class MessageButton extends BaseMessageComponent {
     resolveStyle(style) {
         if (!style) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
 
-        if(typeof style === 'string') style = style.toLowerCase();
-        if(typeof style === 'number') style = Object.keys(styles)[style];
+        if (typeof style === 'string') style = style.toLowerCase();
+        if (typeof style === 'number') style = Object.keys(styles)[style];
 
         if (!styles[style]) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
 
