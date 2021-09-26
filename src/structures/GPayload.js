@@ -1,4 +1,5 @@
 const { MessageEmbed, MessageAttachment, DataResolver, Util, MessageFlags } = require('discord.js');
+const BaseMessageComponent = require('./BaseMessageComponent');
 const { browser } = require('discord.js').Constants;
 
 /**
@@ -50,33 +51,6 @@ class GPayload {
     resolveData() {
         if (this.data) return this;
         else this.data = {};
-
-        /*const type = typeof this.options;
-        if (type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options };
-
-        this.data.tts = Boolean(this.options.tts);
-        this.options.inlineReply = this.options.inlineReply === undefined ? false : this.options.inlineReply;
-        this.channel_id = this.channel.id;
-
-        if (this.options.content && typeof this.options.content === 'object') {
-          this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : this.options.embeds || [];
-          this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : this.options.attachments || [];
-        } else { this.data.content = this.options.content || null; }
-
-        this.data.allowed_mentions = this.options.allowedMentions ? { replied_user: this.options.allowedMentions.repliedUser, parse: this.options.allowedMentions.parse, roles: this.options.allowedMentions.roles, users: this.options.allowedMentions.users } : { parse: [], replied_user: true };
-        this.data.flags = this.options.ephemeral ? 64 : null;
-
-        if (this.options.components) this.data.components = !Array.isArray(this.options.components) ? Array(this.options.components) : this.options.components;
-        if (this.options.embeds) this.data.embeds = !Array.isArray(this.options.embeds) ? Array(this.options.embeds) : this.options.embeds;
-        if (this.options.attachments) this.options.attachments = !Array.isArray(this.options.attachments) ? Array(this.options.attachments) : this.options.attachments;
-        if (this.options.files) this.options.files = !Array.isArray(this.options.files) ? Array(this.options.files) : this.options.files;
-        if (this.options.stickers) {
-          this.options.stickers = !Array.isArray(this.options.stickers) ? this.options.stickers = new Array(this.options.stickers) : this.options.stickers;
-          this.data.sticker_ids = this.options.stickers.map(sticker => sticker.id || sticker);
-        }
-
-        if (this.options.inlineReply && typeof this.options.inlineReply === 'string') this.data.message_reference = { message_id: this.options.inlineReply };
-        else if (typeof this.options.inlineReply === 'boolean' && this.options.inlineReply && (this.channel.lastMessageID || this.channel.lastMessageId)) this.data.message_reference = { message_id: this.channel.lastMessageID || this.channel.lastMessageId };*/
 
         const type = typeof this.options;
         if (type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options };
@@ -130,7 +104,6 @@ class GPayload {
         this.data = {
           content,
           tts,
-          nonce,
           embeds,
           components,
           allowed_mentions: typeof content === 'undefined' && typeof message_reference === 'undefined' ? undefined : allowedMentions,
