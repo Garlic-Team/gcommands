@@ -8,6 +8,8 @@ const UserArgumentType = require('./types/user');
 const RoleArgumentType = require('./types/role');
 const NumberArgumentType = require('./types/number');
 const MentionableArgumentType = require('./types/mentionable');
+const MessageActionRow = require('../structures/MessageActionRow');
+const MessageButton = require('../structures/MessageButton');
 const ifDjsV13 = require('../util/util').checkDjsVersion(13);
 
 /**
@@ -80,13 +82,22 @@ class Argument {
 
         const guildLanguage = await message.guild.getLanguage();
         const wait = 30000;
+        let components = [];
 
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
         if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
-        message.reply(prompt);
+        if (this.type === 'boolean') components = [new MessageActionRow().addComponents([
+            new MessageButton().setLabel('True').setStyle('green').setCustomId('booleanargument_true'),
+            new MessageButton().setLabel('False').setStyle('red').setCustomId('booleanargument_false')
+        ])]
+        
+        message.reply({
+            content: prompt,
+            components: components
+        });
 
         const filter = msg => msg.author.id === message.author.id;
-        const responses = await (ifDjsV13 ? message.channel.awaitMessages({ filter, max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait }));
+        const responses = await (this.type === 'boolean' ? message.channel.awaitMessageComponents({ filter, max: 1, time: wait }) : (ifDjsV13 ? message.channel.awaitMessages({ filter, max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait })));
         if (responses.size === 0) {
             return {
                 valid: true,
@@ -95,6 +106,7 @@ class Argument {
         }
 
         let resFirst = responses.first();
+        if(this.type === 'boolean') resFirst.content === resFirst.customId.split('_')[1];
 
         let invalid;
         if (!this.required && resFirst.content === 'skip') invalid = false;
