@@ -10,6 +10,7 @@ const NumberArgumentType = require('./types/number');
 const MentionableArgumentType = require('./types/mentionable');
 const MessageActionRow = require('../structures/MessageActionRow');
 const MessageButton = require('../structures/MessageButton');
+const { ArgumentChannelTypes } = require('../util/Constants');
 const ifDjsV13 = require('../util/util').checkDjsVersion(13);
 
 /**
@@ -69,7 +70,7 @@ class Argument {
          * Channel Types
          * @type {ArgumentChannelTypes}
          */
-        this.channel_types = argument.channel_types || null;
+        this.channel_types = argument.channel_types ? !Array.isArray(argument.channel_types) ? [ArgumentChannelTypes[argument.channel_types]] : ArgumentChannelTypes[argument.channel_types] : null;
 
         /**
          * SubCommands
