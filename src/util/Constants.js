@@ -332,7 +332,7 @@ function createEnum(keys) {
 
 /**
  * ArgumentChannelTypes
- * 
+ *
  * * DM
  * * GUILD_TEXT
  * * GUILD_VOICE
@@ -356,4 +356,4 @@ module.exports.ArgumentChannelTypes = {
     GUILD_PUBLIC_THREAD: 11,
     GUILD_PRIVATE_THREAD: 12,
     GUILD_STAGE_VOICE: 13,
-}
+};
