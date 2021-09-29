@@ -253,20 +253,22 @@ class GEventHandling {
                         let argInvalid = await arg.argument.validate(arg, { content: rawArg, guild: message.guild });
                         if (argInvalid) {
                             let argInput = await arg.obtain(message, argInvalid);
-                            if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
+                            if (!argInput.valid) {
+                                if (argInput.reason === 'skip') continue;
+                                if (argInput.reason === 'cancel') return;
+                                argInput = await validArg(arg, argInput.prompt);
+                            }
 
                             if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
-                            if (argInput.content !== 'skip') {
-                                finalArgs.push(argInput.content);
+                            finalArgs.push(argInput.content);
 
-                                args[i] = argInput.content;
+                            args[i] = argInput.content;
 
-                                if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
+                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
 
-                                for (const input of missingInput) {
-                                    if (input.name === arg.name) {
-                                        input.value = argInput.content;
-                                    }
+                            for (const input of missingInput) {
+                                if (input.name === arg.name) {
+                                    input.value = argInput.content;
                                 }
                             }
                         } else {
@@ -285,21 +287,23 @@ class GEventHandling {
                     }
 
                     let argInput = await arg.obtain(message);
-                    if (!argInput.valid) argInput = await validArg(arg, argInput.prompt);
+                    if (!argInput.valid) {
+                        if (argInput.reason === 'skip') continue;
+                        if (argInput.reason === 'cancel') return;
+                        argInput = await validArg(arg, argInput.prompt);
+                    }
 
                     if (argInput.timeLimit) return message.reply(this.client.languageFile.ARGS_TIME_LIMIT[guildLanguage]);
 
-                    if (argInput.content !== 'skip') {
-                        finalArgs.push(argInput.content);
+                    finalArgs.push(argInput.content);
 
-                        args[i] = argInput.content;
+                    args[i] = argInput.content;
 
-                        if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
+                    if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
 
-                        for (const input of missingInput) {
-                            if (input.name === arg.name) {
-                                input.value = argInput.content;
-                            }
+                    for (const input of missingInput) {
+                        if (input.name === arg.name) {
+                            input.value = argInput.content;
                         }
                     }
                 }

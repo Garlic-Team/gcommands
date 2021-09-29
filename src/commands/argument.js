@@ -10,6 +10,7 @@ const NumberArgumentType = require('./types/number');
 const MentionableArgumentType = require('./types/mentionable');
 const MessageActionRow = require('../structures/MessageActionRow');
 const MessageButton = require('../structures/MessageButton');
+const ButtonInteraction = require('../structures/ButtonInteraction');
 const ifDjsV13 = require('../util/util').checkDjsVersion(13);
 
 /**
@@ -82,30 +83,63 @@ class Argument {
 
         const guildLanguage = await message.guild.getLanguage();
         const wait = 30000;
-        let components = [];
+
+        let getComponents = disabled => {
+            const components = [
+                new MessageActionRow()
+                    .addComponents([
+                        new MessageButton()
+                            .setLabel('Cancel')
+                            .setStyle('red')
+                            .setCustomId(`argument_cancel_${message.id}`)
+                            .setDisabled(disabled),
+                        !this.required ? new MessageButton()
+                            .setLabel('Skip')
+                            .setStyle('blurple')
+                            .setCustomId(`argument_skip_${message.id}`)
+                            .setDisabled(disabled)
+                            : [],
+                    ]),
+            ];
+            if (this.type === 'boolean') {
+                components[1] = new MessageActionRow().addComponents([
+                    new MessageButton()
+                        .setLabel('True')
+                        .setStyle('green')
+                        .setCustomId(`argument_true_${message.id}`)
+                        .setDisabled(disabled),
+                    new MessageButton()
+                        .setLabel('False')
+                        .setStyle('red')
+                        .setCustomId(`argument_false_${message.id}`)
+                        .setDisabled(disabled),
+                ]);
+            }
+
+            return components.reverse();
+        };
 
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
         if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
-        if (this.type === 'boolean') {
-            components = [new MessageActionRow().addComponents([
-                new MessageButton().setLabel('True').setStyle('green')
-.setCustomId('booleanargument_true'),
-                new MessageButton().setLabel('False').setStyle('red')
-.setCustomId('booleanargument_false'),
-                !this.required ? new MessageButton().setLabel('Skip').setStyle('grey')
-.setCustomId('booleanargument_skip') : [],
-            ])];
-        }
 
         let msgReply = await message.reply({
             content: prompt,
-            components: components,
+            components: this.client.useButtons ? getComponents(false) : [],
         });
 
-        let filter = msg => msg.author.id === message.author.id && msg.id === msgReply.id;
-        if (this.type === 'boolean') filter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('booleanargument');
+        let messageCollectorfilter = msg => msg.author.id === message.author.id;
+        let componentsCollectorfilter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('argument');
 
-        const responses = await (this.type === 'boolean' ? message.channel.awaitMessageComponents({ filter, max: 1, time: wait }) : (ifDjsV13 ? message.channel.awaitMessages({ filter, max: 1, time: wait }) : message.channel.awaitMessages(filter, { max: 1, time: wait })));
+        // eslint-disable-next-line capitalized-comments
+        // if (this.type === 'boolean') filter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('booleanargument');
+
+        let collectors = [
+            (ifDjsV13 ? message.channel.awaitMessages({ filter: messageCollectorfilter, max: 1, time: wait }) : message.channel.awaitMessages(messageCollectorfilter, { max: 1, time: wait })),
+        ];
+
+        if (this.client.useButtons) collectors[1] = message.channel.awaitMessageComponents({ filter: componentsCollectorfilter, max: 1, time: wait });
+
+        const responses = await Promise.race(collectors);
         if (responses.size === 0) {
             return {
                 valid: true,
@@ -114,21 +148,29 @@ class Argument {
         }
 
         let resFirst = responses.first();
-        if (this.type === 'boolean') {
-            resFirst.defer();
-            msgReply.edit({ content: msgReply.content, components: [] });
 
+        if (resFirst instanceof ButtonInteraction) {
+            await resFirst.defer();
             resFirst.content = resFirst.customId.split('_')[1];
         }
 
+        if (this.client.useButtons) await msgReply.edit({ content: msgReply.content, components: getComponents(true) });
+
         let invalid;
-        if (!this.required && resFirst.content === 'skip') invalid = false;
-        else invalid = await this.argument.validate(this, resFirst);
+        let reason;
+        if (!this.required && resFirst.content === 'skip') {
+            invalid = true;
+            reason = 'skip';
+        } else if (resFirst.content === 'cancel') {
+            invalid = true;
+            reason = 'cancel';
+        } else { invalid = await this.argument.validate(this, resFirst); }
 
         if (invalid) {
             return {
                 valid: false,
                 prompt: invalid,
+                reason: reason,
             };
         }
 
