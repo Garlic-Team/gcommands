@@ -66,6 +66,12 @@ class Argument {
         this.choices = argument.choices;
 
         /**
+         * Channel Types
+         * @type {ArgumentChannelTypes}
+         */
+        this.channel_types = argument.channel_types || null;
+
+        /**
          * SubCommands
          * @type {Array<Object>}
         */
