@@ -70,13 +70,24 @@ class Argument {
          * Channel Types
          * @type {ArgumentChannelTypes}
          */
-        this.channel_types = argument.channel_types ? !Array.isArray(argument.channel_types) ? [ArgumentChannelTypes[argument.channel_types]] : ArgumentChannelTypes[argument.channel_types] : null;
+        this.channel_types = this.channelTypes;
 
         /**
          * SubCommands
          * @type {Array<Object>}
         */
         this.subcommands = argument.subcommands;
+    }
+
+    get channelTypes() {
+        let types = this.argument.channel_types ? !Array.isArray(this.argument.channel_types) ? [this.argument.channel_types] : this.argument.channel_types : [];
+        let final = [];
+
+        for (let type of types) {
+            final.push(ArgumentChannelTypes[type]);
+        }
+
+        return final;
     }
 
     /**
