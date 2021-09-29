@@ -331,7 +331,7 @@ function createEnum(keys) {
 
 /**
  * ArgumentChannelTypes
- * 
+ *
  * * DM
  * * GUILD_TEXT
  * * GUILD_VOICE
