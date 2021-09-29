@@ -150,6 +150,7 @@ class GCommandLoader {
                         options: cmd.args || [],
                         type: 1,
                         default_permission: guildOnly ? (Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined : true,
+                        channel_types: cmd.channel_types || null,
                     },
                     url,
                 };
