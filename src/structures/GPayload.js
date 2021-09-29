@@ -96,7 +96,7 @@ class GPayload {
           if (message_id) {
             message_reference = {
               message_id,
-              fail_if_not_exists
+              fail_if_not_exists,
             };
           }
         }
@@ -110,7 +110,7 @@ class GPayload {
           flags,
           message_reference,
           attachments: this.options.attachments,
-          sticker_ids
+          sticker_ids,
         };
         return this;
     }

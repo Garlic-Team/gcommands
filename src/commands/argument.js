@@ -93,13 +93,13 @@ class Argument {
                 new MessageButton().setLabel('False').setStyle('red')
 .setCustomId('booleanargument_false'),
                 !this.required ? new MessageButton().setLabel('Skip').setStyle('grey')
-.setCustomId('booleanargument_skip') : []
+.setCustomId('booleanargument_skip') : [],
             ])];
         }
 
         let msgReply = await message.reply({
             content: prompt,
-            components: components
+            components: components,
         });
 
         let filter = msg => msg.author.id === message.author.id && msg.id === msgReply.id;
