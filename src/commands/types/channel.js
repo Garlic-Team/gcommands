@@ -29,7 +29,7 @@ class ChannelArgumentType extends ArgumentType {
 		let channel = this.client.channels.cache.get(matches[1]);
 		if (!channel) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'channel');
 
-        console.log(channel.type, argument.channel_types)
+        console.log(channel.type, argument.channel_types);
         if (argument.channel_types && argument.channel_types.some(type => type !== channel.type)) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'channel');
 	}
     get(argument, message) {
