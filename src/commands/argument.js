@@ -124,7 +124,7 @@ class Argument {
 
         let msgReply = await message.reply({
             content: prompt,
-            components: this.client.useButtons ? getComponents(false) : [],
+            components: getComponents(false),
         });
 
         let messageCollectorfilter = msg => msg.author.id === message.author.id;
@@ -135,9 +135,8 @@ class Argument {
 
         let collectors = [
             (ifDjsV13 ? message.channel.awaitMessages({ filter: messageCollectorfilter, max: 1, time: wait }) : message.channel.awaitMessages(messageCollectorfilter, { max: 1, time: wait })),
+            message.channel.awaitMessageComponents({ filter: componentsCollectorfilter, max: 1, time: wait }),
         ];
-
-        if (this.client.useButtons) collectors[1] = message.channel.awaitMessageComponents({ filter: componentsCollectorfilter, max: 1, time: wait });
 
         const responses = await Promise.race(collectors);
         if (responses.size === 0) {
@@ -154,7 +153,7 @@ class Argument {
             resFirst.content = resFirst.customId.split('_')[1];
         }
 
-        if (this.client.useButtons) await msgReply.edit({ content: msgReply.content, components: getComponents(true) });
+        await msgReply.edit({ content: msgReply.content, components: getComponents(true) });
 
         let invalid;
         let reason;

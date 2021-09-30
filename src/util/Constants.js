@@ -214,7 +214,6 @@ function createEnum(keys) {
  * @property {GCommandsOptionsCommandsSlash} slash
  * @property {GCommandsOptionsCommandsContext} context
  * @property {string} prefix
- * @property {boolean} useButtons
  * @property {boolean} loadFromCache
  * @typedef {(object)} GCommandsOptionsCommands
  */

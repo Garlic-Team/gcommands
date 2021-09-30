@@ -134,13 +134,6 @@ class GCommandsClient extends Client {
         this.loadFromCache = options.commands.loadFromCache !== undefined ? Boolean(options.commands.loadFromCache) : true;
 
         /**
-         * UseButtons
-         * @type {boolean}
-         * @default true
-         */
-         this.useButtons = options.commands.useButtons !== undefined ? Boolean(options.commands.useButtons) : true;
-
-        /**
          * DefaultCooldown
          * @type {number}
          * @default 0
