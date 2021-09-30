@@ -328,3 +328,31 @@ function createEnum(keys) {
  * @property {string} value
  * @typedef {(Object)} CommandArgsChoice
  */
+
+/**
+ * ArgumentChannelTypes
+ *
+ * * DM
+ * * GUILD_TEXT
+ * * GUILD_VOICE
+ * * GUILD_CATEGORY
+ * * GUILD_NEWS
+ * * GUILD_STORE
+ * * GUILD_NEWS_THREAD
+ * * GUILD_PUBLIC_THREAD
+ * * GUILD_PRIVATE_THREAD
+ * * GUILD_STAGE_VOICE
+ * @typedef {(String)} ArgumentChannelTypes
+ */
+module.exports.ArgumentChannelTypes = {
+    DM: 1,
+    GUILD_TEXT: 0,
+    GUILD_VOICE: 2,
+    GUILD_CATEGORY: 4,
+    GUILD_NEWS: 5,
+    GUILD_STORE: 6,
+    GUILD_NEWS_THREAD: 10,
+    GUILD_PUBLIC_THREAD: 11,
+    GUILD_PRIVATE_THREAD: 12,
+    GUILD_STAGE_VOICE: 13,
+};

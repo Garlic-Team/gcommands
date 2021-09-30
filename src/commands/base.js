@@ -1,5 +1,6 @@
 const { resolveString, isClass } = require('../util/util');
 const GError = require('../structures/GError');
+const { ArgumentChannelTypes } = require('gcommands/src/util/Constants');
 
 /**
  * The Command class
@@ -52,7 +53,19 @@ class Command {
          * Args
          * @type {CommandArgsOption[]}
          */
-        this.args = options.args;
+        this.args = options.args.map(arg => {
+            let types = arg.channel_types ? !Array.isArray(arg.channel_types) ? [arg.channel_types] : arg.channel_types : [];
+            let final = [];
+    
+            for (let type of types) {
+                final.push(ArgumentChannelTypes[type]);
+            }
+
+            return {
+                ...arg,
+                channel_types: final
+            }
+        });
 
         /**
          * AlwaysObtain
