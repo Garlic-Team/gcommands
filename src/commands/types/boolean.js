@@ -35,7 +35,8 @@ class BooleanArgumentType extends ArgumentType {
 	}
 
     get(argument, message) {
-        return Boolean(message);
+        if (message === 'false') return false;
+        else if (message === 'true') return true;
     }
 }
 
