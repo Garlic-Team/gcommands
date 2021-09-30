@@ -138,7 +138,7 @@ class GCommandsClient extends Client {
          * @type {boolean}
          * @default true
          */
-         this.useButtons = options.commands.useButtons !== undefined ? Boolean(options.commands.useButtons) : true;
+         this.useButtons = options.commands.useButtons !== undefined ? Boolean(options.commands.useButtons) : false;
 
         /**
          * DefaultCooldown
