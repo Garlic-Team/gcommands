@@ -1,4 +1,3 @@
-const { ArgumentChannelTypes } = require('../../util/Constants');
 const ArgumentType = require('./base');
 
 /**

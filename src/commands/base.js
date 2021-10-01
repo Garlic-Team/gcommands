@@ -56,15 +56,15 @@ class Command {
         this.args = options.args.map(arg => {
             let types = arg.channel_types ? !Array.isArray(arg.channel_types) ? [arg.channel_types] : arg.channel_types : [];
             let final = [];
-    
+
             for (let type of types) {
                 final.push(ArgumentChannelTypes[type]);
             }
 
             return {
                 ...arg,
-                channel_types: final
-            }
+                channel_types: final,
+            };
         });
 
         /**
