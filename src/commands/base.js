@@ -53,7 +53,7 @@ class Command {
          * Args
          * @type {CommandArgsOption[]}
          */
-        this.args = options.args.map(arg => {
+        this.args = options.args ? options.args.map(arg => {
             let types = arg.channel_types ? !Array.isArray(arg.channel_types) ? [arg.channel_types] : arg.channel_types : [];
             let final = [];
 
@@ -65,7 +65,7 @@ class Command {
                 ...arg,
                 channel_types: final,
             };
-        });
+        }) : null;
 
         /**
          * AlwaysObtain
