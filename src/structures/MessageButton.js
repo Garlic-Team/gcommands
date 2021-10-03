@@ -1,4 +1,4 @@
-const { resolveString, parseEmoji } = require('../util/util');
+const { resolveString, parseEmoji, resolvePartialEmoji } = require('../util/util');
 const { MessageComponentTypes } = require('../util/Constants');
 const BaseMessageComponent = require('./BaseMessageComponent');
 const GError = require('./GError');
@@ -55,6 +55,12 @@ class MessageButton extends BaseMessageComponent {
          * @type {boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
+
+        /**
+         * Emoji
+         * @type {boolean}
+        */
+         this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : false;
 
         if (this.style === 5) {
             /**

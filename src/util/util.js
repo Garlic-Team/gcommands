@@ -40,6 +40,19 @@ class Util {
     }
 
     /**
+     * Resolve emoji without client
+     * @param {EmojiIdentifierResolvable} emoji 
+     * @returns 
+     */
+     static resolvePartialEmoji(emoji) {
+        if (!emoji) return null;
+        if (typeof emoji === 'string') return /^\d{17,19}$/.test(emoji) ? { id: emoji } : Util.parseEmoji(emoji);
+        const { id, name, animated } = emoji;
+        if (!id && !name) return null;
+        return { id, name, animated };
+    }
+
+    /**
      * Internal method to interactionRefactor
      * @param {Client} djsclient
      * @param {GInteraction} interaction
