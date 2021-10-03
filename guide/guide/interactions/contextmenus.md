@@ -29,7 +29,7 @@ const { Command } = require("gcommands");
 module.exports = class extends Command {
   constructor(client) {
     super(client, {
-      name: "parse",
+      contextMenuName: "parse",
       slash: false,
     });
   }
