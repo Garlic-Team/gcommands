@@ -35,10 +35,6 @@ class BooleanArgumentType extends ArgumentType {
 		const b = message.content.toLowerCase();
 		const guildLanguage = await message.guild.getLanguage();
 
-        console.log(this.trueAnswerSet.has(b));
-        console.log(this.falseAnswerSet.has(b));
-
-
 		if (this.trueAnswerSet.has(b) === false && this.falseAnswerSet.has(b) === false) {
 			return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'boolean');
 		}
