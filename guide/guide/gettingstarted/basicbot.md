@@ -45,7 +45,6 @@ const client = new GCommandsClient({
   eventDir: join(__dirname, 'events'),
   caseSensitiveCommands: false, // true or false | whether to match the commands' caps
   caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
-  unkownCommandMessage: false, // true or false | send unkownCommand Message
   language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
   commands: {
     slash: "both", // https://gcommands.js.org/docs/#/docs/main/main/typedef/GCommandsOptionsCommandsSlash
@@ -84,7 +83,6 @@ Below are all the available options for [`GCommandsClient`](https://gcommands.js
 | eventDir              | ❌       | The directory to look for events in                                                                                                                                                                                                                                                                    |
 | caseSensitiveCommands | ❌       | If set to true, command names will be case sensitive                                                                                                                                                                                                                                                   |
 | caseSensitivePrefixes | ❌       | If set to true, prefixes will be case sensitive                                                                                                                                                                                                                                                        |
-| unkownCommandMessage  | ❌       | If set to true, the bot will respond with an error message if a command the user tried to use doesn't exist                                                                                                                                                                                            |
 | language              | ✅       | The default language used to sends messages in                                                                                                                                                                                                                                                         |
 | commands.slash        | ✅       | If set to slash, the bot will only register slash commands. If set to message, the bot will only register message commands. If set to both, the bot will register both and if set to false, the bot will not register any.                                                                                                                              |
 | commands.context      | ✅       | If set to user, the bot will register user context commands. If set to false, the bot will only register message commands. If set to message, the bot will register message context commands. If set to both, the bot will register both |
