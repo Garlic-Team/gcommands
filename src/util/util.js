@@ -42,7 +42,7 @@ class Util {
     /**
      * Resolve emoji without client
      * @param {EmojiIdentifierResolvable} emoji
-     * @returns
+     * @returns {Object|null}
      */
      static resolvePartialEmoji(emoji) {
         if (!emoji) return null;
