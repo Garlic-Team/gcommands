@@ -1,6 +1,6 @@
 const { resolveString, isClass } = require('../util/util');
 const GError = require('../structures/GError');
-const { ArgumentChannelTypes } = require('gcommands/src/util/Constants');
+const { ArgumentChannelTypes } = require('../util/Constants');
 
 /**
  * The Command class
