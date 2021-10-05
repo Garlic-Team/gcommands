@@ -61,7 +61,7 @@ class Command {
                 final.push(ArgumentChannelTypes[type]);
             }
 
-            if(final.length !== 0) arg.channel_types = final;
+            if (final.length !== 0) arg.channel_types = final;
 
             return arg;
         }) : null;

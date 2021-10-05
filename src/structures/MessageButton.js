@@ -151,7 +151,7 @@ class MessageButton extends BaseMessageComponent {
         return {
             type: MessageComponentTypes.BUTTON,
             style: this.url ? 5 : this.style,
-            label: this.label || "",
+            label: this.label || '',
             disabled: this.disabled,
             url: this.url,
             custom_id: this.url ? null : this.customId,
