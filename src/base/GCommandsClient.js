@@ -138,14 +138,14 @@ class GCommandsClient extends Client {
          * @type {boolean}
          * @default false
          */
-        this.deletePrompt = options.arguments.deletePrompt !== undefined ? Boolean(options.arguments.deletePrompt) : false;
+        this.deletePrompt = options.arguments ? options.arguments.deletePrompt !== undefined ? Boolean(options.arguments.deletePrompt) : false : false;
 
         /**
          * DeleteInput
          * @type {boolean}
          * @default false
          */
-        this.deleteInput = options.arguments.deleteInput !== undefined ? Boolean(options.arguments.deleteInput) : false;
+        this.deleteInput = options.arguments ? options.arguments.deleteInput !== undefined ? Boolean(options.arguments.deleteInput) : false : false;
 
         /**
          * DefaultCooldown
