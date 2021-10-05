@@ -167,6 +167,7 @@ function createEnum(keys) {
  * @property {string} eventDir
  * @property {GCommandsOptionsLanguage} language
  * @property {GCommandsOptionsCommands} commands
+ * @property {GCommandsOptionsArguments} arguments
  * @property {boolean} caseSensitiveCommands
  * @property {boolean} caseSensitivePrefixes
  * @property {string} defaultCooldown
@@ -216,6 +217,13 @@ function createEnum(keys) {
  * @property {string} prefix
  * @property {boolean} loadFromCache
  * @typedef {(object)} GCommandsOptionsCommands
+ */
+
+/**
+ * The GCommandsOptionsArguments
+ * @property {boolean} deletePrompt
+ * @property {boolean} deleteInput
+ * @typedef {(object)} GCommandsOptionsArguments
  */
 
 /**
