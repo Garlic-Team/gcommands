@@ -1,11 +1,11 @@
 {
   "name": "gcommands",
-  "version": "7.1.0-dev",
+  "version": "7.1.0",
   "description": "Powerful and flexible command handler that can do everything!",
   "main": "src/index.js",
   "types": "./typings/index.d.ts",
   "dependencies": {
-    "@gcommands/events": "^2.0.2",
+    "@gcommands/events": "^2.0.5",
     "axios": "^0.22.0",
     "ms": "^2.1.3"
   },
