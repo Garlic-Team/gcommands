@@ -171,7 +171,10 @@ class Argument {
             resFirst.content = resFirst.customId.split('_')[1];
         }
 
-        await msgReply.edit({ content: msgReply.content, components: getComponents(true) });
+        if (this.client.deletePrompt) await msgReply.delete();
+        else await msgReply.edit({ content: msgReply.content, components: getComponents(true) });
+
+        if (this.client.deleteInput && resFirst instanceof ButtonInteraction === false && message.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES')) await resFirst.delete();
 
         let invalid;
         let reason;
