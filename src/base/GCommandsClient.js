@@ -23,15 +23,8 @@ class GCommandsClient extends Client {
 
         if (!options.cmdDir) throw new GError('[DEFAULT OPTIONS]','You must specify the cmdDir');
         if (!options.language) throw new GError('[DEFAULT OPTIONS]','You must specify the language');
+        if (!options.commands) throw new GError('[DEFAULT OPTIONS]','You must specify the command options');
         if (String(options.commands.slash) !== 'false' && !options.commands.prefix) throw new GError('[DEFAULT OPTIONS]','You must specify the commands#prefix');
-
-        /**
-         * GCommandsClient
-         * @type {GCommandsClient}
-        */
-        this.GCommandsClient = this;
-        this.GCommandsClient.client = this;
-        this.client = this;
 
         /**
          * CaseSensitiveCommands
@@ -159,9 +152,9 @@ class GCommandsClient extends Client {
          * @type {GCommandsDispatcher}
          * @readonly
          */
-        this.dispatcher = new GCommandsDispatcher(this.GCommandsClient, true);
+        this.dispatcher = new GCommandsDispatcher(this, true);
 
-        new GDatabaseLoader(this.GCommandsClient);
+        new GDatabaseLoader(this);
 
         setImmediate(() => {
             super.on('ready', () => {
@@ -181,9 +174,9 @@ class GCommandsClient extends Client {
         require('../structures/ThreadChannel');
 
         setTimeout(() => {
-            new GEventHandling(this.GCommandsClient);
-            new GEventLoader(this.GCommandsClient);
-            new GCommandLoader(this.GCommandsClient);
+            new GEventHandling(this);
+            new GEventLoader(this);
+            new GCommandLoader(this);
         }, 1000);
     };
 }

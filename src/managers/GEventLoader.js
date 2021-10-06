@@ -8,21 +8,15 @@ class GEventLoader extends null {}
 
 /**
  * GCommandsClient
- * @type {GCommands}
+ * @type {GCommandsClient}
 */
-GEventLoader.GCommandsClient = GEvents.GEvents.GCommandsClient;
+GEventLoader.client = GEvents.GEvents.client;
 
 /**
  * EventDir
  * @type {string}
  */
 GEventLoader.eventDir = GEvents.GEvents.eventDir;
-
-/**
- * Client
- * @type {Client}
- */
-GEventLoader.client = GEvents.GEvents.client;
 
 /**
  * Gevents
