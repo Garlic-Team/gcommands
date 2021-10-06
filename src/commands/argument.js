@@ -81,10 +81,10 @@ class Argument {
     }
 
     get channelTypes() {
-        let types = this.argument.channel_types ? !Array.isArray(this.argument.channel_types) ? [this.argument.channel_types] : this.argument.channel_types : [];
-        let final = [];
+        const types = this.argument.channel_types ? !Array.isArray(this.argument.channel_types) ? [this.argument.channel_types] : this.argument.channel_types : [];
+        const final = [];
 
-        for (let type of types) {
+        for (const type of types) {
             final.push(ArgumentChannelTypes[type]);
         }
 
@@ -101,7 +101,7 @@ class Argument {
 
         const wait = 30000;
 
-        let getComponents = disabled => {
+        const getComponents = disabled => {
             const components = [
                 new MessageActionRow()
                     .addComponents([
@@ -139,18 +139,18 @@ class Argument {
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[language]}`;
         if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
 
-        let msgReply = await message.reply({
+        const msgReply = await message.reply({
             content: prompt,
             components: getComponents(false),
         });
 
-        let messageCollectorfilter = msg => msg.author.id === message.author.id;
-        let componentsCollectorfilter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('argument');
+        const messageCollectorfilter = msg => msg.author.id === message.author.id;
+        const componentsCollectorfilter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('argument');
 
         // eslint-disable-next-line capitalized-comments
         // if (this.type === 'boolean') filter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('booleanargument');
 
-        let collectors = [
+        const collectors = [
             (ifDjsV13 ? message.channel.awaitMessages({ filter: messageCollectorfilter, max: 1, time: wait }) : message.channel.awaitMessages(messageCollectorfilter, { max: 1, time: wait })),
             message.channel.awaitMessageComponents({ filter: componentsCollectorfilter, max: 1, time: wait }),
         ];
@@ -163,7 +163,7 @@ class Argument {
             };
         }
 
-        let resFirst = responses.first();
+        const resFirst = responses.first();
 
         if (resFirst instanceof ButtonInteraction) {
             await resFirst.defer();

@@ -43,7 +43,7 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandFiles() {
-        for await (let fsDirent of fs.readdirSync(this.cmdDir, { withFileTypes: true })) {
+        for await (const fsDirent of fs.readdirSync(this.cmdDir, { withFileTypes: true })) {
             let file = fsDirent.name;
             const fileType = path.extname(file);
             const fileName = path.basename(file, fileType);
@@ -79,7 +79,7 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandCategoryFiles(categoryFolder) {
-        for await (let fsDirent of fs.readdirSync(`${this.cmdDir}/${categoryFolder}`, { withFileTypes: true })) {
+        for await (const fsDirent of fs.readdirSync(`${this.cmdDir}/${categoryFolder}`, { withFileTypes: true })) {
             let file = fsDirent.name;
             const fileType = path.extname(file);
             const fileName = path.basename(file, fileType);
@@ -110,7 +110,7 @@ class GCommandLoader {
      * @private
      */
     async __loadSlashCommands() {
-        let keys = Array.from(this.client.gcommands.keys());
+        const keys = Array.from(this.client.gcommands.keys());
         this.__deleteNonExistCommands(keys);
 
         for (const commandName of keys) {
@@ -132,7 +132,7 @@ class GCommandLoader {
                     }
                 }
 
-                let config = {
+                const config = {
                     method: 'POST',
                     headers: {
                         Authorization: `Bot ${this.client.token}`,
@@ -183,7 +183,7 @@ class GCommandLoader {
             };
 
             if (cmd.guildOnly) {
-                for (let guildOnly of cmd.guildOnly) {
+                for (const guildOnly of cmd.guildOnly) {
                     if (!guildOnly) {
                         await loadSlashCommand();
                         continue;
@@ -224,8 +224,8 @@ class GCommandLoader {
                     }
                 }
 
-                let type = cmd.context ? ApplicationCommandTypesRaw[cmd.context] : ApplicationCommandTypesRaw[this.client.context];
-                let config = {
+                const type = cmd.context ? ApplicationCommandTypesRaw[cmd.context] : ApplicationCommandTypesRaw[this.client.context];
+                const config = {
                     method: 'POST',
                     headers: {
                         Authorization: `Bot ${this.client.token}`,
@@ -278,7 +278,7 @@ class GCommandLoader {
             };
 
             if (cmd.guildOnly) {
-                for (let guildOnly of cmd.guildOnly) {
+                for (const guildOnly of cmd.guildOnly) {
                     if (!guildOnly) {
                         await loadContextMenu();
                         continue;
@@ -312,7 +312,7 @@ class GCommandLoader {
 
                     let url;
                     const loadApiCmd = async () => {
-                        let finalData = [];
+                        const finalData = [];
 
                         if (cmd.userRequiredRoles) {
                             if (!Array.isArray(cmd.userRequiredRoles)) cmd.userRequiredRoles = [cmd.userRequiredRoles];
@@ -338,7 +338,7 @@ class GCommandLoader {
                             }
                         }
 
-                        let config = {
+                        const config = {
                             method: 'PUT',
                             headers: {
                                 Authorization: `Bot ${this.client.token}`,
@@ -384,7 +384,7 @@ class GCommandLoader {
                     };
 
                     if (cmd.guildOnly) {
-                        for (let gOnly of cmd.guildOnly) {
+                        for (const gOnly of cmd.guildOnly) {
                             if (gOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${gOnly}/commands/${apiCommand.id}/permissions`;
                             await loadApiCmd();
                         }
@@ -393,19 +393,19 @@ class GCommandLoader {
             };
 
             if (cmd.guildOnly) {
-                for (let guildOnly of cmd.guildOnly) {
+                for (const guildOnly of cmd.guildOnly) {
                     if (!guildOnly) {
-                        let apiCommandsNoGuild = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
+                        const apiCommandsNoGuild = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
 
                         await loadCommandPermission(apiCommandsNoGuild);
                         continue;
                     }
 
-                    let apiCommands = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name);
+                    const apiCommands = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name);
                     await loadCommandPermission(apiCommands, guildOnly);
                 }
             } else {
-                let apiCommands = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
+                const apiCommands = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
                 await loadCommandPermission(apiCommands);
             }
         }
@@ -439,12 +439,12 @@ class GCommandLoader {
      * @private
      */
     async __deleteNonExistCommands(commandFiles) {
-        let allSlashCommands = await __getAllCommands(this.client);
+        const allSlashCommands = await __getAllCommands(this.client);
         if (!allSlashCommands || allSlashCommands.length < 0) return;
 
         if (String(this.client.slash) === 'false') allSlashCommands.forEach(cmd => __deleteCmd(this.client, cmd.id));
 
-        for (let slashCmd of allSlashCommands) {
+        for (const slashCmd of allSlashCommands) {
             if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
             if (this.client.gcommands.get(slashCmd.name) && String(this.client.gcommands.get(slashCmd.name).slash) === 'false') __deleteCmd(this.client, slashCmd.id);
         }

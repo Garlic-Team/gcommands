@@ -75,7 +75,7 @@ class GPayload {
         if (this.options.attachments && !Array.isArray(this.options.attachments)) this.options.attachments = Array(this.options.attachments);
         if (this.options.files && !Array.isArray(this.options.files)) this.options.files = Array(this.options.files);
 
-        let flags = this.options.ephemeral ? MessageFlags.FLAGS.EPHEMERAL : this.options.flags ? new MessageFlags(this.options.flags).bitfield : null;
+        const flags = this.options.ephemeral ? MessageFlags.FLAGS.EPHEMERAL : this.options.flags ? new MessageFlags(this.options.flags).bitfield : null;
 
         let allowedMentions =
           typeof this.options.allowedMentions === 'undefined'

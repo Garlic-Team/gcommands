@@ -40,13 +40,13 @@ class GEventHandling {
             messageEventUse(newMessage);
         });
 
-        let messageEventUse = async message => {
-            if (!message || !message.author || message.author.bot) return;
+        const messageEventUse = async message => {
+            if (!message || !message.author || message.author.bot || (!this.client.allowDm && message.channel.type === 'dm')) return;
 
             const mention = message.content.match(new RegExp(`^<@!?(${this.client.user.id})> `));
             const prefix = mention ? mention[0] : (message.guild ? (await message.guild.getCommandPrefix())[0] : this.client.prefix);
 
-            let messageContainsPrefix = this.client.caseSensitivePrefixes ? message.content.startsWith(prefix) : message.content.toLowerCase().startsWith(prefix.toLowerCase());
+            const messageContainsPrefix = this.client.caseSensitivePrefixes ? message.content.startsWith(prefix) : message.content.toLowerCase().startsWith(prefix.toLowerCase());
             if (!messageContainsPrefix) return;
 
             const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -64,12 +64,12 @@ class GEventHandling {
                         String(cmd.name),
                 );
 
-                const isSlashEnabled = ['false', 'slash'].includes(String(commandos.slash));
-                const isClientSlashEnabled = !commandos.slash && ['false', 'slash'].includes(String(this.client.slash));
+                const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
+                const isClientMessageEnabled = !commandos.slash && ['false', 'slash'].includes(String(this.client.slash));
 
                 if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
-                if (isSlashEnabled) return;
-                if (isClientSlashEnabled) return;
+                if (isMessageEnabled) return;
+                if (isClientMessageEnabled) return;
 
                 const language = message.guild ? await this.client.dispatcher.getGuildLanguage(message.guild.id) : this.client.language;
 
@@ -89,7 +89,7 @@ class GEventHandling {
                     respond: async (options = undefined) => {
                         if (this.client.autoTyping) ifDjsV13 ? message.sendTyping() : message.startTyping();
 
-                        let msg = await message.reply(options);
+                        const msg = await message.reply(options);
                         botMessageInhibit = msg;
 
                         if (this.client.autoTyping) message.channel.stopTyping(true);
@@ -97,13 +97,13 @@ class GEventHandling {
                     },
                     edit: async (options = undefined) => {
                         if (!botMessageInhibit) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
-                        let editedMsg = await botMessageInhibit.edit(options);
+                        const editedMsg = await botMessageInhibit.edit(options);
                         return editedMsg;
                     },
                     followUp: async (options = undefined) => {
                         if (this.client.autoTyping) ifDjsV13 ? message.sendTyping() : message.startTyping();
 
-                        let msg = await message.reply(options);
+                        const msg = await message.reply(options);
 
                         if (this.client.autoTyping && !ifDjsV13) message.stopTyping(true);
                         return msg;
@@ -183,11 +183,11 @@ class GEventHandling {
                 const finalArgs = [];
                 const missingInput = [];
 
-                let getArgsObject = options => {
+                const getArgsObject = options => {
                     if (!Array.isArray(options)) return {};
-                    let oargs = {};
+                    const oargs = {};
 
-                    for (let o of options) {
+                    for (const o of options) {
                         if ([1, 2].includes(o.type)) {
                             oargs[o.name] = getArgsObject(o.options);
                         } else {
@@ -198,24 +198,24 @@ class GEventHandling {
                     return oargs;
                 };
 
-                let validArg = async (arg, prompt) => {
-                    let final = await arg.obtain(message, language, prompt);
+                const validArg = async (arg, prompt) => {
+                    const final = await arg.obtain(message, language, prompt);
                     if (!final.valid) return validArg(arg, prompt);
 
                     return final;
                 };
 
-                let getSubCommand = async (type, cmdSubcommands) => {
+                const getSubCommand = async (type, cmdSubcommands) => {
                     const options = {
                         type: type,
                         subcommands: cmdSubcommands,
                         required: true,
                     };
-                    let arg = new Argument(this.client, options);
+                    const arg = new Argument(this.client, options);
                     let subcommandInput;
 
                     if (args[0]) {
-                        let subcommandInvalid = await arg.argument.validate(arg, { content: args[0].toLowerCase(), guild: message.guild }, language);
+                        const subcommandInvalid = await arg.argument.validate(arg, { content: args[0].toLowerCase(), guild: message.guild }, language);
                         if (subcommandInvalid) {
                             subcommandInput = await arg.obtain(message, language, subcommandInvalid);
                             if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
@@ -255,22 +255,23 @@ class GEventHandling {
                 const ifNotSubOrGroup = cmdArgs.filter(a => [ArgumentType.SUB_COMMAND, ArgumentType.SUB_COMMAND_GROUP].includes(a.type)).length === 0;
 
                 const cmdsubcommandgroups = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP);
-                if (Array.isArray(cmdsubcommandgroups) && cmdsubcommandgroups[0]) {
+                if (isNotDm && Array.isArray(cmdsubcommandgroups) && cmdsubcommandgroups[0]) {
                     await getSubCommand(ArgumentType.SUB_COMMAND_GROUP, cmdsubcommandgroups);
                 }
 
                 const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
-                if (Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
+                if (isNotDm && Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
                     await getSubCommand(ArgumentType.SUB_COMMAND, cmdsubcommands);
                 }
 
-                for (let i in cmdArgs) {
-                    let arg = new Argument(this.client, cmdArgs[i]);
+                for (const i in cmdArgs) {
+                    if (!isNotDm) continue;
+                    const arg = new Argument(this.client, cmdArgs[i]);
                     if (arg.type === 'invalid') continue;
                     const rawArg = cmdArgs[1] ? args[i] : args.join(' ');
 
                     if (rawArg && !commandos.alwaysObtain) {
-                        let argInvalid = await arg.argument.validate(arg, { content: args[0].toLowerCase(), guild: message.guild }, language);
+                        const argInvalid = await arg.argument.validate(arg, { content: args[0].toLowerCase(), guild: message.guild }, language);
                         if (argInvalid) {
                             let argInput = await arg.obtain(message, language, argInvalid);
                             if (!argInput.valid) {
@@ -333,7 +334,7 @@ class GEventHandling {
                     respond: async (options = undefined) => {
                         if (this.client.autoTyping) ifDjsV13 ? message.channel.sendTyping() : message.channel.startTyping();
 
-                        let msg = await message.reply(options);
+                        const msg = await message.reply(options);
                         botMessage = msg;
 
                         if (this.client.autoTyping && !ifDjsV13) message.channel.stopTyping(true);
@@ -341,18 +342,18 @@ class GEventHandling {
                     },
                     edit: async (options = undefined) => {
                         if (!botMessage) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
-                        let editedMsg = await botMessage.edit(options);
+                        const editedMsg = await botMessage.edit(options);
                         return editedMsg;
                     },
                     followUp: async (options = undefined) => {
                         if (this.client.autoTyping) ifDjsV13 ? message.channel.sendTyping() : message.channel.startTyping();
 
-                        let msg = await message.reply(options);
+                        const msg = await message.reply(options);
 
                         if (this.client.autoTyping && !ifDjsV13) message.channel.stopTyping(true);
                         return msg;
                     },
-                    args: finalArgs,
+                    args: !isNotDm ? finalArgs : args,
                     objectArgs: getArgsObject(objectArgs),
                 };
 
@@ -393,7 +394,7 @@ class GEventHandling {
                 if (interaction.isContextMenu() && String(commandos.context) === 'false') return;
                 if (interaction.isContextMenu() && !commandos.context && String(this.client.context) === 'false') return;
 
-                let inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
+                const inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
                     interaction,
                     member: interaction.member,
                     author: interaction.author,
@@ -407,27 +408,27 @@ class GEventHandling {
                 });
                 if (inhibitReturn === false) return;
 
-                let guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
-                let cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos);
+                const guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
+                const cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos);
                 if (cooldown.cooldown) return interaction.reply.send(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
 
                 if (commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage]);
 
                 if (commandos.userOnly) {
                     if (typeof commandos.userOnly === 'object') {
-                        let users = commandos.userOnly.some(v => interaction.author.id === v);
+                        const users = commandos.userOnly.some(v => interaction.author.id === v);
                         if (!users) return;
                     } else if (interaction.author.id !== commandos.userOnly) { return; }
                 }
 
                 if (commandos.channelOnly) {
                     if (typeof commandos.channelOnly === 'object') {
-                        let channels = commandos.channelOnly.some(v => interaction.channel.id === v);
+                        const channels = commandos.channelOnly.some(v => interaction.channel.id === v);
                         if (!channels) return;
                     } else if (interaction.channel.id !== commandos.channelOnly) { return; }
                 }
 
-                let channelType = channelTypeRefactor(interaction.channel);
+                const channelType = channelTypeRefactor(interaction.channel);
 
                 if (commandos.nsfw && !interaction.channel.nsfw) { return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true }); }
                 if (commandos.channelTextOnly && channelType !== 'text') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true }); }
@@ -460,7 +461,7 @@ class GEventHandling {
                     if (commandos.userRequiredRole) commandos.userRequiredRoles = commandos.userRequiredRole;
                     if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
 
-                    let roles = commandos.userRequiredRoles.some(v => interaction.member._roles.includes(v));
+                    const roles = commandos.userRequiredRoles.some(v => interaction.member._roles.includes(v));
                     if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
                 }
 

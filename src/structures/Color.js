@@ -85,7 +85,7 @@ class Color {
 	 * @returns {string}
      */
 	getRGB() {
-		let get = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(this.text);
+		const get = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(this.text);
 
 		if (this.json) {
 			return {

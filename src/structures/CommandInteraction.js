@@ -27,9 +27,9 @@ class CommandInteraction extends BaseCommandInteraction {
      * @private
     */
     getArgs(options) {
-        let args = [];
+        const args = [];
 
-        let check = option => {
+        const check = option => {
           if (!option) return;
           if (option.value) args.push(option.value);
           else args.push(option.name);
@@ -59,9 +59,9 @@ class CommandInteraction extends BaseCommandInteraction {
     */
     getArgsObject(options) {
         if (!Array.isArray(options)) return {};
-        let args = {};
+        const args = {};
 
-        for (let o of options) {
+        for (const o of options) {
           if ([1, 2].includes(o.type)) {
             args[o.name] = this.getArgsObject(o.options);
           } else {

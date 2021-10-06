@@ -25,7 +25,7 @@ module.exports = client => {
         }
 
         if (!oldState.mute && newState.mute) {
-            let muteType = newState.selfMute ? 'self-muted' : 'server-muted';
+            const muteType = newState.selfMute ? 'self-muted' : 'server-muted';
             client.emit('voiceChannelMute',
                 newMember,
                 muteType,
@@ -33,7 +33,7 @@ module.exports = client => {
         }
 
         if (oldState.mute && !newState.mute) {
-            let muteType = oldState.selfMute ? 'self-muted' : 'server-muted';
+            const muteType = oldState.selfMute ? 'self-muted' : 'server-muted';
             client.emit('voiceChannelUnmute',
                 newMember,
                 muteType,
@@ -41,7 +41,7 @@ module.exports = client => {
         }
 
         if (!oldState.deaf && newState.deaf) {
-            let deafType = newState.selfDeaf ? 'self-deafened' : 'server-deafened';
+            const deafType = newState.selfDeaf ? 'self-deafened' : 'server-deafened';
             client.emit('voiceChannelDeafen',
                 newMember,
                 deafType,
@@ -49,7 +49,7 @@ module.exports = client => {
         }
 
         if (oldState.deaf && !newState.deaf) {
-            let deafType = oldState.selfDeaf ? 'self-deafened' : 'server-deafened';
+            const deafType = oldState.selfDeaf ? 'self-deafened' : 'server-deafened';
             client.emit('voiceChannelUndeafen',
                 newMember,
                 deafType,

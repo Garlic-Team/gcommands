@@ -193,7 +193,7 @@ class GMessage {
 
             edit: {
                 value: async function(result) {
-                    let GPayloadResult = await GPayload.create(this.channel, result)
+                    const GPayloadResult = await GPayload.create(this.channel, result)
                         .resolveData()
                         .resolveFiles();
 
@@ -206,7 +206,7 @@ class GMessage {
                         }).then(d => this.client.actions.MessageCreate.handle(d).message);
                     }
 
-                    let apiMessage = (await this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
+                    const apiMessage = (await this.client.api.channels(this.channel.id).messages[result.messageId ? result.messageId : this.id].patch({
                         data: GPayloadResult.data,
                     }));
 
@@ -217,7 +217,7 @@ class GMessage {
 
             update: {
                 value: async function(result) {
-                    let GPayloadResult = await GPayload.create(this.channel, result)
+                    const GPayloadResult = await GPayload.create(this.channel, result)
                         .resolveData();
 
                     return this.client.api.channels(this.channel.id).messages[this.id].patch({
@@ -234,7 +234,7 @@ class GMessage {
                     if (typeof result === 'string') result = { content: result, inlineReply: this.id };
                     else if (result.inlineReply === undefined || result.inlineReply === true) result.inlineReply = this.id;
 
-                    let GPayloadResult = await GPayload.create(this.channel, result)
+                    const GPayloadResult = await GPayload.create(this.channel, result)
                         .resolveData()
                         .resolveFiles();
 

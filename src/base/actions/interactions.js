@@ -35,8 +35,8 @@ module.exports = client => {
 
         client.emit('GInteraction', interaction);
         if (data.data.component_type) {
-            let member = interaction.clicker.member, guild = interaction.guild, channel = interaction.channel;
-            let inhibitReturn = await inhibit(client, interactionRefactor(interaction), {
+            const member = interaction.clicker.member, guild = interaction.guild, channel = interaction.channel;
+            const inhibitReturn = await inhibit(client, interactionRefactor(interaction), {
                 interaction, member,
                 guild: guild,
                 channel: channel,

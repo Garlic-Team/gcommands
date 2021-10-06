@@ -42,7 +42,7 @@ class ContextMenuInteraction extends BaseCommandInteraction {
      * @private
     */
      getArgs(options) {
-        let args = [];
+        const args = [];
 
         if (options.resolved.users && options.resolved.users[options.target_id]) {
           args.push(new User(this.client, options.resolved.users[options.target_id]));
@@ -62,7 +62,7 @@ class ContextMenuInteraction extends BaseCommandInteraction {
      * @private
     */
      getArgsObject(options) {
-        let args = {};
+        const args = {};
 
         if (options.resolved.users && options.resolved.users[options.target_id]) {
           args.user = new User(this.client, options.resolved.users[options.target_id]);

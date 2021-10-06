@@ -24,7 +24,7 @@ class UserArgumentType extends ArgumentType {
 
 		if (!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'user');
 
-		let user = this.client.users.cache.get(matches[1]);
+		const user = this.client.users.cache.get(matches[1]);
 		if (!user) return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'user');
 	}
     get(argument, message) {

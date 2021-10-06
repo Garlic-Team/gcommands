@@ -28,9 +28,9 @@ module.exports = client => {
         }
 
         if ((oldMember.nickname === newMember.nickname) && (newMember.lastMessageID === null) && (newMember.lastMessageChannelID === null) && (oldMember.premiumSince === newMember.premiumSince) && (oldMember._roles.length === 0) && (newMember._roles.length === 0)) {
-            let url = `https://discord.com/api/v9/guilds/${newMember.guild.id}/members/${newMember.user.id}`;
+            const url = `https://discord.com/api/v9/guilds/${newMember.guild.id}/members/${newMember.user.id}`;
 
-            let config = {
+            const config = {
                 method: 'GET',
                 headers: {
                     Authorization: `Bot ${client.token}`,

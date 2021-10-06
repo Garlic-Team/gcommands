@@ -23,7 +23,7 @@ class Util {
      * @returns {number}
     */
     static msToSeconds(ms) {
-        let seconds = ms / 1000;
+        const seconds = ms / 1000;
         return seconds;
     }
 
@@ -113,7 +113,7 @@ class Util {
     */
     static inhibit(client, interaction, data) {
 		for (const inhibitor of client.inhibitors) {
-			let inhibit = inhibitor(interaction, data);
+			const inhibit = inhibitor(interaction, data);
 			return inhibit;
 		}
 		return null;
@@ -185,7 +185,7 @@ class Util {
      * @private
     */
     static checkDjsVersion(needVer) {
-        let ver = parseInt(version.split('')[0] + version.split('')[1]);
+        const ver = parseInt(version.split('')[0] + version.split('')[1]);
         if (ver === parseInt(needVer)) {
             return true;
         } else {
@@ -225,7 +225,7 @@ class Util {
     */
     static getAllObjects(client, ob) {
 	    if (typeof ob !== 'object') return;
-        for (let v of Object.values(ob)) {
+        for (const v of Object.values(ob)) {
             if (Array.isArray(v)) {
                 Util.getAllObjects(v[0]);
             } else if (typeof v === 'object') {
