@@ -96,10 +96,9 @@ class Argument {
      * @param {Message|Object}
      * @param {string}
      */
-    async obtain(message, prompt = this.prompt) {
+    async obtain(message, language, prompt = this.prompt) {
         if (message.author.bot) return;
 
-        const guildLanguage = await message.guild.getLanguage();
         const wait = 30000;
 
         let getComponents = disabled => {
@@ -137,8 +136,8 @@ class Argument {
             return components.reverse();
         };
 
-        if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
-        if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
+        if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[language]}`;
+        if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
 
         let msgReply = await message.reply({
             content: prompt,
@@ -184,7 +183,7 @@ class Argument {
         } else if (resFirst.content === 'cancel') {
             invalid = true;
             reason = 'cancel';
-        } else { invalid = await this.argument.validate(this, resFirst); }
+        } else { invalid = await this.argument.validate(this, { content: resFirst.content.toLowerCase(), guild: resFirst.guild }, language); }
 
         if (invalid) {
             return {

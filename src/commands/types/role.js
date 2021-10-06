@@ -19,14 +19,13 @@ class RoleArgumentType extends ArgumentType {
 		this.client = client;
     }
 
-	async validate(argument, message) {
+	validate(argument, message, language) {
 		const matches = message.content.match(/([0-9]+)/);
-		const guildLanguage = await message.guild.getLanguage();
 
-		if (!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'role');
+		if (!matches) return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'role');
 
 		let role = message.guild.roles.cache.get(matches[1]);
-		if (!role) return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'role');
+		if (!role) return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'role');
 	}
     get(argument, message) {
         return message.match(/([0-9]+)/)[0];
