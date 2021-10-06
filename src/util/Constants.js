@@ -262,6 +262,7 @@ function createEnum(keys) {
  * @property {string | GPayloadOptions} followUp
  * @property {Array} args
  * @property {Object} objectArgs
+ * @property {string} language
  * @typedef {(Object)} CommandRunOptions
 */
 
@@ -278,7 +279,7 @@ function createEnum(keys) {
  * @property {string | GPayloadOptions} edit
  * @property {string | GPayloadOptions} followUp
  * @property {Array} args
- * @property {Object} objectArgs
+ * @property {string} language
  * @typedef {(Object)} Inhibitor
  */
 
