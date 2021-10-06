@@ -71,7 +71,9 @@ class GEventHandling {
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
 
-                const language = message.guild ? await this.client.dispatcher.getGuildLanguage(message.guild.id) : this.client.language;
+                const channelType = channelTypeRefactor(message.channel);
+                const isNotDm = channelType !== 'dm';
+                const language = isNotDm ? await this.client.dispatcher.getGuildLanguage(message.guild.id) : this.client.language;
 
                 const runOptions = {
                     member: message.member,
@@ -119,10 +121,8 @@ class GEventHandling {
                 if (inhibitReturn === false) return;
 
                 const cooldown = message.guild ? await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos) : null;
-                const channelType = channelTypeRefactor(message.channel);
                 const NSFW = message.guild ? commandos.nsfw && !message.channel.nsfw : null;
                 const isNotChannelType = type => channelType !== type;
-                const isNotDm = channelType !== 'dm';
                 const isNotGuild = guild => !commandos.guildOnly.includes(guild);
 
                 const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
@@ -389,30 +389,60 @@ class GEventHandling {
                         (String(interaction.commandName) === String(cmd.name) || String(interaction.commandName) === String(cmd.contextMenuName)),
                 );
                 if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (slash): &e➜   &3${interaction.commandName ? String(interaction.commandName) : null}`, { json: false }).getText());
-                if (interaction.isCommand() && ['false', 'message'].includes(String(commandos.slash))) return;
-                if (interaction.isCommand() && !commandos.slash && ['false', 'message'].includes(String(this.client.slash))) return;
-                if (interaction.isContextMenu() && String(commandos.context) === 'false') return;
-                if (interaction.isContextMenu() && !commandos.context && String(this.client.context) === 'false') return;
 
-                const inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
-                    interaction,
+                const isSlashEnabled = ['false', 'message'].includes(String(commandos.slash));
+                const isClientSlashEnabled = !commandos.slash && ['false', 'message'].includes(String(this.client.slash));
+                const isContextEnabled = String(commandos.context) === 'false';
+                const isClientContextEnabled = String(this.client.context) === 'false';
+
+
+                if (interaction.isCommand() && isSlashEnabled) return;
+                if (interaction.isCommand() && !commandos.slash && isClientSlashEnabled) return;
+                if (interaction.isContextMenu() && isContextEnabled) return;
+                if (interaction.isContextMenu() && !commandos.context && isClientContextEnabled) return;
+
+                const channelType = channelTypeRefactor(interaction.channel);
+                const isNotDm = channelType !== 'dm';
+                const language = interaction.guild ? await this.client.dispatcher.getGuildLanguage(interaction.guild.id) : this.client.language;
+
+                const runOptions = {
                     member: interaction.member,
                     author: interaction.author,
                     guild: interaction.guild,
                     channel: interaction.channel,
+                    interaction: interaction,
+                    client: this.client,
+                    bot: this.client,
+                    language: language,
+                };
+
+                const inhibitRunOptions = {
                     respond: result => interaction.reply.send(result),
                     edit: result => interaction.reply.edit(result),
                     followUp: result => interaction.reply.followUp(result),
                     args: interaction.arrayArguments,
-                    objectArgs: interaction.objectArguments,
+                };
+
+                const inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
+                    ...runOptions,
+                    ...inhibitRunOptions,
                 });
                 if (inhibitReturn === false) return;
 
-                const guildLanguage = await this.client.dispatcher.getGuildLanguage(interaction.guild.id);
-                const cooldown = await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos);
-                if (cooldown.cooldown) return interaction.reply.send(this.client.languageFile.COOLDOWN[guildLanguage].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name));
+                const cooldown = interaction.guild ? await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos) : null;
+                const NSFW = interaction.guild ? commandos.nsfw && !interaction.channel.nsfw : null;
+                const isNotChannelType = type => channelType !== type;
 
-                if (commandos.nsfw && !interaction.channel.nsfw) return interaction.reply.send(this.client.languageFile.NSFW[guildLanguage]);
+                const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
+                const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
+                const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
+                const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];
+                const getNsfwMessage = () => this.client.languageFile.NSFW[language];
+                const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
+                const getMissingPermissionsMessage = () => this.client.languageFile.MISSING_PERMISSIONS[language].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
+                const getMissingRolesMessage = () => this.client.languageFile.MISSING_ROLES[language].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``);
+
+                if (cooldown?.cooldown) return interaction.reply.send(getCooldownMessage());
 
                 if (commandos.userOnly) {
                     if (typeof commandos.userOnly === 'object') {
@@ -421,77 +451,61 @@ class GEventHandling {
                     } else if (interaction.author.id !== commandos.userOnly) { return; }
                 }
 
-                if (commandos.channelOnly) {
+                if (isNotDm && commandos.channelOnly) {
                     if (typeof commandos.channelOnly === 'object') {
                         const channels = commandos.channelOnly.some(v => interaction.channel.id === v);
                         if (!channels) return;
                     } else if (interaction.channel.id !== commandos.channelOnly) { return; }
                 }
 
-                const channelType = channelTypeRefactor(interaction.channel);
+                if (isNotDm && NSFW) { return interaction.reply.send({ content: getNsfwMessage(), ephemeral: true }); }
+                if (isNotDm && commandos.channelTextOnly && isNotChannelType('text')) { return interaction.reply.send({ content: getChannelTextOnlyMessage(), ephemeral: true }); }
+                if (isNotDm && commandos.channelNewsOnly && isNotChannelType('news')) { return interaction.reply.send({ content: getChannelNewsOnlyMessage(), ephemeral: true }); }
+                if (isNotDm && commandos.channelThreadOnly && isNotChannelType('thread')) { return interaction.reply.send({ content: getChannelThreadOnlyMessage(), ephemeral: true }); }
 
-                if (commandos.nsfw && !interaction.channel.nsfw) { return interaction.reply.send({ content: this.client.languageFile.NSFW[guildLanguage], ephemeral: true }); }
-                if (commandos.channelTextOnly && channelType !== 'text') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_TEXT_ONLY[guildLanguage], ephemeral: true }); }
-                if (commandos.channelNewsOnly && channelType !== 'news') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_NEWS_ONLY[guildLanguage], ephemeral: true }); }
-                if (commandos.channelThreadOnly && channelType !== 'thread') { return interaction.reply.send({ content: this.client.languageFile.CHANNEL_THREAD_ONLY[guildLanguage], ephemeral: true }); }
-
-                if (commandos.clientRequiredPermissions) {
+                if (isNotDm && commandos.clientRequiredPermissions) {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
                         return interaction.reply.send({
-                            content:
-                                this.client.languageFile.MISSING_CLIENT_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
+                            content: getMissingClientPermissionsMessage(),
+                            ephemeral: true,
                         });
                     }
                 }
 
-                if (commandos.userRequiredPermissions) {
+                if (isNotDm && commandos.userRequiredPermissions) {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
                         return interaction.reply.send({
-                            content:
-                                this.client.languageFile.MISSING_PERMISSIONS[guildLanguage].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', ')), ephemeral: true,
+                            content: getMissingPermissionsMessage(),
+                            ephemeral: true,
                         });
                     }
                 }
 
-                if ((commandos.userRequiredRoles) || (commandos.userRequiredRole)) {
-                    if (commandos.userRequiredRole) commandos.userRequiredRoles = commandos.userRequiredRole;
+                if (isNotDm && commandos.userRequiredRoles) {
                     if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
 
                     const roles = commandos.userRequiredRoles.some(v => interaction.member._roles.includes(v));
-                    if (!roles) return interaction.reply.send({ content: this.client.languageFile.MISSING_ROLES[guildLanguage].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``), ephemeral: true });
+                    if (!roles) return interaction.reply.send({ content: getMissingRolesMessage(), ephemeral: true });
                 }
 
-                try {
-                    const client = this.client, bot = this.client;
-                    commandos.run({
-                        client, bot, interaction,
-                        member: interaction.member,
-                        author: interaction.author,
-                        guild: interaction.guild,
-                        channel: interaction.channel,
-
-                        /**
-                         * Respond
-                         * @param {string|GPayloadOptions} result
-                         * @returns {Message}
-                         * @memberof GEventHandling
-                         */
-                        respond: result => interaction.reply.send(result),
-                        edit: result => interaction.reply.edit(result),
-                        followUp: result => interaction.reply.followUp(result),
-                        args: interaction.arrayArguments,
-                        objectArgs: interaction.objectArguments,
-                    });
-                } catch (e) {
-                    this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
-                    this.client.emit(Events.DEBUG, e);
-                }
+                const commandRunOptions = {
+                    respond: result => interaction.reply.send(result),
+                    edit: result => interaction.reply.edit(result),
+                    followUp: result => interaction.reply.followUp(result),
+                    args: interaction.arrayArguments,
+                    objectArgs: interaction.objectArguments,
+                };
 
                 this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
+
+                commandos.run({
+                    ...runOptions,
+                    ...commandRunOptions,
+                });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
                 this.client.emit(Events.DEBUG, e);
