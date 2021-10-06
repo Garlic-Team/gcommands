@@ -6,20 +6,14 @@ const GError = require('../structures/GError');
 class GDatabaseLoader {
     /**
      * The GDatabaseLoader class
-     * @param {GCommands} GCommandsClient
+     * @param {GCommandsClient} client
     */
-    constructor(GCommandsClient) {
-        /**
-         * GCommandsClient
-         * @type {GCommands}
-        */
-        this.GCommandsClient = GCommandsClient;
-
+    constructor(client) {
         /**
          * Client
-         * @type {Client}
+         * @type {GCommandsClient}
         */
-        this.client = this.GCommandsClient.client;
+        this.client = client;
 
         this.__loadDB();
     }
@@ -30,7 +24,7 @@ class GDatabaseLoader {
      * @private
      */
     __loadDB() {
-        let dbType = this.GCommandsClient.database;
+        let dbType = this.client.database;
         if (!dbType) { this.client.database = undefined; } else {
             try {
                 const Keyv = require('keyv');

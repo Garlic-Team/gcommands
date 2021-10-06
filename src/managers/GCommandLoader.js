@@ -11,26 +11,20 @@ const Command = require('../commands/base');
 class GCommandLoader {
     /**
      * The GCommandLoader class
-     * @param {GCommands} GCommandsClient
+     * @param {GCommandsClient} client
      */
-    constructor(GCommandsClient) {
-        /**
-         * GCommandsClient
-         * @type {GCommands}
-        */
-        this.GCommandsClient = GCommandsClient;
-
+    constructor(client) {
         /**
          * Client
-         * @type {Client}
+         * @type {GCommandsClient}
         */
-        this.client = this.GCommandsClient.client;
+        this.client = client;
 
         /**
          * CmdDir
          * @type {string}
         */
-        this.cmdDir = this.GCommandsClient.cmdDir;
+        this.cmdDir = this.client.cmdDir;
 
         /**
          * All Global Commands
@@ -69,7 +63,7 @@ class GCommandLoader {
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
-            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
+            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
         }
 
         await this.__loadSlashCommands();
@@ -106,7 +100,7 @@ class GCommandLoader {
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
-            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
+            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
         }
     }
 
@@ -133,7 +127,7 @@ class GCommandLoader {
                     else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
                     if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
-                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                         return;
                     }
                 }
@@ -156,10 +150,10 @@ class GCommandLoader {
                 };
 
                 axios(config).then(() => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
+                    this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 })
                     .catch(error => {
-                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error.response) {
                             if (error.response.status === 429) {
@@ -167,7 +161,7 @@ class GCommandLoader {
                                     this.__tryAgain(cmd, config, 'Slash');
                                 }, (error.response.data.retry_after) * 1000);
                             } else {
-                                this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
                                     '  &d[GCommands Debug] &3',
                                     `&aCode: &b${error.response.data.code}`,
@@ -177,9 +171,9 @@ class GCommandLoader {
                                 ]).getText());
 
                                 if (error.response.data.errors) {
-                                    getAllObjects(this.GCommandsClient, error.response.data.errors);
+                                    getAllObjects(this.client, error.response.data.errors);
 
-                                    this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                    this.client.emit(Events.DEBUG, new Color([
                                         `&a----------------------`,
                                     ]).getText());
                                 }
@@ -225,7 +219,7 @@ class GCommandLoader {
                     else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
 
                     if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
-                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
                         return;
                     }
                 }
@@ -245,7 +239,7 @@ class GCommandLoader {
                 };
 
                 axios(config).then(() => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
+                    this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
                     if (type === 4) {
                         config.data = JSON.parse(config.data);
                         config.data.type = 3;
@@ -254,7 +248,7 @@ class GCommandLoader {
                     }
                 })
                     .catch(error => {
-                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error.response) {
                             if (error.response.status === 429) {
@@ -262,7 +256,7 @@ class GCommandLoader {
                                     this.__tryAgain(cmd, config, 'Context Menu');
                                 }, (error.response.data.retry_after) * 1000);
                             } else {
-                                this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
                                     '  &d[GCommands Debug] &3',
                                     `&aCode: &b${error.response.data.code}`,
@@ -272,9 +266,9 @@ class GCommandLoader {
                                 ]).getText());
 
                                 if (error.response.data.errors) {
-                                    getAllObjects(this.GCommandsClient, error.response.data.errors);
+                                    getAllObjects(this.client, error.response.data.errors);
 
-                                    this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                    this.client.emit(Events.DEBUG, new Color([
                                         `&a----------------------`,
                                     ]).getText());
                                 }
@@ -357,10 +351,10 @@ class GCommandLoader {
                         };
 
                         axios(config).then(() => {
-                            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
+                            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
                         })
                             .catch(error => {
-                                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                                 if (error.response) {
                                     if (error.response.status === 429) {
@@ -368,7 +362,7 @@ class GCommandLoader {
                                             this.__tryAgain(cmd, config, 'Permission');
                                         }, (error.response.data.retry_after) * 1000);
                                     } else {
-                                        this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                        this.client.emit(Events.DEBUG, new Color([
                                             '&a----------------------',
                                             '  &d[GCommands Debug] &3',
                                             `&aCode: &b${error.response.data.code}`,
@@ -378,9 +372,9 @@ class GCommandLoader {
                                         ]).getText());
 
                                         if (error.response.data.errors) {
-                                            getAllObjects(this.GCommandsClient, error.response.data.errors);
+                                            getAllObjects(this.client, error.response.data.errors);
 
-                                            this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                            this.client.emit(Events.DEBUG, new Color([
                                                 `&a----------------------`,
                                             ]).getText());
                                         }
@@ -424,10 +418,10 @@ class GCommandLoader {
     */
     __tryAgain(cmd, config, type) {
         axios(config).then(() => {
-            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText());
+            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText());
         })
             .catch(error => {
-                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                 if (error.response) {
                     if (error.response.status === 429) {

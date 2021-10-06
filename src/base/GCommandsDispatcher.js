@@ -16,18 +16,12 @@ class GCommandsDispatcher {
      * The GCommansDispatcher class
      * @param {GCommandsClient} GCommandsClient
      */
-    constructor(GCommandsClient, readyWait = true) {
-        /**
-         * GCommandsClient
-         * @type {GCommands}
-        */
-         this.GCommandsClient = GCommandsClient;
-
+    constructor(client, readyWait = true) {
         /**
          * Client
-         * @type {Client}
+         * @type {GCommandsClient}
          */
-        this.client = this.GCommandsClient.client;
+        this.client = client;
 
         /**
          * Inhibitors

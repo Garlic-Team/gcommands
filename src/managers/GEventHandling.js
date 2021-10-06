@@ -11,20 +11,14 @@ const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 class GEventHandling {
     /**
      * Creates new GEventHandling instance
-     * @param {GCommandsClient} GCommandsClient
+     * @param {GCommandsClient} client
      */
-    constructor(GCommandsClient) {
-        /**
-         * GCommandsClient
-         * @type {GCommands}
-        */
-        this.GCommandsClient = GCommandsClient;
-
+    constructor(client) {
         /**
          * Client
-         * @type {Client}
+         * @type {GCommandsClient}
         */
-        this.client = GCommandsClient.client;
+        this.client = client;
 
         this.messageEvent();
         this.slashEvent();
@@ -51,7 +45,7 @@ class GEventHandling {
 
             let mentionRegex = new RegExp(`^<@!?(${this.client.user.id})> `);
 
-            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : (await message.guild.getCommandPrefix()).filter(p => this.GCommandsClient.caseSensitivePrefixes ? message.content.toLowerCase().slice(0, p.length) === p.toLowerCase() : message.content.slice(0, p.length) === p);
+            let prefix = message.content.match(mentionRegex) ? message.content.match(mentionRegex) : (await message.guild.getCommandPrefix()).filter(p => this.client.caseSensitivePrefixes ? message.content.toLowerCase().slice(0, p.length) === p.toLowerCase() : message.content.slice(0, p.length) === p);
             if (prefix.length === 0) return;
 
             const [cmd, ...args] = message.content.slice(prefix[0].length).trim().split(/ +/g);
@@ -60,11 +54,11 @@ class GEventHandling {
             let commandos;
             try {
                 commandos = this.client.gcommands.get(
-                    !this.GCommandsClient.caseSensitiveCommands ?
+                    !this.client.caseSensitiveCommands ?
                         String(cmd).toLowerCase() :
                         String(cmd.name),
                 ) || this.client.galiases.get(
-                    !this.GCommandsClient.caseSensitiveCommands ?
+                    !this.client.caseSensitiveCommands ?
                         String(cmd).toLowerCase() :
                         String(cmd.name),
                 );
@@ -342,7 +336,7 @@ class GEventHandling {
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
-                this.GCommandsClient.emit(Events.DEBUG, e);
+                this.client.emit(Events.DEBUG, e);
             }
         };
     }
@@ -361,7 +355,7 @@ class GEventHandling {
             let commandos;
             try {
                 commandos = this.client.gcommands.find(cmd =>
-                    !this.GCommandsClient.caseSensitiveCommands ?
+                    !this.client.caseSensitiveCommands ?
                         (String(interaction.commandName).toLowerCase() === String(cmd.name).toLowerCase() || String(interaction.commandName).toLowerCase() === String(cmd.contextMenuName).toLowerCase()) :
                         (String(interaction.commandName) === String(cmd.name) || String(interaction.commandName) === String(cmd.contextMenuName)),
                 );
@@ -465,13 +459,13 @@ class GEventHandling {
                     });
                 } catch (e) {
                     this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
-                    this.GCommandsClient.emit(Events.DEBUG, e);
+                    this.client.emit(Events.DEBUG, e);
                 }
 
                 this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
-                this.GCommandsClient.emit(Events.DEBUG, e);
+                this.client.emit(Events.DEBUG, e);
             }
         });
     }
