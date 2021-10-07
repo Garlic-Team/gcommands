@@ -40,3 +40,5 @@
   color: '49eb34'
 - name: 's: awaiting review'
   color: 'ed6432'
+- name: 's: has PR'
+  color: 'f9d0c4'
