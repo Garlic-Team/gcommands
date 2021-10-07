@@ -21,24 +21,26 @@ class GCommandsClient extends Client {
     constructor(options = {}) {
         super(options);
 
-        if (!options.cmdDir) throw new GError('[DEFAULT OPTIONS]','You must specify the cmdDir');
-        if (!options.language) throw new GError('[DEFAULT OPTIONS]','You must specify the language');
-        if (!options.commands) throw new GError('[DEFAULT OPTIONS]','You must specify the command options');
-        if (String(options.commands.slash) !== 'false' && !options.commands.prefix) throw new GError('[DEFAULT OPTIONS]','You must specify the commands#prefix');
+        if (!options.cmdDir) throw new GError('[DEFAULT OPTIONS]', 'You must specify the cmdDir');
+        if (!options.language) throw new GError('[DEFAULT OPTIONS]', 'You must specify the language');
+
+        const isClientMessageEnabled = ['false', 'slash'].includes(String(options.commands?.slash));
+
+        if (!isClientMessageEnabled && !options.commands?.prefix) throw new GError('[DEFAULT OPTIONS]', 'You must specify the commands#prefix');
 
         /**
          * CaseSensitiveCommands
          * @type {boolean}
          * @default true
         */
-         this.caseSensitiveCommands = options.caseSensitiveCommands;
+        this.caseSensitiveCommands = options.caseSensitiveCommands;
 
-         /**
-          * CaseSensitivePrefixes
-          * @type {boolean}
-          * @default true
-         */
-         this.caseSensitivePrefixes = options.caseSensitivePrefixes;
+        /**
+         * CaseSensitivePrefixes
+         * @type {boolean}
+         * @default true
+        */
+        this.caseSensitivePrefixes = options.caseSensitivePrefixes;
 
         /**
          * CmdDir
@@ -103,42 +105,49 @@ class GCommandsClient extends Client {
          * @type {string}
          * @default undefined
          */
-        this.prefix = !Array.isArray(options.commands.prefix) ? Array(options.commands.prefix) : options.commands.prefix;
+        this.prefix = !Array.isArray(options.commands?.prefix) ? Array(options.commands?.prefix) : options.commands?.prefix;
 
         /**
          * Slash
          * @type {string}
          * @default false
          */
-        this.slash = options.commands.slash ? options.commands.slash : false;
+        this.slash = options.commands?.slash ? options.commands?.slash : false;
 
         /**
          * Context
          * @type {string}
          * @default false
          */
-        this.context = options.commands.context ? options.commands.context : false;
+        this.context = options.commands?.context ? options.commands?.context : false;
 
         /**
          * LoadFromCache
          * @type {boolean}
          * @default true
          */
-        this.loadFromCache = options.commands.loadFromCache !== undefined ? Boolean(options.commands.loadFromCache) : true;
+        this.loadFromCache = options.commands?.loadFromCache !== undefined ? Boolean(options.commands?.loadFromCache) : true;
+
+        /**
+         * AllowDm
+         * @type {boolean}
+         * @default false
+        */
+        this.allowDm = options.commands?.allowDm !== undefined ? Boolean(options.commands?.allowDm) : false;
 
         /**
          * DeletePrompt
          * @type {boolean}
          * @default false
          */
-        this.deletePrompt = options.arguments ? options.arguments.deletePrompt !== undefined ? Boolean(options.arguments.deletePrompt) : false : false;
+        this.deletePrompt = options.arguments?.deletePrompt !== undefined ? Boolean(options.arguments?.deletePrompt) : false;
 
         /**
          * DeleteInput
          * @type {boolean}
          * @default false
          */
-        this.deleteInput = options.arguments ? options.arguments.deleteInput !== undefined ? Boolean(options.arguments.deleteInput) : false : false;
+        this.deleteInput = options.arguments?.deleteInput !== undefined ? Boolean(options.arguments?.deleteInput) : false;
 
         /**
          * DefaultCooldown

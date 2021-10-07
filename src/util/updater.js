@@ -7,11 +7,11 @@ module.exports = {
      * @private
     */
     __updater: async function() {
-        let { Color } = require('../index');
-        let version = require('../index').version;
+        const { Color } = require('../index');
+        const version = require('../index').version;
 
-        let GCommandsUpdater = await axios.get('https://registry.npmjs.org/gcommands');
-        let stableVersion = GCommandsUpdater.data['dist-tags'].latest;
+        const GCommandsUpdater = await axios.get('https://registry.npmjs.org/gcommands');
+        const stableVersion = GCommandsUpdater.data['dist-tags'].latest;
 
         if (stableVersion !== version && !version.includes('dev')) {
             console.log(new Color('&d[GCommands Updater] &cPlease update GCommands &ehttps://npmjs.org/package/gcommands').getText());

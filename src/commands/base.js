@@ -54,10 +54,10 @@ class Command {
          * @type {CommandArgsOption[]}
          */
         this.args = options.args ? options.args.map(arg => {
-            let types = arg.channel_types ? !Array.isArray(arg.channel_types) ? [arg.channel_types] : arg.channel_types : [];
-            let final = [];
+            const types = arg.channel_types ? !Array.isArray(arg.channel_types) ? [arg.channel_types] : arg.channel_types : [];
+            const final = [];
 
-            for (let type of types) {
+            for (const type of types) {
                 final.push(ArgumentChannelTypes[type]);
             }
 
@@ -126,6 +126,12 @@ class Command {
          * @type {boolean}
          */
         this.channelThreadOnly = options.channelThreadOnly;
+
+        /**
+         * AllowDm
+         * @type {boolean}
+         */
+         this.allowDm = options.allowDm;
 
         /**
          * GuildOnly
@@ -197,7 +203,7 @@ class Command {
 	 * Reloads the command
 	 */
     async reload() {
-        let cmdPath = this.client.gcommands.get(this.name)._path;
+        const cmdPath = this.client.gcommands.get(this.name)._path;
 
         delete require.cache[require.resolve(cmdPath)];
         this.client.gcommands.delete(this.name);
@@ -211,10 +217,10 @@ class Command {
 
         if (newCommand.name !== this.name) throw new GError('[COMMAND]','Command name cannot change.');
 
-        let nglds = newCommand.guildOnly ? Array.isArray(newCommand.guildOnly) ? newCommand.guildOnly : Array(newCommand.guildOnly) : undefined;
+        const nglds = newCommand.guildOnly ? Array.isArray(newCommand.guildOnly) ? newCommand.guildOnly : Array(newCommand.guildOnly) : undefined;
 
-        let check1 = nglds.every((x, i) => x === this.guildOnly[i]);
-        let check2 = this.guildOnly.every((x, i) => x === nglds[i]);
+        const check1 = nglds.every((x, i) => x === this.guildOnly[i]);
+        const check2 = this.guildOnly.every((x, i) => x === nglds[i]);
         if (!check1 || !check2) throw new GError('[COMMAND]','Command guildOnly cannot change.');
 
         newCommand._path = cmdPath;

@@ -11,7 +11,7 @@ class GPayload {
      * @param {TextChannel | NewsChannel | DMChannel | ThreadChannel} channel
      * @param {string|GPayloadOptions} options
     */
-    constructor(channel, options) {
+    constructor(channel, options, client) {
         /**
          * Channel
          * @type {TextChannel | NewsChannel | DMChannel | ThreadChannel}
@@ -23,7 +23,7 @@ class GPayload {
          * Client
          * @type {Client}
          */
-        this.client = channel.client;
+        this.client = channel?.client || client;
 
         /**
          * Options
@@ -75,11 +75,11 @@ class GPayload {
         if (this.options.attachments && !Array.isArray(this.options.attachments)) this.options.attachments = Array(this.options.attachments);
         if (this.options.files && !Array.isArray(this.options.files)) this.options.files = Array(this.options.files);
 
-        let flags = this.options.ephemeral ? MessageFlags.FLAGS.EPHEMERAL : this.options.flags ? new MessageFlags(this.options.flags).bitfield : null;
+        const flags = this.options.ephemeral ? MessageFlags.FLAGS.EPHEMERAL : this.options.flags ? new MessageFlags(this.options.flags).bitfield : null;
 
         let allowedMentions =
           typeof this.options.allowedMentions === 'undefined'
-            ? this.client.options.allowedMentions
+            ? this.client?.options?.allowedMentions
             : this.options.allowedMentions;
 
         if (allowedMentions) {

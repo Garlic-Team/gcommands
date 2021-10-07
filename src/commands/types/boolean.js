@@ -31,12 +31,9 @@ class BooleanArgumentType extends ArgumentType {
 		this.falseAnswerSet = new Set(['false', 'f', 'no', 'n', 'off', 'disable', 'disabled']);
     }
 
-	async validate(argument, message) {
-		const b = message.content.toLowerCase();
-		const guildLanguage = await message.guild.getLanguage();
-
-		if (this.trueAnswerSet.has(b) === false && this.falseAnswerSet.has(b) === false) {
-			return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'boolean');
+	validate(argument, message, language) {
+		if (this.trueAnswerSet.has(message.content) === false && this.falseAnswerSet.has(message.content) === false) {
+			return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'boolean');
 		}
 	}
 

@@ -23,7 +23,7 @@ class Argument {
      * @param {Client}
      * @param {Object} argument
      */
-    constructor(client, argument) {
+    constructor(client, argument, isNotDm) {
         /**
          * Client
          * @type {Client}
@@ -78,13 +78,20 @@ class Argument {
          * @type {Array<Object>}
         */
         this.subcommands = argument.subcommands;
+
+
+        /**
+         * IsNotDm
+         * @type {string}
+        */
+        this.isNotDm = isNotDm;
     }
 
     get channelTypes() {
-        let types = this.argument.channel_types ? !Array.isArray(this.argument.channel_types) ? [this.argument.channel_types] : this.argument.channel_types : [];
-        let final = [];
+        const types = this.argument.channel_types ? !Array.isArray(this.argument.channel_types) ? [this.argument.channel_types] : this.argument.channel_types : [];
+        const final = [];
 
-        for (let type of types) {
+        for (const type of types) {
             final.push(ArgumentChannelTypes[type]);
         }
 
@@ -96,13 +103,12 @@ class Argument {
      * @param {Message|Object}
      * @param {string}
      */
-    async obtain(message, prompt = this.prompt) {
+    async obtain(message, language, prompt = this.prompt) {
         if (message.author.bot) return;
 
-        const guildLanguage = await message.guild.getLanguage();
         const wait = 30000;
 
-        let getComponents = disabled => {
+        const getComponents = disabled => {
             const components = [
                 new MessageActionRow()
                     .addComponents([
@@ -137,21 +143,21 @@ class Argument {
             return components.reverse();
         };
 
-        if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[guildLanguage]}`;
-        if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[guildLanguage].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
+        if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[language]}`;
+        if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
 
-        let msgReply = await message.reply({
+        const msgReply = await message.reply({
             content: prompt,
             components: getComponents(false),
         });
 
-        let messageCollectorfilter = msg => msg.author.id === message.author.id;
-        let componentsCollectorfilter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('argument');
+        const messageCollectorfilter = msg => msg.author.id === message.author.id;
+        const componentsCollectorfilter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('argument');
 
         // eslint-disable-next-line capitalized-comments
         // if (this.type === 'boolean') filter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('booleanargument');
 
-        let collectors = [
+        const collectors = [
             (ifDjsV13 ? message.channel.awaitMessages({ filter: messageCollectorfilter, max: 1, time: wait }) : message.channel.awaitMessages(messageCollectorfilter, { max: 1, time: wait })),
             message.channel.awaitMessageComponents({ filter: componentsCollectorfilter, max: 1, time: wait }),
         ];
@@ -164,7 +170,7 @@ class Argument {
             };
         }
 
-        let resFirst = responses.first();
+        const resFirst = responses.first();
 
         if (resFirst instanceof ButtonInteraction) {
             await resFirst.defer();
@@ -174,7 +180,7 @@ class Argument {
         if (this.client.deletePrompt) await msgReply.delete();
         else await msgReply.edit({ content: msgReply.content, components: getComponents(true) });
 
-        if (this.client.deleteInput && resFirst instanceof ButtonInteraction === false && message.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES')) await resFirst.delete();
+        if (this.client.deleteInput && this.isNotDm && resFirst instanceof ButtonInteraction === false && message.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES')) await resFirst.delete();
 
         let invalid;
         let reason;
@@ -184,7 +190,7 @@ class Argument {
         } else if (resFirst.content === 'cancel') {
             invalid = true;
             reason = 'cancel';
-        } else { invalid = await this.argument.validate(this, resFirst); }
+        } else { invalid = await this.argument.validate(this, { content: resFirst.content.toLowerCase(), guild: resFirst.guild }, language); }
 
         if (invalid) {
             return {
@@ -211,10 +217,10 @@ class Argument {
         if (argument.type === 3) return new StringArgumentType(client, argument);
         if (argument.type === 4) return new IntegerArgumentType(client, argument);
         if (argument.type === 5) return new BooleanArgumentType(client, argument);
-        if (argument.type === 6) return new UserArgumentType(client, argument);
-        if (argument.type === 7) return new ChannelArgumentType(client, argument);
-        if (argument.type === 8) return new RoleArgumentType(client, argument);
-        if (argument.type === 9) return new MentionableArgumentType(client, argument);
+        if (this.isNotDm && argument.type === 6) return new UserArgumentType(client, argument);
+        if (this.isNotDm && argument.type === 7) return new ChannelArgumentType(client, argument);
+        if (this.isNotDm && argument.type === 8) return new RoleArgumentType(client, argument);
+        if (this.isNotDm && argument.type === 9) return new MentionableArgumentType(client, argument);
         if (argument.type === 10) return new NumberArgumentType(client, argument);
         else return { type: 'invalid' };
     }
