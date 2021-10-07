@@ -412,7 +412,7 @@ declare module 'gcommands' {
     public contextMenuName: string;
     public description: string;
     public cooldown: string;
-    public args: Array<object>;
+    public args: Array<CommandArgsOptions>;
     public alwaysObtain: boolean;
     public clientRequiredPermissions: String | Array<string>;
     public userRequiredPermissions: String | Array<string>;
@@ -517,6 +517,21 @@ declare module 'gcommands' {
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;
     followUp(options: string | GPayloadOptions): void;
+  }
+
+  interface CommandArgsOptions {
+    name: string;
+    description: string;
+    type: ArgumentType;
+    prompt?: string;
+    required?: boolean;
+    choices?: CommandArgsChoice[];
+    options?: CommandArgsOptions;
+  }
+
+  interface CommandArgsChoice {
+    name: string;
+    value: string;
   }
 
   interface GPayloadOptions {
