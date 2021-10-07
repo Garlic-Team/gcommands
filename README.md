@@ -32,8 +32,8 @@ yarn add gcommands@dev
 ```
 
 ## 🐢 | Guide & Documentation
-To help you learn more with GCommands we have a [guide](https://gcommands.js.org/guide/) and [documentation](https://gcommands.js.org/docs/) for you.  
-If you are still having trouble, you can join our [Garlic Team](https://discord.gg/AjKJSBbGm2) discord server.
+To help you learn more about GCommands we have a [guide](https://gcommands.js.org/guide/) and [documentation](https://gcommands.js.org/docs/) for you.  
+If you're still in trouble, you can join our [Garlic Team](https://discord.gg/AjKJSBbGm2) discord server.
 
 ## 👀 | Features
 
