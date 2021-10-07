@@ -277,7 +277,7 @@ class GInteraction {
             if (!id && !this._replied) throw new GError('[NEED REPLY]', 'This interaction has no reply.');
             const apiMessage = (await this.client.api.webhooks(this.client.user.id, this.token).messages[id ? id : '@original'].get().catch(() => null));
 
-            apiMessage.channel_id = this.channel.id;
+            apiMessage.channel_id = this.channel?.id || this.author.id;
             return apiMessage.id ? new Message(this.client, apiMessage, this.channel) : apiMessage;
         };
 
@@ -291,7 +291,7 @@ class GInteraction {
     }
 
     async replySend(result) {
-        const GPayloadResult = await GPayload.create(this.channel, result)
+        const GPayloadResult = await GPayload.create(this.channel, result, this.client)
             .resolveData()
             .resolveFiles();
 
@@ -308,7 +308,7 @@ class GInteraction {
     }
 
     async replyEdit(result, update) {
-        const GPayloadResult = await GPayload.create(this.channel, result)
+        const GPayloadResult = await GPayload.create(this.channel, result, this.client)
             .resolveData()
             .resolveFiles();
 
@@ -330,7 +330,7 @@ class GInteraction {
         return apiMessage;
     }
     async replyFollowUp(result) {
-        const GPayloadResult = await GPayload.create(this.channel, result)
+        const GPayloadResult = await GPayload.create(this.channel, result, this.client)
             .resolveData()
             .resolveFiles();
 

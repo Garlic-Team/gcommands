@@ -128,6 +128,12 @@ class Command {
         this.channelThreadOnly = options.channelThreadOnly;
 
         /**
+         * AllowDm
+         * @type {boolean}
+         */
+         this.allowDm = options.allowDm;
+
+        /**
          * GuildOnly
          * @type {Snowflake | Array}
          */

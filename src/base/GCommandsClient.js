@@ -21,26 +21,26 @@ class GCommandsClient extends Client {
     constructor(options = {}) {
         super(options);
 
-        if (!options.cmdDir) throw new GError('[DEFAULT OPTIONS]','You must specify the cmdDir');
-        if (!options.language) throw new GError('[DEFAULT OPTIONS]','You must specify the language');
+        if (!options.cmdDir) throw new GError('[DEFAULT OPTIONS]', 'You must specify the cmdDir');
+        if (!options.language) throw new GError('[DEFAULT OPTIONS]', 'You must specify the language');
 
         const isClientMessageEnabled = ['false', 'slash'].includes(String(options.commands?.slash));
 
-        if (!isClientMessageEnabled && !options.commands?.prefix) throw new GError('[DEFAULT OPTIONS]','You must specify the commands#prefix');
+        if (!isClientMessageEnabled && !options.commands?.prefix) throw new GError('[DEFAULT OPTIONS]', 'You must specify the commands#prefix');
 
         /**
          * CaseSensitiveCommands
          * @type {boolean}
          * @default true
         */
-         this.caseSensitiveCommands = options.caseSensitiveCommands;
+        this.caseSensitiveCommands = options.caseSensitiveCommands;
 
-         /**
-          * CaseSensitivePrefixes
-          * @type {boolean}
-          * @default true
-         */
-         this.caseSensitivePrefixes = options.caseSensitivePrefixes;
+        /**
+         * CaseSensitivePrefixes
+         * @type {boolean}
+         * @default true
+        */
+        this.caseSensitivePrefixes = options.caseSensitivePrefixes;
 
         /**
          * CmdDir
@@ -132,8 +132,8 @@ class GCommandsClient extends Client {
          * AllowDm
          * @type {boolean}
          * @default false
-         */
-         this.allowDm = options.commands?.allowDm !== undefined ? Boolean(options.commands?.allowDm) : false;
+        */
+        this.allowDm = options.commands?.allowDm !== undefined ? Boolean(options.commands?.allowDm) : false;
 
         /**
          * DeletePrompt

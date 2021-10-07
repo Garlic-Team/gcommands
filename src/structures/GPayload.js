@@ -11,7 +11,7 @@ class GPayload {
      * @param {TextChannel | NewsChannel | DMChannel | ThreadChannel} channel
      * @param {string|GPayloadOptions} options
     */
-    constructor(channel, options) {
+    constructor(channel, options, client) {
         /**
          * Channel
          * @type {TextChannel | NewsChannel | DMChannel | ThreadChannel}
@@ -23,7 +23,7 @@ class GPayload {
          * Client
          * @type {Client}
          */
-        this.client = channel.client;
+        this.client = channel?.client || client;
 
         /**
          * Options
@@ -79,7 +79,7 @@ class GPayload {
 
         let allowedMentions =
           typeof this.options.allowedMentions === 'undefined'
-            ? this.client.options.allowedMentions
+            ? this.client?.options?.allowedMentions
             : this.options.allowedMentions;
 
         if (allowedMentions) {

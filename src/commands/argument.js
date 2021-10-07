@@ -23,7 +23,7 @@ class Argument {
      * @param {Client}
      * @param {Object} argument
      */
-    constructor(client, argument) {
+    constructor(client, argument, isNotDm) {
         /**
          * Client
          * @type {Client}
@@ -78,6 +78,13 @@ class Argument {
          * @type {Array<Object>}
         */
         this.subcommands = argument.subcommands;
+
+
+        /**
+         * IsNotDm
+         * @type {string}
+        */
+        this.isNotDm = isNotDm;
     }
 
     get channelTypes() {
@@ -173,7 +180,7 @@ class Argument {
         if (this.client.deletePrompt) await msgReply.delete();
         else await msgReply.edit({ content: msgReply.content, components: getComponents(true) });
 
-        if (this.client.deleteInput && resFirst instanceof ButtonInteraction === false && message.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES')) await resFirst.delete();
+        if (this.client.deleteInput && this.isNotDm && resFirst instanceof ButtonInteraction === false && message.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES')) await resFirst.delete();
 
         let invalid;
         let reason;
@@ -210,10 +217,10 @@ class Argument {
         if (argument.type === 3) return new StringArgumentType(client, argument);
         if (argument.type === 4) return new IntegerArgumentType(client, argument);
         if (argument.type === 5) return new BooleanArgumentType(client, argument);
-        if (argument.type === 6) return new UserArgumentType(client, argument);
-        if (argument.type === 7) return new ChannelArgumentType(client, argument);
-        if (argument.type === 8) return new RoleArgumentType(client, argument);
-        if (argument.type === 9) return new MentionableArgumentType(client, argument);
+        if (this.isNotDm && argument.type === 6) return new UserArgumentType(client, argument);
+        if (this.isNotDm && argument.type === 7) return new ChannelArgumentType(client, argument);
+        if (this.isNotDm && argument.type === 8) return new RoleArgumentType(client, argument);
+        if (this.isNotDm && argument.type === 9) return new MentionableArgumentType(client, argument);
         if (argument.type === 10) return new NumberArgumentType(client, argument);
         else return { type: 'invalid' };
     }

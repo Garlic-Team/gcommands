@@ -44,7 +44,7 @@ class GEventHandling {
             if (!message || !message.author || message.author.bot || (!this.client.allowDm && message.channel.type === 'dm')) return;
 
             const mention = message.content.match(new RegExp(`^<@!?(${this.client.user.id})> `));
-            const prefix = mention ? mention[0] : (message.guild ? (await message.guild.getCommandPrefix())[0] : this.client.prefix);
+            const prefix = mention ? mention[0] : (message.guild ? (await message.guild.getCommandPrefix())[0] : this.client.prefix[0]);
 
             const messageContainsPrefix = this.client.caseSensitivePrefixes ? message.content.startsWith(prefix) : message.content.toLowerCase().startsWith(prefix.toLowerCase());
             if (!messageContainsPrefix) return;
@@ -64,15 +64,20 @@ class GEventHandling {
                         String(cmd.name),
                 );
 
+                const isDmEnabled = ['false'].includes(String(commandos.allowDm));
+                const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
                 const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
                 const isClientMessageEnabled = !commandos.slash && ['false', 'slash'].includes(String(this.client.slash));
 
+                const channelType = channelTypeRefactor(message.channel);
+                const isNotDm = channelType !== 'dm';
+
+                if (!isNotDm && isDmEnabled) return;
+                if (!isNotDm && isClientDmEnabled) return;
                 if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
 
-                const channelType = channelTypeRefactor(message.channel);
-                const isNotDm = channelType !== 'dm';
                 const language = isNotDm ? await this.client.dispatcher.getGuildLanguage(message.guild.id) : this.client.language;
 
                 const runOptions = {
@@ -211,7 +216,7 @@ class GEventHandling {
                         subcommands: cmdSubcommands,
                         required: true,
                     };
-                    const arg = new Argument(this.client, options);
+                    const arg = new Argument(this.client, options, isNotDm);
                     let subcommandInput;
 
                     if (args[0]) {
@@ -265,8 +270,7 @@ class GEventHandling {
                 }
 
                 for (const i in cmdArgs) {
-                    if (!isNotDm) continue;
-                    const arg = new Argument(this.client, cmdArgs[i]);
+                    const arg = new Argument(this.client, cmdArgs[i], isNotDm);
                     if (arg.type === 'invalid') continue;
                     const rawArg = cmdArgs[1] ? args[i] : args.join(' ');
 
@@ -379,8 +383,6 @@ class GEventHandling {
         this.client.on('GInteraction', async interaction => {
             if (!interaction.isApplication()) return;
 
-            if (!interaction.guild) return;
-
             let commandos;
             try {
                 commandos = this.client.gcommands.find(cmd =>
@@ -390,19 +392,23 @@ class GEventHandling {
                 );
                 if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (slash): &e➜   &3${interaction.commandName ? String(interaction.commandName) : null}`, { json: false }).getText());
 
+                const isDmEnabled = ['false'].includes(String(commandos.allowDm));
+                const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
                 const isSlashEnabled = ['false', 'message'].includes(String(commandos.slash));
                 const isClientSlashEnabled = !commandos.slash && ['false', 'message'].includes(String(this.client.slash));
                 const isContextEnabled = String(commandos.context) === 'false';
                 const isClientContextEnabled = String(this.client.context) === 'false';
 
+                const channelType = channelTypeRefactor(interaction.channel);
+                const isNotDm = channelType !== 'dm';
 
+                if (!isNotDm && isDmEnabled) return;
+                if (!isNotDm && isClientDmEnabled) return;
                 if (interaction.isCommand() && isSlashEnabled) return;
                 if (interaction.isCommand() && !commandos.slash && isClientSlashEnabled) return;
                 if (interaction.isContextMenu() && isContextEnabled) return;
                 if (interaction.isContextMenu() && !commandos.context && isClientContextEnabled) return;
 
-                const channelType = channelTypeRefactor(interaction.channel);
-                const isNotDm = channelType !== 'dm';
                 const language = interaction.guild ? await this.client.dispatcher.getGuildLanguage(interaction.guild.id) : this.client.language;
 
                 const runOptions = {

@@ -215,6 +215,7 @@ declare module 'gcommands' {
     public channelTextOnly: Boolean;
     public channelNewsOnly: Boolean;
     public channelThreadOnly: Boolean;
+    public allowDm: Boolean;
     public guildOnly: Snowflake | Array<Snowflake>;
     public nsfw: boolean;
     public aliases: Array<string>;
@@ -238,6 +239,7 @@ declare module 'gcommands' {
     public setChannelTextOnly(channelTextOnly: Boolean): CommandOptionsBuilder;
     public setChannelNewsOnly(channelNewsOnly: Boolean): CommandOptionsBuilder;
     public setChannelThreadOnly(channelThreadOnly: Boolean): CommandOptionsBuilder;
+    public setAllowDm(allowDm: Boolean): CommandOptionsBuilder;
     public setGuildOnly(guildOnly: Snowflake | Array<Snowflake>): CommandOptionsBuilder;
     public setNsfw(nsfw: Boolean): CommandOptionsBuilder;
     public setAliases(aliases: Array<string>): CommandOptionsBuilder;
@@ -420,6 +422,7 @@ declare module 'gcommands' {
     public channelTextOnly: Boolean;
     public channelNewsOnly: Boolean;
     public channelThreadOnly: Boolean;
+    public allowDm: Boolean;
     public guildOnly: Snowflake | Array<Snowflake>;
     public nsfw: boolean;
     public aliases: Array<string>;

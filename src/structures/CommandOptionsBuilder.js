@@ -128,6 +128,12 @@ class CommandOptionsBuilder {
     this.channelThreadOnly = 'channelThreadOnly' in data ? Boolean(data.channelThreadOnly) : null;
 
     /**
+      * AllowDm
+      * @type {boolean}
+     */
+    this.allowDm = 'allowDm' in data ? Boolean(data.allowDm) : null;
+
+    /**
       * Nsfw
       * @type {boolean}
      */
@@ -319,6 +325,15 @@ class CommandOptionsBuilder {
   */
   setChannelThreadOnly(channelThreadOnly) {
     this.channelThreadOnly = Boolean(channelThreadOnly);
+    return this;
+  }
+
+  /**
+   * Method to setAllowDm
+   * @param {boolean} allowDm
+  */
+   setAllowDm(allowDm) {
+    this.allowDm = Boolean(allowDm);
     return this;
   }
 
