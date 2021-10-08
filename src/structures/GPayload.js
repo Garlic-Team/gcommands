@@ -1,4 +1,5 @@
-const { MessageEmbed, MessageAttachment, DataResolver, Util } = require('discord.js');
+const { MessageEmbed, MessageAttachment, DataResolver, Util, MessageFlags } = require('discord.js');
+const BaseMessageComponent = require('./BaseMessageComponent');
 const { browser } = require('discord.js').Constants;
 
 /**
@@ -10,13 +11,19 @@ class GPayload {
      * @param {TextChannel | NewsChannel | DMChannel | ThreadChannel} channel
      * @param {string|GPayloadOptions} options
     */
-    constructor(channel, options) {
+    constructor(channel, options, client) {
         /**
          * Channel
          * @type {TextChannel | NewsChannel | DMChannel | ThreadChannel}
          */
 
         this.channel = channel;
+
+        /**
+         * Client
+         * @type {Client}
+         */
+        this.client = channel?.client || client;
 
         /**
          * Options
@@ -45,32 +52,66 @@ class GPayload {
         if (this.data) return this;
         else this.data = {};
 
-        let type = typeof this.options;
+        const type = typeof this.options;
         if (type !== 'object' || this.options instanceof MessageEmbed || this.options instanceof MessageAttachment) this.options = { content: this.options };
 
-        this.options.inlineReply = this.options.inlineReply === undefined ? false : this.options.inlineReply;
-        this.channel_id = this.channel.id;
+        const tts = Boolean(this.options.tts);
 
-        if (this.options.content && typeof this.options.content === 'object') {
+        let content;
+        if (typeof this.options.content === 'object') {
           this.options.embeds = this.options.content instanceof MessageEmbed ? this.options.content : this.options.embeds || [];
           this.options.attachments = this.options.content instanceof MessageAttachment ? this.options.content : this.options.attachments || [];
-        } else { this.data.content = this.options.content || null; }
+        } else { content = this.options.content || null; }
 
-        this.data.allowed_mentions = this.options.allowedMentions ? { replied_user: this.options.allowedMentions.repliedUser, parse: this.options.allowedMentions.parse, roles: this.options.allowedMentions.roles, users: this.options.allowedMentions.users } : { parse: [], replied_user: true };
-        this.data.flags = this.options.ephemeral ? 64 : null;
+        if (this.options.components && !Array.isArray(this.options.components)) this.options.components = Array(this.options.components);
+        const components = this.options.components ? this.options.components.map(c => BaseMessageComponent.create(c).toJSON()) : undefined;
 
-        if (this.options.components) this.data.components = !Array.isArray(this.options.components) ? Array(this.options.components) : this.options.components;
-        if (this.options.embeds) this.data.embeds = !Array.isArray(this.options.embeds) ? Array(this.options.embeds) : this.options.embeds;
-        if (this.options.attachments) this.options.attachments = !Array.isArray(this.options.attachments) ? Array(this.options.attachments) : this.options.attachments;
-        if (this.options.files) this.options.files = !Array.isArray(this.options.files) ? Array(this.options.files) : this.options.files;
-        if (this.options.stickers) {
-          this.options.stickers = !Array.isArray(this.options.stickers) ? this.options.stickers = new Array(this.options.stickers) : this.options.stickers;
-          this.data.sticker_ids = this.options.stickers.map(sticker => sticker.id || sticker);
+        if (this.options.stickers && !Array.isArray(this.options.stickers)) this.options.stickers = Array(this.options.stickers);
+        const sticker_ids = this.options.stickers ? this.options.stickers.map(sticker => sticker.id || sticker) : undefined;
+
+        if (this.options.embeds && !Array.isArray(this.options.embeds)) this.options.embeds = Array(this.options.embeds);
+        const embeds = this.options.embeds ? this.options.embeds.map(embed => new MessageEmbed(embed).toJSON()) : undefined;
+
+        if (this.options.attachments && !Array.isArray(this.options.attachments)) this.options.attachments = Array(this.options.attachments);
+        if (this.options.files && !Array.isArray(this.options.files)) this.options.files = Array(this.options.files);
+
+        const flags = this.options.ephemeral ? MessageFlags.FLAGS.EPHEMERAL : this.options.flags ? new MessageFlags(this.options.flags).bitfield : null;
+
+        let allowedMentions =
+          typeof this.options.allowedMentions === 'undefined'
+            ? this.client?.options?.allowedMentions
+            : this.options.allowedMentions;
+
+        if (allowedMentions) {
+          allowedMentions = Object.assign({}, allowedMentions);
+          allowedMentions.replied_user = allowedMentions.repliedUser;
+          delete allowedMentions.repliedUser;
         }
 
-        if (this.options.inlineReply && typeof this.options.inlineReply === 'string') this.data.message_reference = { message_id: this.options.inlineReply };
-        else if (typeof this.options.inlineReply === 'boolean' && this.options.inlineReply && (this.channel.lastMessageID || this.channel.lastMessageId)) this.data.message_reference = { message_id: this.channel.lastMessageID || this.channel.lastMessageId };
+        let message_reference;
+        if (typeof this.options.reply === 'object' || this.options.inlineReply) {
+          const reference = this.options.reply ? this.options.reply.messageReference : this.options.inlineReply;
+          const message_id = reference.id || reference || typeof this.options.inlineReply === 'string' ? this.options.inlineReply : (this.channel.lastMessageID || this.channel.lastMessageId) || undefined;
+          const fail_if_not_exists = this.options.inlineReply ? this.options.inlineReply.failIfNotExists || this.client.options.failIfNotExists : this.options.reply.failIfNotExists || this.client.options.failIfNotExists;
+          if (message_id) {
+            message_reference = {
+              message_id,
+              fail_if_not_exists,
+            };
+          }
+        }
 
+        this.data = {
+          content,
+          tts,
+          embeds,
+          components,
+          allowed_mentions: typeof content === 'undefined' && typeof message_reference === 'undefined' ? undefined : allowedMentions,
+          flags,
+          message_reference,
+          attachments: this.options.attachments,
+          sticker_ids,
+        };
         return this;
     }
 

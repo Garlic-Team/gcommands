@@ -23,7 +23,7 @@ class Util {
      * @returns {number}
     */
     static msToSeconds(ms) {
-        let seconds = ms / 1000;
+        const seconds = ms / 1000;
         return seconds;
     }
 
@@ -37,6 +37,19 @@ class Util {
         if (!text.includes(':')) return { animated: false, name: text, id: null };
         const match = text.match(/<?(?:(a):)?(\w{2,32}):(\d{17,19})?>?/);
         return match && { animated: Boolean(match[1]), name: match[2], id: match[3] || null };
+    }
+
+    /**
+     * Resolve emoji without client
+     * @param {EmojiIdentifierResolvable} emoji
+     * @returns {Object|null}
+     */
+     static resolvePartialEmoji(emoji) {
+        if (!emoji) return null;
+        if (typeof emoji === 'string') return /^\d{17,19}$/.test(emoji) ? { id: emoji } : Util.parseEmoji(emoji);
+        const { id, name, animated } = emoji;
+        if (!id && !name) return null;
+        return { id, name, animated };
     }
 
     /**
@@ -100,7 +113,7 @@ class Util {
     */
     static inhibit(client, interaction, data) {
 		for (const inhibitor of client.inhibitors) {
-			let inhibit = inhibitor(interaction, data);
+			const inhibit = inhibitor(interaction, data);
 			return inhibit;
 		}
 		return null;
@@ -172,7 +185,7 @@ class Util {
      * @private
     */
     static checkDjsVersion(needVer) {
-        let ver = parseInt(version.split('')[0] + version.split('')[1]);
+        const ver = parseInt(version.split('')[0] + version.split('')[1]);
         if (ver === parseInt(needVer)) {
             return true;
         } else {
@@ -206,19 +219,19 @@ class Util {
 
     /**
      * GetAllObjects from object
-     * @param {GCommandsClient} GCommandsClient
+     * @param {GCommandsClient} client
      * @param {Object} ob
      * @returns {String}
     */
-    static getAllObjects(GCommandsClient, ob) {
-	if (typeof ob !== 'object') return;
-        for (let v of Object.values(ob)) {
+    static getAllObjects(client, ob) {
+	    if (typeof ob !== 'object') return;
+        for (const v of Object.values(ob)) {
             if (Array.isArray(v)) {
                 Util.getAllObjects(v[0]);
             } else if (typeof v === 'object') {
                 Util.getAllObjects(v);
             } else {
-                GCommandsClient.emit(Events.DEBUG, new Color([
+                client.emit(Events.DEBUG, new Color([
                     `&b${v}`,
                 ]).getText());
             }

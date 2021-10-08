@@ -30,7 +30,6 @@
  * client.on('commandError', (info) => { console.log(info); });
 */
 
-
 /**
  * commandsLoaded
  * @event GCommandsClient#commandsLoaded
@@ -40,12 +39,21 @@
 */
 
 /**
+ * commandNotFound
+ * @event GCommandsClient#commandNotFound
+ * @param {string} info Command not found
+ * @example
+ * client.on('commandNotFound', (info) => { console.log(info); });
+*/
+
+/**
  * Events
  * * debug
  * * log
  * * commandExecute
  * * commandError
  * * commandsLoaded
+ * * commandNotFound
  * @type {Object}
  */
 exports.Events = {
@@ -54,6 +62,7 @@ exports.Events = {
     COMMAND_EXECUTE: 'commandExecute',
     COMMAND_ERROR: 'commandError',
     COMMANDS_LOADED: 'commandsLoaded',
+    COMMAND_NOT_FOUND: 'commandNotFound',
 };
 
 /**
@@ -158,6 +167,7 @@ function createEnum(keys) {
  * @property {string} eventDir
  * @property {GCommandsOptionsLanguage} language
  * @property {GCommandsOptionsCommands} commands
+ * @property {GCommandsOptionsArguments} arguments
  * @property {boolean} caseSensitiveCommands
  * @property {boolean} caseSensitivePrefixes
  * @property {string} defaultCooldown
@@ -205,8 +215,15 @@ function createEnum(keys) {
  * @property {GCommandsOptionsCommandsSlash} slash
  * @property {GCommandsOptionsCommandsContext} context
  * @property {string} prefix
+ * @property {boolean} loadFromCache
  * @typedef {(object)} GCommandsOptionsCommands
- * @typedef {(Object)} GCommandsOptionsCommands
+ */
+
+/**
+ * The GCommandsOptionsArguments
+ * @property {boolean} deletePrompt
+ * @property {boolean} deleteInput
+ * @typedef {(object)} GCommandsOptionsArguments
  */
 
 /**
@@ -240,10 +257,12 @@ function createEnum(keys) {
  * @property {Message | undefined} message
  * @property {Guild} guild
  * @property {TextChannel | NewsChannel} channel
- * @property {GPayloadOptions} respond
- * @property {GPayloadOptions} edit
+ * @property {string | GPayloadOptions} respond
+ * @property {string | GPayloadOptions} edit
+ * @property {string | GPayloadOptions} followUp
  * @property {Array} args
  * @property {Object} objectArgs
+ * @property {string} language
  * @typedef {(Object)} CommandRunOptions
 */
 
@@ -256,10 +275,11 @@ function createEnum(keys) {
  * @property {GuildMember} member
  * @property {Guild} guild
  * @property {TextChannel | NewsChannel} channel
- * @property {GPayloadOptions} respond
- * @property {GPayloadOptions} edit
+ * @property {string | GPayloadOptions} respond
+ * @property {string | GPayloadOptions} edit
+ * @property {string | GPayloadOptions} followUp
  * @property {Array} args
- * @property {Object} objectArgs
+ * @property {string} language
  * @typedef {(Object)} Inhibitor
  */
 
@@ -317,3 +337,31 @@ function createEnum(keys) {
  * @property {string} value
  * @typedef {(Object)} CommandArgsChoice
  */
+
+/**
+ * ArgumentChannelTypes
+ *
+ * * DM
+ * * GUILD_TEXT
+ * * GUILD_VOICE
+ * * GUILD_CATEGORY
+ * * GUILD_NEWS
+ * * GUILD_STORE
+ * * GUILD_NEWS_THREAD
+ * * GUILD_PUBLIC_THREAD
+ * * GUILD_PRIVATE_THREAD
+ * * GUILD_STAGE_VOICE
+ * @typedef {(String)} ArgumentChannelTypes
+ */
+module.exports.ArgumentChannelTypes = {
+    DM: 1,
+    GUILD_TEXT: 0,
+    GUILD_VOICE: 2,
+    GUILD_CATEGORY: 4,
+    GUILD_NEWS: 5,
+    GUILD_STORE: 6,
+    GUILD_NEWS_THREAD: 10,
+    GUILD_PUBLIC_THREAD: 11,
+    GUILD_PRIVATE_THREAD: 12,
+    GUILD_STAGE_VOICE: 13,
+};

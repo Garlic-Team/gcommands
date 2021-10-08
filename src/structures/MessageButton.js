@@ -1,5 +1,4 @@
-/* From discord-buttons edited */
-const { resolveString, parseEmoji } = require('../util/util');
+const { resolveString, parseEmoji, resolvePartialEmoji } = require('../util/util');
 const { MessageComponentTypes } = require('../util/Constants');
 const BaseMessageComponent = require('./BaseMessageComponent');
 const GError = require('./GError');
@@ -43,7 +42,7 @@ class MessageButton extends BaseMessageComponent {
          * Style
          * @type {string}
         */
-        this.style = 'style' in data ? data.style : null;
+        this.style = 'style' in data ? this.resolveStyle(data.style) : null;
 
         /**
          * Label
@@ -56,6 +55,12 @@ class MessageButton extends BaseMessageComponent {
          * @type {boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
+
+        /**
+         * Emoji
+         * @type {boolean}
+        */
+         this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : false;
 
         if (this.style === 5) {
             /**
@@ -146,7 +151,7 @@ class MessageButton extends BaseMessageComponent {
         return {
             type: MessageComponentTypes.BUTTON,
             style: this.url ? 5 : this.style,
-            label: this.label,
+            label: this.label || '',
             disabled: this.disabled,
             url: this.url,
             custom_id: this.url ? null : this.customId,
@@ -155,9 +160,12 @@ class MessageButton extends BaseMessageComponent {
     }
 
     resolveStyle(style) {
-        if (!style || style === undefined || style === null) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
+        if (!style) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
 
-        if (!styles[style] || styles[style] === undefined || styles[style] === null) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
+        if (typeof style === 'string') style = style.toLowerCase();
+        if (typeof style === 'number') style = Object.keys(styles)[style];
+
+        if (!styles[style]) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
 
         return styles[style] || style;
     }

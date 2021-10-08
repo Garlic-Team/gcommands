@@ -16,18 +16,12 @@ class GCommandsDispatcher {
      * The GCommansDispatcher class
      * @param {GCommandsClient} GCommandsClient
      */
-    constructor(GCommandsClient, readyWait = true) {
-        /**
-         * GCommandsClient
-         * @type {GCommands}
-        */
-         this.GCommandsClient = GCommandsClient;
-
+    constructor(client, readyWait = true) {
         /**
          * Client
-         * @type {Client}
+         * @type {GCommandsClient}
          */
-        this.client = this.GCommandsClient.client;
+        this.client = client;
 
         /**
          * Inhibitors
@@ -68,7 +62,7 @@ class GCommandsDispatcher {
     async setGuildPrefix(guildId, prefix) {
         if (!this.client.database) return false;
 
-        let guildData = await this.client.database.get(`guild_${guildId}`) || {};
+        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
         guildData.prefix = !Array.isArray(prefix) ? Array(prefix) : prefix;
 
         this.client.database.set(`guild_${guildId}`, guildData);
@@ -88,13 +82,13 @@ class GCommandsDispatcher {
 
         if (!this.client.database) return this.client.prefix;
 
-        let guild = this.client.guilds.cache.get(guildId);
+        const guild = this.client.guilds.cache.get(guildId);
         if (guild && guild.prefix && !Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix);
         else cache = false;
 
         if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
 
-        let guildData = await this.client.database.get(`guild_${guildId}`) || {};
+        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
         if (guildData.prefix && !Array.isArray(guildData.prefix)) guildData.prefix = Array(guildData.prefix);
 
         return guildData ? guildData.prefix || this.client.prefix : this.client.prefix;
@@ -109,7 +103,7 @@ class GCommandsDispatcher {
     */
     async getCooldown(guildId, userId, command) {
         if (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
-        let now = Date.now();
+        const now = Date.now();
 
         let cooldown;
         if (typeof command.cooldown === 'object') cooldown = command.cooldown ? ms(command.cooldown.cooldown) : ms(this.client.defaultCooldown);
@@ -144,7 +138,7 @@ class GCommandsDispatcher {
 
         if (!this.client.database || !command.cooldown) return { cooldown: false };
 
-        let guildData = await this.client.database.get(`guild_${guildId}`) || {};
+        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
         if (!guildData.users) guildData.users = {};
         if (!guildData.users[userId]) guildData.users[userId] = guildData.users[userId] || {};
 
@@ -187,7 +181,7 @@ class GCommandsDispatcher {
     async setGuildLanguage(guildId, lang) {
         if (!this.client.database) return false;
 
-        let guildData = await this.client.database.get(`guild_${guildId}`) || {};
+        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
         guildData.language = lang;
 
         this.client.database.set(`guild_${guildId}`, guildData);
@@ -205,12 +199,12 @@ class GCommandsDispatcher {
     async getGuildLanguage(guildId, cache = true) {
         if (!this.client.database) return this.client.language;
 
-        let guild = this.client.guilds.cache.get(guildId);
+        const guild = this.client.guilds.cache.get(guildId);
         if (!guild || !guild.language) cache = false;
 
         if (cache) return guild.language ? guild.language : this.client.language;
 
-        let guildData = await this.client.database.get(`guild_${guildId}`) || {};
+        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
         return guildData ? guildData.language || this.client.language : this.client.language;
     }
 

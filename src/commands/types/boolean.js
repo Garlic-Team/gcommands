@@ -19,20 +19,28 @@ class BooleanArgumentType extends ArgumentType {
 		this.client = client;
 
         /**
-         * AnswerSet
+         * TrueAnswerSet
          * @type {Set}
         */
-		this.answerSet = new Set(['true', 't', 'yes', 'y', 'on', 'enable', 'enabled', 'false', 'f', 'no', 'n', 'off', 'disable', 'disabled']);
+        this.trueAnswerSet = new Set(['true', 't', 'yes', 'y', 'on', 'enable', 'enabled']);
+
+        /**
+         * FalseAnswerSet
+         * @type {Set}
+        */
+		this.falseAnswerSet = new Set(['false', 'f', 'no', 'n', 'off', 'disable', 'disabled']);
     }
 
-	async validate(argument, message) {
-		const b = message.content.toLowerCase();
-		const guildLanguage = await message.guild.getLanguage();
-
-		if (!this.answerSet.has(b)) {
-			return this.client.languageFile.ARGS_MUST_CONTAIN[guildLanguage].replace('{argument}', argument.name).replace('{type}', 'boolean');
+	validate(argument, message, language) {
+		if (this.trueAnswerSet.has(message.content) === false && this.falseAnswerSet.has(message.content) === false) {
+			return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'boolean');
 		}
 	}
+
+    get(argument, message) {
+        if (this.falseAnswerSet.has(message)) return false;
+        else if (this.trueAnswerSet.has(message)) return true;
+    }
 }
 
 module.exports = BooleanArgumentType;

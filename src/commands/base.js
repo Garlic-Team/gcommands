@@ -1,5 +1,6 @@
 const { resolveString, isClass } = require('../util/util');
 const GError = require('../structures/GError');
+const { ArgumentChannelTypes } = require('../util/Constants');
 
 /**
  * The Command class
@@ -52,7 +53,18 @@ class Command {
          * Args
          * @type {CommandArgsOption[]}
          */
-        this.args = options.args;
+        this.args = options.args ? options.args.map(arg => {
+            const types = arg.channel_types ? !Array.isArray(arg.channel_types) ? [arg.channel_types] : arg.channel_types : [];
+            const final = [];
+
+            for (const type of types) {
+                final.push(ArgumentChannelTypes[type]);
+            }
+
+            if (final.length !== 0) arg.channel_types = final;
+
+            return arg;
+        }) : null;
 
         /**
          * AlwaysObtain
@@ -114,6 +126,12 @@ class Command {
          * @type {boolean}
          */
         this.channelThreadOnly = options.channelThreadOnly;
+
+        /**
+         * AllowDm
+         * @type {boolean}
+         */
+         this.allowDm = options.allowDm;
 
         /**
          * GuildOnly
@@ -185,7 +203,7 @@ class Command {
 	 * Reloads the command
 	 */
     async reload() {
-        let cmdPath = this.client.gcommands.get(this.name)._path;
+        const cmdPath = this.client.gcommands.get(this.name)._path;
 
         delete require.cache[require.resolve(cmdPath)];
         this.client.gcommands.delete(this.name);
@@ -198,7 +216,12 @@ class Command {
         if (!(newCommand instanceof Command)) throw new GError('[COMMAND]',`Command ${newCommand.name} doesnt belong in Commands.`);
 
         if (newCommand.name !== this.name) throw new GError('[COMMAND]','Command name cannot change.');
-        if (newCommand.guildOnly !== this.guildOnly) throw new GError('[COMMAND]','Command guildOnly cannot change.');
+
+        const nglds = newCommand.guildOnly ? Array.isArray(newCommand.guildOnly) ? newCommand.guildOnly : Array(newCommand.guildOnly) : undefined;
+
+        const check1 = nglds.every((x, i) => x === this.guildOnly[i]);
+        const check2 = this.guildOnly.every((x, i) => x === nglds[i]);
+        if (!check1 || !check2) throw new GError('[COMMAND]','Command guildOnly cannot change.');
 
         newCommand._path = cmdPath;
         this.client.gcommands.set(newCommand.name, newCommand);

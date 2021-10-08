@@ -16,7 +16,7 @@ module.exports = {
          * @returns {Message}
          */
         value: async function(result) {
-            let GPayloadResult = await GPayload.create(this, result)
+            const GPayloadResult = await GPayload.create(this, result)
                 .resolveData()
                 .resolveFiles();
 

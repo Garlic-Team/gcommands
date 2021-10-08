@@ -60,6 +60,7 @@ declare module 'discord.js' {
     commandExecute: [Command, GuildMember];
     commandError: [Command, GuildMember, String];
     commandsLoaded: [Collection<Command>];
+    commandNotFound: [string]
     log: [string];
     debug: [string];
 
@@ -214,6 +215,7 @@ declare module 'gcommands' {
     public channelTextOnly: Boolean;
     public channelNewsOnly: Boolean;
     public channelThreadOnly: Boolean;
+    public allowDm: Boolean;
     public guildOnly: Snowflake | Array<Snowflake>;
     public nsfw: boolean;
     public aliases: Array<string>;
@@ -237,6 +239,7 @@ declare module 'gcommands' {
     public setChannelTextOnly(channelTextOnly: Boolean): CommandOptionsBuilder;
     public setChannelNewsOnly(channelNewsOnly: Boolean): CommandOptionsBuilder;
     public setChannelThreadOnly(channelThreadOnly: Boolean): CommandOptionsBuilder;
+    public setAllowDm(allowDm: Boolean): CommandOptionsBuilder;
     public setGuildOnly(guildOnly: Snowflake | Array<Snowflake>): CommandOptionsBuilder;
     public setNsfw(nsfw: Boolean): CommandOptionsBuilder;
     public setAliases(aliases: Array<string>): CommandOptionsBuilder;
@@ -409,7 +412,7 @@ declare module 'gcommands' {
     public contextMenuName: string;
     public description: string;
     public cooldown: string;
-    public args: Array<object>;
+    public args: Array<CommandArgsOptions>;
     public alwaysObtain: boolean;
     public clientRequiredPermissions: String | Array<string>;
     public userRequiredPermissions: String | Array<string>;
@@ -419,6 +422,7 @@ declare module 'gcommands' {
     public channelTextOnly: Boolean;
     public channelNewsOnly: Boolean;
     public channelThreadOnly: Boolean;
+    public allowDm: Boolean;
     public guildOnly: Snowflake | Array<Snowflake>;
     public nsfw: boolean;
     public aliases: Array<string>;
@@ -492,6 +496,7 @@ declare module 'gcommands' {
       slash: GCommandsOptionsCommandsSlash;
       context?: GCommandsOptionsCommandsContext;
       prefix?: string;
+      loadFromCache?: boolean;
     },
     caseSensitiveCommands?: boolean;
     caseSensitivePrefixes?: boolean;
@@ -511,6 +516,22 @@ declare module 'gcommands' {
 
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;
+    followUp(options: string | GPayloadOptions): void;
+  }
+
+  interface CommandArgsOptions {
+    name: string;
+    description: string;
+    type: ArgumentType;
+    prompt?: string;
+    required?: boolean;
+    choices?: CommandArgsChoice[];
+    options?: CommandArgsOptions;
+  }
+
+  interface CommandArgsChoice {
+    name: string;
+    value: string;
   }
 
   interface GPayloadOptions {

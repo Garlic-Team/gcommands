@@ -1,5 +1,6 @@
 const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
 const axios = require('axios');
+const path = require('path');
 const fs = require('fs');
 const ms = require('ms');
 const { isClass, __deleteCmd, __getAllCommands, comparable, getAllObjects } = require('../util/util');
@@ -10,26 +11,20 @@ const Command = require('../commands/base');
 class GCommandLoader {
     /**
      * The GCommandLoader class
-     * @param {GCommands} GCommandsClient
+     * @param {GCommandsClient} client
      */
-    constructor(GCommandsClient) {
-        /**
-         * GCommandsClient
-         * @type {GCommands}
-        */
-        this.GCommandsClient = GCommandsClient;
-
+    constructor(client) {
         /**
          * Client
-         * @type {Client}
+         * @type {GCommandsClient}
         */
-        this.client = this.GCommandsClient.client;
+        this.client = client;
 
         /**
          * CmdDir
          * @type {string}
         */
-        this.cmdDir = this.GCommandsClient.cmdDir;
+        this.cmdDir = this.client.cmdDir;
 
         /**
          * All Global Commands
@@ -48,27 +43,27 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandFiles() {
-        for await (let file of (await fs.readdirSync(this.cmdDir))) {
-            const fileTypeIndex = (file.lastIndexOf('.') - 1 >>> 0) + 2;
-            const fileName = file.slice(0, fileTypeIndex - 1);
-            const fileType = file.slice(fileTypeIndex);
+        for await (const fsDirent of fs.readdirSync(this.cmdDir, { withFileTypes: true })) {
+            let file = fsDirent.name;
+            const fileType = path.extname(file);
+            const fileName = path.basename(file, fileType);
 
-            if (!['js', 'ts'].includes(fileType)) {
+            if (fsDirent.isDirectory()) {
                 await this.__loadCommandCategoryFiles(file);
                 continue;
-            }
+            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
 
-            file = await require(`${this.cmdDir}/${file}`);
+            file = require(`${this.cmdDir}/${file}`);
             if (isClass(file)) {
-                file = await new file(this.client);
+                file = new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `${this.cmdDir}/${fileName}.${fileType}`;
+            file._path = `${this.cmdDir}/${fileName}${fileType}`;
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
-            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
+            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
         }
 
         await this.__loadSlashCommands();
@@ -84,13 +79,20 @@ class GCommandLoader {
      * @private
      */
     async __loadCommandCategoryFiles(categoryFolder) {
-        for await (let file of (await fs.readdirSync(`${this.cmdDir}/${categoryFolder}`))) {
-            const fileName = file.split('.').reverse()[1];
-            const fileType = file.split('.').reverse()[0];
+        for await (const fsDirent of fs.readdirSync(`${this.cmdDir}/${categoryFolder}`, { withFileTypes: true })) {
+            let file = fsDirent.name;
+            const fileType = path.extname(file);
+            const fileName = path.basename(file, fileType);
 
-            file = await require(`${this.cmdDir}/${categoryFolder}/${file}`);
+            if (fsDirent.isDirectory()) {
+                // Recursive scan
+                await this.__loadCommandCategoryFiles(`${categoryFolder}/${file}`);
+                continue;
+            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
+
+            file = require(`${this.cmdDir}/${categoryFolder}/${file}`);
             if (isClass(file)) {
-                file = await new file(this.client);
+                file = new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
@@ -98,7 +100,7 @@ class GCommandLoader {
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
-            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
+            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
         }
     }
 
@@ -108,7 +110,7 @@ class GCommandLoader {
      * @private
      */
     async __loadSlashCommands() {
-        let keys = Array.from(this.client.gcommands.keys());
+        const keys = Array.from(this.client.gcommands.keys());
         this.__deleteNonExistCommands(keys);
 
         for (const commandName of keys) {
@@ -119,16 +121,18 @@ class GCommandLoader {
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
 
             const loadSlashCommand = async guildOnly => {
-                let ifAlready;
-                if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
-                else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
+                if (this.client.loadFromCache) {
+                    let ifAlready;
+                    if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
+                    else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
-                if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
-                    return;
+                    if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
+                        return;
+                    }
                 }
 
-                let config = {
+                const config = {
                     method: 'POST',
                     headers: {
                         Authorization: `Bot ${this.client.token}`,
@@ -139,16 +143,17 @@ class GCommandLoader {
                         description: cmd.description,
                         options: cmd.args || [],
                         type: 1,
-                        default_permission: (Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined,
+                        default_permission: guildOnly ? (Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined : true,
+                        channel_types: cmd.channel_types || null,
                     },
                     url,
                 };
 
                 axios(config).then(() => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
+                    this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 })
                     .catch(error => {
-                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error.response) {
                             if (error.response.status === 429) {
@@ -156,7 +161,7 @@ class GCommandLoader {
                                     this.__tryAgain(cmd, config, 'Slash');
                                 }, (error.response.data.retry_after) * 1000);
                             } else {
-                                this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
                                     '  &d[GCommands Debug] &3',
                                     `&aCode: &b${error.response.data.code}`,
@@ -166,9 +171,9 @@ class GCommandLoader {
                                 ]).getText());
 
                                 if (error.response.data.errors) {
-                                    getAllObjects(this.GCommandsClient, error.response.data.errors);
+                                    getAllObjects(this.client, error.response.data.errors);
 
-                                    this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                    this.client.emit(Events.DEBUG, new Color([
                                         `&a----------------------`,
                                     ]).getText());
                                 }
@@ -178,7 +183,7 @@ class GCommandLoader {
             };
 
             if (cmd.guildOnly) {
-                for (let guildOnly of cmd.guildOnly) {
+                for (const guildOnly of cmd.guildOnly) {
                     if (!guildOnly) {
                         await loadSlashCommand();
                         continue;
@@ -208,17 +213,19 @@ class GCommandLoader {
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             const loadContextMenu = async guildOnly => {
-                let ifAlready;
-                if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
-                else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
+                if (this.client.loadFromCache) {
+                    let ifAlready;
+                    if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
+                    else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
 
-                if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
-                    return;
+                    if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
+                        return;
+                    }
                 }
 
-                let type = cmd.context ? ApplicationCommandTypesRaw[cmd.context] : ApplicationCommandTypesRaw[this.client.context];
-                let config = {
+                const type = cmd.context ? ApplicationCommandTypesRaw[cmd.context] : ApplicationCommandTypesRaw[this.client.context];
+                const config = {
                     method: 'POST',
                     headers: {
                         Authorization: `Bot ${this.client.token}`,
@@ -232,7 +239,7 @@ class GCommandLoader {
                 };
 
                 axios(config).then(() => {
-                    this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
+                    this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
                     if (type === 4) {
                         config.data = JSON.parse(config.data);
                         config.data.type = 3;
@@ -241,7 +248,7 @@ class GCommandLoader {
                     }
                 })
                     .catch(error => {
-                        this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error.response) {
                             if (error.response.status === 429) {
@@ -249,7 +256,7 @@ class GCommandLoader {
                                     this.__tryAgain(cmd, config, 'Context Menu');
                                 }, (error.response.data.retry_after) * 1000);
                             } else {
-                                this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
                                     '  &d[GCommands Debug] &3',
                                     `&aCode: &b${error.response.data.code}`,
@@ -259,9 +266,9 @@ class GCommandLoader {
                                 ]).getText());
 
                                 if (error.response.data.errors) {
-                                    getAllObjects(this.GCommandsClient, error.response.data.errors);
+                                    getAllObjects(this.client, error.response.data.errors);
 
-                                    this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                    this.client.emit(Events.DEBUG, new Color([
                                         `&a----------------------`,
                                     ]).getText());
                                 }
@@ -271,7 +278,7 @@ class GCommandLoader {
             };
 
             if (cmd.guildOnly) {
-                for (let guildOnly of cmd.guildOnly) {
+                for (const guildOnly of cmd.guildOnly) {
                     if (!guildOnly) {
                         await loadContextMenu();
                         continue;
@@ -303,9 +310,9 @@ class GCommandLoader {
                 for (const apiCommand of apiCommands) {
                     if (![1].includes(apiCommand.type)) continue;
 
-                    let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands/${apiCommand.id}/permissions`;
+                    let url;
                     const loadApiCmd = async () => {
-                        let finalData = [];
+                        const finalData = [];
 
                         if (cmd.userRequiredRoles) {
                             if (!Array.isArray(cmd.userRequiredRoles)) cmd.userRequiredRoles = [cmd.userRequiredRoles];
@@ -331,7 +338,7 @@ class GCommandLoader {
                             }
                         }
 
-                        let config = {
+                        const config = {
                             method: 'PUT',
                             headers: {
                                 Authorization: `Bot ${this.client.token}`,
@@ -344,10 +351,10 @@ class GCommandLoader {
                         };
 
                         axios(config).then(() => {
-                            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
+                            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
                         })
                             .catch(error => {
-                                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                                 if (error.response) {
                                     if (error.response.status === 429) {
@@ -355,7 +362,7 @@ class GCommandLoader {
                                             this.__tryAgain(cmd, config, 'Permission');
                                         }, (error.response.data.retry_after) * 1000);
                                     } else {
-                                        this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                        this.client.emit(Events.DEBUG, new Color([
                                             '&a----------------------',
                                             '  &d[GCommands Debug] &3',
                                             `&aCode: &b${error.response.data.code}`,
@@ -365,9 +372,9 @@ class GCommandLoader {
                                         ]).getText());
 
                                         if (error.response.data.errors) {
-                                            getAllObjects(this.GCommandsClient, error.response.data.errors);
+                                            getAllObjects(this.client, error.response.data.errors);
 
-                                            this.GCommandsClient.emit(Events.DEBUG, new Color([
+                                            this.client.emit(Events.DEBUG, new Color([
                                                 `&a----------------------`,
                                             ]).getText());
                                         }
@@ -377,30 +384,28 @@ class GCommandLoader {
                     };
 
                     if (cmd.guildOnly) {
-                        for (let gOnly of cmd.guildOnly) {
+                        for (const gOnly of cmd.guildOnly) {
                             if (gOnly) url = `https://discord.com/api/v9/applications/${this.client.user.id}/guilds/${gOnly}/commands/${apiCommand.id}/permissions`;
                             await loadApiCmd();
                         }
-                    } else {
-                        await loadApiCmd();
                     }
                 }
             };
 
             if (cmd.guildOnly) {
-                for (let guildOnly of cmd.guildOnly) {
+                for (const guildOnly of cmd.guildOnly) {
                     if (!guildOnly) {
-                        let apiCommandsNoGuild = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
+                        const apiCommandsNoGuild = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
 
                         await loadCommandPermission(apiCommandsNoGuild);
                         continue;
                     }
 
-                    let apiCommands = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name);
+                    const apiCommands = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name);
                     await loadCommandPermission(apiCommands, guildOnly);
                 }
             } else {
-                let apiCommands = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
+                const apiCommands = (await this._allGlobalCommands).filter(c => c.name === cmd.name);
                 await loadCommandPermission(apiCommands);
             }
         }
@@ -413,10 +418,10 @@ class GCommandLoader {
     */
     __tryAgain(cmd, config, type) {
         axios(config).then(() => {
-            this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText());
+            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText());
         })
             .catch(error => {
-                this.GCommandsClient.emit(Events.LOG, new Color(`&d[GCommands] ${error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                 if (error.response) {
                     if (error.response.status === 429) {
@@ -434,12 +439,12 @@ class GCommandLoader {
      * @private
      */
     async __deleteNonExistCommands(commandFiles) {
-        let allSlashCommands = await __getAllCommands(this.client);
+        const allSlashCommands = await __getAllCommands(this.client);
         if (!allSlashCommands || allSlashCommands.length < 0) return;
 
         if (String(this.client.slash) === 'false') allSlashCommands.forEach(cmd => __deleteCmd(this.client, cmd.id));
 
-        for (let slashCmd of allSlashCommands) {
+        for (const slashCmd of allSlashCommands) {
             if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
             if (this.client.gcommands.get(slashCmd.name) && String(this.client.gcommands.get(slashCmd.name).slash) === 'false') __deleteCmd(this.client, slashCmd.id);
         }
