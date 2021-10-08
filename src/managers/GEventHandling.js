@@ -126,21 +126,11 @@ class GEventHandling {
                 if (inhibitReturn === false) return;
 
                 const cooldown = message.guild ? await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos) : null;
-                const NSFW = message.guild ? commandos.nsfw && !message.channel.nsfw : null;
-                const isNotChannelType = type => channelType !== type;
-                const isNotGuild = guild => !commandos.guildOnly.includes(guild);
-
                 const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
-                const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
-                const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
-                const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];
-                const getNsfwMessage = () => this.client.languageFile.NSFW[language];
-                const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
-                const getMissingPermissionsMessage = () => this.client.languageFile.MISSING_PERMISSIONS[language].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
-                const getMissingRolesMessage = () => this.client.languageFile.MISSING_ROLES[language].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
-                const getArgsTimeLimitMessage = () => this.client.languageFile.ARGS_TIME_LIMIT[language];
 
                 if (cooldown?.cooldown) return message.reply(getCooldownMessage());
+
+                const isNotGuild = guild => !commandos.guildOnly.includes(guild);
 
                 if (isNotDm && commandos.guildOnly && isNotGuild(message.guild.id)) return;
 
@@ -158,11 +148,21 @@ class GEventHandling {
                     } else if (message.channel.id !== commandos.channelOnly) { return; }
                 }
 
+                const isNotChannelType = type => channelType !== type;
+                const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
+                const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
+                const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];
+
                 if (isNotDm && commandos.channelTextOnly && isNotChannelType('text')) return message.reply(getChannelTextOnlyMessage());
                 if (isNotDm && commandos.channelNewsOnly && isNotChannelType('news')) return message.reply(getChannelNewsOnlyMessage());
                 if (isNotDm && commandos.channelThreadOnly && isNotChannelType('thread')) return message.reply({ content: getChannelThreadOnlyMessage(), ephemeral: true });
 
+                const NSFW = message.guild ? commandos.nsfw && !message.channel.nsfw : null;
+                const getNsfwMessage = () => this.client.languageFile.NSFW[language];
+
                 if (NSFW) return message.reply(getNsfwMessage());
+
+                const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
 
                 if (isNotDm && commandos.clientRequiredPermissions) {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
@@ -170,11 +170,15 @@ class GEventHandling {
                     if (message.channel.permissionsFor(message.guild.me).missing(commandos.clientRequiredPermissions).length > 0) return message.reply(getMissingClientPermissionsMessage());
                 }
 
+                const getMissingPermissionsMessage = () => this.client.languageFile.MISSING_PERMISSIONS[language].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
+
                 if (isNotDm && commandos.userRequiredPermissions) {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!message.member.permissions.has(commandos.userRequiredPermissions)) return message.reply(getMissingPermissionsMessage());
                 }
+
+                const getMissingRolesMessage = () => this.client.languageFile.MISSING_ROLES[language].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
 
                 if (isNotDm && commandos.userRequiredRoles) {
                     if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
@@ -182,6 +186,8 @@ class GEventHandling {
                     const roles = commandos.userRequiredRoles.some(v => message.member._roles.includes(v));
                     if (!roles) return message.reply(getMissingRolesMessage());
                 }
+
+                const getArgsTimeLimitMessage = () => this.client.languageFile.ARGS_TIME_LIMIT[language];
 
                 let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
                 const objectArgs = [];
@@ -436,17 +442,7 @@ class GEventHandling {
                 if (inhibitReturn === false) return;
 
                 const cooldown = interaction.guild ? await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos) : null;
-                const NSFW = interaction.guild ? commandos.nsfw && !interaction.channel.nsfw : null;
-                const isNotChannelType = type => channelType !== type;
-
                 const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
-                const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
-                const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
-                const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];
-                const getNsfwMessage = () => this.client.languageFile.NSFW[language];
-                const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
-                const getMissingPermissionsMessage = () => this.client.languageFile.MISSING_PERMISSIONS[language].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
-                const getMissingRolesMessage = () => this.client.languageFile.MISSING_ROLES[language].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``);
 
                 if (cooldown?.cooldown) return interaction.reply.send(getCooldownMessage());
 
@@ -464,10 +460,21 @@ class GEventHandling {
                     } else if (interaction.channel.id !== commandos.channelOnly) { return; }
                 }
 
+                const NSFW = interaction.guild ? commandos.nsfw && !interaction.channel.nsfw : null;
+                const getNsfwMessage = () => this.client.languageFile.NSFW[language];
+
                 if (isNotDm && NSFW) { return interaction.reply.send({ content: getNsfwMessage(), ephemeral: true }); }
+
+                const isNotChannelType = type => channelType !== type;
+                const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
+                const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
+                const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];
+
                 if (isNotDm && commandos.channelTextOnly && isNotChannelType('text')) { return interaction.reply.send({ content: getChannelTextOnlyMessage(), ephemeral: true }); }
                 if (isNotDm && commandos.channelNewsOnly && isNotChannelType('news')) { return interaction.reply.send({ content: getChannelNewsOnlyMessage(), ephemeral: true }); }
                 if (isNotDm && commandos.channelThreadOnly && isNotChannelType('thread')) { return interaction.reply.send({ content: getChannelThreadOnlyMessage(), ephemeral: true }); }
+
+                const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
 
                 if (isNotDm && commandos.clientRequiredPermissions) {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
@@ -480,6 +487,8 @@ class GEventHandling {
                     }
                 }
 
+                const getMissingPermissionsMessage = () => this.client.languageFile.MISSING_PERMISSIONS[language].replace('{PERMISSION}', commandos.userRequiredPermissions.map(v => unescape(v, '_')).join(', '));
+
                 if (isNotDm && commandos.userRequiredPermissions) {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
@@ -490,6 +499,8 @@ class GEventHandling {
                         });
                     }
                 }
+
+                const getMissingRolesMessage = () => this.client.languageFile.MISSING_ROLES[language].replace('{ROLES}', `\`${commandos.userRequiredRoles.map(r => interaction.guild.roles.cache.get(r).name).join(', ')}\``);
 
                 if (isNotDm && commandos.userRequiredRoles) {
                     if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];

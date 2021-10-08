@@ -46,7 +46,7 @@ class ContextMenuInteraction extends BaseCommandInteraction {
 
         if (options.resolved.users && options.resolved.users[options.target_id]) {
           args.push(new User(this.client, options.resolved.users[options.target_id]));
-          args.push(new GuildMember(this.client, options.resolved.members[options.target_id]));
+          if (this.guild) args.push(new GuildMember(this.client, options.resolved.members[options.target_id]));
         }
 
         if (options.resolved.messages && options.resolved.messages[options.target_id]) {
@@ -66,7 +66,7 @@ class ContextMenuInteraction extends BaseCommandInteraction {
 
         if (options.resolved.users && options.resolved.users[options.target_id]) {
           args.user = new User(this.client, options.resolved.users[options.target_id]);
-          args.member = new GuildMember(this.client, options.resolved.members[options.target_id]);
+          if (this.guild) args.member = new GuildMember(this.client, options.resolved.members[options.target_id]);
         }
 
         if (options.resolved.messages && options.resolved.messages[options.target_id]) {
