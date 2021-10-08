@@ -50,6 +50,12 @@ class CommandArgsOptionBuilder {
         this.required = 'required' in data ? Boolean(data.required) : null;
 
         /**
+         * Channel types
+         * @type {boolean}
+        */
+        this.channel_types = 'channel_types' in data ? data.channel_types : null;
+
+        /**
          * Choices
          * @type {Array<CommandArgsChoice>}
         */
@@ -106,6 +112,15 @@ class CommandArgsOptionBuilder {
     */
     setRequired(required) {
         this.required = Boolean(required);
+        return this;
+    }
+
+    /**
+     * Method to setChannelTypes
+     * @param {ArgumentChannelTypes} types
+    */
+    setChannelTypes(types) {
+        this.channel_types = types;
         return this;
     }
 
