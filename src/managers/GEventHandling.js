@@ -366,7 +366,7 @@ class GEventHandling {
 
                 const runOptions = {
                     member: interaction.member,
-                    author: interaction.member.user,
+                    author: interaction.user,
                     guild: interaction.guild,
                     channel: interaction.channel,
                     interaction: interaction,
@@ -391,9 +391,9 @@ class GEventHandling {
 
                 if (commandos.userOnly) {
                     if (typeof commandos.userOnly === 'object') {
-                        const users = commandos.userOnly.some(v => interaction.member.id === v);
+                        const users = commandos.userOnly.some(v => interaction.user.id === v);
                         if (!users) return;
-                    } else if (interaction.member.id !== commandos.userOnly) { return; }
+                    } else if (interaction.user.id !== commandos.userOnly) { return; }
                 }
 
                 if (isNotDm && commandos.channelOnly) {
@@ -452,7 +452,7 @@ class GEventHandling {
                     if (!roles) return interaction.reply.send({ content: getMissingRolesMessage(), ephemeral: true });
                 }
 
-                this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
+                this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, user: interaction.user, channel: interaction.channel, guild: interaction.guild });
 
                 commandos.run({
                     ...runOptions,
@@ -460,7 +460,7 @@ class GEventHandling {
                     objectArgs: interaction.objectArguments,
                 });
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
+                this.client.emit(Events.COMMAND_ERROR, { command: commandos, user: interaction.user, channel: interaction.channel, guild: interaction.guild, error: e });
                 this.client.emit(Events.DEBUG, e);
             }
         });

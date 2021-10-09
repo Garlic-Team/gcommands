@@ -70,10 +70,10 @@ class GCommandLoader {
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `${dir}/${fileName}/${fileType}`;
+            file._path = `${dir}/${fileName}${fileType}`;
             if (this.autoCategory && !file.category) {
                 const category = dir.replace(`${this.cmdDir}/`, '');
-                if (category && category !== this.cmdDir) file.category = category.split('/').join('-');
+                if (category && category !== this.cmdDir) file.category = category.split('/').join(' ');
             }
 
             this.client.gcommands.set(file.name, file);
