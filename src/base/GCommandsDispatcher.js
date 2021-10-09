@@ -1,8 +1,5 @@
 const { Collection, Team } = require('discord.js');
-
-const ButtonCollectorV13 = require('../structures/v13/ButtonCollector'),
-    SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'),
-    Color = require('../structures/Color');
+const Color = require('../structures/Color');
 
 const ms = require('ms');
 
@@ -243,68 +240,6 @@ class GCommandsDispatcher {
     removeInhibitor(inhibitor) {
         if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
         return this.client.inhibitors.delete(inhibitor);
-    }
-
-    /**
-     * Method to createButtonCollector
-     * @param {Message} msg
-     * @param {Function} filter
-     * @param {CollectorOptions} options
-     * @returns {Collector}
-    */
-    createButtonCollector(msg, filter, options = {}) {
-        return new ButtonCollectorV13(msg, filter, options);
-    }
-
-    /**
-     * Method to awaitButtons
-     * @param {Message} msg
-     * @param {Function} filter
-     * @param {CollectorOptions} options
-     * @returns {Collector}
-    */
-    awaitButtons(msg, filter, options = {}) {
-        return new Promise((resolve, reject) => {
-            const collector = this.createButtonCollector(msg, filter, options);
-            collector.once('end', (buttons, reason) => {
-                if (options.errors && options.errors.includes(reason)) {
-                    reject(buttons);
-                } else {
-                    resolve(buttons);
-                }
-            });
-        });
-    }
-
-    /**
-     * Method to createSelectMenuCollector
-     * @param {Message} msg
-     * @param {Function} filter
-     * @param {CollectorOptions} options
-     * @returns {Collector}
-    */
-    createSelectMenuCollector(msg, filter, options = {}) {
-        return new SelectMenuCollectorV13(msg, filter, options);
-    }
-
-    /**
-     * Method to awaitSelectMenus
-     * @param {Message} msg
-     * @param {Function} filter
-     * @param {CollectorOptions} options
-     * @returns {Collector}
-    */
-    awaitSelectMenus(msg, filter, options = {}) {
-        return new Promise((resolve, reject) => {
-            const collector = this.createSelectMenuCollector(msg, filter, options);
-            collector.once('end', (buttons, reason) => {
-                if (options.errors && options.errors.includes(reason)) {
-                    reject(buttons);
-                } else {
-                    resolve(buttons);
-                }
-            });
-        });
     }
 }
 

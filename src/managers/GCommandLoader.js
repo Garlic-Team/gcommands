@@ -27,6 +27,12 @@ class GCommandLoader {
         this.cmdDir = this.client.cmdDir;
 
         /**
+         * AutoCategory
+         * @type {boolean}
+        */
+        this.autoCategory = this.client.autoCategory;
+
+        /**
          * All Global Commands
          * @type {Object}
         */
@@ -34,37 +40,11 @@ class GCommandLoader {
 
         this.client._applicationCommandsCache = [];
 
-        this.__loadCommandFiles();
+        this.__load();
     }
 
-    /**
-     * Internal method to loadCommandFiles
-     * @returns {void}
-     * @private
-     */
-    async __loadCommandFiles() {
-        for await (const fsDirent of fs.readdirSync(this.cmdDir, { withFileTypes: true })) {
-            let file = fsDirent.name;
-            const fileType = path.extname(file);
-            const fileName = path.basename(file, fileType);
-
-            if (fsDirent.isDirectory()) {
-                await this.__loadCommandCategoryFiles(file);
-                continue;
-            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
-
-            file = require(`${this.cmdDir}/${file}`);
-            if (isClass(file)) {
-                file = new file(this.client);
-                if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
-            }
-
-            file._path = `${this.cmdDir}/${fileName}${fileType}`;
-
-            this.client.gcommands.set(file.name, file);
-            if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
-            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`, { json: false }).getText());
-        }
+    async __load() {
+        await this.__loadFiles(this.cmdDir);
 
         await this.__loadSlashCommands();
         await this.__loadContextMenuCommands();
@@ -73,30 +53,28 @@ class GCommandLoader {
         this.client.emit(Events.COMMANDS_LOADED, this.client.gcommands);
     }
 
-    /**
-     * Internal method to loadCommandCategoryFiles
-     * @returns {void}
-     * @private
-     */
-    async __loadCommandCategoryFiles(categoryFolder) {
-        for await (const fsDirent of fs.readdirSync(`${this.cmdDir}/${categoryFolder}`, { withFileTypes: true })) {
+    async __loadFiles(dir) {
+        for await (const fsDirent of fs.readdirSync(dir, { withFileTypes: true })) {
             let file = fsDirent.name;
             const fileType = path.extname(file);
             const fileName = path.basename(file, fileType);
 
             if (fsDirent.isDirectory()) {
-                // Recursive scan
-                await this.__loadCommandCategoryFiles(`${categoryFolder}/${file}`);
+                await this.__loadFiles(path.join(dir, file));
                 continue;
             } else if (!['.js', '.ts'].includes(fileType)) { continue; }
 
-            file = require(`${this.cmdDir}/${categoryFolder}/${file}`);
+            file = require(path.join(dir, file));
             if (isClass(file)) {
                 file = new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `${this.cmdDir}/${categoryFolder}/${fileName}.${fileType}`;
+            file._path = `${dir}/${fileName}/${fileType}`;
+            if (this.autoCategory && !file.category) {
+                const category = dir.replace(`${this.cmdDir}/`, '');
+                if (category && category !== this.cmdDir) file.category = category.split('/').join('-');
+            }
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));

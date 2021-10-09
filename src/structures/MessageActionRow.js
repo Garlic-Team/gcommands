@@ -1,18 +1,20 @@
 const GError = require('./GError');
 const { MessageComponentTypes } = require('../util/Constants');
-const BaseMessageComponent = require('./BaseMessageComponent');
 
 /**
  * The MessageActionRow class
- * @extends BaseMessageComponent
  */
-class MessageActionRow extends BaseMessageComponent {
+class MessageActionRow {
     /**
      * Creates new MessageActionRow instance
      * @param {Array} data
     */
     constructor(data = {}) {
-        super({ type: 'ACTION_ROW' });
+        /**
+         * Type
+         * @type {string}
+        */
+        this.type = 'ACTION_ROW';
 
         /**
          * Components
@@ -30,7 +32,7 @@ class MessageActionRow extends BaseMessageComponent {
      * @private
      */
     setup(data) {
-        this.components = 'components' in data ? data.components.map(c => BaseMessageComponent.create(c)) : [];
+        this.components = 'components' in data ? data.components : [];
 
         return this.toJSON();
     }
@@ -40,7 +42,7 @@ class MessageActionRow extends BaseMessageComponent {
      * @param {MessageButton | MessageSelectMenu} component
     */
     addComponent(component) {
-        if (typeof component !== 'object') throw new GError('[INVALID COMPONENT]','Need provide BaseMessageComponent');
+        if (typeof component !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide BaseMessageComponent');
         this.components.push(component);
         return this;
     }
@@ -50,7 +52,7 @@ class MessageActionRow extends BaseMessageComponent {
      * @param {MessageButton[] | MessageSelectMenu[]} components
     */
     addComponents(components) {
-        if (typeof components !== 'object') throw new GError('[INVALID COMPONENT]','Need provide BaseMessageComponent');
+        if (typeof components !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide BaseMessageComponent');
         this.components.push(...components.flat(Infinity).map(c => c));
         return this;
     }
@@ -62,7 +64,7 @@ class MessageActionRow extends BaseMessageComponent {
      * @param {MessageButton[] | MessageSelectMenu[]} components
     */
     removeComponents(index, deleteCount, ...components) {
-        if (typeof components !== 'object') throw new GError('[INVALID COMPONENT]','Need provide BaseMessageComponent');
+        if (typeof components !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide BaseMessageComponent');
         this.components.splice(index, deleteCount, ...components.flat(Infinity).map(c => c));
         return this;
     }

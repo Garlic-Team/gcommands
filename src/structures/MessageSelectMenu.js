@@ -1,19 +1,22 @@
 const { MessageComponentTypes } = require('../util/Constants');
 const { resolveString } = require('../util/util');
-const BaseMessageComponent = require('./BaseMessageComponent');
 const GError = require('./GError');
 
 /**
  * The MessageSelectMenu class
  * @extends BaseMessageComponent
  */
-class MessageSelectMenu extends BaseMessageComponent {
+class MessageSelectMenu {
     /**
      * Creates new MessageSelectMenu instance
      * @param {Object} data
     */
-     constructor(data = {}) {
-        super({ type: 'SELECT_MENU' });
+    constructor(data = {}) {
+        /**
+        * Type
+        * @type {string}
+       */
+        this.type = 'SELECT_MENU';
 
         /**
          * Options
@@ -30,7 +33,7 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @returns {MessageSelectMenu}
      * @private
      */
-     setup(data) {
+    setup(data) {
         /**
          * Placeholder
          * @type {string}
@@ -126,7 +129,7 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @param {MessageSelectMenuOption} MessageSelectMenuOption
     */
     addOption(option) {
-        if (typeof option !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
+        if (typeof option !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide MessageSelectMenuOption');
         this.options.push(option);
         return this;
     }
@@ -136,7 +139,7 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption
     */
     addOptions(...options) {
-        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
+        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide MessageSelectMenuOption');
         this.options.push(...options.flat(Infinity).map(o => o));
         return this;
     }
@@ -148,7 +151,7 @@ class MessageSelectMenu extends BaseMessageComponent {
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption[]
     */
     removeOptions(index, deleteCount, ...options) {
-        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
+        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide MessageSelectMenuOption');
         this.components.splice(index, deleteCount, ...options.flat(Infinity).map(o => o));
         return this;
     }

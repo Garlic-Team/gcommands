@@ -167,7 +167,7 @@ class Command {
          * Category
          * @type {string}
          */
-        this.category = resolveString(options.category);
+        this.category = options.category ? resolveString(options.category) : undefined;
 
         /**
          * Usage

@@ -21,7 +21,7 @@ class GCommandsClient extends Client {
     constructor(options = {}) {
         super(options);
 
-        if (!options.cmdDir) throw new GError('[DEFAULT OPTIONS]', 'You must specify the cmdDir');
+        if (!options.loader?.cmdDir) throw new GError('[DEFAULT OPTIONS]', 'You must specify the cmdDir');
         if (!options.language) throw new GError('[DEFAULT OPTIONS]', 'You must specify the language');
 
         const isClientMessageEnabled = ['false', 'slash'].includes(String(options.commands?.slash));
@@ -42,25 +42,33 @@ class GCommandsClient extends Client {
         */
         this.caseSensitivePrefixes = options.caseSensitivePrefixes;
 
+
         /**
          * CmdDir
          * @type {string}
         */
-        this.cmdDir = options.cmdDir;
+        this.cmdDir = String(options.loader.cmdDir);
 
         /**
          * EventDir
          * @type {string}
          * @default undefined
         */
-        this.eventDir = options.eventDir;
+        this.eventDir = options.loader?.eventDir ? String(options.loader.eventDir) : undefined;
 
         /**
-         * AutoTyping
+         * LoadFromCache
+         * @type {boolean}
+         * @default true
+         */
+        this.loadFromCache = options.loader?.loadFromCache !== undefined ? Boolean(options.loader.loadFromCache) : true;
+
+        /**
+         * AutoCategory
          * @type {boolean}
          * @default false
-        */
-        this.autoTyping = options.autoTyping;
+         */
+        this.autoCategory = options.loader?.autoCategory !== undefined ? Boolean(options.loader.autoCategory) : false;
 
         /**
          * OwnLanguageFile
@@ -122,13 +130,6 @@ class GCommandsClient extends Client {
         this.context = options.commands?.context ? options.commands?.context : false;
 
         /**
-         * LoadFromCache
-         * @type {boolean}
-         * @default true
-         */
-        this.loadFromCache = options.commands?.loadFromCache !== undefined ? Boolean(options.commands?.loadFromCache) : true;
-
-        /**
          * AllowDm
          * @type {boolean}
          * @default false
@@ -174,13 +175,7 @@ class GCommandsClient extends Client {
     }
 
     loadSys() {
-        new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
-
-        // Require('../structures/DMChannel');
-        // require('../structures/NewsChannel');
-        // require('../structures/TextChannel');
-        // require('../structures/ThreadChannel');
 
         setTimeout(() => {
             new GEventHandling(this);

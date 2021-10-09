@@ -13,21 +13,12 @@ module.exports = {
     GDatabaseLoader: require('./managers/GDatabaseLoader'),
 
     // Structures
-    // GMessage: require('./structures/GMessage'),
-    // GNewsChannel: require('./structures/NewsChannel'),
-    // GTextChannel: require('./structures/TextChannel'),
-    // GDMChannel: require('./structures/DMChannel'),
-    // GThreadChannel: require('./structures/ThreadChannel'),
     MessageButton: require('./structures/MessageButton'),
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
     MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'),
     Command: require('./commands/base'),
     Event: require('@gcommands/events').Event,
-    // GPayload: require('./structures/GPayload'),
-    SelectMenuCollectorV13: require('./structures/v13/SelectMenuCollector'),
-    InteractionCollectorV13: require('./structures/v13/InteractionCollector'),
-    BaseMessageComponent: require('./structures/BaseMessageComponent'),
     GError: require('./structures/GError'),
 
     // Builders

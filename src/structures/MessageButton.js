@@ -1,6 +1,5 @@
 const { resolveString, parseEmoji, resolvePartialEmoji } = require('../util/util');
 const { MessageComponentTypes } = require('../util/Constants');
-const BaseMessageComponent = require('./BaseMessageComponent');
 const GError = require('./GError');
 const styles = {
     blurple: 1,
@@ -20,13 +19,17 @@ const styles = {
  * The MessageButton class
  * @extends BaseMessageComponent
  */
-class MessageButton extends BaseMessageComponent {
+class MessageButton {
     /**
      * Creates new MessageButton instance
      * @param {Object} data
     */
     constructor(data = {}) {
-        super({ type: 'BUTTON' });
+        /**
+         * Type
+         * @type {string}
+        */
+        this.type = 'BUTTON';
 
         this.setup(data);
     }
@@ -60,7 +63,7 @@ class MessageButton extends BaseMessageComponent {
          * Emoji
          * @type {boolean}
         */
-         this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : false;
+        this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : false;
 
         if (this.style === 5) {
             /**
@@ -161,14 +164,14 @@ class MessageButton extends BaseMessageComponent {
     }
 
     resolveStyle(style) {
-        if (!style) throw new GError('[INVALID STYLE]','An invalid button style was provided');
+        if (!style) throw new GError('[INVALID STYLE]', 'An invalid button style was provided');
 
         if (typeof style === 'number' && style >= 1 && style <= 5) return style;
-        else if (typeof style === 'number') throw new GError('[INVALID STYLE]','An invalid button style was provided');
+        else if (typeof style === 'number') throw new GError('[INVALID STYLE]', 'An invalid button style was provided');
 
         if (typeof style === 'string') style = style.toLowerCase();
 
-        if (!styles[style]) throw new GError('[INVALID STYLE]','An invalid button style was provided');
+        if (!styles[style]) throw new GError('[INVALID STYLE]', 'An invalid button style was provided');
 
         return styles[style] || style;
     }
