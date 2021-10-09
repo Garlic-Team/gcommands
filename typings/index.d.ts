@@ -258,6 +258,7 @@ declare module 'gcommands' {
     public description: String;
     public type: String;
     public prompt: String;
+    public channelTypes: Array<ArgumentChannelTypes>;
     public required: Boolean;
     public choices: Array;
     public options: Array<CommandArgsOption>;
@@ -267,6 +268,7 @@ declare module 'gcommands' {
     public setType(type: String): CommandArgsOptionBuilder;
     public setPrompt(prompt: String): CommandArgsOptionBuilder;
     public setRequired(required: Boolean): CommandArgsOptionBuilder;
+    public setChannelTypes(channelTypes: Array<ArgumentChannelTypes>): CommandArgsOptionBuilder;
     public addChoice(choice: CommandArgsChoice): CommandArgsOptionBuilder;
     public addChoices(choices: Array<CommandArgsChoice>): CommandArgsOptionBuilder;
     public addOption(option: CommandArgsOption): CommandArgsOptionBuilder;
@@ -527,6 +529,7 @@ declare module 'gcommands' {
     required?: boolean;
     choices?: CommandArgsChoice[];
     options?: CommandArgsOptions;
+    channel_types?: ArgumentChannelTypes[];
   }
 
   interface CommandArgsChoice {
@@ -535,7 +538,7 @@ declare module 'gcommands' {
   }
 
   interface GPayloadOptions {
-    content: [string | MessageEmbed];
+    content: [string | object | MessageEmbed | MessageAttachment];
     embeds?: [MessageEmbed];
     components?: [MessageActionRow];
     attachments?: [MessageAttachment | MessageAttachment[]];
@@ -583,6 +586,7 @@ declare module 'gcommands' {
 
   type GCommandsOptionsCommandsSlash = 'both' | 'slash' | 'message' | 'false';
   type GCommandsOptionsCommandsContext = 'both' | 'user' | 'message' | 'false';
+  type ArgumentChannelTypes = 'DM' | 'GUILD_TEXT' | 'GUILD_VOICE' | 'GUILD_CATEGORY' | 'GUILD_NEWS' | 'GUILD_STORE' | 'GUILD_NEWS_THREAD' | 'GUILD_PUBLIC_THREAD' | 'GUILD_PRIVATE_THREAD' | 'GUILD_STAGE_VOICE';
 
   interface EventOptions {
     name: string;
