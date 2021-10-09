@@ -11,7 +11,6 @@ const MentionableArgumentType = require('./types/mentionable');
 const MessageActionRow = require('../structures/MessageActionRow');
 const MessageButton = require('../structures/MessageButton');
 const ButtonInteraction = require('../structures/ButtonInteraction');
-const { ArgumentChannelTypes } = require('../util/Constants');
 const ifDjsV13 = require('../util/util').checkDjsVersion(13);
 
 /**
