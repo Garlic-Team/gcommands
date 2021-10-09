@@ -1,8 +1,6 @@
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
+const ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
 const GPayload = require('./GPayload');
-const InteractionCollectorV12 = require('./v12/InteractionCollector');
 const InteractionCollectorV13 = require('./v13/InteractionCollector');
-const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
  * The TextChannelBase
@@ -27,9 +25,9 @@ module.exports = {
 
             const existing = this.messages.cache.get(m.id);
             if (existing) {
-              const clone = existing._clone();
-              clone._patch(m);
-              return clone;
+                const clone = existing._clone();
+                clone._patch(m);
+                return clone;
             }
             return this.messages._add(m);
         },
@@ -40,12 +38,8 @@ module.exports = {
             options.channelId = this.id;
             options.guildId = this.guild ? this.guild.id : null;
 
-            if (ifDjsV13) {
-                options.filter = filter;
-                return new InteractionCollectorV13(this.client, filter, options);
-            } else {
-                return new InteractionCollectorV12(this.client, filter, options);
-            }
+            options.filter = filter;
+            return new InteractionCollectorV13(this.client, filter, options);
         },
     },
 
@@ -66,8 +60,7 @@ module.exports = {
 
     createButtonCollector: {
         value: function(msg, filter, options = {}) {
-            if (ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
-            else return new ButtonCollectorV12(msg, filter, options);
+            return new ButtonCollectorV13(msg, filter, options);
         },
     },
 
@@ -88,8 +81,7 @@ module.exports = {
 
     createSelectMenuCollector: {
         value: function(msg, filter, options = {}) {
-            if (ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
-            else return new SelectMenuCollectorV12(msg, filter, options);
+            return new SelectMenuCollectorV13(msg, filter, options);
         },
     },
 

@@ -10,8 +10,6 @@ const NumberArgumentType = require('./types/number');
 const MentionableArgumentType = require('./types/mentionable');
 const MessageActionRow = require('../structures/MessageActionRow');
 const MessageButton = require('../structures/MessageButton');
-const ButtonInteraction = require('../structures/ButtonInteraction');
-const ifDjsV13 = require('../util/util').checkDjsVersion(13);
 
 /**
  * The Argument class
@@ -140,35 +138,33 @@ class Argument {
         });
 
         const messageCollectorfilter = msg => msg.author.id === message.author.id;
-        const componentsCollectorfilter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('argument');
-
-        // eslint-disable-next-line capitalized-comments
-        // if (this.type === 'boolean') filter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.isButton() && i.customId.includes('booleanargument');
+        const componentsCollectorfilter = i => {
+            i.deferUpdate();
+            return i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.customId.includes('argument');
+        };
 
         const collectors = [
-            (ifDjsV13 ? message.channel.awaitMessages({ filter: messageCollectorfilter, max: 1, time: wait }) : message.channel.awaitMessages(messageCollectorfilter, { max: 1, time: wait })),
-            message.channel.awaitMessageComponents({ filter: componentsCollectorfilter, max: 1, time: wait }),
+            message.channel.awaitMessages({ filter: messageCollectorfilter, max: 1, time: wait, errors: ['TIME'] }),
+            message.channel.awaitMessageComponent({ filter: componentsCollectorfilter, componentType: 'BUTTON', time: (wait + 1) }),
         ];
 
-        const responses = await Promise.race(collectors);
+        const responses = await Promise.race(collectors).catch();
         if (responses.size === 0) {
             return {
                 valid: true,
                 timeLimit: true,
             };
         }
+        const resFirst = typeof responses.first === 'function' ? responses.first() : responses;
 
-        const resFirst = responses.first();
-
-        if (resFirst instanceof ButtonInteraction) {
-            await resFirst.defer();
+        if (resFirst.customId) {
             resFirst.content = resFirst.customId.split('_')[1];
         }
 
         if (this.client.deletePrompt) await msgReply.delete();
         else await msgReply.edit({ content: msgReply.content, components: getComponents(true) });
 
-        if (this.client.deleteInput && this.isNotDm && resFirst instanceof ButtonInteraction === false && message.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES')) await resFirst.delete();
+        if (this.client.deleteInput && this.isNotDm && !resFirst.customId && message.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES')) await resFirst.delete();
 
         let invalid;
         let reason;

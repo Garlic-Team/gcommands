@@ -1,9 +1,8 @@
 const { readdirSync } = require('fs');
 const Argument = require('../commands/argument');
 const ArgumentType = require('../util/Constants').ArgumentType;
-const GError = require('../structures/GError'), { Events } = require('../util/Constants'), Color = require('../structures/Color');
+const { Events } = require('../util/Constants'), Color = require('../structures/Color');
 const { inhibit, interactionRefactor, channelTypeRefactor, unescape } = require('../util/util');
-const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
  * The GEventHandling class
@@ -31,7 +30,7 @@ class GEventHandling {
      * @private
     */
     messageEvent() {
-        this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
+        this.client.on('messageCreate', message => {
             messageEventUse(message);
         });
 
@@ -89,38 +88,13 @@ class GEventHandling {
                     client: this.client,
                     bot: this.client,
                     language: language,
-                };
-
-                let botMessageInhibit;
-                const inhibitRunOptions = {
-                    respond: async (options = undefined) => {
-                        if (this.client.autoTyping) ifDjsV13 ? message.sendTyping() : message.startTyping();
-
-                        const msg = await message.reply(options);
-                        botMessageInhibit = msg;
-
-                        if (this.client.autoTyping) message.channel.stopTyping(true);
-                        return msg;
-                    },
-                    edit: async (options = undefined) => {
-                        if (!botMessageInhibit) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
-                        const editedMsg = await botMessageInhibit.edit(options);
-                        return editedMsg;
-                    },
-                    followUp: async (options = undefined) => {
-                        if (this.client.autoTyping) ifDjsV13 ? message.sendTyping() : message.startTyping();
-
-                        const msg = await message.reply(options);
-
-                        if (this.client.autoTyping && !ifDjsV13) message.stopTyping(true);
-                        return msg;
-                    },
-                    args: args,
+                    respond: (options = undefined) => message.reply(options),
+                    followUp: (options = undefined) => message.reply(options),
                 };
 
                 const inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
                     ...runOptions,
-                    ...inhibitRunOptions,
+                    args: args,
                 });
 
                 if (inhibitReturn === false) return;
@@ -339,39 +313,12 @@ class GEventHandling {
                     }
                 }
 
-                let botMessage;
-                const commandRunOptions = {
-                    respond: async (options = undefined) => {
-                        if (this.client.autoTyping) ifDjsV13 ? message.channel.sendTyping() : message.channel.startTyping();
-
-                        const msg = await message.reply(options);
-                        botMessage = msg;
-
-                        if (this.client.autoTyping && !ifDjsV13) message.channel.stopTyping(true);
-                        return msg;
-                    },
-                    edit: async (options = undefined) => {
-                        if (!botMessage) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
-                        const editedMsg = await botMessage.edit(options);
-                        return editedMsg;
-                    },
-                    followUp: async (options = undefined) => {
-                        if (this.client.autoTyping) ifDjsV13 ? message.channel.sendTyping() : message.channel.startTyping();
-
-                        const msg = await message.reply(options);
-
-                        if (this.client.autoTyping && !ifDjsV13) message.channel.stopTyping(true);
-                        return msg;
-                    },
-                    args: !isNotDm ? finalArgs : args,
-                    objectArgs: getArgsObject(objectArgs),
-                };
-
                 this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: message.member, channel: message.channel, guild: message.guild });
 
                 commandos.run({
                     ...runOptions,
-                    ...commandRunOptions,
+                    args: finalArgs,
+                    objectArgs: getArgsObject(objectArgs),
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
@@ -386,8 +333,8 @@ class GEventHandling {
      * @private
     */
     slashEvent() {
-        this.client.on('GInteraction', async interaction => {
-            if (!interaction.isApplication()) return;
+        this.client.on('interactionCreate', async interaction => {
+            if (interaction.isMessageComponent()) return;
 
             let commandos;
             try {
@@ -419,38 +366,34 @@ class GEventHandling {
 
                 const runOptions = {
                     member: interaction.member,
-                    author: interaction.author,
+                    author: interaction.member.user,
                     guild: interaction.guild,
                     channel: interaction.channel,
                     interaction: interaction,
                     client: this.client,
                     bot: this.client,
                     language: language,
-                };
-
-                const inhibitRunOptions = {
-                    respond: result => interaction.reply.send(result),
-                    edit: result => interaction.reply.edit(result),
-                    followUp: result => interaction.reply.followUp(result),
-                    args: interaction.arrayArguments,
+                    respond: options => interaction.reply(options),
+                    edit: options => interaction.edit(options),
+                    followUp: options => interaction.followUp(options),
                 };
 
                 const inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
                     ...runOptions,
-                    ...inhibitRunOptions,
+                    args: interaction.arrayArguments,
                 });
                 if (inhibitReturn === false) return;
 
-                const cooldown = interaction.guild ? await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos) : null;
+                const cooldown = interaction.guild ? await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.member.id, commandos) : null;
                 const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
 
                 if (cooldown?.cooldown) return interaction.reply.send(getCooldownMessage());
 
                 if (commandos.userOnly) {
                     if (typeof commandos.userOnly === 'object') {
-                        const users = commandos.userOnly.some(v => interaction.author.id === v);
+                        const users = commandos.userOnly.some(v => interaction.member.id === v);
                         if (!users) return;
-                    } else if (interaction.author.id !== commandos.userOnly) { return; }
+                    } else if (interaction.member.id !== commandos.userOnly) { return; }
                 }
 
                 if (isNotDm && commandos.channelOnly) {
@@ -509,19 +452,12 @@ class GEventHandling {
                     if (!roles) return interaction.reply.send({ content: getMissingRolesMessage(), ephemeral: true });
                 }
 
-                const commandRunOptions = {
-                    respond: result => interaction.reply.send(result),
-                    edit: result => interaction.reply.edit(result),
-                    followUp: result => interaction.reply.followUp(result),
-                    args: interaction.arrayArguments,
-                    objectArgs: interaction.objectArguments,
-                };
-
                 this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
 
                 commandos.run({
                     ...runOptions,
-                    ...commandRunOptions,
+                    args: interaction.arrayArguments,
+                    objectArgs: interaction.objectArguments,
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });

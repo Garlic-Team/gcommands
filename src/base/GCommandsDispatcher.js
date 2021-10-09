@@ -1,11 +1,9 @@
 const { Collection, Team } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'),
-    ButtonCollectorV13 = require('../structures/v13/ButtonCollector'),
-    SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'),
+
+const ButtonCollectorV13 = require('../structures/v13/ButtonCollector'),
     SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'),
     Color = require('../structures/Color');
 
-const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 const ms = require('ms');
 
 /**
@@ -214,8 +212,7 @@ class GCommandsDispatcher {
      * @returns {Array}
     */
     async fetchClientApplication() {
-        if (!ifDjsV13) this.application = await this.client.fetchApplication();
-        else this.application = await this.client.application.fetch();
+        this.application = await this.client.application.fetch();
 
         if (this.application.owner === null) this.application.owners = [];
 
@@ -232,11 +229,11 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     addInhibitor(inhibitor) {
-		if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-		if (this.client.inhibitors.has(inhibitor)) return false;
-		this.client.inhibitors.add(inhibitor);
-		return true;
-	}
+        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+        if (this.client.inhibitors.has(inhibitor)) return false;
+        this.client.inhibitors.add(inhibitor);
+        return true;
+    }
 
     /**
      * Method to removeInhibitor
@@ -244,9 +241,9 @@ class GCommandsDispatcher {
      * @returns {Set}
     */
     removeInhibitor(inhibitor) {
-		if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-		return this.client.inhibitors.delete(inhibitor);
-	}
+        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+        return this.client.inhibitors.delete(inhibitor);
+    }
 
     /**
      * Method to createButtonCollector
@@ -256,8 +253,7 @@ class GCommandsDispatcher {
      * @returns {Collector}
     */
     createButtonCollector(msg, filter, options = {}) {
-        if (ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
-        else return new ButtonCollectorV12(msg, filter, options);
+        return new ButtonCollectorV13(msg, filter, options);
     }
 
     /**
@@ -288,8 +284,7 @@ class GCommandsDispatcher {
      * @returns {Collector}
     */
     createSelectMenuCollector(msg, filter, options = {}) {
-        if (ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
-        else return new SelectMenuCollectorV12(msg, filter, options);
+        return new SelectMenuCollectorV13(msg, filter, options);
     }
 
     /**

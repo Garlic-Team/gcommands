@@ -1,12 +1,10 @@
 const { Message, ReactionManager, ClientApplication, MessageFlags, Collection, MessageAttachment, SnowflakeUtil, MessageMentions, MessageEmbed } = require('discord.js');
 const { MessageTypes } = require('discord.js').Constants;
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'), ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
-const InteractionCollectorV12 = require('./v12/InteractionCollector');
+const ButtonCollectorV13 = require('../structures/v13/ButtonCollector'), SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector');
 const InteractionCollectorV13 = require('./v13/InteractionCollector');
 const BaseMessageComponent = require('./BaseMessageComponent');
 const { InteractionTypes } = require('../util/Constants');
 const GPayload = require('./GPayload');
-const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 
 /**
  * The GMessage class
@@ -34,7 +32,7 @@ class GMessage {
                     }
 
                     if ('author' in data) {
-                        this.author = ifDjsV13 ? this.client.users._add(data.author, !data.webhook_id) : this.client.users.add(data.author, !data.webhook_id);
+                        this.author = this.client.users._add(data.author, !data.webhook_id);
                     } else if (!this.author) {
                         this.author = null;
                     }
@@ -78,7 +76,7 @@ class GMessage {
                         this.attachments = new Collection(this.attachemnts);
                     }
 
-                    if (ifDjsV13 && ('sticker_items' in data || 'stickers' in data || !partial)) {
+                    if ('sticker_items' in data || 'stickers' in data || !partial) {
                         const { Sticker } = require('discord.js');
                         this.stickers = new Collection(
                             (data.sticker_items || data.stickers) ? (data.sticker_items || data.stickers).map(s => [s.id, new Sticker(this.client, s)]) : null,
@@ -99,7 +97,7 @@ class GMessage {
                         this.reactions = new ReactionManager(this);
                         if (data.reactions && data.reactions.length > 0) {
                             for (const reaction of data.reactions) {
-                                ifDjsV13 ? this.reactions._add(reaction) : this.reactions.add(reaction);
+                                this.reactions._add(reaction);
                             }
                         }
                     }
@@ -108,7 +106,7 @@ class GMessage {
                         this.mentions = new MessageMentions(
                             this,
                             (data.mentions instanceof MessageMentions) ? [] : data.mentions,
-                            data.mention_roles ,
+                            data.mention_roles,
                             data.mention_everyone,
                             data.mention_channels,
                             data.referenced_message ? data.referenced_message.author : null,
@@ -146,7 +144,7 @@ class GMessage {
                     }
 
                     if ('thread' in data && data.thread !== null) {
-                        ifDjsV13 ? this.client.channels._add(data.thread, this.guild) : this.client.channels.add(data.thread, this.guild);
+                        this.client.channels._add(data.thread, this.guild);
                     }
 
                     this._edits = [];
@@ -154,7 +152,7 @@ class GMessage {
                     if (this.member && data.member) {
                         this.member._patch(data.member);
                     } else if (data.member && this.guild && this.author) {
-                        ifDjsV13 ? this.guild.members._add(Object.assign(data.member, { user: this.author })) : this.guild.members.add(Object.assign(data.member, { user: this.author }));
+                        this.guild.members._add(Object.assign(data.member, { user: this.author }));
                     }
 
                     if ('flags' in data || !partial) {
@@ -175,7 +173,7 @@ class GMessage {
                     }
 
                     if (data.referenced_message) {
-                        ifDjsV13 ? this.channel.messages._add(data.referenced_message) : this.channel.messages.add(data.referenced_message);
+                        this.channel.messages._add(data.referenced_message);
                     }
 
                     if (data.interaction) {
@@ -183,7 +181,7 @@ class GMessage {
                             id: data.interaction.id,
                             type: InteractionTypes[data.interaction.type],
                             commandName: data.interaction.name || data.interaction.commandName,
-                            user: ifDjsV13 ? this.client.users._add(data.interaction.user) : this.client.users.add(data.interaction.user),
+                            user: this.client.users._add(data.interaction.user),
                         };
                     } else if (!this.interaction) {
                         this.interaction = null;
@@ -242,7 +240,7 @@ class GMessage {
                         data: GPayloadResult.data,
                         files: GPayloadResult.files,
                     })
-                    .then(d => this.client.actions.MessageCreate.handle(d).message);
+                        .then(d => this.client.actions.MessageCreate.handle(d).message);
                 },
             },
 
@@ -251,12 +249,8 @@ class GMessage {
                     options.messageId = this.id;
                     options.guildId = this.guild ? this.guild.id : null;
 
-                    if (ifDjsV13) {
-                        options.filter = filter;
-                        return new InteractionCollectorV13(this.client, filter, options);
-                    } else {
-                        return new InteractionCollectorV12(this.client, filter, options);
-                    }
+                    options.filter = filter;
+                    return new InteractionCollectorV13(this.client, filter, options);
                 },
             },
 
@@ -277,8 +271,7 @@ class GMessage {
 
             createButtonCollector: {
                 value: function(filter, options = {}) {
-                    if (ifDjsV13) return new ButtonCollectorV13(this, filter, options);
-                    else return new ButtonCollectorV12(this, filter, options);
+                    return new ButtonCollectorV13(this, filter, options);
                 },
             },
 
@@ -299,8 +292,7 @@ class GMessage {
 
             createSelectMenuCollector: {
                 value: function(filter, options = {}) {
-                    if (ifDjsV13) return new SelectMenuCollectorV13(this, filter, options);
-                    else return new SelectMenuCollectorV12(this, filter, options);
+                    return new SelectMenuCollectorV13(this, filter, options);
                 },
             },
 
@@ -327,21 +319,21 @@ class GMessage {
      * @param {string|GPayloadOptions} result
      * @returns {Message}
      */
-    edit() {}
+    edit() { }
 
     /**
      * Update a message.
      * @param {string|GPayloadOptions} result
      * @returns {Message}
      */
-    update() {}
+    update() { }
 
     /**
      * Send a message.
      * @param {string|GPayloadOptions} result
      * @returns {Message}
      */
-    send() {}
+    send() { }
 
     /**
      * Method to createMessageComponentCollector
@@ -349,15 +341,15 @@ class GMessage {
      * @param {CollectorOptions} options
      * @returns {Collector}
      */
-    createMessageComponentCollector() {}
+    createMessageComponentCollector() { }
 
-     /**
-      * Method to awaitMessageComponents
-      * @param {Function} filter
-      * @param {CollectorOptions} options
-      * @returns {Collector}
-      */
-    awaitMessageComponents() {}
+    /**
+     * Method to awaitMessageComponents
+     * @param {Function} filter
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+     */
+    awaitMessageComponents() { }
 
     /**
      * Method to createButtonCollector
@@ -366,7 +358,7 @@ class GMessage {
      * @param {CollectorOptions} options
      * @returns {Collector}
      */
-    createButtonCollector() {}
+    createButtonCollector() { }
 
     /**
      * Method to awaitButtons
@@ -375,7 +367,7 @@ class GMessage {
      * @param {CollectorOptions} options
      * @returns {Collector}
      */
-    awaitButtons() {}
+    awaitButtons() { }
 
     /**
      * Method to createSelectMenuCollector
@@ -384,7 +376,7 @@ class GMessage {
      * @param {CollectorOptions} options
      * @returns {Collector}
      */
-    createSelectMenuCollector() {}
+    createSelectMenuCollector() { }
 
     /**
      * Method to awaitSelectMenus
@@ -393,7 +385,7 @@ class GMessage {
      * @param {CollectorOptions} options
      * @returns {Collector}
      */
-    awaitSelectMenus() {}
+    awaitSelectMenus() { }
 }
 
 module.exports = GMessage;

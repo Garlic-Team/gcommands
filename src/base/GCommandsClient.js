@@ -177,10 +177,10 @@ class GCommandsClient extends Client {
         new (require('../structures/GMessage'));
         new (require('../structures/GGuild'));
 
-        require('../structures/DMChannel');
-        require('../structures/NewsChannel');
-        require('../structures/TextChannel');
-        require('../structures/ThreadChannel');
+        // Require('../structures/DMChannel');
+        // require('../structures/NewsChannel');
+        // require('../structures/TextChannel');
+        // require('../structures/ThreadChannel');
 
         setTimeout(() => {
             new GEventHandling(this);
