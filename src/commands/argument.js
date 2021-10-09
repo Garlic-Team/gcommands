@@ -11,7 +11,6 @@ const MentionableArgumentType = require('./types/mentionable');
 const MessageActionRow = require('../structures/MessageActionRow');
 const MessageButton = require('../structures/MessageButton');
 const ButtonInteraction = require('../structures/ButtonInteraction');
-const { ArgumentChannelTypes } = require('../util/Constants');
 const ifDjsV13 = require('../util/util').checkDjsVersion(13);
 
 /**
@@ -71,7 +70,7 @@ class Argument {
          * Channel Types
          * @type {ArgumentChannelTypes}
          */
-        this.channel_types = this.channelTypes;
+        this.channel_types = argument.channel_types || [];
 
         /**
          * SubCommands
@@ -85,17 +84,6 @@ class Argument {
          * @type {string}
         */
         this.isNotDm = isNotDm;
-    }
-
-    get channelTypes() {
-        const types = this.argument.channel_types ? !Array.isArray(this.argument.channel_types) ? [this.argument.channel_types] : this.argument.channel_types : [];
-        const final = [];
-
-        for (const type of types) {
-            final.push(ArgumentChannelTypes[type]);
-        }
-
-        return final;
     }
 
     /**

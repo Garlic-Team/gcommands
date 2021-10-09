@@ -351,7 +351,7 @@ function createEnum(keys) {
  * * GUILD_PUBLIC_THREAD
  * * GUILD_PRIVATE_THREAD
  * * GUILD_STAGE_VOICE
- * @typedef {(String)} ArgumentChannelTypes
+ * @typedef {(string)} ArgumentChannelTypes
  */
 module.exports.ArgumentChannelTypes = {
     DM: 1,
