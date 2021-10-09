@@ -84,7 +84,7 @@ class MessageButton extends BaseMessageComponent {
      * @param {string} style
     */
     setStyle(style) {
-        this.style = this.resolveStyle(resolveString(style.toLowerCase()));
+        this.style = this.resolveStyle(style);
         return this;
     }
 
@@ -121,6 +121,7 @@ class MessageButton extends BaseMessageComponent {
     */
     setURL(url) {
         this.url = resolveString(url);
+        this.style = 5;
         return this;
     }
 
@@ -150,7 +151,7 @@ class MessageButton extends BaseMessageComponent {
     toJSON() {
         return {
             type: MessageComponentTypes.BUTTON,
-            style: this.url ? 5 : this.style,
+            style: this.style,
             label: this.label || '',
             disabled: this.disabled,
             url: this.url,
@@ -160,12 +161,14 @@ class MessageButton extends BaseMessageComponent {
     }
 
     resolveStyle(style) {
-        if (!style) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
+        if (!style) throw new GError('[INVALID STYLE]','An invalid button style was provided');
+
+        if (typeof style === 'number' && style >= 1 && style <= 5) return style;
+        else if (typeof style === 'number') throw new GError('[INVALID STYLE]','An invalid button style was provided');
 
         if (typeof style === 'string') style = style.toLowerCase();
-        if (typeof style === 'number') style = Object.keys(styles)[style];
 
-        if (!styles[style]) throw new GError('[INVALID STYLE]','An invalid button styles was provided');
+        if (!styles[style]) throw new GError('[INVALID STYLE]','An invalid button style was provided');
 
         return styles[style] || style;
     }
