@@ -1,4 +1,4 @@
-const ArgumentType = require('./base');
+const ArgumentType = require('./Base');
 
 /**
  * The MentionableArgumentType class

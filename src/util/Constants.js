@@ -163,11 +163,10 @@ function createEnum(keys) {
 
 /**
  * The GCommandsOptions
- * @property {string} cmdDir
- * @property {string} eventDir
  * @property {GCommandsOptionsLanguage} language
  * @property {GCommandsOptionsCommands} commands
  * @property {GCommandsOptionsArguments} arguments
+ * @property {GCommandsOptionsLoader} loader
  * @property {boolean} caseSensitiveCommands
  * @property {boolean} caseSensitivePrefixes
  * @property {string} defaultCooldown
@@ -227,6 +226,14 @@ function createEnum(keys) {
  */
 
 /**
+ * The GCommandsOptionsLoader
+ * @property {string} cmdDir
+ * @property {string} eventDir
+ * @property {boolean} autoCategory
+ * @typedef {(object)} GCommandsOptionsLoader
+ */
+
+/**
  * The GPayloadOptions
  * @property {string} content
  * @property {MessageEmbed[]} embeds
@@ -260,8 +267,7 @@ function createEnum(keys) {
  * @property {string | GPayloadOptions} respond
  * @property {string | GPayloadOptions} edit
  * @property {string | GPayloadOptions} followUp
- * @property {Array} args
- * @property {Object} objectArgs
+ * @property {Object} args
  * @property {string} language
  * @typedef {(Object)} CommandRunOptions
 */
@@ -278,7 +284,6 @@ function createEnum(keys) {
  * @property {string | GPayloadOptions} respond
  * @property {string | GPayloadOptions} edit
  * @property {string | GPayloadOptions} followUp
- * @property {Array} args
  * @property {string} language
  * @typedef {(Object)} Inhibitor
  */

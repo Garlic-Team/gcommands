@@ -1,4 +1,4 @@
-const ArgumentType = require('./base');
+const ArgumentType = require('./Base');
 
 /**
  * The SubCommandArgumentType class
@@ -22,7 +22,6 @@ class SubCommandArgumentType extends ArgumentType {
         if (argument.subcommands && !argument.subcommands.find(sc => sc.name === message.content)) { return this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', argument.subcommands.map(sc => `\`${sc.name}\``).join(', ')); }
     }
     get(argument, message) {
-        console.log(argument, message);
         return argument.subcommands.find(sc => sc.name === message);
     }
 }

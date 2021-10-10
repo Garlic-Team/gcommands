@@ -6,28 +6,6 @@ import Keyv = require('keyv');
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian' | 'french';
 
 declare module 'discord.js' {
-  export interface Message {
-    components: MessageActionRow[];
-    update(result: string | MessageEditAndUpdateOptions)
-    edit(result: string | MessageEditAndUpdateOptions)
-    createButtonCollector(filter: CollectorFilter, options?: CollectorOptions): ButtonCollector;
-    awaitButtons(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageButton>>;
-
-    createSelectMenuCollector(filter: CollectorFilter, options?: CollectorOptions): SelectMenuCollector;
-    awaitSelectMenus(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageSelectMenu>>;
-  }
-
-  export interface Message extends discord.Message {
-    components: MessageActionRow[];
-    update(result: string | MessageEditAndUpdateOptions)
-    edit(result: string | MessageEditAndUpdateOptions)
-    createButtonCollector(filter: CollectorFilter, options?: CollectorOptions): ButtonCollector;
-    awaitButtons(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageButton>>;
-
-    createSelectMenuCollector(filter: CollectorFilter, options?: CollectorOptions): SelectMenuCollector;
-    awaitSelectMenus(filter: CollectorFilter, options?: CollectorOptions): Promise<Collection<Snowflake, MessageSelectMenu>>;
-  }
-
   export interface Guild {
     prefix: string;
 
@@ -491,9 +469,16 @@ declare module 'gcommands' {
   }
 
   interface GCommandsOptions {
-    cmdDir: string;
-    eventDir?: string;
     language: GuildLanguageTypes;
+    loader: {
+      cmdDir: string;
+      eventDir?: string;
+      autoCategory?: boolean;
+    }
+    arguments: {
+      deletePrompt?: boolean;
+      deleteInput?: boolean;
+    }
     commands: {
       slash: GCommandsOptionsCommandsSlash;
       context?: GCommandsOptionsCommandsContext;

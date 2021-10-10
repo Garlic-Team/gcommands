@@ -1,4 +1,4 @@
-const GError = require('../../structures/GError');
+const GError = require('../GError');
 
 /**
  * The ArgumentType class

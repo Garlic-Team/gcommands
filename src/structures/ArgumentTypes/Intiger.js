@@ -1,16 +1,16 @@
-const ArgumentType = require('./base');
+const ArgumentType = require('./Base');
 
 /**
- * The NumberArgumentType class
+ * The IntegerArgumentType class
  * @extends ArgumentType
  */
-class NumberArgumentType extends ArgumentType {
+class IntegerArgumentType extends ArgumentType {
     /**
-     * The NumberArgumentType class
+     * The IntegerArgumentType class
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'number');
+        super(client, 'integer');
 
         /**
          * Client
@@ -20,13 +20,13 @@ class NumberArgumentType extends ArgumentType {
     }
 
 	validate(argument, message, language) {
-		if (!parseInt(message.content)) { return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'number'); }
+		if (!parseInt(message.content) || (parseInt(message.content) % 1 !== 0)) { return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'integer'); }
 
 		if (argument.choices && !argument.choices.some(ch => ch.name === message.content)) { return this.client.languageFile.ARGS_CHOICES[language].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', ')); }
 	}
     get(argument, message) {
-        return Number(message);
+        return parseInt(message);
     }
 }
 
-module.exports = NumberArgumentType;
+module.exports = IntegerArgumentType;

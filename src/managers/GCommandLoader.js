@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const ms = require('ms');
 const { isClass, __deleteCmd, __getAllCommands, comparable, getAllObjects } = require('../util/util');
-const Command = require('../commands/base');
+const Command = require('../structures/Command');
 /**
  * The GCommandLoader class
  */

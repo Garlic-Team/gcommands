@@ -1,5 +1,5 @@
 const { resolveString, isClass } = require('../util/util');
-const GError = require('../structures/GError');
+const GError = require('./GError');
 const { ArgumentChannelTypes } = require('../util/Constants');
 
 /**

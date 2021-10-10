@@ -17,7 +17,7 @@ module.exports = {
     MessageActionRow: require('./structures/MessageActionRow'),
     MessageSelectMenu: require('./structures/MessageSelectMenu'),
     MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'),
-    Command: require('./commands/base'),
+    Command: require('./structures/Command'),
     Event: require('@gcommands/events').Event,
     GError: require('./structures/GError'),
 

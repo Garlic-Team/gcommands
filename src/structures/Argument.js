@@ -1,15 +1,15 @@
-const SubCommandArgumentType = require('./types/sub_command');
-const SubCommandGroupArgumentType = require('./types/sub_command_group');
-const StringArgumentType = require('./types/string');
-const IntegerArgumentType = require('./types/integer');
-const BooleanArgumentType = require('./types/boolean');
-const ChannelArgumentType = require('./types/channel');
-const UserArgumentType = require('./types/user');
-const RoleArgumentType = require('./types/role');
-const NumberArgumentType = require('./types/number');
-const MentionableArgumentType = require('./types/mentionable');
-const MessageActionRow = require('../structures/MessageActionRow');
-const MessageButton = require('../structures/MessageButton');
+const SubCommandArgumentType = require('./ArgumentTypes/Subcommand');
+const SubCommandGroupArgumentType = require('./ArgumentTypes/SubcommandGroup');
+const StringArgumentType = require('./ArgumentTypes/String');
+const IntegerArgumentType = require('./ArgumentTypes/Intiger');
+const BooleanArgumentType = require('./ArgumentTypes/Boolean');
+const ChannelArgumentType = require('./ArgumentTypes/Channel');
+const UserArgumentType = require('./ArgumentTypes/User');
+const RoleArgumentType = require('./ArgumentTypes/Role');
+const NumberArgumentType = require('./ArgumentTypes/Number');
+const MentionableArgumentType = require('./ArgumentTypes/Mentionable');
+const MessageActionRow = require('./MessageActionRow');
+const MessageButton = require('./MessageButton');
 
 /**
  * The Argument class
@@ -33,13 +33,6 @@ class Argument {
         */
         this.name = argument.name;
 
-
-        /**
-         * Required
-         * @type {boolean}
-        */
-        this.required = argument.required;
-
         /**
          * Argument
          * @type {Argument}
@@ -51,6 +44,12 @@ class Argument {
          * @type {string}
         */
         this.type = this.determineArgument(client, argument).type;
+
+        /**
+         * Required
+         * @type {boolean}
+        */
+        this.required = this.type === ('sub_command' || 'sub_command_group') ? true : argument.required;
 
         /**
          * Prompt
@@ -101,12 +100,12 @@ class Argument {
                         new MessageButton()
                             .setLabel('Cancel')
                             .setStyle('red')
-                            .setCustomId(`argument_cancel_${message.id}`)
+                            .setCustomId(`argument_cancel_${message.id}_${this.name}`)
                             .setDisabled(disabled),
                         !this.required ? new MessageButton()
                             .setLabel('Skip')
                             .setStyle('blurple')
-                            .setCustomId(`argument_skip_${message.id}`)
+                            .setCustomId(`argument_skip_${message.id}_${this.name}`)
                             .setDisabled(disabled)
                             : [],
                     ]),
@@ -116,12 +115,12 @@ class Argument {
                     new MessageButton()
                         .setLabel('True')
                         .setStyle('green')
-                        .setCustomId(`argument_true_${message.id}`)
+                        .setCustomId(`argument_true_${message.id}_${this.name}`)
                         .setDisabled(disabled),
                     new MessageButton()
                         .setLabel('False')
                         .setStyle('red')
-                        .setCustomId(`argument_false_${message.id}`)
+                        .setCustomId(`argument_false_${message.id}_${this.name}`)
                         .setDisabled(disabled),
                 ]);
             }
@@ -138,10 +137,7 @@ class Argument {
         });
 
         const messageCollectorfilter = msg => msg.author.id === message.author.id;
-        const componentsCollectorfilter = i => {
-            i.deferUpdate();
-            return i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.customId.includes('argument');
-        };
+        const componentsCollectorfilter = i => i.user.id === message.author.id && i.message && i.message.id === msgReply.id && i.customId.includes(message.id) && i.customId.includes(this.name);
 
         const collectors = [
             message.channel.awaitMessages({ filter: messageCollectorfilter, max: 1, time: wait, errors: ['TIME'] }),
@@ -150,14 +146,12 @@ class Argument {
 
         const responses = await Promise.race(collectors).catch();
         if (responses.size === 0) {
-            return {
-                valid: true,
-                timeLimit: true,
-            };
+            return 'timelimit';
         }
         const resFirst = typeof responses.first === 'function' ? responses.first() : responses;
 
         if (resFirst.customId) {
+            resFirst.deferUpdate().catch();
             resFirst.content = resFirst.customId.split('_')[1];
         }
 
@@ -166,28 +160,16 @@ class Argument {
 
         if (this.client.deleteInput && this.isNotDm && !resFirst.customId && message.channel.permissionsFor(this.client.user.id).has('MANAGE_MESSAGES')) await resFirst.delete();
 
-        let invalid;
-        let reason;
-        if (!this.required && resFirst.content === 'skip') {
-            invalid = true;
-            reason = 'skip';
-        } else if (resFirst.content === 'cancel') {
-            invalid = true;
-            reason = 'cancel';
-        } else { invalid = await this.argument.validate(this, { content: resFirst.content.toLowerCase(), guild: resFirst.guild }, language); }
+        if (!this.required && resFirst.content === 'skip') return 'skip';
+        else if (resFirst.content === 'cancel') return 'cancel';
+
+        const invalid = await this.argument.validate(this, { content: resFirst.content.toLowerCase(), guild: resFirst.guild }, language);
 
         if (invalid) {
-            return {
-                valid: false,
-                prompt: invalid,
-                reason: reason,
-            };
+            return this.obtain(message, language, invalid);
         }
 
-        return {
-            valid: true,
-            content: this.get(resFirst),
-        };
+        return this.get(resFirst);
     }
 
     /**
