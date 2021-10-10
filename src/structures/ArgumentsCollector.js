@@ -73,7 +73,7 @@ class ArgumentsCollector {
         const oargs = {};
 
         for (const o of options) {
-            if (['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(o.type)) {
+            if (['SUB_COMMAND', 'SUB_COMMAND_GROUP', 1, 2].includes(o.type)) {
                 oargs[o.name] = o.options ? this.resolve(o.options) : [];
             } else {
                 oargs[o.name] = o.value;

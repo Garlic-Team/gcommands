@@ -38,6 +38,12 @@ class GCommandLoader {
         */
         this._allGlobalCommands = __getAllCommands(this.client);
 
+        /**
+        * Data
+        * @type {Object}
+       */
+        this.data = { global: [], guilds: [] };
+
         this.client._applicationCommandsCache = [];
 
         this.__load();
@@ -126,7 +132,6 @@ class GCommandLoader {
                     },
                     url,
                 };
-
                 axios(config).then(() => {
                     this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                 })
@@ -215,7 +220,6 @@ class GCommandLoader {
                     },
                     url,
                 };
-
                 axios(config).then(() => {
                     this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
                     if (type === 4) {
@@ -417,17 +421,35 @@ class GCommandLoader {
      * @private
      */
     async __deleteNonExistCommands(commandFiles) {
-        const allSlashCommands = await __getAllCommands(this.client);
-        if (!allSlashCommands || allSlashCommands.length < 0) return;
+        const deleteAllGlobalCommands = async () => {
+            const allSlashCommands = await __getAllCommands(this.client);
+            if (!allSlashCommands || allSlashCommands.length < 0) return;
 
-        if (String(this.client.slash) === 'false') allSlashCommands.forEach(cmd => __deleteCmd(this.client, cmd.id));
+            for (const slashCmd of allSlashCommands) {
+                if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
+                else if (this.client.gcommands.get(slashCmd.name) && ['false', 'message'].includes(String(this.client.gcommands.get(slashCmd.name).slash))) __deleteCmd(this.client, slashCmd.id);
+                else if (!this.client.gcommands.get(slashCmd.name).slash && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id);
+                else continue;
+                this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted: &e➜   &3${slashCmd.name}`, { json: false }).getText());
+            }
+        };
+        const deleteAllGuildCommands = async () => {
+            const guilds = this.client.guilds.cache.map(guild => guild.id);
+            for (const guild of guilds) {
+                const allGuildSlashCommands = await __getAllCommands(this.client, guild);
+                if (!allGuildSlashCommands || allGuildSlashCommands.length < 0) return;
 
-        for (const slashCmd of allSlashCommands) {
-            if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
-            if (this.client.gcommands.get(slashCmd.name) && String(this.client.gcommands.get(slashCmd.name).slash) === 'false') __deleteCmd(this.client, slashCmd.id);
-        }
-
-        console.log(new Color('&d[GCommands TIP] &3Are guild commands not deleted when you delete them? Use this site for remove &ehttps://gcommands-slash-gui.netlify.app/').getText());
+                for (const slashCmd of allGuildSlashCommands) {
+                    if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id, guild);
+                    else if (this.client.gcommands.get(slashCmd.name) && ['false', 'message'].includes(String(this.client.gcommands.get(slashCmd.name).slash))) __deleteCmd(this.client, slashCmd.id, guild);
+                    else if (!this.client.gcommands.get(slashCmd.name).slash && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id, guild);
+                    else continue;
+                    this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted (guild: ${guild}): &e➜   &3${slashCmd.name}`, { json: false }).getText());
+                }
+            }
+        };
+        await deleteAllGlobalCommands();
+        await deleteAllGuildCommands();
     }
 }
 
