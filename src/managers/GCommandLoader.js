@@ -421,6 +421,7 @@ class GCommandLoader {
      * @private
      */
     async __deleteNonExistCommands(commandFiles) {
+        if (!this.client.deleteNonExistent) return;
         const deleteAllGlobalCommands = async () => {
             const allSlashCommands = await __getAllCommands(this.client);
             if (!allSlashCommands || allSlashCommands.length < 0) return;

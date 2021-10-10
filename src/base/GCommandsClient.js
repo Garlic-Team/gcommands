@@ -71,6 +71,13 @@ class GCommandsClient extends Client {
         this.autoCategory = options.loader?.autoCategory !== undefined ? Boolean(options.loader.autoCategory) : false;
 
         /**
+         * DeleteNonExistent
+         * @type {boolean}
+         * @default true
+         */
+        this.deleteNonExistent = options.loader?.deleteNonExistent !== undefined ? Boolean(options.loader.deleteNonExistent) : true;
+
+        /**
          * OwnLanguageFile
          * @type {Object}
         */

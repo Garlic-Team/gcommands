@@ -1,7 +1,6 @@
 const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
 const Color = require('../structures/Color');
 const { InteractionTypes, MessageComponentTypes, Events } = require('./Constants');
-const axios = require('axios');
 
 /**
  * The Util class
@@ -158,18 +157,15 @@ class Util {
     */
     static async __getAllCommands(client, guildId = undefined) {
         try {
-            const config = {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bot ${client.token}`,
-                    'Content-Type': 'application/json',
-                },
-                url: guildId ? `https://discord.com/api/v9/applications/${client.user.id}/guilds/${guildId}/commands` : `https://discord.com/api/v9/applications/${client.user.id}/commands`,
-            };
-            const response = await axios(config);
-            if (response.data) return response.data;
+            const app = client.api.applications(client.user.id);
+            if (guildId) {
+                app.guilds(guildId);
+            }
+
+            const commands = await app.commands.get();
+            if (commands) return commands;
             else return [];
-        } catch (e) { console.log(e); return []; }
+        } catch { return []; }
     }
 
     /**
