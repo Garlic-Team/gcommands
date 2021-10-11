@@ -64,6 +64,8 @@ class GEventHandling {
                         String(cmd.name),
                 );
 
+                if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
+
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
                 const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
@@ -74,7 +76,6 @@ class GEventHandling {
 
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
-                if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
 
