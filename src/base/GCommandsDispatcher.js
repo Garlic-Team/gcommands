@@ -1,6 +1,11 @@
 const { Collection, Team } = require('discord.js');
-const Color = require('../structures/Color');
+const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'),
+    ButtonCollectorV13 = require('../structures/v13/ButtonCollector'),
+    SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'),
+    SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'),
+    Color = require('../structures/Color');
 
+const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 const ms = require('ms');
 
 /**
@@ -57,11 +62,15 @@ class GCommandsDispatcher {
     async setGuildPrefix(guildId, prefix) {
         if (!this.client.database) return false;
 
-        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
-        guildData.prefix = !Array.isArray(prefix) ? Array(prefix) : prefix;
+        if (this.client.database instanceof Sequelize) {
 
-        this.client.database.set(`guild_${guildId}`, guildData);
-        this.client.guilds.cache.get(guildId).prefix = guildData.prefix;
+        } else {
+            const guildData = await this.client.database.get(`guild_${guildId}`) || {};
+            guildData.prefix = !Array.isArray(prefix) ? Array(prefix) : prefix;
+
+            this.client.database.set(`guild_${guildId}`, guildData);
+            this.client.guilds.cache.get(guildId).prefix = guildData.prefix;
+        }
 
         return true;
     }
@@ -83,10 +92,18 @@ class GCommandsDispatcher {
 
         if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
 
-        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
-        if (guildData.prefix && !Array.isArray(guildData.prefix)) guildData.prefix = Array(guildData.prefix);
+        if (this.client.database instanceof Sequelize) {
+            const guildData = await this.client.database.models.Guild.findOne({ where: { id: guildId } });
+            if (guildData) await guildData.getPrefix();
+            if (guildData?.prefix && !Array.isArray(guildData?.prefix)) guildData.prefix = Array(guildData?.prefix);
 
-        return guildData ? guildData.prefix || this.client.prefix : this.client.prefix;
+            return guildData ? guildData.prefix || this.client.prefix : this.client.prefix;
+        } else {
+            const guildData = await this.client.database.get(`guild_${guildId}`) || {};
+            if (guildData.prefix && !Array.isArray(guildData.prefix)) guildData.prefix = Array(guildData.prefix);
+
+            return guildData ? guildData.prefix || this.client.prefix : this.client.prefix;
+        }
     }
 
     /**
@@ -209,7 +226,8 @@ class GCommandsDispatcher {
      * @returns {Array}
     */
     async fetchClientApplication() {
-        this.application = await this.client.application.fetch();
+        if (!ifDjsV13) this.application = await this.client.fetchApplication();
+        else this.application = await this.client.application.fetch();
 
         if (this.application.owner === null) this.application.owners = [];
 
@@ -226,11 +244,11 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     addInhibitor(inhibitor) {
-        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-        if (this.client.inhibitors.has(inhibitor)) return false;
-        this.client.inhibitors.add(inhibitor);
-        return true;
-    }
+		if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+		if (this.client.inhibitors.has(inhibitor)) return false;
+		this.client.inhibitors.add(inhibitor);
+		return true;
+	}
 
     /**
      * Method to removeInhibitor
@@ -238,8 +256,72 @@ class GCommandsDispatcher {
      * @returns {Set}
     */
     removeInhibitor(inhibitor) {
-        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-        return this.client.inhibitors.delete(inhibitor);
+		if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+		return this.client.inhibitors.delete(inhibitor);
+	}
+
+    /**
+     * Method to createButtonCollector
+     * @param {Message} msg
+     * @param {Function} filter
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+    */
+    createButtonCollector(msg, filter, options = {}) {
+        if (ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
+        else return new ButtonCollectorV12(msg, filter, options);
+    }
+
+    /**
+     * Method to awaitButtons
+     * @param {Message} msg
+     * @param {Function} filter
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+    */
+    awaitButtons(msg, filter, options = {}) {
+        return new Promise((resolve, reject) => {
+            const collector = this.createButtonCollector(msg, filter, options);
+            collector.once('end', (buttons, reason) => {
+                if (options.errors && options.errors.includes(reason)) {
+                    reject(buttons);
+                } else {
+                    resolve(buttons);
+                }
+            });
+        });
+    }
+
+    /**
+     * Method to createSelectMenuCollector
+     * @param {Message} msg
+     * @param {Function} filter
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+    */
+    createSelectMenuCollector(msg, filter, options = {}) {
+        if (ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
+        else return new SelectMenuCollectorV12(msg, filter, options);
+    }
+
+    /**
+     * Method to awaitSelectMenus
+     * @param {Message} msg
+     * @param {Function} filter
+     * @param {CollectorOptions} options
+     * @returns {Collector}
+    */
+    awaitSelectMenus(msg, filter, options = {}) {
+        return new Promise((resolve, reject) => {
+            const collector = this.createSelectMenuCollector(msg, filter, options);
+            collector.once('end', (buttons, reason) => {
+                if (options.errors && options.errors.includes(reason)) {
+                    reject(buttons);
+                } else {
+                    resolve(buttons);
+                }
+            });
+        });
     }
 }
 
