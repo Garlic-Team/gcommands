@@ -1,17 +1,15 @@
+const { Model } = require('sequelize');
+
 class SequelizeModel {
-    constructor(client, options, modelName) {
+    constructor(client, data, options) {
         this.client = client;
         this.sequelize = client.database;
 
-        return this.setup(options, modelName);
+        return this.setup(data, options);
     }
-    setup(options, modelName) {
-        const { Model } = require('sequelize');
-        class Base extends Model {}
-
-        Base.init(options.attributes, { sequelize: this.sequelize, modelName });
-
-        return Base;
+    setup(data, options) {
+        class Base extends Model { }
+        return Base.init(data, { sequelize: this.sequelize, ...options });
     }
 }
 

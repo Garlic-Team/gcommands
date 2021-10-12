@@ -1,9 +1,5 @@
 const { Collection, Team } = require('discord.js');
-const ButtonCollectorV12 = require('../structures/v12/ButtonCollector'),
-    ButtonCollectorV13 = require('../structures/v13/ButtonCollector'),
-    SelectMenuCollectorV12 = require('../structures/v12/SelectMenuCollector'),
-    SelectMenuCollectorV13 = require('../structures/v13/SelectMenuCollector'),
-    Color = require('../structures/Color');
+const Color = require('../structures/Color');
 
 const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 const ms = require('ms');
@@ -54,55 +50,79 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to setGuildPrefix
+     * Internal method to getGuildData
      * @param {Snowflake} guildId
-     * @param {string|Array} prefix
+     * @param {Object} options
+     * @returns {Object}
+    */
+    async getGuildData(guildId, options) {
+        if (!options.force && typeof this.data === 'object') return this.data;
+
+        let data = await this.client.database.models.Guild.findOrCreate({ where: { id: guildId } });
+        if (Array.isArray(data)) data = data[0];
+
+        return data?.id ? data : null;
+    }
+
+    /**
+     * Internal method to setGuildPrefix
+     * @param {Object} guild
+     * @param {string} prefix
      * @returns {boolean}
     */
-    async setGuildPrefix(guildId, prefix) {
-        if (!this.client.database) return false;
-
-        if (this.client.database instanceof Sequelize) {
-
-        } else {
-            const guildData = await this.client.database.get(`guild_${guildId}`) || {};
-            guildData.prefix = !Array.isArray(prefix) ? Array(prefix) : prefix;
-
-            this.client.database.set(`guild_${guildId}`, guildData);
-            this.client.guilds.cache.get(guildId).prefix = guildData.prefix;
+    async setGuildPrefix(guild, prefix) {
+        try {
+            await guild.getData();
+            await guild.data?.update({ prefix: String(prefix) });
+            return true;
+        } catch {
+            return false;
         }
-
-        return true;
     }
 
     /**
      * Internal method to getGuildPrefix
-     * @param {Snowflake} guildId
-     * @param {boolean} cache
+     * @param {Object} guild
      * @returns {string}
     */
-    async getGuildPrefix(guildId, cache = true) {
-        if (!Array.isArray(this.client.prefix)) this.client.prefix = Array(this.client.prefix);
+    async getGuildPrefix(guild) {
+        try {
+            await guild.getData();
+            const prefix = guild.data?.prefix;
+            return prefix ? prefix : null;
+        } catch {
+            return false;
+        }
+    }
 
-        if (!this.client.database) return this.client.prefix;
+    /**
+     * Internal method to setGuildLanguage
+     * @param {Object} guild
+     * @param {string} language
+     * @returns {boolean}
+    */
+     async setGuildLanguage(guild, language) {
+        try {
+            await guild.getData();
+            await guild.data?.update({ language: String(language) });
+            return true;
+        } catch {
+            return false;
+        }
+    }
 
-        const guild = this.client.guilds.cache.get(guildId);
-        if (guild && guild.prefix && !Array.isArray(guild.prefix)) guild.prefix = Array(guild.prefix);
-        else cache = false;
-
-        if (cache) return guild.prefix ? guild.prefix : this.client.prefix;
-
-        if (this.client.database instanceof Sequelize) {
-            const guildData = await this.client.database.models.Guild.findOne({ where: { id: guildId } });
-            if (guildData) await guildData.getPrefix();
-            if (guildData?.prefix && !Array.isArray(guildData?.prefix)) guildData.prefix = Array(guildData?.prefix);
-
-            return guildData ? guildData.prefix || this.client.prefix : this.client.prefix;
-        } else {
-            const guildData = await this.client.database.get(`guild_${guildId}`) || {};
-            if (guildData.prefix && !Array.isArray(guildData.prefix)) guildData.prefix = Array(guildData.prefix);
-
-            return guildData ? guildData.prefix || this.client.prefix : this.client.prefix;
+    /**
+     * Internal method to getGuildLanguage
+     * @param {Object} guild
+     * @returns {boolean}
+    */
+    async getGuildLanguage(guild) {
+        try {
+            await guild.getData();
+            const language = guild.data?.language;
+            return language ? language : null;
+        } catch (e) {
+            return false;
         }
     }
 
@@ -185,42 +205,6 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to setGuildLanguage
-     * @param {Snowflake} guildId
-     * @param {string} lang
-     * @returns {boolean}
-    */
-    async setGuildLanguage(guildId, lang) {
-        if (!this.client.database) return false;
-
-        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
-        guildData.language = lang;
-
-        this.client.database.set(`guild_${guildId}`, guildData);
-        this.client.guilds.cache.get(guildId).language = guildData.language;
-
-        return true;
-    }
-
-    /**
-     * Internal method to getGuildLanguage
-     * @param {Snowflake} guildId
-     * @param {boolean} cache
-     * @returns {boolean}
-    */
-    async getGuildLanguage(guildId, cache = true) {
-        if (!this.client.database) return this.client.language;
-
-        const guild = this.client.guilds.cache.get(guildId);
-        if (!guild || !guild.language) cache = false;
-
-        if (cache) return guild.language ? guild.language : this.client.language;
-
-        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
-        return guildData ? guildData.language || this.client.language : this.client.language;
-    }
-
-    /**
      * Internal method to fetchClientApplication
      * @private
      * @returns {Array}
@@ -244,11 +228,11 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     addInhibitor(inhibitor) {
-		if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-		if (this.client.inhibitors.has(inhibitor)) return false;
-		this.client.inhibitors.add(inhibitor);
-		return true;
-	}
+        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+        if (this.client.inhibitors.has(inhibitor)) return false;
+        this.client.inhibitors.add(inhibitor);
+        return true;
+    }
 
     /**
      * Method to removeInhibitor
@@ -256,72 +240,8 @@ class GCommandsDispatcher {
      * @returns {Set}
     */
     removeInhibitor(inhibitor) {
-		if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-		return this.client.inhibitors.delete(inhibitor);
-	}
-
-    /**
-     * Method to createButtonCollector
-     * @param {Message} msg
-     * @param {Function} filter
-     * @param {CollectorOptions} options
-     * @returns {Collector}
-    */
-    createButtonCollector(msg, filter, options = {}) {
-        if (ifDjsV13) return new ButtonCollectorV13(msg, filter, options);
-        else return new ButtonCollectorV12(msg, filter, options);
-    }
-
-    /**
-     * Method to awaitButtons
-     * @param {Message} msg
-     * @param {Function} filter
-     * @param {CollectorOptions} options
-     * @returns {Collector}
-    */
-    awaitButtons(msg, filter, options = {}) {
-        return new Promise((resolve, reject) => {
-            const collector = this.createButtonCollector(msg, filter, options);
-            collector.once('end', (buttons, reason) => {
-                if (options.errors && options.errors.includes(reason)) {
-                    reject(buttons);
-                } else {
-                    resolve(buttons);
-                }
-            });
-        });
-    }
-
-    /**
-     * Method to createSelectMenuCollector
-     * @param {Message} msg
-     * @param {Function} filter
-     * @param {CollectorOptions} options
-     * @returns {Collector}
-    */
-    createSelectMenuCollector(msg, filter, options = {}) {
-        if (ifDjsV13) return new SelectMenuCollectorV13(msg, filter, options);
-        else return new SelectMenuCollectorV12(msg, filter, options);
-    }
-
-    /**
-     * Method to awaitSelectMenus
-     * @param {Message} msg
-     * @param {Function} filter
-     * @param {CollectorOptions} options
-     * @returns {Collector}
-    */
-    awaitSelectMenus(msg, filter, options = {}) {
-        return new Promise((resolve, reject) => {
-            const collector = this.createSelectMenuCollector(msg, filter, options);
-            collector.once('end', (buttons, reason) => {
-                if (options.errors && options.errors.includes(reason)) {
-                    reject(buttons);
-                } else {
-                    resolve(buttons);
-                }
-            });
-        });
+        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+        return this.client.inhibitors.delete(inhibitor);
     }
 }
 

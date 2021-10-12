@@ -42,7 +42,7 @@ class GEventHandling {
             if (!message || !message.author || message.author.bot || (!this.client.allowDm && message.channel.type === 'dm')) return;
 
             const mention = message.content.match(new RegExp(`^<@!?(${this.client.user.id})> `));
-            const prefix = mention ? mention[0] : (message.guild ? (await message.guild.getCommandPrefix())[0] : this.client.prefix[0]);
+            const prefix = mention ? mention[0] : (message.guild ? (message.guild.data?.prefix ?? (await message.guild.getData())?.prefix) || this.client.prefix : this.client.prefix);
 
             const messageContainsPrefix = this.client.caseSensitivePrefixes ? message.content.startsWith(prefix) : message.content.toLowerCase().startsWith(prefix.toLowerCase());
             if (!messageContainsPrefix) return;
@@ -62,6 +62,8 @@ class GEventHandling {
                         String(cmd.name),
                 );
 
+                if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
+
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
                 const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
@@ -72,11 +74,10 @@ class GEventHandling {
 
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
-                if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
 
-                const language = isNotDm ? await this.client.dispatcher.getGuildLanguage(message.guild.id) : this.client.language;
+                const language = isNotDm ? (message.guild.data?.language ?? (await message.guild.getLanguage() ?? this.client.language)) : this.client.language;
 
                 const runOptions = {
                     member: message.member,
@@ -217,7 +218,7 @@ class GEventHandling {
                 if (interaction.isContextMenu() && isContextEnabled) return;
                 if (interaction.isContextMenu() && !commandos.context && isClientContextEnabled) return;
 
-                const language = interaction.guild ? await this.client.dispatcher.getGuildLanguage(interaction.guild.id) : this.client.language;
+                const language = isNotDm ? (interaction.guild.data?.language ?? (await interaction.guild.getData())?.language ?? this.client.language) : this.client.language;
 
                 const runOptions = {
                     member: interaction.member,

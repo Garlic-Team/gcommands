@@ -9,7 +9,13 @@ class GuildModel extends SequelizeModel {
                 allowNull: false,
                 primaryKey: true,
             },
-        }, 'Guild');
+            language: {
+                type: DataTypes.STRING,
+            },
+            prefix: {
+                type: DataTypes.STRING,
+            },
+        }, { modelName: 'Guild' });
     }
 }
 
