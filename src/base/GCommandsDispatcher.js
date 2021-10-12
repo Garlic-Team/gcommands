@@ -136,7 +136,7 @@ class GCommandsDispatcher {
             await guild.getData();
             const language = guild.data?.language;
             return language ? language : null;
-        } catch (e) {
+        } catch {
             return false;
         }
     }
