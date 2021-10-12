@@ -4,7 +4,7 @@ const { Guild } = require('discord.js');
  * The GGuild class
  * @extends Guild
  */
- class GGuild {
+class GGuild {
     constructor() {
         Object.defineProperties(Guild.prototype, {
             getCommandPrefix: {
@@ -52,28 +52,35 @@ const { Guild } = require('discord.js');
      * @param {boolean} cache
      * @returns {Promise}
     */
-    getCommandPrefix() {}
+    getCommandPrefix() { }
 
     /**
      * Method to setCommandPrefix
      * @param {string} prefix
      * @returns {void}
     */
-    setCommandPrefix() {}
+    setCommandPrefix() { }
 
     /**
      * Method to getLanguage
      * @param {boolean} cache
      * @returns {Promise}
     */
-    getLanguage() {}
+    getLanguage() { }
 
     /**
      * Method to setLanguage
      * @param {string} lang
      * @returns {void}
     */
-    setLanguage() {}
+    setLanguage() { }
+
+    /**
+     * Method to getData
+     * @param {object} options
+     * @returns {object}
+    */
+    getData() { }
 }
 
 module.exports = GGuild;

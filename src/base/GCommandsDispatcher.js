@@ -50,6 +50,21 @@ class GCommandsDispatcher {
     }
 
     /**
+     * Internal method to getUserData
+     * @param {Snowflake} userId
+     * @param {Object} options
+     * @returns {Object}
+    */
+    async getUserData(userId, options) {
+        if (!options.force && typeof this.data === 'object') return this.data;
+
+        let data = await this.client.database.models.User.findOrCreate({ where: { id: userId } });
+        if (Array.isArray(data)) data = data[0];
+
+        return data?.id ? data : null;
+    }
+
+    /**
      * Internal method to getGuildData
      * @param {Snowflake} guildId
      * @param {Object} options
@@ -101,7 +116,7 @@ class GCommandsDispatcher {
      * @param {string} language
      * @returns {boolean}
     */
-     async setGuildLanguage(guild, language) {
+    async setGuildLanguage(guild, language) {
         try {
             await guild.getData();
             await guild.data?.update({ language: String(language) });
@@ -128,79 +143,40 @@ class GCommandsDispatcher {
 
     /**
      * Internal method to getCooldown
-     * @param {Snowflake} guildId
      * @param {Snowflake} userId
      * @param {Command} command
      * @returns {string}
     */
-    async getCooldown(guildId, userId, command) {
-        if (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
+    getCooldown(userId, command) {
+        // If (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
         const now = Date.now();
 
         let cooldown;
-        if (typeof command.cooldown === 'object') cooldown = command.cooldown ? ms(command.cooldown.cooldown) : ms(this.client.defaultCooldown);
-        else cooldown = command.cooldown ? ms(command.cooldown) : ms(this.client.defaultCooldown);
 
-        if (cooldown < 1800000 || !this.client.database) {
-            if (!this.client.cooldowns.has(command.name)) this.client.cooldowns.set(command.name, new Collection());
+        if (typeof command.cooldown === 'object' && command.cooldown?.cooldown) cooldown = ms(command.cooldown.cooldown);
+        else if (typeof command.cooldown === 'string') cooldown = ms(command.cooldown);
+        else cooldown = ms(this.client.defaultCooldown);
 
-            const timestamps = this.client.cooldowns.get(command.name);
+        if (!this.client.cooldowns.has(command.name)) this.client.cooldowns.set(command.name, new Collection());
 
-            if (timestamps.has(userId)) {
-                if (timestamps.has(userId)) {
-                    const expirationTime = timestamps.get(userId) + cooldown;
+        const timestamps = this.client.cooldowns.get(command.name);
 
-                    if (now < expirationTime) {
-                        if (typeof command.cooldown === 'object' && command.cooldown.agressive) {
-                            this.client.cooldowns.set(command.name, new Collection());
-                            return { cooldown: true, wait: ms(cooldown) };
-                        }
-
-                        const timeLeft = ms(expirationTime - now);
-
-                        return { cooldown: true, wait: timeLeft };
-                    }
+        if (timestamps.has(userId)) {
+            const expirationTime = timestamps.get(userId) + cooldown;
+            if (now < expirationTime) {
+                if (typeof command.cooldown === 'object' && command.cooldown.agressive) {
+                    this.client.cooldowns.set(command.name, new Collection());
+                    return { cooldown: true, wait: ms(cooldown) };
                 }
+
+                const timeLeft = ms(expirationTime - now);
+
+                return { cooldown: true, wait: timeLeft };
             }
-
-            timestamps.set(userId, now);
-            setTimeout(() => timestamps.delete(userId), cooldown);
-            return { cooldown: false };
         }
 
-        if (!this.client.database || !command.cooldown) return { cooldown: false };
-
-        const guildData = await this.client.database.get(`guild_${guildId}`) || {};
-        if (!guildData.users) guildData.users = {};
-        if (!guildData.users[userId]) guildData.users[userId] = guildData.users[userId] || {};
-
-        let userInfo = guildData.users[userId][command.name];
-
-        if (!userInfo) {
-            guildData.users[userId][command.name] = ms(command.cooldown) + now;
-
-            userInfo = guildData.users[userId][command.name];
-            this.client.database.set(`guild_${guildId}`, guildData);
-        }
-
-        if (now < userInfo) {
-            if (typeof command.cooldown === 'object' && command.cooldown.agressive) {
-                guildData.users[userId][command.name] = ms(command.cooldown) + now;
-
-                userInfo = guildData.users[userId][command.name];
-                this.client.database.set(`guild_${guildId}`, guildData);
-
-                return { cooldown: true, wait: ms(cooldown) };
-            }
-
-            return { cooldown: true, wait: ms(userInfo - now) };
-        } else {
-            guildData.users[userId] = guildData.users[userId] || {};
-            guildData.users[userId][command.name] = undefined;
-
-            this.client.database.set(`guild_${guildId}`, guildData);
-        }
-
+        timestamps.set(userId, now);
+        setTimeout(() => timestamps.delete(userId), cooldown);
         return { cooldown: false };
     }
 

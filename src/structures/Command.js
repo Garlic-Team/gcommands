@@ -39,8 +39,9 @@ class Command {
         /**
          * Cooldown
          * @type {string}
+         * @default undefined
          */
-        this.cooldown = resolveString(options.cooldown);
+        this.cooldown = options.cooldown ? resolveString(options.cooldown) : undefined;
 
         /**
          * ExpectedArgs

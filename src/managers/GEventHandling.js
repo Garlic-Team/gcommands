@@ -99,7 +99,7 @@ class GEventHandling {
 
                 if (inhibitReturn === false) return;
 
-                const cooldown = message.guild ? await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos) : null;
+                const cooldown = this.client.dispatcher.getCooldown(message.author.id, commandos);
                 const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
 
                 if (cooldown?.cooldown) return message.reply(getCooldownMessage());
@@ -240,7 +240,7 @@ class GEventHandling {
                 });
                 if (inhibitReturn === false) return;
 
-                const cooldown = interaction.guild ? await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.member.id, commandos) : null;
+                const cooldown = interaction.guild ? this.client.dispatcher.getCooldown(interaction.member.id, commandos) : null;
                 const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
 
                 if (cooldown?.cooldown) return interaction.reply.send(getCooldownMessage());

@@ -2,7 +2,6 @@
 
 module.exports = {
     // Root classes
-    GCommands: require('./base/GCommands.js'),
     GCommandsClient: require('./base/GCommandsClient.js'),
     GEventLoader: require('@gcommands/events').GEvents,
     GCommandsDispatcher: require('./base/GCommandsDispatcher'),
@@ -20,6 +19,7 @@ module.exports = {
     Command: require('./structures/Command'),
     Event: require('@gcommands/events').Event,
     GError: require('./structures/GError'),
+    SequelizeModel: require('./structures/SequelizeModel'),
 
     // Builders
     CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),

@@ -57,6 +57,13 @@ class GCommandsClient extends Client {
         this.eventDir = options.loader?.eventDir ? String(options.loader.eventDir) : undefined;
 
         /**
+         * ModelDir
+         * @type {string}
+         * @default undefined
+        */
+        this.modelDir = options.loader?.modelDir ? String(options.loader.modelDir) : undefined;
+
+        /**
          * LoadFromCache
          * @type {boolean}
          * @default true
@@ -183,6 +190,7 @@ class GCommandsClient extends Client {
 
     loadSys() {
         new (require('../structures/GGuild'));
+        new (require('../structures/GUser'));
 
         setTimeout(() => {
             new GEventHandling(this);
