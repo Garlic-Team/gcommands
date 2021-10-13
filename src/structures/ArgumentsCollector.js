@@ -2,28 +2,83 @@ const Argument = require('./Argument');
 const { CommandInteractionOptionResolver } = require('discord.js');
 const { Collection } = require('discord.js');
 
+
+/**
+ * The collector for arguments
+ * @private
+ */
 class ArgumentsCollector {
+    /**
+     * @param {Client} client
+     * @param {Object} data
+     * @constructor
+     */
     constructor(client, data) {
+        /**
+         * The client
+         * @type {Client}
+        */
         this.client = client;
 
+        /**
+         * The message
+         * @type {Message}
+         */
         this.message = data.message;
 
+        /**
+         * The args
+         * @type {Array}
+         */
         this.args = data.args;
 
+        /**
+         * The language
+         * @type {string}
+         */
         this.language = data.language;
 
+        /**
+         * If the command was executed inside DM's
+         * @type {boolean}
+        */
         this.isNotDm = data.isNotDm;
 
+        /**
+         * The command arguments
+         * @type {Array<CommandArgsOption>}
+         */
         this.cmdArgs = JSON.parse(JSON.stringify(data.commandos.args));
 
+        /**
+         * The command
+         * @type {Command}
+         */
         this.commandos = data.commandos;
 
+        /**
+         * The timelimit message
+         * @type {string}
+         */
         this.timeLimitMessage = this.client.languageFile.ARGS_TIME_LIMIT[data.language];
 
+        /**
+         * The options
+         * @type {Array}
+         */
         this.options = [];
 
+        /**
+         * The resolved users/channels/roles
+         * @type {Object<Collection>}
+         */
         this.resolved = {};
     }
+
+    /**
+     * Internal method to get arguments
+     * @returns {void}
+     */
     async get() {
         for (const arg of this.cmdArgs) {
             if ([1, 2].includes(arg.type)) arg.subcommands = this.cmdArgs.filter(sc => [1, 2].includes(sc.type));
@@ -64,6 +119,12 @@ class ArgumentsCollector {
             }
         }
     }
+
+    /**
+     * Internal method to add arguments
+     * @param {object} argument
+     * @returns {void}
+     */
     addArgument(argument) {
         this.addResolved(argument);
         if (['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(this.options[0]?.type)) {
@@ -76,9 +137,20 @@ class ArgumentsCollector {
         }
         return this.options.push(argument);
     }
+
+    /**
+     * Internal method to resolve arguments
+     * @returns {CommandInteractionOptionResolver}
+     */
     resolve() {
         return new CommandInteractionOptionResolver(this.client, this.options, this.resolved);
     }
+
+    /**
+     * Internal method to add resolved user/role/channel
+     * @param {object} argument
+     * @returns {void}
+     */
     addResolved(argument) {
         if (argument.user) {
             if (!this.resolved.users) this.resolved.users = new Collection();

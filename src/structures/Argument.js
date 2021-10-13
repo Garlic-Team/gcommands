@@ -12,72 +12,73 @@ const MessageActionRow = require('./MessageActionRow');
 const MessageButton = require('./MessageButton');
 
 /**
- * The Argument class
+ * The argument for message commands
+ * @private
  */
 class Argument {
     /**
-     * The Argument class
      * @param {Client} client
      * @param {Object} argument
      * @param {boolean} isNotDm
+     * @constructor
      */
     constructor(client, argument, isNotDm) {
         /**
-         * Client
+         * The client
          * @type {Client}
         */
         this.client = client;
 
         /**
-         * Name
+         * The name
          * @type {string}
         */
         this.name = argument.name;
 
         /**
-         * IsNotDm
+         * If the command was executed inside DM's
          * @type {boolean}
         */
         this.isNotDm = isNotDm;
 
         /**
-         * Argument
+         * The argument type class
          * @type {Argument}
         */
         this.argument = this.determineArgument(client, argument);
 
         /**
-         * Type
+         * The type
          * @type {string}
         */
         this.type = this.determineArgument(client, argument).type;
 
         /**
-         * Required
+         * Wheter the argument is required or not
          * @type {boolean}
         */
         this.required = ['sub_command', 'sub_command_group'].includes(this.type) ? true : argument.required;
 
         /**
-         * Prompt
+         * The prompt
          * @type {string}
         */
         this.prompt = argument.prompt || `Please define argument ${argument.name}`;
 
         /**
-         * Choices
+         * The choices
          * @type {Object}
         */
         this.choices = argument.choices;
 
         /**
-         * Channel Types
+         * The channel types
          * @type {ArgumentChannelTypes}
          */
         this.channel_types = argument.channel_types || [];
 
         /**
-         * SubCommands
+         * The sub commands
          * @type {Array<Object>}
         */
         this.subcommands = argument.subcommands;
@@ -87,6 +88,7 @@ class Argument {
      * Method to obtain
      * @param {Message|Object}
      * @param {string}
+     * @returns {any}
      */
     async obtain(message, language, prompt = this.prompt) {
         if (message.author.bot) return;
@@ -177,6 +179,7 @@ class Argument {
      * Method to determineArgument
      * @param {Client}
      * @param {Argument}
+     * @returns {Object}
      */
     determineArgument(client, argument) {
         if (argument.type === 1) return new SubCommandArgumentType(client, argument);

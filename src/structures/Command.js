@@ -7,51 +7,44 @@ const { ArgumentChannelTypes } = require('../util/Constants');
  */
 class Command {
     /**
-     * Creates new Command instance
      * @param {Client} client
      * @param {CommandOptions} options
+     * @constructor
     */
     constructor(client, options = {}) {
         /**
-         * Client
+         * The client
          * @type {Client}
          */
         this.client = client;
 
         /**
-         * Name
+         * The name
          * @type {string}
          */
         this.name = resolveString(options.name);
 
         /**
-         * ContextMenuName
+         * The context menu name
          * @type {string}
          */
         this.contextMenuName = resolveString(options.contextMenuName);
 
         /**
-         * Description
+         * The description
          * @type {string}
          */
         this.description = resolveString(options.description);
 
         /**
-         * Cooldown
+         * The cooldown
          * @type {string}
          * @default undefined
          */
         this.cooldown = options.cooldown ? resolveString(options.cooldown) : undefined;
 
         /**
-         * ExpectedArgs
-         * @type {string | Array}
-         * @deprecated
-         */
-        this.expectedArgs = options.expectedArgs;
-
-        /**
-         * Args
+         * The arguments
          * @type {CommandArgsOption[]}
          */
         this.args = options.args ? options.args.map(arg => {
@@ -68,116 +61,109 @@ class Command {
         }) : null;
 
         /**
-         * AlwaysObtain
+         * Whether always obtain is enabled
          * @type {boolean}
          */
          this.alwaysObtain = options.alwaysObtain ? Boolean(options.alwaysObtain) : false;
 
         /**
-         * MinArgs
-         * @type {number}
-         * @deprecated use args
-         */
-        this.minArgs = Number(options.minArgs);
-
-        /**
-         * UserRequiredPermissions
+         * The permissions required by a user
          * @type {string | Array}
          */
         this.userRequiredPermissions = options.userRequiredPermissions;
 
         /**
-         * UserRequiredRoles
+         * The roles required by a user
          * @type {string | Array}
          */
         this.userRequiredRoles = options.userRequiredRoles;
 
         /**
-         * ClientRequiredPermissions
+         * The permissions required by the client
          * @type {string | Array}
          */
         this.clientRequiredPermissions = options.clientRequiredPermissions;
 
         /**
-         * UserOnly
+         * The users who can use this command
          * @type {Snowflake | Array}
          */
         this.userOnly = options.userOnly;
 
         /**
-         * ChannelOnly
+         * The channels in wich this command can get used
          * @type {Snowflake | Array}
          */
         this.channelOnly = options.channelOnly;
 
         /**
-         * ChannelTextOnly
+         * Wheter the command can only be used inside a text channel
          * @type {boolean}
          */
         this.channelTextOnly = options.channelTextOnly;
 
         /**
-         * ChannelNewsOnly
+         * Wheter the command can only be used inside a news channel
          * @type {boolean}
          */
         this.channelNewsOnly = options.channelNewsOnly;
 
         /**
-         * ChannelThreadOnly
+         * Wheter the command can only be used inside a thread channel
          * @type {boolean}
          */
         this.channelThreadOnly = options.channelThreadOnly;
 
         /**
-         * AllowDm
+         * Wheter the command can be used in DM's
          * @type {boolean}
          */
          this.allowDm = options.allowDm;
 
         /**
-         * GuildOnly
+         * The guilds in wich this command can get used
          * @type {Snowflake | Array}
          */
         this.guildOnly = options.guildOnly ? Array.isArray(options.guildOnly) ? options.guildOnly : Array(options.guildOnly) : undefined;
 
         /**
-         * Nsfw
+         * Wheter this command can be only be used inside NSFW channels
          * @type {boolean}
          */
         this.nsfw = options.nsfw;
 
         /**
-         * Slash
+         * Wheter this command should be a slash command
          * @type {boolean}
          */
         this.slash = options.slash;
 
         /**
-         * Context
+         * Wheter this command should be a context menu
          * @type {GCommandsOptionsCommandsContext}
          */
         this.context = options.context;
 
         /**
-         * Aliases
+         * The aliases
          * @type {Array}
          */
         this.aliases = Array.isArray(options.aliases) ? options.aliases : Array(options.aliases);
 
         /**
-         * Category
+         * The category
          * @type {string}
          */
         this.category = options.category ? resolveString(options.category) : undefined;
 
         /**
-         * Usage
+         * The usage
          * @type {string}
          */
         this.usage = resolveString(options.usage);
 
         /**
-         * Command Path
+         * The file path
          * @type {string}
          * @private
          */
@@ -193,15 +179,14 @@ class Command {
     /**
      * Run function
      * @param {CommandRunOptions} options
-     * @param {Array} arrayArgs
-     * @param {Object} objectArgs
      */
-    async run(options, arrayArgs, objectArgs) { // eslint-disable-line no-unused-vars, require-await
+    async run(options) { // eslint-disable-line no-unused-vars, require-await
         throw new GError('[COMMAND]',`Command ${this.name} doesn't provide a run method!`);
     }
 
 	/**
 	 * Reloads the command
+     * @returns {boolean}
 	 */
     async reload() {
         const cmdPath = this.client.gcommands.get(this.name)._path;
