@@ -6,16 +6,17 @@ const { Events } = require('../util/Constants');
 const Color = require('../structures/Color');
 
 /**
- * The GDatabaseLoader class
+ * The loader for the sequelize database and sequelize models
+ * @private
  */
 class GDatabaseLoader {
     /**
-     * The GDatabaseLoader class
      * @param {GCommandsClient} client
+     * @constructor
     */
     constructor(client) {
         /**
-         * Client
+         * The client
          * @type {GCommandsClient}
         */
         this.client = client;
@@ -24,9 +25,8 @@ class GDatabaseLoader {
     }
 
     /**
-     * Internal method to dbLoad
-     * @returns {boolean}
-     * @private
+     * Internal method to load database
+     * @returns {void}
      */
     async __loadDB() {
         const dbType = this.client.database;
@@ -46,6 +46,11 @@ class GDatabaseLoader {
             }
         }
     }
+
+    /**
+     * Internal method to load default models
+     * @returns {void}
+     */
     __loadDefaultModels() {
         const Guild = require('../structures/DefaultModels/Guild');
         const User = require('../structures/DefaultModels/User');
@@ -54,6 +59,10 @@ class GDatabaseLoader {
         new User(this.client);
     }
 
+    /**
+     * Internal method to load models
+     * @returns {void}
+     */
     async __loadModels(dir) {
         for await (const fsDirent of fs.readdirSync(dir, { withFileTypes: true })) {
             let file = fsDirent.name;

@@ -7,7 +7,7 @@ const ms = require('ms');
  */
 class GCommandsDispatcher {
     /**
-     * @param {GCommandsClient} GCommandsClient
+     * @param {GCommandsClient} client
      * @constructor
      */
     constructor(client, readyWait = true) {

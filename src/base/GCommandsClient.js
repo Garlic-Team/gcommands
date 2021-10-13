@@ -29,20 +29,20 @@ class GCommandsClient extends Client {
         if (!isClientMessageEnabled && !options.commands?.prefix) throw new GError('[DEFAULT OPTIONS]', 'You must specify the commands#prefix');
 
         /**
-         * The path to the commands
+         * The path to the command files
          * @type {string}
         */
         this.cmdDir = String(options.loader.cmdDir);
 
         /**
-         * The path to the events
+         * The path to the event files
          * @type {string}
          * @default undefined
         */
         this.eventDir = options.loader?.eventDir !== undefined ? String(options.loader.eventDir) : undefined;
 
         /**
-         * The path to the database models
+         * The path to the database model files
          * @type {string}
          * @default undefined
         */

@@ -4,16 +4,17 @@ const { Events } = require('../util/Constants'), Color = require('../structures/
 const { inhibit, interactionRefactor, channelTypeRefactor, unescape } = require('../util/util');
 
 /**
- * The GEventHandling class
+ * The handler for message and slash commands
+ * @private
 */
 class GEventHandling {
     /**
-     * Creates new GEventHandling instance
      * @param {GCommandsClient} client
+     * @constructor
      */
     constructor(client) {
         /**
-         * Client
+         * The client
          * @type {GCommandsClient}
         */
         this.client = client;
@@ -24,9 +25,8 @@ class GEventHandling {
     }
 
     /**
-     * Internal method to messageEvent
+     * Internal method to handle message event
      * @returns {void}
-     * @private
     */
     messageEvent() {
         this.client.on('messageCreate', message => {
@@ -184,9 +184,8 @@ class GEventHandling {
     }
 
     /**
-     * Internal method to slashEvent
+     * Internal method to handle interaction event
      * @returns {void}
-     * @private
     */
     slashEvent() {
         this.client.on('interactionCreate', async interaction => {
@@ -322,9 +321,8 @@ class GEventHandling {
     }
 
     /**
-     * Internal method to loadMoreEvents
+     * Internal method to load more events
      * @returns {void}
-     * @private
     */
     async loadMoreEvents() {
         await readdirSync(`${__dirname}/../base/actions/`).forEach(file => {
