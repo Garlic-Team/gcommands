@@ -1,5 +1,5 @@
 module.exports = client => {
-    client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    client.on('guildMemberUpdate', (oldMember, newMember) => {
         if (oldMember.premiumSince && newMember.premiumSince) {
             client.emit('guildMemberBoost',
                 newMember,
