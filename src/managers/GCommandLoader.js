@@ -1,5 +1,5 @@
 const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
-const axios = require('axios');
+const { default: hyttpo } = require('hyttpo');
 const path = require('path');
 const fs = require('fs');
 const ms = require('ms');
@@ -122,47 +122,47 @@ class GCommandLoader {
                         Authorization: `Bot ${this.client.token}`,
                         'Content-Type': 'application/json',
                     },
-                    data: {
+                    body: JSON.stringify({
                         name: cmd.name,
                         description: cmd.description,
                         options: cmd.args || [],
                         type: 1,
                         default_permission: guildOnly ? (Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined : true,
                         channel_types: cmd.channel_types || null,
-                    },
+                    }),
                     url,
                 };
-                axios(config).then(() => {
-                    this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
-                })
-                    .catch(error => {
-                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                        if (error.response) {
-                            if (error.response.status === 429) {
-                                setTimeout(() => {
-                                    this.__tryAgain(cmd, config, 'Slash');
-                                }, (error.response.data.retry_after) * 1000);
-                            } else {
+                hyttpo.request(config)
+                .then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText()))
+                .catch(error => {
+                    this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+
+                    if (error) {
+                        if (error.status === 429) {
+                            setTimeout(() => {
+                                this.__tryAgain(cmd, config, 'Slash');
+                            }, (error.data.retry_after) * 1000);
+                        } else {
+                            this.client.emit(Events.DEBUG, new Color([
+                                '&a----------------------',
+                                '  &d[GCommands Debug] &3',
+                                `&aCode: &b${error.data.code}`,
+                                `&aMessage: &b${error.data.message}`,
+                                '',
+                                `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                            ]).getText());
+
+                            if (error.data.errors) {
+                                getAllObjects(this.client, error.data.errors);
+
                                 this.client.emit(Events.DEBUG, new Color([
-                                    '&a----------------------',
-                                    '  &d[GCommands Debug] &3',
-                                    `&aCode: &b${error.response.data.code}`,
-                                    `&aMessage: &b${error.response.data.message}`,
-                                    '',
-                                    `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                                    `&a----------------------`,
                                 ]).getText());
-
-                                if (error.response.data.errors) {
-                                    getAllObjects(this.client, error.response.data.errors);
-
-                                    this.client.emit(Events.DEBUG, new Color([
-                                        `&a----------------------`,
-                                    ]).getText());
-                                }
                             }
                         }
-                    });
+                    }
+                });
             };
 
             if (cmd.guildOnly) {
@@ -214,13 +214,14 @@ class GCommandLoader {
                         Authorization: `Bot ${this.client.token}`,
                         'Content-Type': 'application/json',
                     },
-                    data: {
+                    body: JSON.stringify({
                         name: cmd.contextMenuName || cmd.name,
                         type: type === 4 ? 2 : type,
-                    },
+                    }),
                     url,
                 };
-                axios(config).then(() => {
+
+                hyttpo.request(config).then(() => {
                     this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
                     if (type === 4) {
                         config.data = JSON.parse(config.data);
@@ -229,34 +230,34 @@ class GCommandLoader {
                         this.__tryAgain(cmd, config, 'Context Menu (message)');
                     }
                 })
-                    .catch(error => {
-                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                .catch(error => {
+                    this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                        if (error.response) {
-                            if (error.response.status === 429) {
-                                setTimeout(() => {
-                                    this.__tryAgain(cmd, config, 'Context Menu');
-                                }, (error.response.data.retry_after) * 1000);
-                            } else {
+                    if (error) {
+                        if (error.status === 429) {
+                            setTimeout(() => {
+                                this.__tryAgain(cmd, config, 'Context Menu');
+                            }, (error.data.retry_after) * 1000);
+                        } else {
+                            this.client.emit(Events.DEBUG, new Color([
+                                '&a----------------------',
+                                '  &d[GCommands Debug] &3',
+                                `&aCode: &b${error.data.code}`,
+                                `&aMessage: &b${error.data.message}`,
+                                '',
+                                `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                            ]).getText());
+
+                            if (error.data.errors) {
+                                getAllObjects(this.client, error.data.errors);
+
                                 this.client.emit(Events.DEBUG, new Color([
-                                    '&a----------------------',
-                                    '  &d[GCommands Debug] &3',
-                                    `&aCode: &b${error.response.data.code}`,
-                                    `&aMessage: &b${error.response.data.message}`,
-                                    '',
-                                    `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                                    `&a----------------------`,
                                 ]).getText());
-
-                                if (error.response.data.errors) {
-                                    getAllObjects(this.client, error.response.data.errors);
-
-                                    this.client.emit(Events.DEBUG, new Color([
-                                        `&a----------------------`,
-                                    ]).getText());
-                                }
                             }
                         }
-                    });
+                    }
+                });
             };
 
             if (cmd.guildOnly) {
@@ -326,43 +327,41 @@ class GCommandLoader {
                                 Authorization: `Bot ${this.client.token}`,
                                 'Content-Type': 'application/json',
                             },
-                            data: {
+                            body: JSON.stringify({
                                 permissions: finalData,
-                            },
+                            }),
                             url,
                         };
 
-                        axios(config).then(() => {
-                            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText());
-                        })
-                            .catch(error => {
-                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        hyttpo.request(config).then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText()))
+                        .catch(error => {
+                            this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                                if (error.response) {
-                                    if (error.response.status === 429) {
-                                        setTimeout(() => {
-                                            this.__tryAgain(cmd, config, 'Permission');
-                                        }, (error.response.data.retry_after) * 1000);
-                                    } else {
+                            if (error) {
+                                if (error.status === 429) {
+                                    setTimeout(() => {
+                                        this.__tryAgain(cmd, config, 'Permission');
+                                    }, (error.data.retry_after) * 1000);
+                                } else {
+                                    this.client.emit(Events.DEBUG, new Color([
+                                        '&a----------------------',
+                                        '  &d[GCommands Debug] &3',
+                                        `&aCode: &b${error.data.code}`,
+                                        `&aMessage: &b${error.data.message}`,
+                                        '',
+                                        `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                                    ]).getText());
+
+                                    if (error.data.errors) {
+                                        getAllObjects(this.client, error.data.errors);
+
                                         this.client.emit(Events.DEBUG, new Color([
-                                            '&a----------------------',
-                                            '  &d[GCommands Debug] &3',
-                                            `&aCode: &b${error.response.data.code}`,
-                                            `&aMessage: &b${error.response.data.message}`,
-                                            '',
-                                            `${error.response.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                                            `&a----------------------`,
                                         ]).getText());
-
-                                        if (error.response.data.errors) {
-                                            getAllObjects(this.client, error.response.data.errors);
-
-                                            this.client.emit(Events.DEBUG, new Color([
-                                                `&a----------------------`,
-                                            ]).getText());
-                                        }
                                     }
                                 }
-                            });
+                            }
+                        });
                     };
 
                     if (cmd.guildOnly) {
@@ -399,20 +398,16 @@ class GCommandLoader {
      * @private
     */
     __tryAgain(cmd, config, type) {
-        axios(config).then(() => {
-            this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText());
-        })
-            .catch(error => {
-                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error.response ? error.response.status === 429 ? `&aWait &e${ms(error.response.data.retry_after * 1000)}` : '' : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+        hyttpo.request(config).then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText()))
+        .catch(error => {
+            this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
-                if (error.response) {
-                    if (error.response.status === 429) {
-                        setTimeout(() => {
-                            this.__tryAgain(cmd, config, type);
-                        }, (error.response.data.retry_after) * 1000);
-                    }
-                }
-            });
+            if (error && error.status === 429) {
+                setTimeout(() => {
+                    this.__tryAgain(cmd, config, type);
+                }, (error.data.retry_after) * 1000);
+            }
+        });
     }
 
     /**

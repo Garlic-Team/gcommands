@@ -1,5 +1,3 @@
-const { default: axios } = require('axios');
-
 module.exports = client => {
     client.on('guildMemberUpdate', async (oldMember, newMember) => {
         if (oldMember.premiumSince && newMember.premiumSince) {
@@ -38,9 +36,8 @@ module.exports = client => {
                 url,
             };
 
-            const response = (await axios(config)).data;
-
-            if (response.pending) return;
+            const response = newMember.pending;
+            if (response) return;
 
             client.emit('guildMemberAcceptShipScreening',
                 newMember,
