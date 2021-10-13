@@ -10,7 +10,7 @@ class RoleArgumentType extends ArgumentType {
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'role');
+        super(client, 'ROLE');
 
         /**
          * Client

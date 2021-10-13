@@ -10,7 +10,7 @@ class NumberArgumentType extends ArgumentType {
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'number');
+        super(client, 'NUMBER');
 
         /**
          * Client

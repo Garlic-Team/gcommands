@@ -9,7 +9,7 @@ class StringArgumentType extends ArgumentType {
      * The StringArgumentType class
      */
     constructor(client) {
-        super(client, 'string');
+        super(client, 'STRING');
 
         /**
          * Client

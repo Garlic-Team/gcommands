@@ -1,7 +1,5 @@
 const { Collection, Team } = require('discord.js');
 const Color = require('../structures/Color');
-
-const ifDjsV13 = require('../util/util').checkDjsVersion('13');
 const ms = require('ms');
 
 /**
@@ -9,30 +7,30 @@ const ms = require('ms');
  */
 class GCommandsDispatcher {
     /**
-     * The GCommansDispatcher class
      * @param {GCommandsClient} GCommandsClient
+     * @constructor
      */
     constructor(client, readyWait = true) {
         /**
-         * Client
+         * The client
          * @type {GCommandsClient}
          */
         this.client = client;
 
         /**
-         * Inhibitors
+         * All the inhibitors
          * @type {Set}
         */
         this.inhibitors = new Set();
 
         /**
-         * Cooldowns
+         * All the cooldowns
          * @type {Collection}
         */
         this.cooldowns = new Collection();
 
         /**
-         * Application
+         * The client application
          * @type {ClientApplication}
         */
         this.application = null;
@@ -50,10 +48,11 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to getUserData
+     * Internal method to get user data
      * @param {Snowflake} userId
      * @param {Object} options
-     * @returns {Object}
+     * @private
+     * @returns {Object || null}
     */
     async getUserData(userId, options) {
         if (!options.force && typeof this.data === 'object') return this.data;
@@ -65,10 +64,11 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to getGuildData
+     * Internal method to get guild data
      * @param {Snowflake} guildId
      * @param {Object} options
-     * @returns {Object}
+     * @private
+     * @returns {Object || null}
     */
     async getGuildData(guildId, options) {
         if (!options.force && typeof this.data === 'object') return this.data;
@@ -80,9 +80,10 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to setGuildPrefix
+     * Internal method to set guild prefix
      * @param {Object} guild
      * @param {string} prefix
+     * @private
      * @returns {boolean}
     */
     async setGuildPrefix(guild, prefix) {
@@ -96,8 +97,9 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to getGuildPrefix
+     * Internal method to get guild prefix
      * @param {Object} guild
+     * @private
      * @returns {string}
     */
     async getGuildPrefix(guild) {
@@ -111,9 +113,10 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to setGuildLanguage
+     * Internal method to set guild language
      * @param {Object} guild
      * @param {string} language
+     * @private
      * @returns {boolean}
     */
     async setGuildLanguage(guild, language) {
@@ -127,8 +130,9 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to getGuildLanguage
+     * Internal method to get guild language
      * @param {Object} guild
+     * @private
      * @returns {boolean}
     */
     async getGuildLanguage(guild) {
@@ -142,10 +146,11 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to getCooldown
+     * Internal method to get cooldown
      * @param {Snowflake} userId
      * @param {Command} command
-     * @returns {string}
+     * @private
+     * @returns {Object}
     */
     getCooldown(userId, command) {
         if (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
@@ -181,13 +186,12 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to fetchClientApplication
+     * Internal method to fetch client application
      * @private
      * @returns {Array}
     */
     async fetchClientApplication() {
-        if (!ifDjsV13) this.application = await this.client.fetchApplication();
-        else this.application = await this.client.application.fetch();
+        this.application = await this.client.application.fetch();
 
         if (this.application.owner === null) this.application.owners = [];
 
@@ -199,7 +203,7 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Method to addInhibitor
+     * Method to add inhibitor
      * @param {Inhibitor} inhibitor
      * @returns {boolean}
     */
@@ -211,7 +215,7 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Method to removeInhibitor
+     * Method to remove inhibitor
      * @param {Inhibitor} inhibitor
      * @returns {Set}
     */

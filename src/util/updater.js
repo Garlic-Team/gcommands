@@ -2,7 +2,7 @@ const hyttpo = require('hyttpo');
 
 module.exports = {
     /**
-     * Internal method to update
+     * Internal method to check version
      * @returns {void}
      * @private
     */

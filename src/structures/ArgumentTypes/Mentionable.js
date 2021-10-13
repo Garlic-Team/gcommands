@@ -10,7 +10,7 @@ class MentionableArgumentType extends ArgumentType {
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'mentionable');
+        super(client, 'MENTIONABLE');
 
         /**
          * Client

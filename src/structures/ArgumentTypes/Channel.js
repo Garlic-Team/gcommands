@@ -10,7 +10,7 @@ class ChannelArgumentType extends ArgumentType {
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'channel');
+        super(client, 'CHANNEL');
 
         /**
          * Client

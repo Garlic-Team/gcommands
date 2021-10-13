@@ -10,13 +10,13 @@ const fs = require('fs');
 const GError = require('../structures/GError');
 
 /**
- * The main GCommandsClient class
- * @extends Client
+ * The main hub for interacting with the Discord API, and the starting point for any bot.
+ * @extends {@link https://discord.js.org/#/docs/main/stable/class/Client}
  */
 class GCommandsClient extends Client {
     /**
-     * The GCommandsClient class
-     * @param {GCommandsOptions} options - Options (Discord.js client options, GCommandOptions)
+     * @param {GCommandsOptions} options Options for the client
+     * @constructor
      */
     constructor(options = {}) {
         super(options);
@@ -29,151 +29,151 @@ class GCommandsClient extends Client {
         if (!isClientMessageEnabled && !options.commands?.prefix) throw new GError('[DEFAULT OPTIONS]', 'You must specify the commands#prefix');
 
         /**
-         * CaseSensitiveCommands
-         * @type {boolean}
-         * @default true
-        */
-        this.caseSensitiveCommands = options.caseSensitiveCommands;
-
-        /**
-         * CaseSensitivePrefixes
-         * @type {boolean}
-         * @default true
-        */
-        this.caseSensitivePrefixes = options.caseSensitivePrefixes;
-
-
-        /**
-         * CmdDir
+         * The path to the commands
          * @type {string}
         */
         this.cmdDir = String(options.loader.cmdDir);
 
         /**
-         * EventDir
+         * The path to the events
          * @type {string}
          * @default undefined
         */
-        this.eventDir = options.loader?.eventDir ? String(options.loader.eventDir) : undefined;
+        this.eventDir = options.loader?.eventDir !== undefined ? String(options.loader.eventDir) : undefined;
 
         /**
-         * ModelDir
+         * The path to the database models
          * @type {string}
          * @default undefined
         */
-        this.modelDir = options.loader?.modelDir ? String(options.loader.modelDir) : undefined;
+        this.modelDir = options.loader?.modelDir !== undefined ? String(options.loader.modelDir) : undefined;
 
         /**
-         * LoadFromCache
+         * Wheter loading from cache is enabled
          * @type {boolean}
          * @default true
          */
         this.loadFromCache = options.loader?.loadFromCache !== undefined ? Boolean(options.loader.loadFromCache) : true;
 
         /**
-         * AutoCategory
+         * Wheter auto category is enabled
          * @type {boolean}
          * @default false
          */
         this.autoCategory = options.loader?.autoCategory !== undefined ? Boolean(options.loader.autoCategory) : false;
 
         /**
-         * DeleteNonExistent
+         * Wheter auto deleting non existent commands is enabled
          * @type {boolean}
          * @default true
          */
         this.deleteNonExistent = options.loader?.deleteNonExistent !== undefined ? Boolean(options.loader.deleteNonExistent) : true;
 
         /**
-         * OwnLanguageFile
-         * @type {Object}
+         * The own language file
+         * @type {?Object}
         */
         if (!options.ownLanguageFile) this.languageFile = require('../util/message.json');
         else this.languageFile = options.ownLanguageFile;
 
         /**
-         * Language
+         * The default language
          * @type {Object} language
         */
         this.language = options.language;
 
         /**
-         * Database
+         * The database
          * @type {Object} database
          * @default undefined
         */
         this.database = options.database;
 
         /**
-         * Gcategories
+         * All the categories
          * @type {Array}
          */
         this.gcategories = fs.readdirSync(this.cmdDir);
 
         /**
-         * Gcommands
+         * All the commands
          * @type {Collection}
          */
         this.gcommands = new Collection();
 
         /**
-         * Galiases
+         * All the aliases of commands
          * @type {Collection}
          */
         this.galiases = new Collection();
 
         /**
-         * Prefix
+         * The default prefix
          * @type {string}
          * @default undefined
          */
-        this.prefix = options.commands?.prefix ? String(options.commands?.prefix) : undefined;
+        this.prefix = options.commands?.prefix ? String(options.commands.prefix) : undefined;
 
         /**
-         * Slash
+         * Wheter slash commands are enabled
          * @type {string}
          * @default false
          */
-        this.slash = options.commands?.slash ? options.commands?.slash : false;
+        this.slash = options.commands?.slash ? String(options.commands.slash) : false;
 
         /**
-         * Context
+         * Wheter context menu's are enabled
          * @type {string}
          * @default false
          */
-        this.context = options.commands?.context ? options.commands?.context : false;
+        this.context = options.commands?.context !== undefined ? Boolean(options.commands.context) : false;
 
         /**
-         * AllowDm
+         * Wheter commands in DM are enabled
          * @type {boolean}
          * @default false
         */
-        this.allowDm = options.commands?.allowDm !== undefined ? Boolean(options.commands?.allowDm) : false;
+        this.allowDm = options.commands?.allowDm !== undefined ? Boolean(options.commands.allowDm) : false;
 
         /**
-         * DeletePrompt
+         * Whether case sensitive commands is enabled
+         * @type {boolean}
+         * @default false
+        */
+        this.caseSensitiveCommands = options.commands?.caseSensitiveCommands !== undefined ? Boolean(options.commands?.caseSensitiveCommands) : false;
+
+        /**
+         * Wheter case sensitive prefix is enabled
+         * @type {boolean}
+         * @default false
+        */
+        this.caseSensitivePrefixes = options.caseSensitivePrefixes !== undefined ? Boolean(options.caseSensitivePrefixes) : false;
+
+        /**
+         * Wheter deleting the prompt is enabled
          * @type {boolean}
          * @default false
          */
-        this.deletePrompt = options.arguments?.deletePrompt !== undefined ? Boolean(options.arguments?.deletePrompt) : false;
+        this.deletePrompt = options.arguments?.deletePrompt !== undefined ? Boolean(options.arguments.deletePrompt) : false;
 
         /**
-         * DeleteInput
+         * Wheter deleting the input is enabled
          * @type {boolean}
          * @default false
          */
-        this.deleteInput = options.arguments?.deleteInput !== undefined ? Boolean(options.arguments?.deleteInput) : false;
+        this.deleteInput = options.arguments?.deleteInput !== undefined ? Boolean(options.arguments.deleteInput) : false;
 
         /**
-         * DefaultCooldown
+         * The default cooldown
          * @type {number}
-         * @default 0
+         * @default '0s'
          */
-        this.defaultCooldown = options.defaultCooldown ? options.defaultCooldown : 0;
+        this.defaultCooldown = options.defaultCooldown !== undefined ? String(options.defaultCooldown) : '0s';
 
         /**
-         * Dispatcher
+         * The dispatcher
          * @type {GCommandsDispatcher}
+         * @private
          * @readonly
          */
         this.dispatcher = new GCommandsDispatcher(this, true);

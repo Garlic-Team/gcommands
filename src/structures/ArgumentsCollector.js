@@ -51,14 +51,14 @@ class ArgumentsCollector {
             if (typeof result === 'object') {
                 this.addArgument({
                     name: result.name,
-                    type: result.type === 1 ? 'SUB_COMMAND' : 'SUB_COMMAND_GROUP',
+                    type: argument.type,
                 });
                 this.cmdArgs = result.options ?? [];
                 return this.get();
             } else {
                 this.addArgument(argument.argument.resolve({
                     name: argument.name,
-                    type: String(argument.type).toUpperCase(),
+                    type: argument.type,
                     value: result,
                 }));
             }

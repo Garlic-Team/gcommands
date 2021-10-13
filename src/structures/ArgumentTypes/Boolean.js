@@ -10,7 +10,7 @@ class BooleanArgumentType extends ArgumentType {
      * @param {Client}
      */
     constructor(client) {
-        super(client, 'boolean');
+        super(client, 'BOOLEAN');
 
         /**
          * Client

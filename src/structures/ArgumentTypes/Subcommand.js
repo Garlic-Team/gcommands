@@ -9,7 +9,7 @@ class SubCommandArgumentType extends ArgumentType {
      * The SubCommandArgumentType class
      */
     constructor(client) {
-        super(client, 'sub_command');
+        super(client, 'SUB_COMMAND');
 
         /**
          * Client

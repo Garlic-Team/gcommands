@@ -1,49 +1,43 @@
 /**
- * Debug Event
+ * Emitted for general debugging information.
  * @event GCommandsClient#debug
  * @param {string} info The message that was emitted.
- * @example
- * client.on('debug', (info) => { console.log(info); });
+ * @example client.on('debug', (info) => { console.log(info); });
 */
 
 /**
- * Log Event
+ * Emitted for command loading/deletion
  * @event GCommandsClient#log
  * @param {string} info The message that was emitted.
- * @example
- * client.on('log', (info) => { console.log(info); });
+ * @example client.on('log', (info) => { console.log(info); });
 */
 
 /**
- * commandExecute
+ * Emitted when a command executes
  * @event GCommandsClient#commandExecute
  * @param {string} info Running the command.
- * @example
- * client.on('commandExecute', (info) => { console.log(info); });
+ * @example client.on('commandExecute', (info) => { console.log(info); });
 */
 
 /**
- * commandError
+ * Emitted when a error occurs inside a command
  * @event GCommandsClient#commandError
  * @param {string} info Error from command
- * @example
- * client.on('commandError', (info) => { console.log(info); });
+ * @example client.on('commandError', (info) => { console.log(info); });
 */
 
 /**
- * commandsLoaded
+ * Emitted when all commands are loaded
  * @event GCommandsClient#commandsLoaded
  * @param {string} info All commands loaded
- * @example
- * client.on('commandsLoaded', (info) => { console.log(info); });
+ * @example client.on('commandsLoaded', (info) => { console.log(info); });
 */
 
 /**
- * commandNotFound
+ * Emitted when a command is not found
  * @event GCommandsClient#commandNotFound
  * @param {string} info Command not found
- * @example
- * client.on('commandNotFound', (info) => { console.log(info); });
+ * @example client.on('commandNotFound', (info) => { console.log(info); });
 */
 
 /**
@@ -106,7 +100,7 @@ exports.ArgumentType = {
  * * link
  * @type {Object}
  */
- exports.ButtonType = {
+exports.ButtonType = {
     blurple: 'blurple',
     gray: 'gray',
     grey: 'gray',
@@ -126,12 +120,12 @@ exports.ArgumentType = {
  * * MESSAGE
  * @typedef {string} ApplicationCommandType
  */
- exports.ApplicationCommandTypes = createEnum([null, 'CHAT_INPUT', 'USER', 'MESSAGE']);
- exports.ApplicationCommandTypesRaw = {
+exports.ApplicationCommandTypes = createEnum([null, 'CHAT_INPUT', 'USER', 'MESSAGE']);
+exports.ApplicationCommandTypesRaw = {
     user: 2,
     message: 3,
     both: 4,
- };
+};
 
 /**
  * The type of an {@link GInteraction} object:
@@ -140,7 +134,7 @@ exports.ArgumentType = {
  * * MESSAGE_COMPONENT
  * @typedef {string} GInteractionType
  */
- exports.InteractionTypes = createEnum([null, 'PING', 'APPLICATION_COMMAND', 'MESSAGE_COMPONENT']);
+exports.InteractionTypes = createEnum([null, 'PING', 'APPLICATION_COMMAND', 'MESSAGE_COMPONENT']);
 
 /**
  * The type of a message component
@@ -149,7 +143,7 @@ exports.ArgumentType = {
  * * SELECT_MENU
  * @typedef {string} MessageComponentType
  */
- exports.MessageComponentTypes = createEnum([null, 'ACTION_ROW', 'BUTTON', 'SELECT_MENU']);
+exports.MessageComponentTypes = createEnum([null, 'ACTION_ROW', 'BUTTON', 'SELECT_MENU']);
 
 function createEnum(keys) {
     const obj = {};
@@ -234,29 +228,6 @@ function createEnum(keys) {
  */
 
 /**
- * The GPayloadOptions
- * @property {string} content
- * @property {MessageEmbed[]} embeds
- * @property {MessageActionRow[]} components
- * @property {MessageAttachment[]} attachments
- * @property {boolean} ephemeral
- * @property {Object} allowedMentions
- * @property {(string | boolean)} inlineReply
- * @property {(string | Array)} stickers
- * @example .send({
- *  content: 'hello',
- *  embeds: [embed],
- *  components: [actionRow],
- *  attachments: [myMessageAttachment],
- *  ephemeral: false,
- *  allowedMentions: { parse: ['users','roles','everyone'] },
- *  inlineReply: true,
- *  stickers: ['sticker id']
- * })
- * @typedef {(string | Object)} GPayloadOptions
-*/
-
-/**
  * The CommandRunOptions
  * @property {Client} client
  * @property {GInteraction} interaction
@@ -286,15 +257,6 @@ function createEnum(keys) {
  * @property {string | GPayloadOptions} followUp
  * @property {string} language
  * @typedef {(Object)} Inhibitor
- */
-
-/**
- * The InteractionEventClicker
- *
- * @property {GuildMember} member
- * @property {User} user
- * @property {Snowflake} id
- * @typedef {(Object)} InteractionEventClicker
  */
 
 /**
