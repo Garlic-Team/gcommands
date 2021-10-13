@@ -148,7 +148,7 @@ class GCommandsDispatcher {
      * @returns {string}
     */
     getCooldown(userId, command) {
-        // If (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
+        if (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
         const now = Date.now();
 
         let cooldown;

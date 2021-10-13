@@ -16,17 +16,19 @@ class StringArgumentType extends ArgumentType {
          * @type {Client}
         */
         this.client = client;
+
+         /**
+         * Value
+         * @type {Object}
+        */
+          this.value = {};
     }
 
 	validate(argument, message, language) {
-        if (argument.choices && !argument.choices.some(ch => ch.name.toLowerCase() === message.content)) { return this.client.languageFile.ARGS_CHOICES[language].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', ')); }
-	}
-    get(argument, message) {
-        if (argument.choices) {
-            return argument.choices.find(ch => ch.name.toLowerCase() === message);
-        } else {
-            return message;
-        }
+        const choice = argument.choices?.some(ch => ch.name.toLowerCase() === message.content);
+        if (argument.choices && !choice) return this.client.languageFile.ARGS_CHOICES[language].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', '));
+        else if (choice) this.value.value = choice.value;
+        else this.value.value = message.content;
     }
 }
 

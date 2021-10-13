@@ -16,13 +16,18 @@ class SubCommandArgumentType extends ArgumentType {
          * @type {Client}
         */
         this.client = client;
+
+        /**
+        * Value
+        * @type {Object}
+       */
+        this.value = {};
     }
 
     validate(argument, message, language) {
-        if (argument.subcommands && !argument.subcommands.find(sc => sc.name === message.content)) { return this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', argument.subcommands.map(sc => `\`${sc.name}\``).join(', ')); }
-    }
-    get(argument, message) {
-        return argument.subcommands.find(sc => sc.name === message);
+        const subcommand = argument.subcommands?.find(sc => sc.name === message.content);
+        if (argument.subcommands && !subcommand) return this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', argument.subcommands.map(sc => `\`${sc.name}\``).join(', '));
+        else this.value.value = subcommand;
     }
 }
 

@@ -17,8 +17,9 @@ const MessageButton = require('./MessageButton');
 class Argument {
     /**
      * The Argument class
-     * @param {Client}
+     * @param {Client} client
      * @param {Object} argument
+     * @param {boolean} isNotDm
      */
     constructor(client, argument, isNotDm) {
         /**
@@ -32,6 +33,12 @@ class Argument {
          * @type {string}
         */
         this.name = argument.name;
+
+        /**
+         * IsNotDm
+         * @type {boolean}
+        */
+        this.isNotDm = isNotDm;
 
         /**
          * Argument
@@ -49,7 +56,7 @@ class Argument {
          * Required
          * @type {boolean}
         */
-        this.required = this.type === ('sub_command' || 'sub_command_group') ? true : argument.required;
+        this.required = ['sub_command', 'sub_command_group'].includes(this.type) ? true : argument.required;
 
         /**
          * Prompt
@@ -74,13 +81,6 @@ class Argument {
          * @type {Array<Object>}
         */
         this.subcommands = argument.subcommands;
-
-
-        /**
-         * IsNotDm
-         * @type {string}
-        */
-        this.isNotDm = isNotDm;
     }
 
     /**
@@ -90,6 +90,7 @@ class Argument {
      */
     async obtain(message, language, prompt = this.prompt) {
         if (message.author.bot) return;
+        if (this.type === 'invalid') return 'cancel';
 
         const wait = 30000;
 
@@ -129,7 +130,7 @@ class Argument {
         };
 
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[language]}`;
-        if ((this.type === 'sub_command' || 'sub_command_group') && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
+        if (['sub_command', 'sub_command_group'].includes(this.type) && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
 
         const msgReply = await message.reply({
             content: prompt,
@@ -169,7 +170,7 @@ class Argument {
             return this.obtain(message, language, invalid);
         }
 
-        return this.get(resFirst);
+        return this.argument.get(resFirst);
     }
 
     /**
@@ -189,15 +190,6 @@ class Argument {
         if (this.isNotDm && argument.type === 9) return new MentionableArgumentType(client, argument);
         if (argument.type === 10) return new NumberArgumentType(client, argument);
         else return { type: 'invalid' };
-    }
-
-    /**
-     * Method to get
-     * @param {object | string} message
-     */
-    get(message) {
-        if (typeof message === 'string') return this.argument.get(this, message);
-        else return this.argument.get(this, message.content);
     }
 }
 

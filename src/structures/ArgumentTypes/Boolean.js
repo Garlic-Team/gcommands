@@ -16,7 +16,13 @@ class BooleanArgumentType extends ArgumentType {
          * Client
          * @type {Client}
         */
-		this.client = client;
+        this.client = client;
+
+        /**
+        * Value
+        * @type {Object}
+       */
+        this.value = {};
 
         /**
          * TrueAnswerSet
@@ -28,18 +34,17 @@ class BooleanArgumentType extends ArgumentType {
          * FalseAnswerSet
          * @type {Set}
         */
-		this.falseAnswerSet = new Set(['false', 'f', 'no', 'n', 'off', 'disable', 'disabled']);
+        this.falseAnswerSet = new Set(['false', 'f', 'no', 'n', 'off', 'disable', 'disabled']);
     }
 
-	validate(argument, message, language) {
-		if (this.trueAnswerSet.has(message.content) === false && this.falseAnswerSet.has(message.content) === false) {
-			return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'boolean');
-		}
-	}
-
-    get(argument, message) {
-        if (this.falseAnswerSet.has(message)) return false;
-        else if (this.trueAnswerSet.has(message)) return true;
+    validate(argument, message, language) {
+        if (this.trueAnswerSet.has(message.content) === false && this.falseAnswerSet.has(message.content) === false) {
+            return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'boolean');
+        } else if (this.falseAnswerSet.has(message.content)) {
+            this.value.value = false;
+        } else if (this.trueAnswerSet.has(message.content)) {
+            this.value.value = true;
+        }
     }
 }
 

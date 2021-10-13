@@ -1,5 +1,6 @@
-const ArgumentType = require('../util/Constants').ArgumentType;
 const Argument = require('./Argument');
+const { CommandInteractionOptionResolver } = require('discord.js');
+const { Collection } = require('discord.js');
 
 class ArgumentsCollector {
     constructor(client, data) {
@@ -19,11 +20,13 @@ class ArgumentsCollector {
 
         this.timeLimitMessage = this.client.languageFile.ARGS_TIME_LIMIT[data.language];
 
-        this.finalArgs = [];
+        this.options = [];
+
+        this.resolved = {};
     }
     async get() {
         for (const arg of this.cmdArgs) {
-            if (arg.type === (ArgumentType.SUB_COMMAND || ArgumentType.SUB_COMMAND_GROUP)) arg.subcommands = this.cmdArgs.filter(sc => sc.type === (ArgumentType.SUB_COMMAND || ArgumentType.SUB_COMMAND_GROUP));
+            if ([1, 2].includes(arg.type)) arg.subcommands = this.cmdArgs.filter(sc => [1, 2].includes(sc.type));
             const argument = new Argument(this.client, arg, this.isNotDm);
             let result;
             if (this.args[0]) {
@@ -31,7 +34,7 @@ class ArgumentsCollector {
                 if (invalid) {
                     result = await argument.obtain(this.message, this.language, invalid);
                 } else {
-                    result = argument.get(this.args[0]);
+                    result = argument.argument.get(this.args[0]);
                 }
             } else {
                 result = await argument.obtain(this.message, this.language, arg.prompt);
@@ -48,39 +51,51 @@ class ArgumentsCollector {
             if (typeof result === 'object') {
                 this.addArgument({
                     name: result.name,
-                    type: result.type,
+                    type: result.type === 1 ? 'SUB_COMMAND' : 'SUB_COMMAND_GROUP',
                 });
                 this.cmdArgs = result.options ?? [];
                 return this.get();
             } else {
-                this.addArgument({
+                this.addArgument(argument.argument.resolve({
                     name: argument.name,
-                    type: argument.type,
+                    type: String(argument.type).toUpperCase(),
                     value: result,
-                });
+                }));
             }
         }
     }
     addArgument(argument) {
-        if (this.finalArgs[0]?.type === (ArgumentType.SUB_COMMAND || ArgumentType.SUB_COMMAND_GROUP)) {
-            if (!Array.isArray(this.finalArgs[0].options)) this.finalArgs[0].options = [];
-            return this.finalArgs[0].options.push(argument);
-        }
-        return this.finalArgs.push(argument);
-    }
-    resolve(options) {
-        if (!Array.isArray(options)) return {};
-        const oargs = {};
-
-        for (const o of options) {
-            if (['SUB_COMMAND', 'SUB_COMMAND_GROUP', 1, 2].includes(o.type)) {
-                oargs[o.name] = o.options ? this.resolve(o.options) : [];
-            } else {
-                oargs[o.name] = o.value;
+        this.addResolved(argument);
+        if (['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(this.options[0]?.type)) {
+            if (!Array.isArray(this.options[0].options)) this.options[0].options = [];
+            if (['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(this.options[0].options[0]?.type)) {
+                if (!Array.isArray(this.options[0].options[0].options)) this.options[0].options[0].options = [];
+                return this.options[0].options[0].options.push(argument);
             }
+            return this.options[0].options.push(argument);
         }
-
-        return oargs;
+        return this.options.push(argument);
+    }
+    resolve() {
+        return new CommandInteractionOptionResolver(this.client, this.options, this.resolved);
+    }
+    addResolved(argument) {
+        if (argument.user) {
+            if (!this.resolved.users) this.resolved.users = new Collection();
+            this.resolved.users.set(argument.user.id, argument.user);
+        }
+        if (argument.member) {
+            if (!this.resolved.members) this.resolved.members = new Collection();
+            this.resolved.members.set(argument.member.id, argument.member);
+        }
+        if (argument.role) {
+            if (!this.resolved.roles) this.resolved.roles = new Collection();
+            this.resolved.roles.set(argument.role.id, argument.role);
+        }
+        if (argument.channel) {
+            if (!this.resolved.channels) this.resolved.channels = new Collection();
+            this.resolved.channels.set(argument.channel.id, argument.channel);
+        }
     }
 }
 

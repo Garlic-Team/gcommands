@@ -308,18 +308,11 @@ class GEventHandling {
                     if (!roles) return interaction.reply.send({ content: getMissingRolesMessage(), ephemeral: true });
                 }
 
-                let finalArgs;
-                if (commandos.args && commandos.args[0]) {
-                    const collector = new ArgumentsCollector(this.client, { interaction, args: [], language, isNotDm, commandos });
-
-                    finalArgs = collector.resolve(interaction.options.data);
-                }
-
                 this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, user: interaction.user, channel: interaction.channel, guild: interaction.guild });
 
                 commandos.run({
                     ...runOptions,
-                    args: finalArgs,
+                    args: interaction.options,
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, user: interaction.user, channel: interaction.channel, guild: interaction.guild, error: e });
