@@ -25,17 +25,6 @@ module.exports = client => {
         }
 
         if ((oldMember.nickname === newMember.nickname) && (newMember.lastMessageID === null) && (newMember.lastMessageChannelID === null) && (oldMember.premiumSince === newMember.premiumSince) && (oldMember._roles.length === 0) && (newMember._roles.length === 0)) {
-            const url = `https://discord.com/api/v9/guilds/${newMember.guild.id}/members/${newMember.user.id}`;
-
-            const config = {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bot ${client.token}`,
-                    'Content-Type': 'application/json',
-                },
-                url,
-            };
-
             const response = newMember.pending;
             if (response) return;
 
