@@ -1,7 +1,7 @@
 const { Guild } = require('discord.js');
 
 /**
- * The GGuild class
+ * The GGuild
  * @extends Guild
  */
 class GGuild {
@@ -48,35 +48,35 @@ class GGuild {
 
     /* eslint-disable no-empty-function */
     /**
-     * Method to getCommandPrefix
+     * Method to get command prefix
      * @param {boolean} cache
      * @returns {Promise}
     */
     getCommandPrefix() { }
 
     /**
-     * Method to setCommandPrefix
+     * Method to set command prefix
      * @param {string} prefix
      * @returns {void}
     */
     setCommandPrefix() { }
 
     /**
-     * Method to getLanguage
+     * Method to get language
      * @param {boolean} cache
      * @returns {Promise}
     */
     getLanguage() { }
 
     /**
-     * Method to setLanguage
+     * Method to set language
      * @param {string} lang
      * @returns {void}
     */
     setLanguage() { }
 
     /**
-     * Method to getData
+     * Method to get data
      * @param {object} options
      * @returns {object}
     */

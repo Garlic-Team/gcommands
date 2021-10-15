@@ -16,17 +16,17 @@ const styles = {
 };
 
 /**
- * The MessageButton class
+ * The builder for the MessageButton
  * @extends BaseMessageComponent
  */
 class MessageButton {
     /**
-     * Creates new MessageButton instance
      * @param {Object} data
+     * @constructor
     */
     constructor(data = {}) {
         /**
-         * Type
+         * The type
          * @type {string}
         */
         this.type = 'BUTTON';
@@ -35,45 +35,45 @@ class MessageButton {
     }
 
     /**
-     * Setup
+     * Setup function
      * @param {Object} data
      * @returns {MessageButton}
      * @private
      */
     setup(data) {
         /**
-         * Style
+         * The style
          * @type {string}
         */
         this.style = 'style' in data ? this.resolveStyle(data.style) : null;
 
         /**
-         * Label
+         * The label
          * @type {string}
         */
         this.label = 'label' in data ? resolveString(data.label) : null;
 
         /**
-         * Disabled
+         * The disabled
          * @type {boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
         /**
-         * Emoji
+         * The emoji
          * @type {boolean}
         */
         this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : false;
 
         if (this.style === 5) {
             /**
-             * Url
+             * The url
              * @type {string}
             */
             this.url = 'url' in data ? resolveString(data.url) : null;
         } else {
             /**
-             * CustomId
+             * The custom id
              * @type {string}
             */
             this.customId = data.custom_id || data.customId || null;
@@ -83,7 +83,7 @@ class MessageButton {
     }
 
     /**
-     * Method to setStyle
+     * Method to set style
      * @param {string} style
     */
     setStyle(style) {
@@ -92,7 +92,7 @@ class MessageButton {
     }
 
     /**
-     * Method to setLabel
+     * Method to set label
      * @param {string} label
     */
     setLabel(label) {
@@ -101,7 +101,7 @@ class MessageButton {
     }
 
     /**
-     * Method to setEmoji
+     * Method to set emoji
      * @param {string} emoji
     */
     setEmoji(emoji) {
@@ -110,7 +110,7 @@ class MessageButton {
     }
 
     /**
-     * Method to setDisabled
+     * Method to set disabled
      * @param {string} boolean
     */
     setDisabled(boolean = true) {
@@ -119,7 +119,7 @@ class MessageButton {
     }
 
     /**
-     * Method to setURL
+     * Method to set URL
      * @param {string} url
     */
     setURL(url) {
@@ -129,7 +129,7 @@ class MessageButton {
     }
 
     /**
-     * Method to setID
+     * Method to set ID
      * @param {string} id
      * @deprecated
     */
@@ -139,7 +139,7 @@ class MessageButton {
     }
 
     /**
-     * Method to setCustomId
+     * Method to set custom ID
      * @param {string} id
     */
     setCustomId(id) {
@@ -148,7 +148,7 @@ class MessageButton {
     }
 
     /**
-     * Method to toJSON
+     * Method to convert to JSON
      * @return {Object}
     */
     toJSON() {

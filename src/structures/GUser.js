@@ -1,7 +1,7 @@
 const { User } = require('discord.js');
 
 /**
- * The GUser class
+ * The GUser
  * @extends User
  */
 class GUser {
@@ -20,7 +20,7 @@ class GUser {
     /* eslint-disable no-empty-function */
 
     /**
-     * Method to getData
+     * Method to get data
      * @param {object} options
      * @returns {object}
     */

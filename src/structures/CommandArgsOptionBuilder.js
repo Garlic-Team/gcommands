@@ -13,7 +13,7 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Setup funcrion
+     * Setup function
      * @param {CommandArgsOption} data
      * @returns {CommandArgsOption}
      * @private

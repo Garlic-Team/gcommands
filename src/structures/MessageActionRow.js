@@ -2,22 +2,22 @@ const GError = require('./GError');
 const { MessageComponentTypes } = require('../util/Constants');
 
 /**
- * The MessageActionRow class
+ * The builder for the MessageActionRow
  */
 class MessageActionRow {
     /**
-     * Creates new MessageActionRow instance
      * @param {Array} data
+     * @constructor
     */
     constructor(data = {}) {
         /**
-         * Type
+         * The type
          * @type {string}
         */
         this.type = 'ACTION_ROW';
 
         /**
-         * Components
+         * The components
          * @type {Array}
         */
         this.components = [];
@@ -26,7 +26,7 @@ class MessageActionRow {
     }
 
     /**
-     * Setup
+     * Setup function
      * @param {Array} data
      * @returns {MessageActionRow}
      * @private
@@ -38,7 +38,7 @@ class MessageActionRow {
     }
 
     /**
-     * Method to addComponent
+     * Method to add component
      * @param {MessageButton | MessageSelectMenu} component
     */
     addComponent(component) {
@@ -48,7 +48,7 @@ class MessageActionRow {
     }
 
     /**
-     * Method to addComponents
+     * Method to add components
      * @param {MessageButton[] | MessageSelectMenu[]} components
     */
     addComponents(components) {
@@ -58,7 +58,7 @@ class MessageActionRow {
     }
 
     /**
-     * Method to removeComponents
+     * Method to remove components
      * @param {number} index
      * @param {number} deleteCount
      * @param {MessageButton[] | MessageSelectMenu[]} components
@@ -70,7 +70,7 @@ class MessageActionRow {
     }
 
     /**
-     * Method to toJSON
+     * Method to convert to JSON
      * @return {Object}
     */
     toJSON() {
