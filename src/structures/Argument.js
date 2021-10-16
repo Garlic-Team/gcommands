@@ -172,7 +172,6 @@ class Argument {
             return this.obtain(message, language, invalid);
         }
 
-        console.log(1);
         return this.argument.get(resFirst);
     }
 

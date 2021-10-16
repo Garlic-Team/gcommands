@@ -39,7 +39,6 @@ class GEventHandling {
         });
 
         const messageEventUse = async message => {
-            console.log(this.client.inhibitors);
             if (!message || !message.author || message.author.bot || (!this.client.allowDm && message.channel.type === 'dm')) return;
 
             const mention = message.content.match(new RegExp(`^<@!?(${this.client.user.id})> `));
