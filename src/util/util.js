@@ -59,9 +59,9 @@ class Util {
      * @param {Function} data
      * @returns {object}
     */
-    static inhibit(client, interaction, data) {
+    static inhibit(client, data) {
 		for (const inhibitor of client.inhibitors) {
-			const inhibit = inhibitor(interaction, data);
+			const inhibit = inhibitor(data);
 			return inhibit;
 		}
 		return null;

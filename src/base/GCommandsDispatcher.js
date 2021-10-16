@@ -55,6 +55,7 @@ class GCommandsDispatcher {
      * @returns {Object || null}
     */
     async getUserData(userId, options) {
+        if (!this.client.database) return null;
         if (!options.force && typeof this.data === 'object') return this.data;
 
         let data = await this.client.database.models.User.findOrCreate({ where: { id: userId } });
@@ -71,6 +72,7 @@ class GCommandsDispatcher {
      * @returns {Object || null}
     */
     async getGuildData(guildId, options) {
+        if (!this.client.database) return null;
         if (!options.force && typeof this.data === 'object') return this.data;
 
         let data = await this.client.database.models.Guild.findOrCreate({ where: { id: guildId } });
@@ -87,6 +89,7 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     async setGuildPrefix(guild, prefix) {
+        if (!this.client.database) return false;
         try {
             await guild.getData();
             await guild.data?.update({ prefix: String(prefix) });
@@ -103,6 +106,7 @@ class GCommandsDispatcher {
      * @returns {string}
     */
     async getGuildPrefix(guild) {
+        if (!this.client.database) return false;
         try {
             await guild.getData();
             const prefix = guild.data?.prefix;
@@ -120,6 +124,7 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     async setGuildLanguage(guild, language) {
+        if (!this.client.database) return false;
         try {
             await guild.getData();
             await guild.data?.update({ language: String(language) });
@@ -136,6 +141,7 @@ class GCommandsDispatcher {
      * @returns {boolean}
     */
     async getGuildLanguage(guild) {
+        if (!this.client.database) return false;
         try {
             await guild.getData();
             const language = guild.data?.language;

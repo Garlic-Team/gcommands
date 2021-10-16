@@ -138,6 +138,7 @@ class GCommandLoader {
                 hyttpo.request(config)
                     .then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText()))
                     .catch(error => {
+                        console.log(1);
                         this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error) {
@@ -193,8 +194,6 @@ class GCommandLoader {
             if (String(cmd.context) === 'false') continue;
             if (!cmd.context && String(this.client.context) === 'false') continue;
 
-            if (cmd.expectedArgs) cmd.args = cmd.expectedArgs;
-
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             const loadContextMenu = async guildOnly => {
                 if (this.client.loadFromCache) {
@@ -232,6 +231,7 @@ class GCommandLoader {
                     }
                 })
                     .catch(error => {
+                        console.log(2);
                         this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error) {

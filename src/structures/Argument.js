@@ -57,7 +57,7 @@ class Argument {
          * Wheter the argument is required or not
          * @type {boolean}
         */
-        this.required = ['sub_command', 'sub_command_group'].includes(this.type) ? true : argument.required;
+        this.required = ['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(this.type) ? true : argument.required;
 
         /**
          * The prompt
@@ -92,7 +92,7 @@ class Argument {
      */
     async obtain(message, language, prompt = this.prompt) {
         if (message.author.bot) return;
-        if (this.type === 'invalid') return 'cancel';
+        if (this.type === 'invalid') return false;
 
         const wait = 30000;
 
@@ -132,7 +132,7 @@ class Argument {
         };
 
         if (!this.required) prompt += `\n${this.client.languageFile.ARGS_OPTIONAL[language]}`;
-        if (['sub_command', 'sub_command_group'].includes(this.type) && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
+        if (['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(this.type) && this.subcommands) prompt = this.client.languageFile.ARGS_COMMAND[language].replace('{choices}', this.subcommands.map(sc => `\`${sc.name}\``).join(', '));
 
         const msgReply = await message.reply({
             content: prompt,
@@ -172,6 +172,7 @@ class Argument {
             return this.obtain(message, language, invalid);
         }
 
+        console.log(1);
         return this.argument.get(resFirst);
     }
 
