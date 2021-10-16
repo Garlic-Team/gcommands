@@ -1,7 +1,7 @@
 const { readdirSync } = require('fs');
 const ArgumentsCollector = require('../structures/ArgumentsCollector');
 const { Events } = require('../util/Constants'), Color = require('../structures/Color');
-const { inhibit, interactionRefactor, channelTypeRefactor, unescape } = require('../util/util');
+const { inhibit, unescape } = require('../util/util');
 
 /**
  * The handler for message and slash commands
@@ -69,8 +69,7 @@ class GEventHandling {
                 const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
                 const isClientMessageEnabled = !commandos.slash && ['false', 'slash'].includes(String(this.client.slash));
 
-                const channelType = channelTypeRefactor(message.channel);
-                const isNotDm = channelType !== 'dm';
+                const isNotDm = message.channel.type !== 'dm';
 
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
@@ -92,7 +91,7 @@ class GEventHandling {
                     followUp: (options = undefined) => message.reply(options),
                 };
 
-                const inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
+                const inhibitReturn = await inhibit(this.client, {
                     ...runOptions,
                     args: args,
                 });
@@ -122,7 +121,7 @@ class GEventHandling {
                     } else if (message.channel.id !== commandos.channelOnly) { return; }
                 }
 
-                const isNotChannelType = type => channelType !== type;
+                const isNotChannelType = type => message.channel.type !== type;
                 const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
                 const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
                 const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];
@@ -207,8 +206,7 @@ class GEventHandling {
                 const isContextEnabled = String(commandos.context) === 'false';
                 const isClientContextEnabled = String(this.client.context) === 'false';
 
-                const channelType = channelTypeRefactor(interaction.channel);
-                const isNotDm = channelType !== 'dm';
+                const isNotDm = interaction.channel.type !== 'dm';
 
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
@@ -233,7 +231,7 @@ class GEventHandling {
                     followUp: options => interaction.followUp(options),
                 };
 
-                const inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
+                const inhibitReturn = await inhibit(this.client, {
                     ...runOptions,
                     args: interaction.arrayArguments,
                 });
@@ -263,7 +261,7 @@ class GEventHandling {
 
                 if (isNotDm && NSFW) { return interaction.reply.send({ content: getNsfwMessage(), ephemeral: true }); }
 
-                const isNotChannelType = type => channelType !== type;
+                const isNotChannelType = type => interaction.channel.type !== type;
                 const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
                 const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
                 const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];

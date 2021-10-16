@@ -126,7 +126,7 @@ class GCommandsClient extends Client {
          * @type {string}
          * @default false
          */
-        this.context = options.commands?.context !== undefined ? Boolean(options.commands.context) : false;
+        this.context = options.commands?.context !== undefined ? String(options.commands.context) : false;
 
         /**
          * Wheter commands in DM are enabled

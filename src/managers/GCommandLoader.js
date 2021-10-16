@@ -193,8 +193,6 @@ class GCommandLoader {
             if (String(cmd.context) === 'false') continue;
             if (!cmd.context && String(this.client.context) === 'false') continue;
 
-            if (cmd.expectedArgs) cmd.args = cmd.expectedArgs;
-
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             const loadContextMenu = async guildOnly => {
                 if (this.client.loadFromCache) {
