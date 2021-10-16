@@ -30,7 +30,7 @@ class MessageActionRow extends BaseMessageComponent {
      * @private
      */
     setup(data) {
-        this.components = 'components' in data ? data.components.map(c => BaseMessageComponent.create(c)) : [];
+        this.components = 'components' in data ? data.components.map(c => c) : [];
 
         return this.toJSON();
     }
