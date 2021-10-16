@@ -1,4 +1,4 @@
-const { resolveString, parseEmoji } = require('../util/util');
+const { resolveString, parseEmoji, resolvePartialEmoji } = require('../util/util');
 
 /**
  * The MessageSelectMenuOption class
@@ -41,7 +41,7 @@ class MessageSelectMenuOption {
          * Emoji
          * @type {string}
         */
-        this.emoji = 'emoji' in data ? parseEmoji(data.emoji) : null;
+        this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : null;
 
         /**
          * Default
