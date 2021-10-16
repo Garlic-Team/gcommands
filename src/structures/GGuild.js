@@ -1,35 +1,46 @@
 const { Guild } = require('discord.js');
 
 /**
- * The GGuild class
+ * The GGuild
  * @extends Guild
  */
- class GGuild {
+class GGuild {
     constructor() {
         Object.defineProperties(Guild.prototype, {
             getCommandPrefix: {
-                value: async function(cache = true) {
-                    const prefix = await this.client.dispatcher.getGuildPrefix(this.id, cache);
-                    return prefix || this.client.prefix || [];
+                value: async function() {
+                    const prefix = await this.client.dispatcher.getGuildPrefix(this);
+                    if (prefix && this.data) this.data.prefix = String(prefix);
+                    return prefix || this.client.prefix;
                 },
             },
             setCommandPrefix: {
-                value: function(prefix) {
-                    this.client.dispatcher.setGuildPrefix(this.id, prefix);
+                value: async function(prefix) {
+                    const isSet = await this.client.dispatcher.setGuildPrefix(this, prefix);
+                    if (isSet && this.data) this.data.prefix = String(prefix);
                     this.client.emit('commandPrefixChange', this, prefix);
                 },
             },
 
             getLanguage: {
-                value: async function(cache = true) {
-                    const language = await this.client.dispatcher.getGuildLanguage(this.id, cache);
+                value: async function() {
+                    const language = await this.client.dispatcher.getGuildLanguage(this);
+                    if (language && this.data) this.data.language = String(language);
                     return language || this.client.language || 'english';
                 },
             },
             setLanguage: {
-                value: function(lang) {
-                    this.client.dispatcher.setGuildLanguage(this.id, lang);
+                value: async function(lang) {
+                    const isSet = await this.client.dispatcher.setGuildLanguage(this, lang);
+                    if (isSet && this.data) this.data.language = String(lang);
                     this.client.emit('guildLanguageChange', this, lang);
+                },
+            },
+            getData: {
+                value: async function(options = {}) {
+                    const data = await this.client.dispatcher.getGuildData(this.id, options);
+                    if (data) this.data = data;
+                    return data;
                 },
             },
         });
@@ -37,32 +48,39 @@ const { Guild } = require('discord.js');
 
     /* eslint-disable no-empty-function */
     /**
-     * Method to getCommandPrefix
+     * Method to get command prefix
      * @param {boolean} cache
      * @returns {Promise}
     */
-    getCommandPrefix() {}
+    getCommandPrefix() { }
 
     /**
-     * Method to setCommandPrefix
+     * Method to set command prefix
      * @param {string} prefix
      * @returns {void}
     */
-    setCommandPrefix() {}
+    setCommandPrefix() { }
 
     /**
-     * Method to getLanguage
+     * Method to get language
      * @param {boolean} cache
      * @returns {Promise}
     */
-    getLanguage() {}
+    getLanguage() { }
 
     /**
-     * Method to setLanguage
+     * Method to set language
      * @param {string} lang
      * @returns {void}
     */
-    setLanguage() {}
+    setLanguage() { }
+
+    /**
+     * Method to get data
+     * @param {object} options
+     * @returns {object}
+    */
+    getData() { }
 }
 
 module.exports = GGuild;

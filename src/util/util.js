@@ -1,13 +1,13 @@
-const { version, DMChannel, TextChannel, NewsChannel } = require('discord.js');
 const Color = require('../structures/Color');
-const { InteractionTypes, MessageComponentTypes, Events } = require('./Constants');
+const { Events } = require('./Constants');
 
 /**
  * The Util class
+ * @private
  */
 class Util {
     /**
-     * Internal method to resolveString
+     * Internal method to resolve string
      * @param {string | Array} data
      * @returns {string}
     */
@@ -18,7 +18,7 @@ class Util {
     }
 
     /**
-     * Internal method to msToSeconds
+     * Internal method to convert ms to seconds
      * @param {number} ms
      * @returns {number}
     */
@@ -28,7 +28,7 @@ class Util {
     }
 
     /**
-     * Internal method to parseEmoji
+     * Internal method to parse a emoji
      * @param {string} text
      * @returns {Object}
     */
@@ -40,7 +40,7 @@ class Util {
     }
 
     /**
-     * Resolve emoji without client
+     * Internal method to resolve a emoji without a client
      * @param {EmojiIdentifierResolvable} emoji
      * @returns {Object|null}
      */
@@ -53,59 +53,7 @@ class Util {
     }
 
     /**
-     * Internal method to interactionRefactor
-     * @param {Client} djsclient
-     * @param {GInteraction} interaction
-     * @returns {Object}
-    */
-    static interactionRefactor(interaction, cmd) {
-        interaction.inGuild = () => Boolean(interaction.guild && interaction.member);
-
-        interaction.isApplication = () => InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND;
-        interaction.isCommand = () => cmd ? true : false || (InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND && String(interaction.targetType) === 'undefined');
-        interaction.isContextMenu = () => InteractionTypes[interaction.type] === InteractionTypes.APPLICATION_COMMAND && String(interaction.targetType) !== 'undefined';
-
-        interaction.isMessageComponent = () => InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT;
-
-        interaction.isButton = () => (
-            InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
-            MessageComponentTypes[interaction.componentType] === MessageComponentTypes.BUTTON
-        );
-
-        interaction.isSelectMenu = () => (
-            InteractionTypes[interaction.type] === InteractionTypes.MESSAGE_COMPONENT &&
-            MessageComponentTypes[interaction.componentType] === MessageComponentTypes.SELECT_MENU
-        );
-
-        if (interaction.isCommand() && !interaction.isApplication()) {
-            interaction.commandName = cmd.name;
-            interaction.commandId = null;
-        }
-
-        return interaction;
-    }
-
-    /**
-     * Internal method to channelTypeRefactor
-     * @param {Channel} channel
-     * @returns {Object}
-    */
-    static channelTypeRefactor(channel) {
-        let finalResult;
-
-        if (!channel) return null;
-        if (channel instanceof TextChannel) finalResult = 'text';
-        if (channel instanceof NewsChannel) finalResult = 'news';
-        if (channel instanceof DMChannel) finalResult = 'dm';
-        if (channel.type === 'GUILD_NEWS_THREAD') finalResult = 'thread';
-        if (channel.type === 'GUILD_PUBLIC_THREAD') finalResult = 'thread';
-        if (channel.type === 'GUILD_PRIVATE_THREAD') finalResult = 'thread';
-
-        return finalResult;
-    }
-
-    /**
-     * Internal method to inhivit
+     * Internal method to inhibit
      * @param {Client} client
      * @param {GInteraction} interaction
      * @param {Function} data
@@ -120,7 +68,7 @@ class Util {
     }
 
     /**
-     * Internal method to isClass
+     * Internal method to check if is class
      * @param {File} input
      * @returns {boolean}
     */
@@ -131,10 +79,9 @@ class Util {
 	}
 
     /**
-     * Internal method to deleteCmd
+     * Internal method to delete command
      * @param {Client} client
      * @param {number} commandId
-     * @private
     */
     static async __deleteCmd(client, commandId, guildId = undefined) {
         try {
@@ -150,51 +97,25 @@ class Util {
     }
 
     /**
-     * Internal method to getAllCommands
+     * Internal method to get all commands
      * @param {Client} client
      * @param {number} guildId
-     * @private
     */
     static async __getAllCommands(client, guildId = undefined) {
-        if (client._applicationCommandsCache) {
-            if (guildId && client._applicationCommandsCache[guildId]) return client._applicationCommandsCache[guildId];
-            else if (!guildId) return client._applicationCommandsCache.global;
-        }
-
         try {
             const app = client.api.applications(client.user.id);
             if (guildId) {
                 app.guilds(guildId);
             }
 
-            const cmds = await app.commands.get();
-
-            if (guildId) client._applicationCommandsCache[guildId] = cmds;
-            else client._applicationCommandsCache.global = cmds;
-
-            return cmds;
-        } catch (e) {
-            return [];
-        }
+            const commands = await app.commands.get();
+            if (commands) return commands;
+            else return [];
+        } catch { return []; }
     }
 
     /**
-     * Internal method to checkDjsVersion
-     * @param {number} needVer
-     * @returns {boolean}
-     * @private
-    */
-    static checkDjsVersion(needVer) {
-        const ver = parseInt(version.split('')[0] + version.split('')[1]);
-        if (ver === parseInt(needVer)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Determine equality for two JavaScript objects
+     * Internal method to determine equality for two JavaScript objects
      * @param {Object | Array} o
      * @returns {Object | Array}
     */
@@ -203,7 +124,7 @@ class Util {
     }
 
     /**
-     * Unescape
+     * Internal method to unescape
      * @param {String} a
      * @param {String} b
      * @param {String} c
@@ -218,7 +139,7 @@ class Util {
     }
 
     /**
-     * GetAllObjects from object
+     * Internal method to get all objects from object
      * @param {GCommandsClient} client
      * @param {Object} ob
      * @returns {String}

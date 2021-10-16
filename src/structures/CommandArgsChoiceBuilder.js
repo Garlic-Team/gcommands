@@ -1,32 +1,32 @@
 const { resolveString } = require('../util/util');
 
 /**
- * The CommandArgsChoiceBuilder class
+ * The builder for the command option choice
  */
 class CommandArgsChoiceBuilder {
     /**
-     * Creates new CommandArgsChoiceBuilder instance
      * @param {CommandArgsChoice} data
+     * @constructor
     */
      constructor(data = {}) {
         this.setup(data);
     }
 
     /**
-     * Setup
+     * Setup function
      * @param {CommandArgsChoice} data
      * @returns {CommandArgsChoice}
      * @private
      */
     setup(data) {
         /**
-         * Name
+         * The name
          * @type {string}
         */
         this.name = 'name' in data ? resolveString(data.name) : null;
 
         /**
-         * Value
+         * The value
          * @type {any}
         */
         this.value = 'value' in data ? data.value : null;
@@ -35,8 +35,9 @@ class CommandArgsChoiceBuilder {
     }
 
     /**
-     * Method to setName
+     * Method to set name
      * @param {string} name
+     * @returns {CommandArgsChoiceBuilder}
     */
     setName(name) {
         this.name = resolveString(name);
@@ -44,8 +45,9 @@ class CommandArgsChoiceBuilder {
     }
 
     /**
-     * Method to setValue
+     * Method to set value
      * @param {any} value
+     * @returns {CommandArgsChoiceBuilder}
     */
     setValue(value) {
         this.value = value;
@@ -53,7 +55,7 @@ class CommandArgsChoiceBuilder {
     }
 
     /**
-     * Method to toJSON
+     * Method to convert to JSON
      * @returns {Object}
     */
      toJSON() {

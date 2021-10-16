@@ -1,68 +1,68 @@
 const { resolveString } = require('../util/util');
 
 /**
- * The CommandArgsOptionBuilder class
+ * The builder for the command option
  */
 class CommandArgsOptionBuilder {
     /**
-     * Creates new CommandArgsOptionBuilder instance
      * @param {CommandArgsOption} data
+     * @constructor
     */
     constructor(data = {}) {
         this.setup(data);
     }
 
     /**
-     * Setup
+     * Setup function
      * @param {CommandArgsOption} data
      * @returns {CommandArgsOption}
      * @private
      */
     setup(data) {
         /**
-         * Name
+         * The name
          * @type {string}
         */
         this.name = 'name' in data ? resolveString(data.name) : null;
 
         /**
-         * Description
+         * The description
          * @type {string}
         */
         this.description = 'description' in data ? resolveString(data.description) : null;
 
         /**
-         * Type
+         * The type
          * @type {number}
         */
         this.type = 'type' in data ? Number(data.type) : null;
 
         /**
-         * Prompt
+         * The prompt
          * @type {string}
         */
         this.prompt = 'prompt' in data ? resolveString(data.prompt) : null;
 
         /**
-         * Required
+         * Wheter the argument is required
          * @type {boolean}
         */
         this.required = 'required' in data ? Boolean(data.required) : null;
 
         /**
-         * Channel types
-         * @type {boolean}
-        */
+         * The channel types
+         * @type {ArgumentChannelTypes}
+         */
         this.channel_types = 'channel_types' in data ? data.channel_types : null;
 
         /**
-         * Choices
+         * The choices
          * @type {Array<CommandArgsChoice>}
         */
         this.choices = 'choices' in data ? data.choises : null;
 
         /**
-         * Options
+         * The options
          * @type {Array<CommandArgsOption>}
         */
          this.options = 'options' in data ? data.options : null;
@@ -71,8 +71,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to setName
+     * Method to set name
      * @param {string} name
+     * @returns {CommandArgsOptionBuilder}
     */
     setName(name) {
         this.name = resolveString(name);
@@ -80,8 +81,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to setDescription
+     * Method to set description
      * @param {string} description
+     * @returns {CommandArgsOptionBuilder}
     */
     setDescription(description) {
         this.description = resolveString(description);
@@ -89,8 +91,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to setType
+     * Method to set type
      * @param {string} type
+     * @returns {CommandArgsOptionBuilder}
     */
     setType(type) {
         this.type = Number(type);
@@ -98,8 +101,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to setPrompt
+     * Method to set prompt
      * @param {string} prompt
+     * @returns {CommandArgsOptionBuilder}
     */
     setPrompt(prompt) {
         this.prompt = resolveString(prompt);
@@ -107,8 +111,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to setRequired
+     * Method to set required
      * @param {boolean} required
+     * @returns {CommandArgsOptionBuilder}
     */
     setRequired(required) {
         this.required = Boolean(required);
@@ -116,8 +121,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to setChannelTypes
+     * Method to set channel types
      * @param {ArgumentChannelTypes} types
+     * @returns {CommandArgsOptionBuilder}
     */
     setChannelTypes(types) {
         this.channel_types = types;
@@ -125,8 +131,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to addChoice
+     * Method to add choice
      * @param {CommandArgsChoice} choice
+     * @returns {CommandArgsOptionBuilder}
     */
     addChoice(choice) {
         if (!Array.isArray(this.choices)) this.choices = [];
@@ -135,8 +142,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to addChoices
+     * Method to add choices
      * @param {Array<CommandArgsChoice>} choices
+     * @returns {CommandArgsOptionBuilder}
     */
     addChoices(choices) {
         for (const choice of Object.values(choices)) {
@@ -146,8 +154,9 @@ class CommandArgsOptionBuilder {
     }
 
     /**
-     * Method to addOption
+     * Method to add option
      * @param {CommandArgsOption} option
+     * @returns {CommandArgsOptionBuilder}
     */
      addOption(option) {
         if (!Array.isArray(this.options)) this.options = [];
@@ -156,8 +165,9 @@ class CommandArgsOptionBuilder {
       }
 
       /**
-       * Method to addOptions
+       * Method to add options
        * @param {Array<CommandArgsOption>} options
+       * @returns {CommandArgsOptionBuilder}
       */
       addOptions(options) {
         for (const option of Object.values(options)) {
@@ -167,7 +177,7 @@ class CommandArgsOptionBuilder {
       }
 
     /**
-     * Method to toJSON
+     * Method to convert to JSON
      * @returns {Object}
     */
      toJSON() {

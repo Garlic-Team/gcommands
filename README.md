@@ -40,6 +40,6 @@ If you're still in trouble, you can join our [Garlic Team](https://discord.gg/Aj
 - Command Handler, Event Handler
 - Supports slash, legacy and context menus commands
 - Supports custom i18n messages
-- Supports discord.js v12 and v13
+- Supports discord.js v13
 - Simply have a legacy and slash command in 1 file
 - Supports many types of arguments

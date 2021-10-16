@@ -1,6 +1,5 @@
 const { resolveString, parseEmoji, resolvePartialEmoji } = require('../util/util');
 const { MessageComponentTypes } = require('../util/Constants');
-const BaseMessageComponent = require('./BaseMessageComponent');
 const GError = require('./GError');
 const styles = {
     blurple: 1,
@@ -17,60 +16,64 @@ const styles = {
 };
 
 /**
- * The MessageButton class
+ * The builder for the MessageButton
  * @extends BaseMessageComponent
  */
-class MessageButton extends BaseMessageComponent {
+class MessageButton {
     /**
-     * Creates new MessageButton instance
      * @param {Object} data
+     * @constructor
     */
     constructor(data = {}) {
-        super({ type: 'BUTTON' });
+        /**
+         * The type
+         * @type {string}
+        */
+        this.type = 'BUTTON';
 
         this.setup(data);
     }
 
     /**
-     * Setup
+     * Setup function
      * @param {Object} data
      * @returns {MessageButton}
      * @private
      */
     setup(data) {
         /**
-         * Style
+         * The style
          * @type {string}
         */
         this.style = 'style' in data ? this.resolveStyle(data.style) : null;
 
         /**
-         * Label
+         * The label
          * @type {string}
         */
         this.label = 'label' in data ? resolveString(data.label) : null;
 
         /**
-         * Disabled
+         * The disabled
          * @type {boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
 
         /**
-         * Emoji
+         * The emoji
          * @type {boolean}
         */
-         this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : false;
+        this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : false;
 
         if (this.style === 5) {
             /**
-             * Url
+             * The url
              * @type {string}
             */
             this.url = 'url' in data ? resolveString(data.url) : null;
         } else {
             /**
-             * CustomId
+             * The custom id
              * @type {string}
             */
             this.customId = data.custom_id || data.customId || null;
@@ -80,7 +83,7 @@ class MessageButton extends BaseMessageComponent {
     }
 
     /**
-     * Method to setStyle
+     * Method to set style
      * @param {string} style
     */
     setStyle(style) {
@@ -89,7 +92,7 @@ class MessageButton extends BaseMessageComponent {
     }
 
     /**
-     * Method to setLabel
+     * Method to set label
      * @param {string} label
     */
     setLabel(label) {
@@ -98,7 +101,7 @@ class MessageButton extends BaseMessageComponent {
     }
 
     /**
-     * Method to setEmoji
+     * Method to set emoji
      * @param {string} emoji
     */
     setEmoji(emoji) {
@@ -107,7 +110,7 @@ class MessageButton extends BaseMessageComponent {
     }
 
     /**
-     * Method to setDisabled
+     * Method to set disabled
      * @param {string} boolean
     */
     setDisabled(boolean = true) {
@@ -116,7 +119,7 @@ class MessageButton extends BaseMessageComponent {
     }
 
     /**
-     * Method to setURL
+     * Method to set URL
      * @param {string} url
     */
     setURL(url) {
@@ -126,7 +129,7 @@ class MessageButton extends BaseMessageComponent {
     }
 
     /**
-     * Method to setID
+     * Method to set ID
      * @param {string} id
      * @deprecated
     */
@@ -136,7 +139,7 @@ class MessageButton extends BaseMessageComponent {
     }
 
     /**
-     * Method to setCustomId
+     * Method to set custom ID
      * @param {string} id
     */
     setCustomId(id) {
@@ -145,7 +148,7 @@ class MessageButton extends BaseMessageComponent {
     }
 
     /**
-     * Method to toJSON
+     * Method to convert to JSON
      * @return {Object}
     */
     toJSON() {
@@ -161,14 +164,14 @@ class MessageButton extends BaseMessageComponent {
     }
 
     resolveStyle(style) {
-        if (!style) throw new GError('[INVALID STYLE]','An invalid button style was provided');
+        if (!style) throw new GError('[INVALID STYLE]', 'An invalid button style was provided');
 
         if (typeof style === 'number' && style >= 1 && style <= 5) return style;
-        else if (typeof style === 'number') throw new GError('[INVALID STYLE]','An invalid button style was provided');
+        else if (typeof style === 'number') throw new GError('[INVALID STYLE]', 'An invalid button style was provided');
 
         if (typeof style === 'string') style = style.toLowerCase();
 
-        if (!styles[style]) throw new GError('[INVALID STYLE]','An invalid button style was provided');
+        if (!styles[style]) throw new GError('[INVALID STYLE]', 'An invalid button style was provided');
 
         return styles[style] || style;
     }

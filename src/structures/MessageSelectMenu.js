@@ -1,22 +1,25 @@
 const { MessageComponentTypes } = require('../util/Constants');
 const { resolveString } = require('../util/util');
-const BaseMessageComponent = require('./BaseMessageComponent');
 const GError = require('./GError');
 
 /**
- * The MessageSelectMenu class
+ * The builder for the MessageSelectMenu
  * @extends BaseMessageComponent
  */
-class MessageSelectMenu extends BaseMessageComponent {
+class MessageSelectMenu {
     /**
-     * Creates new MessageSelectMenu instance
      * @param {Object} data
+     * @constructor
     */
-     constructor(data = {}) {
-        super({ type: 'SELECT_MENU' });
+    constructor(data = {}) {
+        /**
+        * The type
+        * @type {string}
+       */
+        this.type = 'SELECT_MENU';
 
         /**
-         * Options
+         * The options
          * @type {Array}
         */
         this.options = [];
@@ -25,32 +28,32 @@ class MessageSelectMenu extends BaseMessageComponent {
     }
 
     /**
-     * Setup
+     * Setup function
      * @param {Object} data
      * @returns {MessageSelectMenu}
      * @private
      */
-     setup(data) {
+    setup(data) {
         /**
-         * Placeholder
+         * The placeholder
          * @type {string}
         */
         this.placeholder = 'placeholder' in data ? resolveString(data.placeholder) : null;
 
         /**
-         * MaxValues
+         * The max values
          * @type {number}
         */
         this.max_values = 'max_values' in data ? Number(data.max_values) : 1;
 
         /**
-         * MinValues
+         * The min values
          * @type {number}
         */
         this.min_values = 'min_values' in data ? Number(data.min_values) : 1;
 
         /**
-         * CustomId
+         * The custom ID
          * @type {string}
         */
         this.customId = data.custom_id || data.customId || null;
@@ -58,7 +61,7 @@ class MessageSelectMenu extends BaseMessageComponent {
         this.options = 'options' in data ? Array(data.options) : [];
 
         /**
-         * Disabled
+         * The disabled
          * @type {boolean}
         */
         this.disabled = 'disabled' in data ? Boolean(data.disabled) : false;
@@ -67,7 +70,7 @@ class MessageSelectMenu extends BaseMessageComponent {
     }
 
     /**
-     * Method to setDisabled
+     * Method to set disabled
      * @param {string} boolean
     */
     setPlaceholder(string) {
@@ -76,7 +79,7 @@ class MessageSelectMenu extends BaseMessageComponent {
     }
 
     /**
-     * Method to setMaxValues
+     * Method to set max values
      * @param {number} int
     */
     setMaxValues(int = 1) {
@@ -85,7 +88,7 @@ class MessageSelectMenu extends BaseMessageComponent {
     }
 
     /**
-     * Method to setMinValues
+     * Method to set min values
      * @param {number} int
     */
     setMinValues(int = 1) {
@@ -94,7 +97,7 @@ class MessageSelectMenu extends BaseMessageComponent {
     }
 
     /**
-     * Method to setID
+     * Method to set ID
      * @param {string} id
      * @deprecated
     */
@@ -104,7 +107,7 @@ class MessageSelectMenu extends BaseMessageComponent {
     }
 
     /**
-     * Method to setCustomId
+     * Method to set custom ID
      * @param {string} id
     */
     setCustomId(id) {
@@ -113,7 +116,7 @@ class MessageSelectMenu extends BaseMessageComponent {
     }
 
     /**
-     * Method to setDisabled
+     * Method to set disabled
      * @param {string} boolean
     */
     setDisabled(boolean = true) {
@@ -122,39 +125,39 @@ class MessageSelectMenu extends BaseMessageComponent {
     }
 
     /**
-     * Method to addOption
+     * Method to add option
      * @param {MessageSelectMenuOption} MessageSelectMenuOption
     */
     addOption(option) {
-        if (typeof option !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
+        if (typeof option !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide MessageSelectMenuOption');
         this.options.push(option);
         return this;
     }
 
     /**
-     * Method to addOptions
+     * Method to add options
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption
     */
     addOptions(...options) {
-        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
+        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide MessageSelectMenuOption');
         this.options.push(...options.flat(Infinity).map(o => o));
         return this;
     }
 
     /**
-     * Method to removeOptions
+     * Method to remove options
      * @param {number} index
      * @param {number} deleteCount
      * @param {MessageSelectMenuOption[]} MessageSelectMenuOption[]
     */
     removeOptions(index, deleteCount, ...options) {
-        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]','Need provide MessageSelectMenuOption');
+        if (typeof options !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide MessageSelectMenuOption');
         this.components.splice(index, deleteCount, ...options.flat(Infinity).map(o => o));
         return this;
     }
 
     /**
-     * Method to toJSON
+     * Method to convert to JSON
      * @return {Object}
     */
     toJSON() {

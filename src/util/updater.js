@@ -1,8 +1,8 @@
-const axios = require('axios');
+const hyttpo = require('hyttpo');
 
 module.exports = {
     /**
-     * Internal method to update
+     * Internal method to check version
      * @returns {void}
      * @private
     */
@@ -10,7 +10,7 @@ module.exports = {
         const { Color } = require('../index');
         const version = require('../index').version;
 
-        const GCommandsUpdater = await axios.get('https://registry.npmjs.org/gcommands');
+        const GCommandsUpdater = await hyttpo.get('https://registry.npmjs.org/gcommands');
         const stableVersion = GCommandsUpdater.data['dist-tags'].latest;
 
         if (stableVersion !== version && !version.includes('dev')) {

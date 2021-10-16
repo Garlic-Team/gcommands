@@ -2,40 +2,39 @@
 const GEvents = require('@gcommands/events');
 
 /**
- * The GEventLoader class
+ * The loader for event files and events
+ * @private
  */
 class GEventLoader extends null {}
 
 /**
- * GCommandsClient
+ * The client
  * @type {GCommandsClient}
 */
 GEventLoader.client = GEvents.GEvents.client;
 
 /**
- * EventDir
+ * The path to the event files
  * @type {string}
  */
 GEventLoader.eventDir = GEvents.GEvents.eventDir;
 
 /**
- * Gevents
+ * All the events
  * @type {Collection}
  */
 GEventLoader.client.gevents = GEvents.GEvents.gevents;
 
 
 /**
- * Internal method to loadEventsFiles
+ * Internal method to load event files
  * @returns {void}
- * @private
 */
 GEventLoader.__loadEventFiles = () => GEvents.GEvents.__loadEventFiles;
 
 /**
- * Internal method to loadEvents
+ * Internal method to load events
  * @returns {void}
- * @private
 */
 GEventLoader.__loadEvents = () => GEvents.GEvents.__loadEvents;
 

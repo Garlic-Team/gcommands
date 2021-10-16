@@ -2,48 +2,48 @@
 const GEvents = require('@gcommands/events');
 
 /**
- * The EventOptionsBuilder class
+ * The builder for a event
  */
 class EventOptionsBuilder extends null { }
 
 /**
- * Name
+ * The name
  * @type {string}
 */
 EventOptionsBuilder.name = GEvents.EventOptionsBuilder.name;
 
 /**
- * Once
+ * Wheter the event should be executed once
  * @type {boolean}
 */
 EventOptionsBuilder.once = GEvents.EventOptionsBuilder.once;
 
 /**
- * Ws
+ * Wheter the event should be from the web socket
  * @type {boolean}
 */
 EventOptionsBuilder.ws = GEvents.EventOptionsBuilder.ws;
 
 /**
- * Method to setName
+ * Method to set name
  * @param {string} name
 */
 EventOptionsBuilder.setName = () => GEvents.EventOptionsBuilder.setName;
 
 /**
- * Method to setOnce
+ * Method to set once
  * @param {boolean} once
 */
 EventOptionsBuilder.setOnce = () => GEvents.EventOptionsBuilder.setOnce;
 
 /**
- * Method to setWs
+ * Method to set ws
  * @param {boolean} ws
 */
 EventOptionsBuilder.setWs = () => GEvents.EventOptionsBuilder.setWs;
 
 /**
- * Method to toJSON
+ * Method to convert to JSON
  * @returns {Object}
 */
 EventOptionsBuilder.toJSON = () => GEvents.EventOptionsBuilder.toJSON;

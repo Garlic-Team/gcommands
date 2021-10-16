@@ -1,21 +1,23 @@
 const GError = require('./GError');
 const { MessageComponentTypes } = require('../util/Constants');
-const BaseMessageComponent = require('./BaseMessageComponent');
 
 /**
- * The MessageActionRow class
- * @extends BaseMessageComponent
+ * The builder for the MessageActionRow
  */
-class MessageActionRow extends BaseMessageComponent {
+class MessageActionRow {
     /**
-     * Creates new MessageActionRow instance
      * @param {Array} data
+     * @constructor
     */
     constructor(data = {}) {
-        super({ type: 'ACTION_ROW' });
+        /**
+         * The type
+         * @type {string}
+        */
+        this.type = 'ACTION_ROW';
 
         /**
-         * Components
+         * The components
          * @type {Array}
         */
         this.components = [];
@@ -24,51 +26,51 @@ class MessageActionRow extends BaseMessageComponent {
     }
 
     /**
-     * Setup
+     * Setup function
      * @param {Array} data
      * @returns {MessageActionRow}
      * @private
      */
     setup(data) {
-        this.components = 'components' in data ? data.components.map(c => BaseMessageComponent.create(c)) : [];
+        this.components = 'components' in data ? data.components : [];
 
         return this.toJSON();
     }
 
     /**
-     * Method to addComponent
+     * Method to add component
      * @param {MessageButton | MessageSelectMenu} component
     */
     addComponent(component) {
-        if (typeof component !== 'object') throw new GError('[INVALID COMPONENT]','Need provide BaseMessageComponent');
+        if (typeof component !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide BaseMessageComponent');
         this.components.push(component);
         return this;
     }
 
     /**
-     * Method to addComponents
+     * Method to add components
      * @param {MessageButton[] | MessageSelectMenu[]} components
     */
     addComponents(components) {
-        if (typeof components !== 'object') throw new GError('[INVALID COMPONENT]','Need provide BaseMessageComponent');
+        if (typeof components !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide BaseMessageComponent');
         this.components.push(...components.flat(Infinity).map(c => c));
         return this;
     }
 
     /**
-     * Method to removeComponents
+     * Method to remove components
      * @param {number} index
      * @param {number} deleteCount
      * @param {MessageButton[] | MessageSelectMenu[]} components
     */
     removeComponents(index, deleteCount, ...components) {
-        if (typeof components !== 'object') throw new GError('[INVALID COMPONENT]','Need provide BaseMessageComponent');
+        if (typeof components !== 'object') throw new GError('[INVALID COMPONENT]', 'Need provide BaseMessageComponent');
         this.components.splice(index, deleteCount, ...components.flat(Infinity).map(c => c));
         return this;
     }
 
     /**
-     * Method to toJSON
+     * Method to convert to JSON
      * @return {Object}
     */
     toJSON() {
