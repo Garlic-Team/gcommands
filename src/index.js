@@ -19,7 +19,6 @@ module.exports = {
     Command: require('./structures/Command'),
     Event: require('@gcommands/events').Event,
     GError: require('./structures/GError'),
-    SequelizeModel: require('./structures/SequelizeModel'),
 
     // Builders
     CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),

@@ -190,7 +190,6 @@ class GCommandsClient extends Client {
 
     loadSys() {
         new (require('../structures/GGuild'));
-        new (require('../structures/GUser'));
 
         setTimeout(() => {
             new GEventHandling(this);

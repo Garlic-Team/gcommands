@@ -48,37 +48,39 @@ class GCommandsDispatcher {
     }
 
     /**
-     * Internal method to get user data
-     * @param {Snowflake} userId
+     * Internal method to get guild data
+     * @param {Object} guild
      * @param {Object} options
      * @private
-     * @returns {Object || null}
+     * @returns {Object | false}
     */
-    async getUserData(userId, options) {
-        if (!this.client.database) return null;
-        if (!options.force && typeof this.data === 'object') return this.data;
+    async getGuildData(guild, options = {}) {
+        if (!this.client.database) return false;
+        if (guild.data && !options.force) return guild.data;
 
-        let data = await this.client.database.models.User.findOrCreate({ where: { id: userId } });
-        if (Array.isArray(data)) data = data[0];
+        try {
+            const data = await this.client.database.get(`guild_${guild.id}`) || {};
 
-        return data?.id ? data : null;
+            return data;
+        } catch { return false; }
     }
 
     /**
-     * Internal method to get guild data
-     * @param {Snowflake} guildId
+     * Internal method to set guild data
+     * @param {Object} guild
      * @param {Object} options
      * @private
-     * @returns {Object || null}
+     * @returns {Object | boolean}
     */
-    async getGuildData(guildId, options) {
-        if (!this.client.database) return null;
-        if (!options.force && typeof this.data === 'object') return this.data;
+    async setGuildData(guild, data) {
+        if (!this.client.database) return false;
+        if (!data) return false;
 
-        let data = await this.client.database.models.Guild.findOrCreate({ where: { id: guildId } });
-        if (Array.isArray(data)) data = data[0];
+        try {
+            await this.client.database.set(`guild_${guild.id}`, data);
 
-        return data?.id ? data : null;
+            return true;
+        } catch { return false; }
     }
 
     /**
@@ -90,30 +92,36 @@ class GCommandsDispatcher {
     */
     async setGuildPrefix(guild, prefix) {
         if (!this.client.database) return false;
+        if (!prefix) return false;
+
         try {
-            await guild.getData();
-            await guild.data?.update({ prefix: String(prefix) });
-            return true;
-        } catch {
-            return false;
-        }
+            const data = await guild.getData();
+
+            data.prefix = prefix;
+
+            const isSet = await guild.setData(data);
+
+            return isSet;
+        } catch { return false; }
     }
 
     /**
      * Internal method to get guild prefix
      * @param {Object} guild
+     * @param {Object} options
      * @private
      * @returns {string}
     */
-    async getGuildPrefix(guild) {
+    async getGuildPrefix(guild, options = {}) {
         if (!this.client.database) return false;
+        if (guild.data?.prefix && !options.force) return guild.data.prefix;
+
         try {
-            await guild.getData();
-            const prefix = guild.data?.prefix;
-            return prefix ? prefix : null;
-        } catch {
-            return false;
-        }
+            const data = await guild.getData({ force: true });
+
+            if (data?.prefix) return data.prefix;
+            else return false;
+        } catch { return false; }
     }
 
     /**
@@ -125,30 +133,36 @@ class GCommandsDispatcher {
     */
     async setGuildLanguage(guild, language) {
         if (!this.client.database) return false;
+        if (!language) return false;
+
         try {
-            await guild.getData();
-            await guild.data?.update({ language: String(language) });
-            return true;
-        } catch {
-            return false;
-        }
+            const data = await guild.getData();
+
+            data.language = language;
+
+            const isSet = await guild.setData(data);
+
+            return isSet;
+        } catch { return false; }
     }
 
     /**
      * Internal method to get guild language
      * @param {Object} guild
+     * @param {Object} options
      * @private
      * @returns {boolean}
     */
-    async getGuildLanguage(guild) {
+    async getGuildLanguage(guild, options = {}) {
         if (!this.client.database) return false;
+        if (guild.data?.language && !options.force) return guild.data.language;
+
         try {
-            await guild.getData();
-            const language = guild.data?.language;
-            return language ? language : null;
-        } catch {
-            return false;
-        }
+            const data = await guild.getData({ force: true });
+
+            if (data?.language) return data.language;
+            else return false;
+        } catch { return false; }
     }
 
     /**
@@ -158,37 +172,54 @@ class GCommandsDispatcher {
      * @private
      * @returns {Object}
     */
-    getCooldown(userId, command) {
+    async getCooldown(userId, guild, command) {
         if (this.application && this.application.owners.some(user => user.id === userId)) return { cooldown: false };
         const now = Date.now();
 
         let cooldown;
-
-        if (typeof command.cooldown === 'object' && command.cooldown?.cooldown) cooldown = ms(command.cooldown.cooldown);
-        else if (typeof command.cooldown === 'string') cooldown = ms(command.cooldown);
+        if (typeof command.cooldown === 'string') cooldown = ms(command.cooldown);
         else cooldown = ms(this.client.defaultCooldown);
 
-        if (!this.client.cooldowns.has(command.name)) this.client.cooldowns.set(command.name, new Collection());
+        if (cooldown < 1800000 || !this.client.database) {
+            if (!this.client.cooldowns.has(command.name)) this.client.cooldowns.set(command.name, new Collection());
 
-        const timestamps = this.client.cooldowns.get(command.name);
+            const timestamps = this.client.cooldowns.get(command.name);
 
-        if (timestamps.has(userId)) {
-            const expirationTime = timestamps.get(userId) + cooldown;
-            if (now < expirationTime) {
-                if (typeof command.cooldown === 'object' && command.cooldown.agressive) {
-                    this.client.cooldowns.set(command.name, new Collection());
-                    return { cooldown: true, wait: ms(cooldown) };
+            if (timestamps.has(userId)) {
+                const expirationTime = timestamps.get(userId);
+
+                if (now > expirationTime) {
+                    timestamps.delete(userId);
+                } else {
+                    const timeLeft = ms(expirationTime - now);
+                    return { cooldown: true, wait: timeLeft };
                 }
-
-                const timeLeft = ms(expirationTime - now);
-
-                return { cooldown: true, wait: timeLeft };
             }
-        }
+            timestamps.set(userId, (now + cooldown));
+            return { cooldown: false };
+        } else if (this.client.database) {
+            const data = await guild.getData();
 
-        timestamps.set(userId, now);
-        setTimeout(() => timestamps.delete(userId), cooldown);
-        return { cooldown: false };
+            if (!data.users) data.users = {};
+            if (!data.users[userId]) data.users[userId] = {};
+            if (!data.users[userId]?.cooldowns) data.users[userId].cooldowns = {};
+
+            const cooldowns = data.users[userId].cooldowns;
+
+            if (cooldowns[command.name]) {
+                const expirationTime = cooldowns[command.name];
+
+                if (now > expirationTime) {
+                    delete cooldowns[command.name];
+                } else {
+                    const timeLeft = ms(expirationTime - now);
+                    return { cooldown: true, wait: timeLeft };
+                }
+            }
+            cooldowns[command.name] = (now + cooldown);
+            await guild.setData(data);
+            return { cooldown: false };
+        }
     }
 
     /**
@@ -197,38 +228,38 @@ class GCommandsDispatcher {
      * @returns {Array}
     */
     async fetchClientApplication() {
-        this.application = await this.client.application.fetch();
+    this.application = await this.client.application.fetch();
 
-        if (this.application.owner === null) this.application.owners = [];
+    if (this.application.owner === null) this.application.owners = [];
 
-        if (this.application.owner instanceof Team) {
-            this.application.owners = [...this.application.owner.members.values()].map(teamMember => teamMember.user);
-        } else { this.application.owners = [this.application.owner]; }
+    if (this.application.owner instanceof Team) {
+        this.application.owners = [...this.application.owner.members.values()].map(teamMember => teamMember.user);
+    } else { this.application.owners = [this.application.owner]; }
 
-        return this.application.owners;
-    }
+    return this.application.owners;
+}
 
-    /**
-     * Method to add inhibitor
-     * @param {Inhibitor} inhibitor
-     * @returns {boolean}
-    */
-    addInhibitor(inhibitor) {
-        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-        if (this.client.inhibitors.has(inhibitor)) return false;
-        this.client.inhibitors.add(inhibitor);
-        return true;
-    }
+/**
+ * Method to add inhibitor
+ * @param {Inhibitor} inhibitor
+ * @returns {boolean}
+*/
+addInhibitor(inhibitor) {
+    if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+    if (this.client.inhibitors.has(inhibitor)) return false;
+    this.client.inhibitors.add(inhibitor);
+    return true;
+}
 
-    /**
-     * Method to remove inhibitor
-     * @param {Inhibitor} inhibitor
-     * @returns {Set}
-    */
-    removeInhibitor(inhibitor) {
-        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-        return this.client.inhibitors.delete(inhibitor);
-    }
+/**
+ * Method to remove inhibitor
+ * @param {Inhibitor} inhibitor
+ * @returns {Set}
+*/
+removeInhibitor(inhibitor) {
+    if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+    return this.client.inhibitors.delete(inhibitor);
+}
 }
 
 module.exports = GCommandsDispatcher;
