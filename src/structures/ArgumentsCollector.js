@@ -85,7 +85,7 @@ class ArgumentsCollector {
             const argument = new Argument(this.client, arg, this.isNotDm);
             let result;
             if (this.args[0]) {
-                const invalid = argument.argument.validate(argument, { content: this.args[0], guild: this.message.guild });
+                const invalid = argument.argument.validate(argument, { content: this.args[0], guild: this.message.guild }, this.language);
                 if (invalid) {
                     result = await argument.obtain(this.message, this.language, invalid);
                 } else {

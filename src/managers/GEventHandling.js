@@ -44,7 +44,7 @@ class GEventHandling {
             // Add to message.json
             if (message.guild && !message.guild.available) return message.reply('This server is not available at the moment. Try again later');
 
-            const mention = message.content.match(new RegExp(`^<@!?(${this.client.user.id})> `));
+            const mention = message.content.split(' ')[0].match(new RegExp(`^<@!?(${this.client.user.id})>`));
             const prefix = mention ? mention[0] : (message.guild ? await message.guild.getCommandPrefix() : this.client.prefix);
 
             const messageContainsPrefix = this.client.caseSensitivePrefixes ? message.content.startsWith(prefix) : message.content.toLowerCase().startsWith(prefix.toLowerCase());
