@@ -42,13 +42,6 @@ class GCommandsClient extends Client {
         this.eventDir = options.loader?.eventDir !== undefined ? String(options.loader.eventDir) : undefined;
 
         /**
-         * The path to the database model files
-         * @type {string}
-         * @default undefined
-        */
-        this.modelDir = options.loader?.modelDir !== undefined ? String(options.loader.modelDir) : undefined;
-
-        /**
          * Wheter loading from cache is enabled
          * @type {boolean}
          * @default true

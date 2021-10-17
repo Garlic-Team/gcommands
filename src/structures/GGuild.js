@@ -54,29 +54,29 @@ class GGuild {
     /* eslint-disable no-empty-function */
     /**
      * Method to get command prefix
-     * @param {boolean} cache
-     * @returns {Promise}
+     * @param {object} options
+     * @returns {string}
     */
     getCommandPrefix() { }
 
     /**
      * Method to set command prefix
      * @param {string} prefix
-     * @returns {void}
+     * @returns {boolean}
     */
     setCommandPrefix() { }
 
     /**
      * Method to get language
-     * @param {boolean} cache
-     * @returns {Promise}
+     * @param {object} options
+     * @returns {string}
     */
     getLanguage() { }
 
     /**
      * Method to set language
-     * @param {string} lang
-     * @returns {void}
+     * @param {string} language
+     * @returns {boolean}
     */
     setLanguage() { }
 
@@ -86,6 +86,13 @@ class GGuild {
      * @returns {object}
     */
     getData() { }
+
+    /**
+     * Method to set data
+     * @param {object} data
+     * @returns {boolean}
+    */
+    setData() { }
 }
 
 module.exports = GGuild;

@@ -7,21 +7,33 @@ type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'ge
 
 declare module 'discord.js' {
   export interface Guild {
-    prefix: string;
+    data: {
+      prefix: string,
+      language: string,
+      users: object,
+    }
 
-    getCommandPrefix(): string;
-    setCommandPrefix(prefix: string): void;
-    getLanguage(): string;
-    setLanguage(language: GuildLanguageTypes): void;
+    getCommandPrefix(options: object): string;
+    setCommandPrefix(prefix: string): boolean;
+    getLanguage(options: object): string;
+    setLanguage(language: GuildLanguageTypes): boolean;
+    getData(options): object;
+    setData(data): boolean;
   }
 
   export interface Guild extends discord.Guild {
-    prefix: string;
+    data: {
+      prefix: string,
+      language: string,
+      users: object,
+    }
 
-    getCommandPrefix(): string;
-    setCommandPrefix(prefix: string): void;
-    getLanguage(): string;
-    setLanguage(language: GuildLanguageTypes): void;
+    getCommandPrefix(options: object): string;
+    setCommandPrefix(prefix: string): boolean;
+    getLanguage(options: object): string;
+    setLanguage(language: GuildLanguageTypes): boolean;
+    getData(options): object;
+    setData(data): boolean;
   }
 
   export interface Client {
