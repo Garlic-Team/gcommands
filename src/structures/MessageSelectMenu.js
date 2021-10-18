@@ -166,7 +166,7 @@ class MessageSelectMenu {
             min_values: this.min_values,
             max_values: this.max_values || this.options.length,
             placeholder: this.placeholder || '',
-            custom_id: this.customId,
+            custom_id: this.custom_id || this.customId,
             disabled: this.disabled,
             options: this.options,
         };
