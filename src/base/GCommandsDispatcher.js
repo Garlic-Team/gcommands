@@ -33,7 +33,7 @@ class GCommandsDispatcher {
          * The client application
          * @type {ClientApplication}
         */
-        this.application = null;
+        this.application = this.client.application;
 
         this.client.inhibitors = this.inhibitors;
         this.client.cooldowns = this.cooldowns;
@@ -228,38 +228,38 @@ class GCommandsDispatcher {
      * @returns {Array}
     */
     async fetchClientApplication() {
-    this.application = await this.client.application.fetch();
+        this.application = await this.client.application.fetch();
 
-    if (this.application.owner === null) this.application.owners = [];
+        if (this.application.owner === null) this.application.owners = [];
 
-    if (this.application.owner instanceof Team) {
-        this.application.owners = [...this.application.owner.members.values()].map(teamMember => teamMember.user);
-    } else { this.application.owners = [this.application.owner]; }
+        if (this.application.owner instanceof Team) {
+            this.application.owners = [...this.application.owner.members.values()].map(teamMember => teamMember.user);
+        } else { this.application.owners = [this.application.owner]; }
 
-    return this.application.owners;
-}
+        return this.application.owners;
+    }
 
-/**
- * Method to add inhibitor
- * @param {Inhibitor} inhibitor
- * @returns {boolean}
-*/
-addInhibitor(inhibitor) {
-    if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-    if (this.client.inhibitors.has(inhibitor)) return false;
-    this.client.inhibitors.add(inhibitor);
-    return true;
-}
+    /**
+     * Method to add inhibitor
+     * @param {Inhibitor} inhibitor
+     * @returns {boolean}
+    */
+    addInhibitor(inhibitor) {
+        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+        if (this.client.inhibitors.has(inhibitor)) return false;
+        this.client.inhibitors.add(inhibitor);
+        return true;
+    }
 
-/**
- * Method to remove inhibitor
- * @param {Inhibitor} inhibitor
- * @returns {Set}
-*/
-removeInhibitor(inhibitor) {
-    if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-    return this.client.inhibitors.delete(inhibitor);
-}
+    /**
+     * Method to remove inhibitor
+     * @param {Inhibitor} inhibitor
+     * @returns {Set}
+    */
+    removeInhibitor(inhibitor) {
+        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+        return this.client.inhibitors.delete(inhibitor);
+    }
 }
 
 module.exports = GCommandsDispatcher;

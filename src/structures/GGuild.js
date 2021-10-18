@@ -43,6 +43,7 @@ class GGuild {
             },
             setData: {
                 value: async function(data) {
+                    if (!data) data = this.data;
                     const isSet = await this.client.dispatcher.setGuildData(this, data);
                     if (isSet) this.data = data;
                     return isSet;
