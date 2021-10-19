@@ -195,11 +195,11 @@ class GEventHandling {
 
             // Add to message.json
             if (interaction.guild && !interaction.guild.available) {
- return interaction.reply({
-                content: 'This server is not available at the moment. Try again later',
-                ephemeral: true
-            });
-}
+                return interaction.reply({
+                    content: 'This server is not available at the moment. Try again later',
+                    ephemeral: true,
+                });
+            }
 
             let commandos;
             try {

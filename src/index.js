@@ -18,7 +18,6 @@ module.exports = {
     MessageActionRow: require('discord.js').MessageActionRow,
     MessageSelectMenu: require('discord.js').MessageSelectMenu,
     MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'),
-    // TODO: delete ^
 
     Command: require('./structures/Command'),
     Event: require('@gcommands/events').Event,
