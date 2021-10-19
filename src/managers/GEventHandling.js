@@ -191,10 +191,13 @@ class GEventHandling {
     */
     slashEvent() {
         this.client.on('interactionCreate', async interaction => {
-            if (interaction.isMessageComponent()) return;
+            if (!(interaction.isCommand() || interaction.isContextMenu())) return;
 
             // Add to message.json
-            if (interaction.guild && !interaction.guild.available) return interaction.reply('This server is not available at the moment. Try again later');
+            if (interaction.guild && !interaction.guild.available) return interaction.reply({
+                content: 'This server is not available at the moment. Try again later',
+                ephemeral: true
+            });
 
             let commandos;
             try {
@@ -232,15 +235,15 @@ class GEventHandling {
                     client: this.client,
                     bot: this.client,
                     language: language,
+                    args: interaction.options,
+                    objectArgs: this.argsToObject(interaction.options) || {},
                     respond: options => interaction.reply(options),
                     edit: options => interaction.edit(options),
                     followUp: options => interaction.followUp(options),
                 };
 
-                const inhibitReturn = await inhibit(this.client, {
-                    ...runOptions,
-                    args: interaction.arrayArguments,
-                });
+                const inhibitReturn = await inhibit(this.client, runOptions);
+
                 if (inhibitReturn === false) return;
 
                 const cooldown = interaction.guild ? this.client.dispatcher.getCooldown(interaction.member.id, interaction.guild, commandos) : null;
@@ -313,10 +316,7 @@ class GEventHandling {
 
                 this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, user: interaction.user, channel: interaction.channel, guild: interaction.guild });
 
-                commandos.run({
-                    ...runOptions,
-                    args: interaction.options,
-                });
+                commandos.run(runOptions);
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, user: interaction.user, channel: interaction.channel, guild: interaction.guild, error: e });
                 this.client.emit(Events.DEBUG, e);
@@ -332,6 +332,24 @@ class GEventHandling {
         await readdirSync(`${__dirname}/../base/actions/`).forEach(file => {
             require(`../base/actions/${file}`)(this.client);
         });
+    }
+
+    /**
+     * Change arguments to object
+     */
+    argsToObject(options) {
+        if (!Array.isArray(options)) return {};
+        const args = {};
+
+        for (const o of options) {
+          if ([1, 2].includes(o.type)) {
+            args[o.name] = this.argsToObject(o.options);
+          } else {
+            args[o.name] = o.value;
+          }
+        }
+
+        return args;
     }
 }
 

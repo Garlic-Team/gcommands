@@ -12,10 +12,10 @@ module.exports = {
     GDatabaseLoader: require('./managers/GDatabaseLoader'),
 
     // Structures
-    MessageButton: require('./structures/MessageButton'),
-    MessageActionRow: require('./structures/MessageActionRow'),
-    MessageSelectMenu: require('./structures/MessageSelectMenu'),
-    MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'),
+    MessageButton: require('discord.js').MessageButton, //TOTO: delete
+    MessageActionRow: require('discord.js').MessageActionRow, //TOTO: delete
+    MessageSelectMenu: require('discord.js').MessageSelectMenu, //TOTO: delete
+    MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'), //TOTO: delete
     Command: require('./structures/Command'),
     Event: require('@gcommands/events').Event,
     GError: require('./structures/GError'),

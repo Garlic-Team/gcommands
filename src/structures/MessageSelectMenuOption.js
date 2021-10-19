@@ -2,11 +2,13 @@ const { resolveString, parseEmoji, resolvePartialEmoji } = require('../util/util
 
 /**
  * The builder for the MessageSelectMenuOption
+ * @deprecated
  */
 class MessageSelectMenuOption {
     /**
      * @param {Object} data
      * @constructor
+     * @deprecated
     */
     constructor(data = {}) {
         this.setup(data);
