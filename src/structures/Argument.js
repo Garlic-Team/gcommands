@@ -94,7 +94,7 @@ class Argument {
         if (message.author.bot) return;
         if (this.type === 'invalid') return false;
 
-        const wait = 30000;
+        const wait = this.client.wait;
 
         const getComponents = disabled => {
             const components = [

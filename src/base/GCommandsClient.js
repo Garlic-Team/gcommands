@@ -11,7 +11,7 @@ const GError = require('../structures/GError');
 
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
- * @extends {@link https://discord.js.org/#/docs/main/stable/class/Client}
+ * @extends Client
  */
 class GCommandsClient extends Client {
     /**
@@ -155,6 +155,13 @@ class GCommandsClient extends Client {
          * @default false
          */
         this.deleteInput = options.arguments?.deleteInput !== undefined ? Boolean(options.arguments.deleteInput) : false;
+
+        /**
+         * How long a user has to respond to a argument prompt
+         * @type {boolean}
+         * @default 30000
+         */
+        this.wait = options.arguments?.wait !== undefined ? Number(options.arguments.wait) : 30000;
 
         /**
          * The default cooldown
