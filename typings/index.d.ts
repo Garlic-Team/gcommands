@@ -510,7 +510,7 @@ declare module 'gcommands' {
     message: Message;
     guild: Guild;
     channel: TextChannel | NewsChannel;
-    args: any[];
+    args: CommandInteractionOptionResolver
     objectArgs: Object<any>;
 
     respond(options: string | GPayloadOptions): void;
