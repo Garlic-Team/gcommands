@@ -194,10 +194,12 @@ class GEventHandling {
             if (!(interaction.isCommand() || interaction.isContextMenu())) return;
 
             // Add to message.json
-            if (interaction.guild && !interaction.guild.available) return interaction.reply({
+            if (interaction.guild && !interaction.guild.available) {
+ return interaction.reply({
                 content: 'This server is not available at the moment. Try again later',
                 ephemeral: true
             });
+}
 
             let commandos;
             try {
