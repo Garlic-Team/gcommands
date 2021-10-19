@@ -8,8 +8,7 @@ const UserArgumentType = require('./ArgumentTypes/User');
 const RoleArgumentType = require('./ArgumentTypes/Role');
 const NumberArgumentType = require('./ArgumentTypes/Number');
 const MentionableArgumentType = require('./ArgumentTypes/Mentionable');
-const MessageActionRow = require('./MessageActionRow');
-const MessageButton = require('./MessageButton');
+const { MessageActionRow, MessageButton } = require('discord.js');
 
 /**
  * The argument for message commands
@@ -102,12 +101,12 @@ class Argument {
                     .addComponents([
                         new MessageButton()
                             .setLabel('Cancel')
-                            .setStyle('red')
+                            .setStyle('DANGER')
                             .setCustomId(`argument_cancel_${message.id}_${this.name}`)
                             .setDisabled(disabled),
                         !this.required ? new MessageButton()
                             .setLabel('Skip')
-                            .setStyle('blurple')
+                            .setStyle('PRIMARY')
                             .setCustomId(`argument_skip_${message.id}_${this.name}`)
                             .setDisabled(disabled)
                             : [],
@@ -117,12 +116,12 @@ class Argument {
                 components[1] = new MessageActionRow().addComponents([
                     new MessageButton()
                         .setLabel('True')
-                        .setStyle('green')
+                        .setStyle('SUCCESS')
                         .setCustomId(`argument_true_${message.id}_${this.name}`)
                         .setDisabled(disabled),
                     new MessageButton()
                         .setLabel('False')
-                        .setStyle('red')
+                        .setStyle('DANGER')
                         .setCustomId(`argument_false_${message.id}_${this.name}`)
                         .setDisabled(disabled),
                 ]);
