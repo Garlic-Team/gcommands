@@ -1,4 +1,4 @@
-import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates, ClientOptions } from 'discord.js';
+import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates, ClientOptions, Interaction } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 import { Command, GCommandsDispatcher, GInteraction, MessageEditAndUpdateOptions } from '../src/index';
@@ -505,13 +505,13 @@ declare module 'gcommands' {
 
   interface CommandRunOptions {
     client: Client;
-    interaction: Object;
+    interaction: Interaction;
     member: GuildMember;
     message: Message;
     guild: Guild;
     channel: TextChannel | NewsChannel;
-    args: Array;
-    objectArgs: Object;
+    args: any[];
+    objectArgs: Object<any>;
 
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;
