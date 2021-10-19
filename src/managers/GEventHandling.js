@@ -240,7 +240,7 @@ class GEventHandling {
                     args: interaction.options,
                     objectArgs: this.argsToObject(interaction.options) || {},
                     respond: options => interaction.reply(options),
-                    edit: options => interaction.edit(options),
+                    edit: options => interaction.editReply(options),
                     followUp: options => interaction.followUp(options),
                 };
 
