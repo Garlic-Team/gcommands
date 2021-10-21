@@ -237,7 +237,7 @@ declare module 'gcommands' {
     public setUsage(usage: string): CommandOptionsBuilder;
     public setSlash(slash: GCommandsOptionsCommandsSlash): CommandOptionsBuilder;
     public setContext(context: GCommandsOptionsCommandsContext): CommandOptionsBuilder;
-    public toJSON(): CommandOptionsBuilder
+    public toJSON(): CommandOptionsBuilder;
   }
 
   export class CommandArgsOptionBuilder {
@@ -505,13 +505,13 @@ declare module 'gcommands' {
 
   interface CommandRunOptions {
     client: Client;
-    interaction: discord.CommandInteraction;
+    interaction: CommandInteraction;
     member: GuildMember;
     message: Message;
     guild: Guild;
     channel: TextChannel | NewsChannel;
-    args: CommandInteractionOptionResolver
-    objectArgs: Object<any>;
+    args: CommandInteractionOptionResolver;
+    objectArgs: Object<string, any>;
 
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;
