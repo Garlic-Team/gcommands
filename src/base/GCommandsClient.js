@@ -26,7 +26,7 @@ class GCommandsClient extends Client {
 
         const isClientMessageEnabled = ['false', 'slash'].includes(String(options.commands?.slash));
 
-        if (!isClientMessageEnabled && !options.commands?.prefix) throw new GError('[DEFAULT OPTIONS]', 'You must specify the commands#prefix');
+        if (isClientMessageEnabled && !options.commands?.prefix) throw new GError('[DEFAULT OPTIONS]', 'You must specify the commands#prefix');
 
         /**
          * The path to the command files
