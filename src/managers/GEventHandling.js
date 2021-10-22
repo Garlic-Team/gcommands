@@ -238,7 +238,7 @@ class GEventHandling {
                     bot: this.client,
                     language: language,
                     args: interaction.options,
-                    objectArgs: this.argsToObject(interaction.options) || {},
+                    objectArgs: this.argsToObject(interaction.options.data) || {},
                     respond: options => interaction.reply(options),
                     edit: options => interaction.editReply(options),
                     followUp: options => interaction.followUp(options),
