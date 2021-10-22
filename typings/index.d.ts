@@ -511,7 +511,7 @@ declare module 'gcommands' {
     guild: Guild;
     channel: TextChannel | NewsChannel;
     args: CommandInteractionOptionResolver;
-    objectArgs: Object<any>;
+    objectArgs: Object;
 
     respond(options: string | GPayloadOptions): void;
     edit(options: string | GPayloadOptions): void;
