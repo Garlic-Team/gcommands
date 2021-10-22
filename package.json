@@ -24,10 +24,9 @@
   },
   "keywords": [
     "gcommands",
-    "command",
-    "discord bot",
     "handler",
-    "slash command handler"
+    "slash commands",
+    "context menus"
   ],
   "author": "Garlic-Team",
   "license": "MIT",
