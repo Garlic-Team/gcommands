@@ -51,6 +51,49 @@ class Util {
         if (!id && !name) return null;
         return { id, name, animated };
     }
+	
+    /**
+     * Internal method to set the message options
+     * @param {Object} options 
+     * @param {Function} methodFunction
+     * @return {Object}
+     */
+    static setMessageOptions(options) {
+    if (options instanceof Array) {
+
+      const embeds = [];
+      const components = [];
+      const attachments = [];
+      const stickers = [];
+
+      options.forEach(option => {
+        if (option instanceof Discord.MessageEmbed) {
+         return embeds.push(option);
+        } else if (option instanceof Discord.MessageAttachment) {
+         return attachments.push(option);
+        } else if (option instanceof Discord.MessageActionRow) {
+         return components.push(option);
+        } else if (option instanceof Discord.Sticker) {
+         return stickers.push(option);
+        }
+      })
+
+     return { embeds: [embeds], components: [components], attachments: [attachments], stickers: [stickers] }
+
+    }
+    
+    if (options instanceof Discord.MessageEmbed) {
+     return { embeds: [options] };
+    } else if (options instanceof Discord.MessageAttachment) {
+     return { attachments: [options] };
+    } else if (options instanceof Discord.MessageActionRow) {
+     return { components: [options] };
+    } else if (options instanceof Discord.Sticker) {
+     return { stickers: [options] };
+    } else {
+     return options;     
+    }
+}
 
     /**
      * Internal method to inhibit
