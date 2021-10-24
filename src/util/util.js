@@ -59,13 +59,14 @@ class Util {
      * @return {Object}
      */
      static resolveMessageOptions(options) {
+          
+     const embeds = [];
+     const components = [];
+     const attachments = [];
+     const stickers = [];
+	     
      if (Array.isArray(options) {
-      const embeds = [];
-      const components = [];
-      const attachments = [];
-      const stickers = [];
-
-      options.forEach(option => {
+     options.forEach(option => {
         if (option instanceof Discord.MessageEmbed) {
          return embeds.push(option);
         } else if (option instanceof Discord.MessageAttachment) {
@@ -76,14 +77,7 @@ class Util {
          return stickers.push(option);
         }
       });
-
-     return { embeds: [embeds], components: [components], attachments: [attachments], stickers: [stickers] };
     }
-	
-    const embeds = [];
-    const components = [];
-    const attachments = [];
-    const stickers = [];
 
     if (options instanceof Discord.MessageEmbed) {
      embeds.push(options)
