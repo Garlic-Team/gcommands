@@ -88,7 +88,7 @@ class Util {
      return options;
     }
 
-    let sendOptions = {};
+    const sendOptions = {};
 
     if (embeds.length !== 0) sendOptions.embeds = embeds;
     if (components.length !== 0) sendOptions.components = components;
