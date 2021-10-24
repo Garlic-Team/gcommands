@@ -79,18 +79,25 @@ class Util {
 
      return { embeds: [embeds], components: [components], attachments: [attachments], stickers: [stickers] };
     }
+	
+    const embeds = [];
+    const components = [];
+    const attachments = [];
+    const stickers = [];
 
     if (options instanceof Discord.MessageEmbed) {
-     return { embeds: [options] };
+     embeds.push(options)
     } else if (options instanceof Discord.MessageAttachment) {
-     return { attachments: [options] };
+     attachments.push(options)
     } else if (options instanceof Discord.MessageActionRow) {
-     return { components: [options] };
+     components.push(options)
     } else if (options instanceof Discord.Sticker) {
-     return { stickers: [options] };
+     stickers.push(options)
     } else {
      return options;
     }
+
+    return { embeds: [embeds], components: [components], attachments: [attachments], stickers: [stickers] };
 }
 
     /**
