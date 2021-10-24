@@ -2,7 +2,6 @@ const { readdirSync } = require('fs');
 const ArgumentsCollector = require('../structures/ArgumentsCollector');
 const { Events } = require('../util/Constants'), Color = require('../structures/Color');
 const { inhibit, unescape, setMessageOptions } = require('../util/util');
-const Discord = require('discord.js');
 
 /**
  * The handler for message and slash commands
