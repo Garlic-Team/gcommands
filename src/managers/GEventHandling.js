@@ -2,7 +2,7 @@ const { readdirSync } = require('fs');
 const ArgumentsCollector = require('../structures/ArgumentsCollector');
 const { Events } = require('../util/Constants'), Color = require('../structures/Color');
 const { inhibit, unescape } = require('../util/util');
-const Discord = require('discord.js')
+const Discord = require('discord.js');
 
 /**
  * The handler for message and slash commands
@@ -91,24 +91,24 @@ class GEventHandling {
                     client: this.client,
                     bot: this.client,
                     language: language,
-                    
+
                     respond: (options = undefined) => {
                     if (options instanceof Discord.MessageEmbed) {
-                    message.reply({ embeds: [options] })
+                    message.reply({ embeds: [options] });
                     } else if (options instanceof Discord.MessageAttachment) {
-                    message.reply({ attachments: [options] })
+                    message.reply({ attachments: [options] });
                     } else {
-                    message.reply(options)
+                    message.reply(options);
                     }
                     },
-                    
+
                     followUp: (options = undefined) => {
                     if (options instanceof Discord.MessageEmbed) {
-                    message.reply({ embeds: [options] })
+                    message.reply({ embeds: [options] });
                     } else if (options instanceof Discord.MessageAttachment) {
-                    message.reply({ attachments: [options] })
+                    message.reply({ attachments: [options] });
                     } else {
-                    message.reply(options)
+                    message.reply(options);
                     }
                     },
                 };
@@ -258,34 +258,34 @@ class GEventHandling {
                     language: language,
                     args: interaction.options,
                     objectArgs: this.argsToObject(interaction.options.data) || {},
-                    
+
                     respond: (options = undefined) => {
                     if (options instanceof Discord.MessageEmbed) {
-                    interaction.reply({ embeds: [options] })
+                    interaction.reply({ embeds: [options] });
                     } else if (options instanceof Discord.MessageAttachment) {
-                    interaction.reply({ attachments: [options] })
+                    interaction.reply({ attachments: [options] });
                     } else {
-                    interaction.reply(options)
+                    interaction.reply(options);
                     }
                     },
-                    
+
                     edit: (options = undefined) => {
                     if (options instanceof Discord.MessageEmbed) {
-                    interaction.editReply({ embeds: [options] })
+                    interaction.editReply({ embeds: [options] });
                     } else if (options instanceof Discord.MessageAttachment) {
-                    interaction.editReply({ attachments: [options] })
+                    interaction.editReply({ attachments: [options] });
                     } else {
-                    interaction.editReply(options)
+                    interaction.editReply(options);
                     }
                     },
-                    
+
                     followUp: (options = undefined) => {
                     if (options instanceof Discord.MessageEmbed) {
-                    interaction.followUp({ embeds: [options] })
+                    interaction.followUp({ embeds: [options] });
                     } else if (options instanceof Discord.MessageAttachment) {
-                    interaction.followUp({ attachments: [options] })
+                    interaction.followUp({ attachments: [options] });
                     } else {
-                    interaction.followUp(options)
+                    interaction.followUp(options);
                     }
                     },
                 };
