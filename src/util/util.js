@@ -65,7 +65,7 @@ class Util {
      const attachments = [];
      const stickers = [];
 	     
-     if (Array.isArray(options) {
+     if (Array.isArray(options)) {
      options.forEach(option => {
         if (option instanceof Discord.MessageEmbed) {
          return embeds.push(option);
