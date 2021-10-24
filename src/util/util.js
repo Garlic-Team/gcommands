@@ -59,7 +59,7 @@ class Util {
      * @return {Object}
      */
 static resolveMessageOptions(options) {
-    if (options instanceof Array) {
+if (Array.isArray(options) {
       const embeds = [];
       const components = [];
       const attachments = [];
