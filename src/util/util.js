@@ -55,8 +55,7 @@ class Util {
 
     /**
      * Internal method to set the message options
-     * @param {Object} options
-     * @param {Function} methodFunction
+     * @param {Object|MessageEmbed|MessageAttachment|MessageActionRow|Sticker} options
      * @return {Object}
      */
     static setMessageOptions(options) {
