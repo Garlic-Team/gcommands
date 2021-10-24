@@ -51,16 +51,15 @@ class Util {
         if (!id && !name) return null;
         return { id, name, animated };
     }
-	
+
     /**
      * Internal method to set the message options
-     * @param {Object} options 
+     * @param {Object} options
      * @param {Function} methodFunction
      * @return {Object}
      */
     static setMessageOptions(options) {
     if (options instanceof Array) {
-
       const embeds = [];
       const components = [];
       const attachments = [];
@@ -76,12 +75,11 @@ class Util {
         } else if (option instanceof Discord.Sticker) {
          return stickers.push(option);
         }
-      })
+      });
 
-     return { embeds: [embeds], components: [components], attachments: [attachments], stickers: [stickers] }
-
+     return { embeds: [embeds], components: [components], attachments: [attachments], stickers: [stickers] };
     }
-    
+
     if (options instanceof Discord.MessageEmbed) {
      return { embeds: [options] };
     } else if (options instanceof Discord.MessageAttachment) {
@@ -91,7 +89,7 @@ class Util {
     } else if (options instanceof Discord.Sticker) {
      return { stickers: [options] };
     } else {
-     return options;     
+     return options;
     }
 }
 
