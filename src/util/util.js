@@ -88,12 +88,12 @@ class Util {
      return options;
     }
 
-    const sendOptions = {};
+    let sendOptions = {};
 
-    if (embeds.length > 0) sendOptions.embeds = embeds;
-    if (components.length > 0) sendOptions.components = components;
-    if (attachments.length > 0) sendOptions.attachments = attachments;
-    if (stickers.length > 0) sendOptions.stickers = stickers;
+    if (embeds.length !== 0) sendOptions.embeds = embeds;
+    if (components.length !== 0) sendOptions.components = components;
+    if (attachments.length !== 0) sendOptions.attachments = attachments;
+    if (stickers.length !== 0) sendOptions.stickers = stickers;
 
     return sendOptions;
 }
