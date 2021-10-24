@@ -1,7 +1,7 @@
 const { readdirSync } = require('fs');
 const ArgumentsCollector = require('../structures/ArgumentsCollector');
 const { Events } = require('../util/Constants'), Color = require('../structures/Color');
-const { inhibit, unescape } = require('../util/util');
+const { inhibit, unescape, setMessageOptions } = require('../util/util');
 const Discord = require('discord.js');
 
 /**
@@ -92,25 +92,8 @@ class GEventHandling {
                     bot: this.client,
                     language: language,
 
-                    respond: (options = undefined) => {
-                    if (options instanceof Discord.MessageEmbed) {
-                    message.reply({ embeds: [options] });
-                    } else if (options instanceof Discord.MessageAttachment) {
-                    message.reply({ attachments: [options] });
-                    } else {
-                    message.reply(options);
-                    }
-                    },
-
-                    followUp: (options = undefined) => {
-                    if (options instanceof Discord.MessageEmbed) {
-                    message.reply({ embeds: [options] });
-                    } else if (options instanceof Discord.MessageAttachment) {
-                    message.reply({ attachments: [options] });
-                    } else {
-                    message.reply(options);
-                    }
-                    },
+                    respond: (options = undefined) => message.reply(setMessageOptions(options)),
+                    followUp: (options = undefined) => message.reply(setMessageOptions(options)),
                 };
 
                 const inhibitReturn = await inhibit(this.client, {
@@ -259,35 +242,9 @@ class GEventHandling {
                     args: interaction.options,
                     objectArgs: this.argsToObject(interaction.options.data) || {},
 
-                    respond: (options = undefined) => {
-                    if (options instanceof Discord.MessageEmbed) {
-                    interaction.reply({ embeds: [options] });
-                    } else if (options instanceof Discord.MessageAttachment) {
-                    interaction.reply({ attachments: [options] });
-                    } else {
-                    interaction.reply(options);
-                    }
-                    },
-
-                    edit: (options = undefined) => {
-                    if (options instanceof Discord.MessageEmbed) {
-                    interaction.editReply({ embeds: [options] });
-                    } else if (options instanceof Discord.MessageAttachment) {
-                    interaction.editReply({ attachments: [options] });
-                    } else {
-                    interaction.editReply(options);
-                    }
-                    },
-
-                    followUp: (options = undefined) => {
-                    if (options instanceof Discord.MessageEmbed) {
-                    interaction.followUp({ embeds: [options] });
-                    } else if (options instanceof Discord.MessageAttachment) {
-                    interaction.followUp({ attachments: [options] });
-                    } else {
-                    interaction.followUp(options);
-                    }
-                    },
+                    respond: (options = undefined) => interaction.reply(setMessageOptions(options)),
+                    edit: (options = undefined) => interaction.editReply(setMessageOptions(options)),
+                    followUp: (options = undefined) => interaction.followUp(setMessageOptions(options)),
                 };
 
                 const inhibitReturn = await inhibit(this.client, runOptions);
