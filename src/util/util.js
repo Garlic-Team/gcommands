@@ -54,12 +54,12 @@ class Util {
     }
 
     /**
-     * Internal method to set the message options
+     * Internal method to resolve the message options
      * @param {Object|MessageEmbed|MessageAttachment|MessageActionRow|Sticker} options
      * @return {Object}
      */
-static resolveMessageOptions(options) {
-if (Array.isArray(options) {
+     static resolveMessageOptions(options) {
+     if (Array.isArray(options) {
       const embeds = [];
       const components = [];
       const attachments = [];
