@@ -58,7 +58,7 @@ class Util {
      * @param {Object|MessageEmbed|MessageAttachment|MessageActionRow|Sticker} options
      * @return {Object}
      */
-    static setMessageOptions(options) {
+static resolveMessageOptions(options) {
     if (options instanceof Array) {
       const embeds = [];
       const components = [];
