@@ -77,9 +77,7 @@ class Util {
          return stickers.push(option);
         }
       });
-    }
-
-    if (options instanceof Discord.MessageEmbed) {
+    } else if (options instanceof Discord.MessageEmbed) {
      embeds.push(options)
     } else if (options instanceof Discord.MessageAttachment) {
      attachments.push(options)
