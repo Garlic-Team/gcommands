@@ -27,7 +27,7 @@ class GDatabaseLoader {
         const dbType = this.client.database;
         if (!dbType) { this.client.database = undefined; } else {
             try {
-                const Keyv = require('keyv');
+                const Keyv = require('@keyvhq/core');
 
                 this.client.database = new Keyv(dbType);
             } catch (e) {
