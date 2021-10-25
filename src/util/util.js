@@ -64,7 +64,7 @@ class Util {
 
         const embeds = [];
         const components = [];
-        const attachments = [];
+        const files = [];
         const stickers = [];
 
         if (!Array.isArray(options)) options = [options];
@@ -73,7 +73,7 @@ class Util {
         if (option instanceof Discord.MessageEmbed) {
             return embeds.push(option);
         } else if (option instanceof Discord.MessageAttachment) {
-            return attachments.push(option);
+            return files.push(option);
         } else if (option instanceof Discord.MessageActionRow) {
             return components.push(option);
         } else if (option instanceof Discord.Sticker) {
@@ -81,12 +81,12 @@ class Util {
         }
       });
 
-    if (embeds.length === 0 && components.length === 0 && attachments.length === 0 && stickers.length === 0) return options[0];
+    if (embeds.length === 0 && components.length === 0 && files.length === 0 && stickers.length === 0) return options[0];
 
        return {
          embeds: embeds.length !== 0 ? embeds : undefined,
          components: components.length !== 0 ? components : undefined,
-         attachments: attachments.length !== 0 ? attachments : undefined,
+         files: files.length !== 0 ? files : undefined,
          stickers: stickers.length !== 0 ? stickers : undefined,
       };
     }
