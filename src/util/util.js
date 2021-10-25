@@ -59,14 +59,14 @@ class Util {
      * @return {Object}
      */
 static resolveMessageOptions(options) {
-    if(!options) return {};
+    if (!options) return {};
 
     const embeds = [];
     const components = [];
     const attachments = [];
     const stickers = [];
 
-    if(!Array.isArray(options)) options = [options];
+    if (!Array.isArray(options)) options = [options];
 
     options.forEach(option => {
         if (option instanceof Discord.MessageEmbed) {
@@ -80,7 +80,7 @@ static resolveMessageOptions(options) {
         }
     });
 
-    if (embeds.length === 0 && components.length === 0 && attachments.length === 0 && stickers.length === 0) return options[0]
+    if (embeds.length === 0 && components.length === 0 && attachments.length === 0 && stickers.length === 0) return options[0];
 
    return {
        embeds: embeds.length !== 0 ? embeds : undefined,
