@@ -1,7 +1,6 @@
 const Color = require('../structures/Color');
 const { Events } = require('./Constants');
 const Discord = require('discord.js');
-const { GPayloadOptions } = require('gcommands');
 
 /**
  * The Util class
