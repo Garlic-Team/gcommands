@@ -1,5 +1,9 @@
 # Message Components
 
+::: danger
+**DEPRECATED** Check official djs guide: [Buttons](https://discordjs.guide/interactions/buttons.html) [Select Menus](https://discordjs.guide/interactions/select-menus.html#component-collectors) 
+:::
+
 Buttons send an event when clicked.
 
 ::: warning
