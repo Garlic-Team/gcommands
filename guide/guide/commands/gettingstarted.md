@@ -9,7 +9,7 @@ const { join } = require('path');
 
 new GCommandsClient({
     ...options,
-    loaders: {
+    loader: {
         cmdDir: join(__dirname + 'commands')
     }
 });
