@@ -8,7 +8,9 @@ const { join } = require("path");
 
 const client = new GCommandsClient({
     ...options,
-    eventDir: join(__dirname, "events")
+    loader: {
+        eventDir: join(__dirname, "events")
+    }
 })
 ```
 
