@@ -110,6 +110,7 @@ module.exports = config({
             title: 'Additionals',
             collapsable: true,
             children: [
+              'additional/fromv7tov8',
               'additional/fromv6tov7',
               'additional/fromv5tov6',
               'additional/fromv4tov5',
