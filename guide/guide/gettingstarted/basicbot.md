@@ -41,12 +41,21 @@ Then, paste this code in:
 const { GCommandsClient } = require("gcommands");
 const { join } = require('path');
 const client = new GCommandsClient({
-  cmdDir: join(__dirname, 'commands'),
-  eventDir: join(__dirname, 'events'),
-  caseSensitiveCommands: false, // true or false | whether to match the commands' caps
-  caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
+  loaders: {
+    cmdDir: join(__dirname, 'commands'),
+    eventDir: join(__dirname, 'events'),
+  },
   language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
   commands: {
+    caseSensitiveCommands: false, // true or false | whether to match the commands' caps
+    caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
+    allowDm: false, // true or false | DM Support
+    
+    // Argument prompt deleting and input deleting, there is now a option available to delete the prompt/input for arguments.
+    deleteInput: true, // Default false
+    deletePrompt: true, // Default false
+    
+    // Slash, context, prefix
     slash: "both", // https://gcommands.js.org/docs/#/docs/main/main/typedef/GCommandsOptionsCommandsSlash
     context: "false", // https://gcommands.js.org/docs/#/docs/main/main/typedef/GCommandsOptionsCommandsContext
     prefix: ".", // for normal commands
@@ -79,14 +88,17 @@ Below are all the available options for [`GCommandsClient`](https://gcommands.js
 
 | PARAMETER             | REQUIRED | FUNCTIONALITY                                                                                                                                                                                                                                                                                          |
 | --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| cmdDir                | ✅       | The directory to look for commands in                                                                                                                                                                                                                                                                  |
-| eventDir              | ❌       | The directory to look for events in                                                                                                                                                                                                                                                                    |
-| caseSensitiveCommands | ❌       | If set to true, command names will be case sensitive                                                                                                                                                                                                                                                   |
-| caseSensitivePrefixes | ❌       | If set to true, prefixes will be case sensitive                                                                                                                                                                                                                                                        |
+| loaders.cmdDir                | ✅       | The directory to look for commands in                                                                                                                                                                                                                                                                  |
+| loaders.eventDir              | ❌       | The directory to look for events in                                                                                                                                                                                                                                                                    |
+| commands.caseSensitiveCommands | ❌       | If set to true, command names will be case sensitive                                                                                                                                                                                                                                                   |
+| commands.caseSensitivePrefixes | ❌       | If set to true, prefixes will be case sensitive                                                                                                                                                                                                                                                        |
 | language              | ✅       | The default language used to sends messages in                                                                                                                                                                                                                                                         |
 | commands.slash        | ✅       | If set to slash, the bot will only register slash commands. If set to message, the bot will only register message commands. If set to both, the bot will register both and if set to false, the bot will not register any.                                                                                                                              |
 | commands.context      | ✅       | If set to user, the bot will register user context commands. If set to false, the bot will only register message commands. If set to message, the bot will register message context commands. If set to both, the bot will register both |
 | commands.prefix       | ❌       | The prefix the bot will use in message commands                                                                                                                                                                                                                                                        |
+| commands.allowDm       | ❌       | DM Support                                                                                                                                                                                                                                                        |
+| commands.deleteInput       | ❌       | Argument input deleting                                                                                                                                                                                                                                                        |
+| commands.deletePrompt       | ❌       | Argument prompt deleting                                                                                                                                                                                                                                                        |
 | defaultCooldown       | ❌       | The default cooldown for commands                                                                                                                                                                                                                                                                      |
 | database              | ❌       | The database to store guild prefixes, etc. in                                                                                                                                                                                                                                                          |
 
