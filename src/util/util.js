@@ -86,7 +86,7 @@ static resolveMessageOptions(options) {
        embeds: embeds.length !== 0 ? embeds : undefined,
        components: components.length !== 0 ? components : undefined,
        attachments: attachments.length !== 0 ? attachments : undefined,
-       stickers: stickers.length !== 0 ? stickers : undefined
+       stickers: stickers.length !== 0 ? stickers : undefined,
    };
 }
 
