@@ -58,44 +58,36 @@ class Util {
      * @param {Object|MessageEmbed|MessageAttachment|MessageActionRow|Sticker} options
      * @return {Object}
      */
-     static resolveMessageOptions(options) {
-     const embeds = [];
-     const components = [];
-     const attachments = [];
-     const stickers = [];
+static resolveMessageOptions(options) {
+    if(!options) return {};
 
-     if (Array.isArray(options)) {
-     options.forEach(option => {
+    const embeds = [];
+    const components = [];
+    const attachments = [];
+    const stickers = [];
+
+    if(!Array.isArray(options)) options = [options];
+
+    options.forEach(option => {
         if (option instanceof Discord.MessageEmbed) {
-         return embeds.push(option);
+            return embeds.push(option);
         } else if (option instanceof Discord.MessageAttachment) {
-         return attachments.push(option);
+            return attachments.push(option);
         } else if (option instanceof Discord.MessageActionRow) {
-         return components.push(option);
+            return components.push(option);
         } else if (option instanceof Discord.Sticker) {
-         return stickers.push(option);
+            return stickers.push(option);
         }
-      });
-    } else if (options instanceof Discord.MessageEmbed) {
-     embeds.push(options);
-    } else if (options instanceof Discord.MessageAttachment) {
-     attachments.push(options);
-    } else if (options instanceof Discord.MessageActionRow) {
-     components.push(options);
-    } else if (options instanceof Discord.Sticker) {
-     stickers.push(options);
-    } else {
-     return options;
-    }
+    });
 
-    const sendOptions = {};
+    if (embeds.length === 0 && components.length === 0 && attachments.length === 0 && stickers.length === 0) return options[0]
 
-    if (embeds.length !== 0) sendOptions.embeds = embeds;
-    if (components.length !== 0) sendOptions.components = components;
-    if (attachments.length !== 0) sendOptions.attachments = attachments;
-    if (stickers.length !== 0) sendOptions.stickers = stickers;
-
-    return sendOptions;
+   return {
+       embeds: embeds.length !== 0 ? embeds : undefined,
+       components: components.length !== 0 ? components : undefined,
+       attachments: attachments.length !== 0 ? attachments : undefined,
+       stickers: stickers.length !== 0 ? stickers : undefined
+   };
 }
 
     /**
