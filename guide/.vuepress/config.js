@@ -3,7 +3,7 @@ const { config } = require("vuepress-theme-hope");
 module.exports = config({
     title: 'GCommands',
     description: 'Powerful and flexible command handler that can do everything!',
-    base: "/guide/", // /guide/
+    base: "/", // /guide/
 
     head: [
         ['link', { rel: 'icon', href: '/gcommands.png' }],
