@@ -1,4 +1,5 @@
 # Updating from v7 to v8
+For starters, discord.js v12 support has been removed
 
 ## GCommandsOptions
 
@@ -45,3 +46,8 @@ new GCommandsClient({
 
 #### deleteInput & deletePrompt
 Added support for deleting prompts and input
+
+## Command
+
+### args
+Args are no longer arrays, but they are https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
