@@ -60,11 +60,11 @@ This creates a command with the argument "user".
 Now we need to create the `run()` function.
 
 ```javascript
-run({ author, client, respond, args }) {
+run({ author, client, respond, objectArgs }) {
   // Fetch the mentioned user
-  let user = args[0]
-    ? args[0].match(/[0-9]+/g)
-      ? client.users.cache.get(args[0].match(/[0-9]+/g)[0]) || author
+  let user = objectArgs.user
+    ? objectArgs.user.match(/[0-9]+/g)
+      ? client.users.cache.get(objectArgs.user.match(/[0-9]+/g)[0]) || author
       : author
     : author;
 
@@ -133,9 +133,9 @@ module.exports = class extends Command {
   }
 
   run({ author, client, respond, args }) {
-    let user = args[0]
-      ? args[0].match(/[0-9]+/g)
-        ? client.users.cache.get(args[0].match(/[0-9]+/g)[0]) || author
+    let user = objectArgs.user
+      ? objectArgs.user.match(/[0-9]+/g)
+        ? client.users.cache.get(objectArgs.user.match(/[0-9]+/g)[0]) || author
         : author
       : author;
 
@@ -202,18 +202,18 @@ This creates a new command with the "product" and "amount" argument. The "produc
 The `args` can be accesed in the `CommandRunOptions`.
 
 ```javascript
-async run({ member, respond, edit, args }) {
+async run({ member, respond, edit, objectArgs }) {
   // Cap the amount
-  args[1] =
-    parseInt(args[1]) > 25
+  objectArgs.amount =
+    parseInt(objectArgs.amount) > 25
       ? 25
-      : parseInt(args[1]) < 0
+      : parseInt(objectArgs.amount) < 0
       ? 0
-      : parseInt(args[1]);
+      : parseInt(objectArgs.amount);
 
   // Format the user's choices
-  let product = `${args[1]} Delicious ${args[0][0].toUpperCase() +
-    args[0].slice(1).toLowerCase()}${args[1] === 1 ? "" : "s"}`;
+  let product = `${objectArgs.amount} Delicious ${objectArgs.product.toUpperCase() +
+    objectArgs.product.slice(1).toLowerCase()}${objectArgs.amount === 1 ? "" : "s"}`;
 
   // Send the response
   let m = await respond({
@@ -228,11 +228,11 @@ async run({ member, respond, edit, args }) {
   // Add a response
   if (isBurnt)
     m.content += `\n\nOh no! Your ${product} ${
-      args[1] === 1 ? "was" : "were"
+      objectArgs.amount === 1 ? "was" : "were"
     } left in the oven for too long and burnt! Try again.`;
   else
     m.content += `\n\nYou successfully baked your ${product} and gave ${
-      args[1] === 1 ? "it" : "them"
+      objectArgs.amount === 1 ? "it" : "them"
     } to your friends. They like it!`;
 
   // Edit the message
@@ -316,16 +316,16 @@ module.exports = class extends Command {
       ],
     });
   }
-  async run({ member, respond, edit, args }) {
-    args[1] =
-      parseInt(args[1]) > 25
+  async run({ member, respond, edit, objectArgs }) {
+    objectArgs.amount =
+      parseInt(objectArgs.amount) > 25
         ? 25
-        : parseInt(args[1]) < 0
+        : parseInt(objectArgs.amount) < 0
         ? 0
-        : parseInt(args[1]);
+        : parseInt(objectArgs.amount);
 
-    let product = `${args[1]} Delicious ${args[0][0].toUpperCase() +
-      args[0].slice(1).toLowerCase()}${args[1] === 1 ? "" : "s"}`;
+    let product = `${objectArgs.amount} Delicious ${objectArgs.product.toUpperCase() +
+      objectArgs.product.slice(1).toLowerCase()}${objectArgs.amount === 1 ? "" : "s"}`;
 
     let m = await respond({
       content: `You decide to bake ${product}. You put it in the oven and wait.`,
@@ -336,11 +336,11 @@ module.exports = class extends Command {
 
     if (isBurnt)
       m.content += `\n\nOh no! Your ${product} ${
-        args[1] === 1 ? "was" : "were"
+        objectArgs.amount === 1 ? "was" : "were"
       } left in the oven for too long and burnt! Try again.`;
     else
       m.content += `\n\nYou successfully baked your ${product} and gave ${
-        args[1] === 1 ? "it" : "them"
+        objectArgs.amount === 1 ? "it" : "them"
       } to your friends. They like it!`;
 
     await edit({ content: m.content });
