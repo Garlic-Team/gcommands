@@ -535,13 +535,17 @@ declare module 'gcommands' {
   }
 
   interface GPayloadOptions {
-    content: [string | object | MessageEmbed | MessageAttachment];
-    embeds?: [MessageEmbed];
-    components?: [MessageActionRow];
-    attachments?: [MessageAttachment | MessageAttachment[]];
-    ephemeral?: [boolean];
-    allowedMentions?: [object];
-    inlineReply?: [boolean | string]
+    tts?: boolean;
+    nonce?: string;
+    content?: string;
+    ephemeral?: boolean;
+    inlineReply?: boolean | string;
+    allowedMentions?: MessageMentionOptions;
+    files?: MessageAttachment[];
+    embeds?: MessageEmbed[];
+    components?: MessageActionRow[];
+    stickers?: StickerResolvable[];
+    attachments?: MessageAttachment[];
   }
 
   interface GPayloadFiles {
