@@ -202,7 +202,7 @@ class GCommandsClient extends Client {
         setTimeout(() => {
             new GEventHandling(this);
             if (this.eventDir) new GEventLoader(this);
-            if (this.componentDir) new GComponents(this, this.componentDir);
+            if (this.componentDir) new GComponents(this, { dir: this.componentDir });
             new GCommandLoader(this);
         }, 1000);
     };
