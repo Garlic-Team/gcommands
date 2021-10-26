@@ -8,7 +8,7 @@ const UserArgumentType = require('./ArgumentTypes/User');
 const RoleArgumentType = require('./ArgumentTypes/Role');
 const NumberArgumentType = require('./ArgumentTypes/Number');
 const MentionableArgumentType = require('./ArgumentTypes/Mentionable');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
 /**
  * The argument for message commands
@@ -126,6 +126,38 @@ class Argument {
                         .setDisabled(disabled),
                 ]);
             }
+            if (this.choices && Array.isArray(this.choices) && this.choices[0]) {
+                const menu = new MessageSelectMenu()
+                    .setPlaceholder('Select a choice')
+                    .setMaxValues(1)
+                    .setMinValues(1)
+                    .setCustomId(`argument_choice_${message.id}_${this.name}`)
+                    .setDisabled(disabled);
+
+                for (const choice of this.choices) {
+                    menu.addOptions([{ label: choice.name, value: choice.value }]);
+                }
+
+                components[1] = new MessageActionRow().addComponents([
+                    menu,
+                ]);
+            }
+            if (this.subcommands && Array.isArray(this.subcommands) && this.subcommands[0]) {
+                const menu = new MessageSelectMenu()
+                    .setPlaceholder('Select a subcommand')
+                    .setMaxValues(1)
+                    .setMinValues(1)
+                    .setCustomId(`argument_subcommand_${message.id}_${this.name}`)
+                    .setDisabled(disabled);
+
+                for (const subcommand of this.subcommands) {
+                    menu.addOptions([{ label: subcommand.name, value: subcommand.name }]);
+                }
+
+                components[1] = new MessageActionRow().addComponents([
+                    menu,
+                ]);
+            }
 
             return components.reverse();
         };
@@ -144,6 +176,7 @@ class Argument {
         const collectors = [
             message.channel.awaitMessages({ filter: messageCollectorfilter, max: 1, time: wait, errors: ['TIME'] }),
             message.channel.awaitMessageComponent({ filter: componentsCollectorfilter, componentType: 'BUTTON', time: (wait + 1) }),
+            message.channel.awaitMessageComponent({ filter: componentsCollectorfilter, componentType: 'SELECT_MENU', time: (wait + 1) }),
         ];
 
         const responses = await Promise.race(collectors).catch();
@@ -154,7 +187,9 @@ class Argument {
 
         if (resFirst.customId) {
             resFirst.deferUpdate().catch();
-            resFirst.content = resFirst.customId.split('_')[1];
+            if (resFirst.isSelectMenu()) {
+                resFirst.content = resFirst.values[0];
+            } else { resFirst.content = resFirst.customId.split('_')[1]; }
         }
 
         if (this.client.deletePrompt) await msgReply.delete();
