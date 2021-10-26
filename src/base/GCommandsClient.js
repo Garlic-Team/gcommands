@@ -1,6 +1,7 @@
 const GCommandLoader = require('../managers/GCommandLoader'),
     GCommandsDispatcher = require('./GCommandsDispatcher'),
     { GEvents: GEventLoader } = require('@gcommands/events'),
+    { GComponents } = require('@gcommands/components'),
     GEventHandling = require('../managers/GEventHandling'),
     GDatabaseLoader = require('../managers/GDatabaseLoader'),
     GUpdater = require('../util/updater');
@@ -40,6 +41,13 @@ class GCommandsClient extends Client {
          * @default undefined
         */
         this.eventDir = options.loader?.eventDir !== undefined ? String(options.loader.eventDir) : undefined;
+
+        /**
+         * The path to the component files
+         * @type {string}
+         * @default undefined
+        */
+         this.componentDir = options.loader?.componentDir !== undefined ? String(options.loader.componentDir) : undefined;
 
         /**
          * Wheter loading from cache is enabled
@@ -193,7 +201,8 @@ class GCommandsClient extends Client {
 
         setTimeout(() => {
             new GEventHandling(this);
-            new GEventLoader(this);
+            if (this.eventDir) new GEventLoader(this);
+            if (this.componentDir) new GComponents(this, this.componentDir);
             new GCommandLoader(this);
         }, 1000);
     };

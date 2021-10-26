@@ -6,6 +6,8 @@ import Keyv = require('keyv');
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian' | 'french';
 
 declare module 'discord.js' {
+  export * from '@gcommands/components';
+
   export interface Guild {
     data: {
       prefix: string,

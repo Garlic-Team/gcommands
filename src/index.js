@@ -11,13 +11,13 @@ module.exports = {
     GCommandLoader: require('./managers/GCommandLoader'),
     GDatabaseLoader: require('./managers/GDatabaseLoader'),
 
-    // Structures
-
-    // TOTO: delete
-    MessageButton: require('discord.js').MessageButton,
-    MessageActionRow: require('discord.js').MessageActionRow,
-    MessageSelectMenu: require('discord.js').MessageSelectMenu,
-    MessageSelectMenuOption: require('./structures/MessageSelectMenuOption'),
+    // Components
+    Component: require('@gcommands/components').Component,
+    CustomId: require('@gcommands/components').CustomId,
+    ComponentType: require('@gcommands/components').ComponentType,
+    Button: require('@gcommands/components').Button,
+    SelectMenu: require('@gcommands/components').SelectMenu,
+    ActionRow: require('@gcommands/components').ActionRow,
 
     Command: require('./structures/Command'),
     Event: require('@gcommands/events').Event,
