@@ -1,5 +1,6 @@
 const Color = require('../structures/Color');
 const { Events } = require('./Constants');
+const Discord = require('discord.js');
 
 /**
  * The Util class
@@ -50,6 +51,43 @@ class Util {
         const { id, name, animated } = emoji;
         if (!id && !name) return null;
         return { id, name, animated };
+    }
+
+    /**
+     * Internal method to resolve the message options
+     * @param {Object|MessageEmbed|MessageAttachment|MessageActionRow|Sticker} options
+     * @returns {GPayloadOptions}
+     */
+     static resolveMessageOptions(options) {
+        if (!options) return {};
+
+        const embeds = [];
+        const components = [];
+        const files = [];
+        const stickers = [];
+
+        if (!Array.isArray(options)) options = [options];
+
+        options.forEach(option => {
+        if (option instanceof Discord.MessageEmbed) {
+            return embeds.push(option);
+        } else if (option instanceof Discord.MessageAttachment) {
+            return files.push(option);
+        } else if (option instanceof Discord.MessageActionRow) {
+            return components.push(option);
+        } else if (option instanceof Discord.Sticker) {
+            return stickers.push(option);
+        }
+      });
+
+    if (embeds.length === 0 && components.length === 0 && files.length === 0 && stickers.length === 0) return options[0];
+
+       return {
+         embeds: embeds.length !== 0 ? embeds : undefined,
+         components: components.length !== 0 ? components : undefined,
+         files: files.length !== 0 ? files : undefined,
+         stickers: stickers.length !== 0 ? stickers : undefined,
+      };
     }
 
     /**

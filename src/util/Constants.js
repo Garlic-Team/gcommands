@@ -191,6 +191,24 @@ exports.ArgumentType = {
  */
 
 /**
+ * Base options provided when sending.
+ * <info>You can also see [discord.js docs](https://discord.js.org/#/docs/main/stable/typedef/MessageOptions) for more info.</info>
+ *
+ * @typedef {Object} GPayloadOptions
+ * @property {boolean} [tts=false]
+ * @property {string} [nonce='']
+ * @property {string} [content='']
+ * @property {boolean} [ephemeral=false]
+ * @property {boolean|string} [inlineReply]
+ * @property {MessageEmbed[]} [embeds]
+ * @property {MessageMentionOptions} [allowedMentions]
+ * @property {FileOptions[]|BufferResolvable[]|MessageAttachment[]} [files]
+ * @property {MessageActionRow[]|MessageActionRowOptions[]} [components]
+ * @property {StickerResolvable[]} [stickers]
+ * @property {MessageAttachment[]} [attachments]
+ */
+
+/**
  * The CommandOptions
  * <info>`channelThreadOnly` is only for d.js v13</info>
  *

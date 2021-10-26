@@ -1,7 +1,7 @@
 const { readdirSync } = require('fs');
 const ArgumentsCollector = require('../structures/ArgumentsCollector');
 const { Events } = require('../util/Constants'), Color = require('../structures/Color');
-const { inhibit, unescape } = require('../util/util');
+const { inhibit, unescape, resolveMessageOptions } = require('../util/util');
 
 /**
  * The handler for message and slash commands
@@ -90,8 +90,9 @@ class GEventHandling {
                     client: this.client,
                     bot: this.client,
                     language: language,
-                    respond: (options = undefined) => message.reply(options),
-                    followUp: (options = undefined) => message.reply(options),
+
+                    respond: (options = undefined) => message.reply(resolveMessageOptions(options)),
+                    followUp: (options = undefined) => message.reply(resolveMessageOptions(options)),
                 };
 
                 const inhibitReturn = await inhibit(this.client, {
@@ -238,10 +239,11 @@ class GEventHandling {
                     bot: this.client,
                     language: language,
                     args: interaction.options,
-                    objectArgs: this.argsToObject(interaction.options) || {},
-                    respond: options => interaction.reply(options),
-                    edit: options => interaction.edit(options),
-                    followUp: options => interaction.followUp(options),
+                    objectArgs: this.argsToObject(interaction.options.data) || {},
+
+                    respond: (options = undefined) => interaction.reply(resolveMessageOptions(options)),
+                    edit: (options = undefined) => interaction.editReply(resolveMessageOptions(options)),
+                    followUp: (options = undefined) => interaction.followUp(resolveMessageOptions(options)),
                 };
 
                 const inhibitReturn = await inhibit(this.client, runOptions);

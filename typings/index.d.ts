@@ -1,4 +1,4 @@
-import discord, { Channel, Client, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates, ClientOptions } from 'discord.js';
+import discord, { Channel, Client, ClientEvents, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates, ClientOptions, CommandInteraction } from 'discord.js';
 import InteractionEvent = require('../src/structures/InteractionEvent');
 import { EventEmitter } from 'events';
 import { Command, GCommandsDispatcher, GInteraction, MessageEditAndUpdateOptions } from '../src/index';
@@ -239,7 +239,7 @@ declare module 'gcommands' {
     public setUsage(usage: string): CommandOptionsBuilder;
     public setSlash(slash: GCommandsOptionsCommandsSlash): CommandOptionsBuilder;
     public setContext(context: GCommandsOptionsCommandsContext): CommandOptionsBuilder;
-    public toJSON(): CommandOptionsBuilder
+    public toJSON(): CommandOptionsBuilder;
   }
 
   export class CommandArgsOptionBuilder {
@@ -507,12 +507,12 @@ declare module 'gcommands' {
 
   interface CommandRunOptions {
     client: Client;
-    interaction: Object;
+    interaction: CommandInteraction;
     member: GuildMember;
     message: Message;
     guild: Guild;
     channel: TextChannel | NewsChannel;
-    args: Array;
+    args: CommandInteractionOptionResolver;
     objectArgs: Object;
 
     respond(options: string | GPayloadOptions): void;
@@ -537,13 +537,17 @@ declare module 'gcommands' {
   }
 
   interface GPayloadOptions {
-    content: [string | object | MessageEmbed | MessageAttachment];
-    embeds?: [MessageEmbed];
-    components?: [MessageActionRow];
-    attachments?: [MessageAttachment | MessageAttachment[]];
-    ephemeral?: [boolean];
-    allowedMentions?: [object];
-    inlineReply?: [boolean | string]
+    tts?: boolean;
+    nonce?: string;
+    content?: string;
+    ephemeral?: boolean;
+    inlineReply?: boolean | string;
+    allowedMentions?: MessageMentionOptions;
+    files?: MessageAttachment[];
+    embeds?: MessageEmbed[];
+    components?: MessageActionRow[];
+    stickers?: StickerResolvable[];
+    attachments?: MessageAttachment[];
   }
 
   interface GPayloadFiles {

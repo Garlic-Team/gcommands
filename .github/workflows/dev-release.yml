@@ -15,11 +15,11 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
 
-      - name: Deprecate old versions
-        run: |
-          npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)" "no longer supported" || true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      #- name: Deprecate old versions
+      #  run: |
+      #    npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)" "no longer supported" || true
+      #  env:
+      #    NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: publish
         run: |
