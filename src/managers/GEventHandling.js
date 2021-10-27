@@ -167,7 +167,6 @@ class GEventHandling {
                 let finalArgs;
                 if (commandos.args && commandos.args[0]) {
                     const collector = new ArgumentsCollector(this.client, { message, args, language, isNotDm, commandos });
-
                     if (await collector.get() === false) return;
 
                     finalArgs = collector.resolve(collector.finalArgs);
@@ -178,6 +177,8 @@ class GEventHandling {
                 commandos.run({
                     ...runOptions,
                     args: finalArgs,
+                    objectArgs: this.argsToObject(finalArgs._hoistedOptions) || {},
+                    arrayArgs: this.argsToArray(finalArgs._hoistedOptions) || []
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
