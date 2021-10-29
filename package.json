@@ -2,11 +2,12 @@
   "name": "gcommands",
   "version": "8.0.0-dev",
   "description": "Powerful and flexible command handler that can do everything!",
-  "main": "src/index.js",
-  "types": "./typings/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
-    "@gcommands/events": "^2.0.6",
     "@gcommands/components": "^1.0.0",
+    "@gcommands/events": "^2.0.6",
+    "@keyvhq/core": "^1.6.0",
     "discord.js": "^13.2.0",
     "hyttpo": "^0.2.4",
     "ms": "^2.1.3"
@@ -16,19 +17,19 @@
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-typescript": "^7.15.0",
-    "@typescript-eslint/eslint-plugin": "^5.1.0",
-    "@typescript-eslint/parser": "^5.1.0",
-    "glob": "^7.2.0",
-    "typedoc": "^0.22.7",
-    "typescript": "^4.4.3",
-    "babel-cli": "^6.26.0",
-    "babel-plugin-add-module-exports": "^1.0.4",
     "@discordjs/docgen": "github:xHyroM/docgen",
     "@types/node": "^16.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-prettier": "^3.4.1"
+    "eslint-plugin-prettier": "^3.4.1",
+    "glob": "^7.2.0",
+    "typedoc": "^0.22.7",
+    "typescript": "^4.4.3"
   },
   "repository": {
     "type": "git",
@@ -47,7 +48,7 @@
   },
   "scripts": {
     "test": "eslint src",
-    "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified",
+    "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
     "tscbuild": "tsc --emitDeclarationOnly",
     "docsbuild": "typedoc --out docs src/index.ts"
   },

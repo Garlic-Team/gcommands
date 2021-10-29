@@ -1,12 +1,12 @@
 import { Color } from './Color';
 
 export class GError extends Error {
-    public id: string;
     public message: string;
+    public name: string;
 
-    constructor(id: string, message: string) {
+    constructor(name: string, message: string) {
         super(message);
-        this.id = id;
         this.message = new Color(`&c${message}`).getText();
+        this.name = new Color(`&a${name}`).getText();
     }
 }

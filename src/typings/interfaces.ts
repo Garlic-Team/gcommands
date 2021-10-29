@@ -1,5 +1,7 @@
 import { ClientOptions } from 'discord.js';
 
+import { GuildLanguageTypes, GCommandsOptionsCommandsSlash, GCommandsOptionsCommandsContext } from './types';
+
 export interface GCommandsClientOptions extends ClientOptions {
     language: GuildLanguageTypes;
     loader: {
@@ -24,7 +26,3 @@ export interface GCommandsClientOptions extends ClientOptions {
     database?: string;
     ownLanguageFile?: object;
 }
-
-export type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian' | 'french';
-export type GCommandsOptionsCommandsSlash = 'both' | 'slash' | 'message' | 'false';
-export type GCommandsOptionsCommandsContext = 'both' | 'user' | 'message' | 'false';
