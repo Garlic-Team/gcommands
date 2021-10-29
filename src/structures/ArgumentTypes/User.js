@@ -28,7 +28,7 @@ class UserArgumentType extends ArgumentType {
 	validate(argument, message, language) {
 		const matches = message.content.match(/([0-9]+)/);
 
-		if (!matches[0]) return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'user');
+		if (!matches?.[0]) return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'user');
         this.value.value = matches[0];
 
 		const user = this.client.users.cache.get(matches[0]);

@@ -489,7 +489,7 @@ declare module 'gcommands' {
       eventDir?: string;
       autoCategory?: boolean;
     }
-    arguments: {
+    arguments?: {
       deletePrompt?: boolean;
       deleteInput?: boolean;
     }
@@ -566,7 +566,7 @@ declare module 'gcommands' {
 
   interface CommandOptions {
     name: string;
-    contextMenuName: string;
+    contextMenuName?: string;
     description: string;
     cooldown?: string;
     args?: Array<Object>;

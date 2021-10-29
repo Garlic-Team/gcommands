@@ -169,7 +169,6 @@ class GEventHandling {
                 let finalArgs;
                 if (commandos.args && commandos.args[0]) {
                     const collector = new ArgumentsCollector(this.client, { message, args, language, isNotDm, commandos });
-
                     if (await collector.get() === false) return;
 
                     finalArgs = collector.resolve(collector.finalArgs);
@@ -180,6 +179,8 @@ class GEventHandling {
                 commandos.run({
                     ...runOptions,
                     args: finalArgs,
+                    objectArgs: this.argsToObject(finalArgs._hoistedOptions) || {},
+                    arrayArgs: this.argsToArray(finalArgs._hoistedOptions) || [],
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
@@ -240,6 +241,7 @@ class GEventHandling {
                     language: language,
                     args: interaction.options,
                     objectArgs: this.argsToObject(interaction.options.data) || {},
+                    arrayArgs: this.argsToArray(interaction.options.data) || [],
 
                     respond: (options = undefined) => interaction.reply(resolveMessageOptions(options)),
                     edit: (options = undefined) => interaction.editReply(resolveMessageOptions(options)),
@@ -351,6 +353,35 @@ class GEventHandling {
           } else {
             args[o.name] = o.value;
           }
+        }
+
+        return args;
+    }
+
+    /**
+     * Change arguments to array
+     */
+    argsToArray(options) {
+        const args = [];
+
+        const check = option => {
+          if (!option) return;
+          if (option.value) args.push(option.value);
+          else args.push(option.name);
+
+          if (option.options) {
+            for (let o = 0; o < option.options.length; o++) {
+              check(option.options[o]);
+            }
+          }
+        };
+
+        if (Array.isArray(options)) {
+          for (let o = 0; o < options.length; o++) {
+            check(options[o]);
+          }
+        } else {
+          check(options);
         }
 
         return args;
