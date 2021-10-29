@@ -12,6 +12,17 @@
     "ms": "^2.1.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-typescript": "^7.15.0",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "glob": "^7.2.0",
+    "typedoc": "^0.22.7",
+    "typescript": "^4.4.3",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "@discordjs/docgen": "github:xHyroM/docgen",
     "@types/node": "^16.3.3",
     "eslint": "^8.0.0",
@@ -36,9 +47,9 @@
   },
   "scripts": {
     "test": "eslint src",
-    "docs:devbuild": "docgen --source src --custom docs/index.yml --output docs/dev.json",
-    "docs:build": "docgen --source src --custom docs/index.yml --output docs/main.json",
-    "docs:test": "docgen --source src"
+    "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified",
+    "tscbuild": "tsc --emitDeclarationOnly",
+    "docsbuild": "typedoc --out docs src/index.ts"
   },
   "engines": {
     "node": ">=16.6.0"

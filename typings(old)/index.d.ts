@@ -1,7 +1,7 @@
 import discord, { Channel, Client, ClientEvents, Collector, Collection, Guild, GuildChannel, GuildMember, Message, MessageAttachment, MessageCollectorOptions, CollectorOptions, MessageEmbed, Snowflake, User, NewsChannel, TextChannel, DMChannel, ThreadChannel, MembershipStates, ClientOptions, CommandInteraction } from 'discord.js';
-import InteractionEvent = require('../src/structures/InteractionEvent');
+import InteractionEvent = require('../src(old)/structures/InteractionEvent');
 import { EventEmitter } from 'events';
-import { Command, GCommandsDispatcher, GInteraction, MessageEditAndUpdateOptions } from '../src/index';
+import { Command, GCommandsDispatcher, GInteraction, MessageEditAndUpdateOptions } from '../src(old)/index';
 import Keyv = require('keyv');
 type GuildLanguageTypes = 'english' | 'spanish' | 'portuguese' | 'russian' | 'german' | 'czech' | 'slovak' | 'turkish' | 'polish' | 'indonesian' | 'italian' | 'french';
 

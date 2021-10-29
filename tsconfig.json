@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "outDir": "dist",
+      "target": "es5",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "sourceMap": true,
+      "removeComments": true,
+      "noImplicitAny": false,
+      "declaration": true
+    },
+    "typedocOptions": {
+      "entryPoints": ["src/index.ts"],
+      "out": "docs",
+      "githubPages": true,
+    },
+    "files": [
+      "src/index.ts"
+    ],
+    "compileOnSave": false,
+    "buildOnSave": false
+}
