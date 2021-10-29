@@ -67,7 +67,9 @@ A new component handler for GCommands: GComponents!
 
 ```javascript
 new GCommandsClient({
-  commands: ...
+  loader: {
+    componentDir: ...
+  }
 })
 ```
 
