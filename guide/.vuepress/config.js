@@ -79,6 +79,14 @@ module.exports = config({
             ]
           },
           {
+            title: 'Components',
+            collapsable: true,
+            children: [
+              'components/setup',
+              'components/create',
+            ]
+          },
+          {
             title: 'Database',
             collapsable: true,
             children: [
