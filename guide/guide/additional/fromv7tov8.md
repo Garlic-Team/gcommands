@@ -19,7 +19,7 @@ new GCommandsClient({
 ```
 
 ### commands
-The command releated options for GCommands. [Docs](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommands) 📙
+The command related options for GCommands. [Docs](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommands) 📙
 
 #### caseSensitivePrefixes & caseSensitiveCommands
 caseSensitivePrefixes & caseSensitiveCommands have been moved to a place in commands.
