@@ -82,7 +82,7 @@ class ArgumentsCollector {
     async get() {
         for (const arg of this.cmdArgs) {
             if ([1, 2].includes(arg.type)) arg.subcommands = this.cmdArgs.filter(sc => [1, 2].includes(sc.type));
-            const argument = new Argument(this.client, arg, this.isNotDm);
+            const argument = new Argument(this.client, arg, this.isNotDm, this.language);
             let result;
             if (this.args[0]) {
                 const invalid = argument.argument.validate(argument, { content: this.args[0], guild: this.message.guild }, this.language);

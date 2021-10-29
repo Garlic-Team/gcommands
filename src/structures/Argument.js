@@ -21,7 +21,7 @@ class Argument {
      * @param {boolean} isNotDm
      * @constructor
      */
-    constructor(client, argument, isNotDm) {
+    constructor(client, argument, isNotDm, language) {
         /**
          * The client
          * @type {Client}
@@ -62,7 +62,7 @@ class Argument {
          * The prompt
          * @type {string}
         */
-        this.prompt = argument.prompt || `Please define argument ${argument.name}`;
+        this.prompt = argument.prompt || this.client.languageFile.ARGS_PROMPT[language].replace('{argument}', this.name);
 
         /**
          * The choices

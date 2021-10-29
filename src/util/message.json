@@ -1,4 +1,18 @@
 {
+    "GUILD_UNAVAILABLE": {
+        "english": "This server is not available at the moment. Try again later",
+        "spanish": "Este servidor no está disponible en este momento. Vuelva a intentarlo más tarde",
+        "portuguese": "Este servidor não está disponível de momento. Tente novamente mais tarde",
+        "russian": "Этот сервер в данный момент недоступен. Повторите попытку позже",
+        "german": "Dieser Server ist im Moment nicht verfügbar. Versuchen Sie es später noch einmal",
+        "czech": "Tento server není v současné době k dispozici. Zkuste to později",
+        "slovak": "Tento server momentálne nie je k dispozícii. Skúste to neskôr",
+        "turkish": "Bu sunucu şu anda kullanılamıyor. Daha sonra tekrar deneyin",
+        "polish": "Ten serwer jest w tej chwili niedostępny. Spróbuj ponownie później",
+        "indonesian": "Server ini tidak tersedia saat ini. Coba lagi nanti",
+        "italian": "Questo server non è disponibile al momento. Riprova più tardi",
+        "french": "Ce serveur n'est pas disponible pour le moment. Réessayez plus tard"
+    },
     "MISSING_PERMISSIONS": {
         "english": "You must have the {PERMISSION} permission in order to use this command.",
         "spanish": "Debe tener el permiso {PERMISSION} para poder utilizar este comando.",
@@ -124,6 +138,20 @@
         "indonesian": "Anda hanya bisa menjalankan command ini di sebuah channel NSFW saja.",
         "italian": "Puoi usare questo comando solo in canali da NSFW.",
         "french": "Vous ne pouvez lancer cette commande que dans les salons NSFW."
+    },
+    "ARGS_PROMPT": {
+        "english": "Please define argument {argument}",
+        "spanish": "Por favor, defina el argumento {argumento}",
+        "portuguese": "Por favor, defina o argumento {argumento}",
+        "russian": "Пожалуйста, определите аргумент {аргумент}",
+        "german": "Bitte definieren Sie das Argument {argument}",
+        "czech": "Definujte prosím argument {argument}",
+        "slovak": "Prosím, definujte argument {argument}",
+        "turkish": "Lütfen {argument} bağımsız değişkenini tanımlayın",
+        "polish": "Proszę zdefiniować argument {argument}",
+        "indonesian": "Harap tentukan argumen {argument}",
+        "italian": "Si prega di definire l'argomento {argomento}",
+        "french": "Veuillez définir l'argument {argument}"
     },
     "ARGS_TIME_LIMIT": {
         "english": "You have no time left to answer. You must run the command again.",

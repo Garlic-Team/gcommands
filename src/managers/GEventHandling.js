@@ -39,10 +39,16 @@ class GEventHandling {
         });
 
         const messageEventUse = async message => {
-            if (!message || !message.author || message.author.bot || (!this.client.allowDm && message.channel.type === 'dm')) return;
+            if (!message || !message.author || message.author.bot) return;
 
-            // Add to message.json
-            if (message.guild && !message.guild.available) return message.reply('This server is not available at the moment. Try again later');
+            const isNotDm = message.channel.type !== 'dm';
+            const language = isNotDm ? await message.guild.getLanguage() : this.client.language;
+
+            if (message.guild && !message.guild.available) {
+                return message.reply({
+                    content: this.client.languageFile.GUILD_UNAVAILABLE[language],
+                });
+            }
 
             const mention = message.content.split(' ')[0].match(new RegExp(`^<@!?(${this.client.user.id})>`));
             const prefix = mention ? mention[0] : (message.guild ? await message.guild.getCommandPrefix() : this.client.prefix);
@@ -72,14 +78,10 @@ class GEventHandling {
                 const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
                 const isClientMessageEnabled = !commandos.slash && ['false', 'slash'].includes(String(this.client.slash));
 
-                const isNotDm = message.channel.type !== 'dm';
-
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
-
-                const language = isNotDm ? await message.guild.getLanguage() : this.client.language;
 
                 const runOptions = {
                     member: message.member,
@@ -194,10 +196,12 @@ class GEventHandling {
         this.client.on('interactionCreate', async interaction => {
             if (!(interaction.isCommand() || interaction.isContextMenu())) return;
 
-            // Add to message.json
+            const isNotDm = interaction.channel.type !== 'dm';
+            const language = isNotDm ? await interaction.guild.getLanguage() : this.client.language;
+
             if (interaction.guild && !interaction.guild.available) {
                 return interaction.reply({
-                    content: 'This server is not available at the moment. Try again later',
+                    content: this.client.languageFile.GUILD_UNAVAILABLE[language],
                     ephemeral: true,
                 });
             }
@@ -218,16 +222,12 @@ class GEventHandling {
                 const isContextEnabled = String(commandos.context) === 'false';
                 const isClientContextEnabled = String(this.client.context) === 'false';
 
-                const isNotDm = interaction.channel.type !== 'dm';
-
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
                 if (interaction.isCommand() && isSlashEnabled) return;
                 if (interaction.isCommand() && !commandos.slash && isClientSlashEnabled) return;
                 if (interaction.isContextMenu() && isContextEnabled) return;
                 if (interaction.isContextMenu() && !commandos.context && isClientContextEnabled) return;
-
-                const language = isNotDm ? await interaction.guild.getLanguage() : this.client.language;
 
                 const runOptions = {
                     member: interaction.member,
