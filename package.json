@@ -18,7 +18,7 @@
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-typescript": "^7.15.0",
-    "@discordjs/docgen": "github:xHyroM/docgen",
+    "@discordjs/ts-docgen": "^0.3.2",
     "@types/node": "^16.3.3",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
@@ -29,7 +29,6 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^3.4.1",
     "glob": "^7.2.0",
-    "typedoc": "^0.22.7",
     "typescript": "^4.4.3"
   },
   "repository": {
@@ -51,7 +50,8 @@
     "test": "eslint src",
     "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
     "tscbuild": "tsc --emitDeclarationOnly",
-    "docsbuild": "typedoc --out docs src/index.ts"
+    "docs:build": "typedoc --json docs/out-main.json src/index.ts && node scripts/docs.mjs",
+    "docs:devbuild": "typedoc --json docs/out-dev.json src/index.ts && node scripts/devdocs.mjs"
   },
   "engines": {
     "node": ">=16.6.0"
