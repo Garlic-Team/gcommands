@@ -1,5 +1,5 @@
-import { Client, MessageActionRow, MessageAttachment, MessageEmbed, Sticker } from 'discord.js';
-import { GCommandsClient } from '..';
+import { MessageActionRow, MessageAttachment, MessageEmbed, Sticker } from 'discord.js';
+import { GCommandsClient } from '../base/GCommandsClient';
 import { Color } from '../structures/Color';
 import { InternalEvents } from './Constants';
 
@@ -63,7 +63,7 @@ class Util {
         };
     }
 
-    static inhibit(client, data: Function) {
+    static inhibit(client, data: () => boolean) {
 		for (const inhibitor of client.inhibitors) {
 			const inhibit = inhibitor(data);
 			return inhibit;
