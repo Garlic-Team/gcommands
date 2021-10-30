@@ -3,7 +3,7 @@ import { GCommandsClient } from '../../base/GCommandsClient';
 import { ChannelType, LanguageType } from '../../util/Constants';
 import { BaseArgument } from './Base';
 
-export class ChannelArgumentType extends BaseArgument {
+export class ChannelArgument extends BaseArgument {
     constructor(client: GCommandsClient) {
         super(client, 'CHANNEL');
     }

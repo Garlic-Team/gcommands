@@ -4,7 +4,7 @@ import { LanguageType } from '../../util/Constants';
 import { BaseArgument } from './Base';
 
 
-class RoleArgumentType extends BaseArgument {
+export class RoleArgument extends BaseArgument {
     constructor(client: GCommandsClient) {
         super(client, 'ROLE');
     }
@@ -25,5 +25,3 @@ class RoleArgumentType extends BaseArgument {
         return option;
     }
 }
-
-module.exports = RoleArgumentType;

@@ -18,7 +18,7 @@ export class BaseArgument {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public validate(argument, message: { content: string, guild: Guild }, language: LanguageType) { // eslint-disable-line no-unused-vars, require-await
+    public validate(argument, message: { content: string, guild: Guild }, language: LanguageType): string | void | Promise<string | void> { // eslint-disable-line no-unused-vars, require-await
         throw new GError('[ARGUMENTS]', 'Argument doesnt have provided validate() method');
     }
 

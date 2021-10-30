@@ -4,7 +4,7 @@ import { LanguageType } from '../../util/Constants';
 import { BaseArgument } from './Base';
 
 
-class NumberArgumentType extends BaseArgument {
+export class NumberArgument extends BaseArgument {
     constructor(client: GCommandsClient) {
         super(client, 'NUMBER');
     }
@@ -18,5 +18,3 @@ class NumberArgumentType extends BaseArgument {
         else this.value.value = Number(message.content);
     }
 }
-
-module.exports = NumberArgumentType;

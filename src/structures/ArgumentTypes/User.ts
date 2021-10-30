@@ -3,7 +3,7 @@ import { GCommandsClient } from '../../base/GCommandsClient';
 import { LanguageType } from '../../util/Constants';
 import { BaseArgument } from './Base';
 
-class UserArgumentType extends BaseArgument {
+export class UserArgument extends BaseArgument {
     constructor(client: GCommandsClient) {
         super(client, 'USER');
     }
@@ -29,5 +29,3 @@ class UserArgumentType extends BaseArgument {
         return option;
     }
 }
-
-module.exports = UserArgumentType;

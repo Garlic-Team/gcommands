@@ -4,7 +4,7 @@ import { LanguageType } from '../../util/Constants';
 import { BaseArgument } from './Base';
 
 
-export class IntegerArgumentType extends BaseArgument {
+export class IntegerArgument extends BaseArgument {
     constructor(client: GCommandsClient) {
         super(client, 'INTEGER');
     }

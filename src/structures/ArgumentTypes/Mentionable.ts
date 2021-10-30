@@ -3,7 +3,7 @@ import { GCommandsClient } from '../../base/GCommandsClient';
 import { LanguageType } from '../../util/Constants';
 import { BaseArgument } from './Base';
 
-export class MentionableArgumentType extends BaseArgument {
+export class MentionableArgument extends BaseArgument {
     constructor(client: GCommandsClient) {
         super(client, 'MENTIONABLE');
     }

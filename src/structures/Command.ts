@@ -1,24 +1,10 @@
 import { Snowflake, PermissionResolvable } from 'discord.js';
 
 import { GCommandsClient } from '../base/GCommandsClient';
-import { CommandOptions } from '../typings/interfaces';
+import { CommandOptions, CommandArgsOption } from '../typings/interfaces';
 import { CommandOptionsDefaults } from '../typings/defaults';
-import { CommandType, ArgumentType, ChannelType } from '../util/Constants';
+import { CommandType, ChannelType } from '../util/Constants';
 import { GError } from './GError';
-
-interface CommandArgsOptionChoice {
-    name: string;
-    value: unknown;
-}
-interface CommandArgsOption {
-    name: string;
-    description?: string;
-    type: ArgumentType;
-    prompt?: string;
-    required?: boolean;
-    options: Array<CommandArgsOption>;
-    choices?: Array<CommandArgsOptionChoice>
-}
 
 export class Command {
     public client: GCommandsClient;

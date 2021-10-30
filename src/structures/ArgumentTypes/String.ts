@@ -3,7 +3,7 @@ import { GCommandsClient } from '../../base/GCommandsClient';
 import { LanguageType } from '../../util/Constants';
 import { BaseArgument } from './Base';
 
-export class StringArgumentType extends BaseArgument {
+export class StringArgument extends BaseArgument {
     /**
      * The StringArgumentType class
      */
@@ -18,5 +18,3 @@ export class StringArgumentType extends BaseArgument {
         else this.value.value = message.content;
     }
 }
-
-module.exports = StringArgumentType;

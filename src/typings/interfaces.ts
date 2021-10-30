@@ -1,6 +1,6 @@
 import { ClientOptions, Snowflake, PermissionResolvable } from 'discord.js';
 
-import { LanguageType, CommandType, ChannelType } from '../util/Constants';
+import { LanguageType, CommandType, ChannelType, ArgumentType } from '../util/Constants';
 
 export interface GCommandsClientOptions extends ClientOptions {
     language: LanguageType;
@@ -41,11 +41,26 @@ export interface CommandOptions {
   userRequiredPermissions?: Array<PermissionResolvable>;
   userRequiredRoles?: Array<Snowflake>;
   userOnly?: Array<Snowflake>;
-  channelTypeOnly?: Array<ChannelType>
+  channelType?: Array<ChannelType>
   allowDm?: boolean;
   guildOnly?: Array<Snowflake>;
   nsfw?: boolean;
   aliases?: Array<string>;
   category?: string;
   usage?: string;
+}
+
+export interface CommandArgsOptionChoice {
+  name: string;
+  value: string;
+}
+export interface CommandArgsOption {
+  name: string;
+  description?: string;
+  type: ArgumentType;
+  prompt?: string;
+  required?: boolean;
+  channelType?: Array<ChannelType>;
+  options: Array<CommandArgsOption>;
+  choices?: Array<CommandArgsOptionChoice>
 }
