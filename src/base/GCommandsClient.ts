@@ -37,7 +37,7 @@ export class GCommandsClient extends Client {
             });
         });
     }
-    private loadSys() {
+    private loadSys(): void {
         new GGuild();
 
         setTimeout(() => {

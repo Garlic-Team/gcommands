@@ -107,7 +107,7 @@ export class GCommandsDispatcher {
         // eslint-disable-next-line no-useless-return
         } catch { return; }
     }
-    public async getCooldown(userId: Snowflake, guild: Guild, command: Command) {
+    public async getCooldown(userId: Snowflake, guild: Guild, command: Command): Promise<{ cooldown: boolean, wait?: string }> {
         if (this.owners.has(userId)) return { cooldown: false };
         const now = Date.now();
 

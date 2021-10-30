@@ -15,6 +15,8 @@ export interface GCommandsClientOptions extends ClientOptions {
       deletePrompt?: boolean;
       deleteInput?: boolean;
       wait?: number;
+      addSkipToPrompt?: boolean;
+      promptIfSkippable?: boolean;
     }
     commands?: {
       defaultType?: Array<CommandType>;
