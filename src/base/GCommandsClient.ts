@@ -2,6 +2,7 @@ import { Client, Collection } from 'discord.js';
 import * as Keyv from '@keyvhq/core';
 
 import { GCommandsClientOptions } from '../typings/interfaces';
+import { GCommandsClientOptionsDefaults } from '../typings/defaults';
 import { GCommandsDispatcher } from './GCommandsDispatcher';
 import { GDatabaseLoader } from '../managers/GDatabaseLoader';
 
@@ -13,7 +14,7 @@ export class GCommandsClient extends Client {
     public dispatcher: GCommandsDispatcher;
     public database: Keyv;
 
-    public constructor(options: GCommandsClientOptions) {
+    public constructor(options: GCommandsClientOptions = GCommandsClientOptionsDefaults) {
         super(options);
 
         if (!this.options.ownLanguageFile) this.languageFile = import('../util/message.json');

@@ -1,12 +1,13 @@
 import { ClientOptions } from 'discord.js';
 
-import { GuildLanguageTypes, GCommandsOptionsCommandsSlash, GCommandsOptionsCommandsContext } from './types';
+import { LanguageType, CommandType } from '../util/Constants';
 
 export interface GCommandsClientOptions extends ClientOptions {
-    language: GuildLanguageTypes;
+    language: LanguageType;
     loader: {
       cmdDir: string;
       eventDir?: string;
+      componentDir?: string
       autoCategory?: boolean;
     }
     arguments?: {
@@ -15,8 +16,7 @@ export interface GCommandsClientOptions extends ClientOptions {
       wait?: number;
     }
     commands?: {
-      slash?: GCommandsOptionsCommandsSlash;
-      context?: GCommandsOptionsCommandsContext;
+      defaultType?: Array<CommandType>;
       prefix?: string;
       loadFromCache?: boolean;
     },

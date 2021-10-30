@@ -4,6 +4,8 @@ export * from '@gcommands/events';
 
 export * from './base/GCommandsClient';
 
+export { LanguageType, CommandType } from './util/Constants';
+
 declare module 'discord.js' {
     export interface Guild {
         data: Record<string, unknown>;
