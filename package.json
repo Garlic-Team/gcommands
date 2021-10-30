@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@gcommands/components": "^1.0.0",
+    "@gcommands/components": "^1.0.2",
     "@gcommands/events": "^2.0.6",
     "@keyvhq/core": "^1.6.0",
     "discord-api-types": "^0.24.0",
