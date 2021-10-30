@@ -35,13 +35,13 @@ export interface CommandOptions {
   cooldown?: string;
   args?: Array<boolean>;
   alwaysObtain?: boolean;
-  clientRequiredPermissions?: PermissionResolvable | Array<PermissionResolvable>;
-  userRequiredPermissions?: PermissionResolvable | Array<PermissionResolvable>;
-  userRequiredRoles?: Snowflake | Array<Snowflake>;
-  userOnly?: Snowflake | Array<Snowflake>;
-  channelTypeOnly?: TextBasedChannelTypes | Array<TextBasedChannelTypes>
+  clientRequiredPermissions?: Array<PermissionResolvable>;
+  userRequiredPermissions?: Array<PermissionResolvable>;
+  userRequiredRoles?: Array<Snowflake>;
+  userOnly?: Array<Snowflake>;
+  channelTypeOnly?: Array<TextBasedChannelTypes>
   allowDm?: boolean;
-  guildOnly?: Snowflake | Array<Snowflake>;
+  guildOnly?: Array<Snowflake>;
   nsfw?: boolean;
   aliases?: Array<string>;
   category?: string;
