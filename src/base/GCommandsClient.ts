@@ -16,7 +16,7 @@ export class GCommandsClient extends Client {
     public languageFile: object;
     public options: GCommandsClientOptions;
     public dispatcher: GCommandsDispatcher;
-    public database: Keyv;
+    public database: Keyv | null;
 
     public constructor(options: GCommandsClientOptions) {
         super(Object.assign(GCommandsClientOptionsDefaults, options));
@@ -36,12 +36,13 @@ export class GCommandsClient extends Client {
             });
         });
     }
+
     private loadSys() {
         new GGuild();
 
         setTimeout(() => {
-            // New GEventHandling(this);
-            // If (this.eventDir) new GEventLoader(this);
+            //new GEventHandling(this);
+            //if (this.eventDir) new GEventLoader(this);
             if (this.options.loader.componentDir) new GComponents(this, { dir: this.options.loader.componentDir });
             new GCommandLoader(this);
         }, 1000);
