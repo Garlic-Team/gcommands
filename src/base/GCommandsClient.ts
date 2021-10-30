@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Client, Collection } from 'discord.js';
 import * as Keyv from '@keyvhq/core';
 import { GComponents } from '@gcommands/components';

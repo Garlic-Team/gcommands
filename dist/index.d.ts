@@ -1,3 +1,5 @@
+import { Collection } from 'discord.js';
+import { Command } from './structures/Command';
 export * from '@gcommands/components';
 export * from '@gcommands/events';
 export * from './base/GCommandsClient';
@@ -18,5 +20,48 @@ declare module 'discord.js' {
             force?: boolean;
         }) => Promise<string>;
         setLanguage: (language: string) => Promise<boolean>;
+    }
+    interface ClientEvents {
+        selectMenu: [SelectMenuInteraction];
+        clickButton: [ButtonInteraction];
+        commandPrefixChange: [Guild, string];
+        commandExecute: [Command, GuildMember];
+        commandError: [Command, GuildMember, string];
+        commandsLoaded: [Collection<string, Command>];
+        commandNotFound: [string];
+        log: [string];
+        debug: [string];
+        guildLanguageChange: [Guild, string];
+        guildBoostLevelUp: [Guild, number, number];
+        guildBoostLevelDown: [Guild, number, number];
+        guildRegionUpdate: [Guild, string, string];
+        guildBannerUpdate: [Guild, string, string];
+        guildAfkChannelUpdate: [Guild, Channel, Channel];
+        guildVanityURLUpdate: [Guild, string, string];
+        guildFeaturesUpdate: [Guild, object, object];
+        guildAcronymUpdate: [Guild, string, string];
+        guildOwnerUpdate: [Guild, GuildMember, GuildMember];
+        guildMaximumMembersUpdate: [Guild, number, number];
+        guildPartnerUpdate: [Guild, boolean, boolean];
+        guildVerifyUpdate: [Guild, boolean, boolean];
+        voiceChannelJoin: [Channel, VoiceState];
+        voiceChannelLeave: [Channel, VoiceState];
+        voiceChannelSwitch: [Channel, Channel, VoiceState];
+        voiceChannelMute: [Channel, string];
+        voiceChannelUnmute: [Channel, string];
+        voiceChannelDeaf: [Channel, string];
+        voiceChannelUndeaf: [Channel, string];
+        voiceStreamingStart: [Channel, Channel];
+        voiceStreamingStop: [Channel, Channel];
+        guildMemberNicknameUpdate: [GuildMember, string, string];
+        guildMemberAcceptShipScreening: [GuildMember];
+        guildMemberBoost: [GuildMember, number, number];
+        guildMemberUnboost: [GuildMember, number, number];
+        userAvatarUpdate: [GuildMember, string, string];
+        userUsernameUpdate: [GuildMember, string, string];
+        userDiscriminatorUpdate: [GuildMember, string, string];
+        userFlagsUpdate: [GuildMember, string, string];
+        rolePositionUpdate: [GuildMember, number, number];
+        rolePermissionsUpdate: [GuildMember, number, number];
     }
 }
