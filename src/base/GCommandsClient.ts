@@ -1,11 +1,14 @@
 import { Client, Collection } from 'discord.js';
 import * as Keyv from '@keyvhq/core';
+import { GComponents } from '@gcommands/components';
 
 import { GCommandsClientOptions } from '../typings/interfaces';
 import { GCommandsClientOptionsDefaults } from '../typings/defaults';
 import { GCommandsDispatcher } from './GCommandsDispatcher';
 import { GDatabaseLoader } from '../managers/GDatabaseLoader';
 import { Command } from '../structures/Command';
+import { GGuild } from '../structures/GGuild';
+import { GCommandLoader } from '../managers/GCommandLoader';
 
 export class GCommandsClient extends Client {
     public commands: Collection<string, Command>;
@@ -26,5 +29,21 @@ export class GCommandsClient extends Client {
         this.dispatcher = new GCommandsDispatcher(this);
 
         new GDatabaseLoader(this);
+
+        setImmediate(() => {
+            super.on('ready', () => {
+                this.loadSys();
+            });
+        });
+    }
+    private loadSys() {
+        new GGuild();
+
+        setTimeout(() => {
+            // New GEventHandling(this);
+            // If (this.eventDir) new GEventLoader(this);
+            if (this.options.loader.componentDir) new GComponents(this, { dir: this.options.loader.componentDir });
+            new GCommandLoader(this);
+        }, 1000);
     }
 }

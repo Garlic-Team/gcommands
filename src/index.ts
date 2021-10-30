@@ -3,6 +3,7 @@ export * from '@gcommands/components';
 export * from '@gcommands/events';
 
 export * from './base/GCommandsClient';
+export * from './structures/Command';
 
 export { LanguageType, CommandType } from './util/Constants';
 

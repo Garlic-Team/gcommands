@@ -9,6 +9,7 @@ export const GCommandsClientOptionsDefaults = {
       eventDir: undefined,
       componentDir: undefined,
       autoCategory: false,
+      loadFromCache: true,
     },
     arguments: {
       deletePrompt: false,
@@ -18,7 +19,6 @@ export const GCommandsClientOptionsDefaults = {
     commands: {
       defaultType: [],
       prefix: undefined,
-      loadFromCache: true,
     },
     caseSensitiveCommands: false,
     caseSensitivePrefixes: false,

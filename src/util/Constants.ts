@@ -21,3 +21,12 @@ export enum CommandType {
     MESSAGE_CONTEXT_MENU = 'message_context_menu',
     USER_CONTEXT_MENU = 'user_context_menu',
 }
+
+export enum InternalEvents {
+    DEBUG = 'debug',
+    LOG = 'log',
+    COMMAND_EXECUTE = 'commandExecute',
+    COMMAND_ERROR = 'commandError',
+    COMMANDS_LOADED = 'commandsLoaded',
+    COMMAND_NOT_FOUND = 'commandNotFound',
+}

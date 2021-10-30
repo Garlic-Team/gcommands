@@ -1,8 +1,10 @@
+import { resolveString } from '../util/util';
+
 export class Color {
     public text: string;
 
-	constructor(text: string) {
-		this.text = text;
+	constructor(text: string | Array<string>) {
+		this.text = resolveString(text);
 
         this.text = this.text
 			// COLORS

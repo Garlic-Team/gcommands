@@ -9,6 +9,7 @@ export interface GCommandsClientOptions extends ClientOptions {
       eventDir?: string;
       componentDir?: string
       autoCategory?: boolean;
+      loadFromCache?: boolean;
     }
     arguments?: {
       deletePrompt?: boolean;
@@ -18,7 +19,6 @@ export interface GCommandsClientOptions extends ClientOptions {
     commands?: {
       defaultType?: Array<CommandType>;
       prefix?: string;
-      loadFromCache?: boolean;
     },
     caseSensitiveCommands?: boolean;
     caseSensitivePrefixes?: boolean;
