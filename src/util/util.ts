@@ -83,7 +83,7 @@ class Util {
         return a;
     }
 
-    static async __deleteCmd(client, commandId: Number, guildId = undefined) {
+    static async __deleteCmd(client, commandId: number, guildId = undefined) {
         try {
             const app = client.api.applications(client.user.id);
             if (guildId) {

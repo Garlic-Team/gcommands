@@ -42,8 +42,8 @@ export class GCommandsClient extends Client {
         new GGuild();
 
         setTimeout(() => {
-            //new GEventHandling(this);
-            //if (this.eventDir) new GEventLoader(this);
+            // New GEventHandling(this);
+            // if (this.eventDir) new GEventLoader(this);
             if (this.options.loader.componentDir) new GComponents(this, { dir: this.options.loader.componentDir });
             new GCommandLoader(this);
         }, 1000);

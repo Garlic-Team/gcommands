@@ -11,7 +11,7 @@ export class GDatabaseLoader {
 
         this.load();
     }
-    
+
     private load(): void {
         const store = this.client.options.database;
         if (typeof store === 'object') {
@@ -20,6 +20,6 @@ export class GDatabaseLoader {
             } catch (err) {
                 throw new GError('[DATABASE]', err);
             }
-        } else this.client.database = null;
+        } else { this.client.database = null; }
     }
 }

@@ -4,7 +4,7 @@ import * as ms from 'ms';
 import { Routes } from 'discord-api-types/v9';
 const base = 'https://discord.com/api/v9/';
 import { Snowflake } from 'discord.js';
-//import hyttpo from 'hyttpo';
+// Import hyttpo from 'hyttpo';
 
 import { Command } from '../structures/Command';
 import { GCommandsClient } from '../base/GCommandsClient';
@@ -69,7 +69,7 @@ export class GCommandLoader {
     }
 
     /**
-    private async loadSlashCommands() {
+    Private async loadSlashCommands() {
         const keys = Array.from(this.client.commands.keys());
         this.__deleteNonExistCommands(keys);
 
