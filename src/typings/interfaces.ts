@@ -1,6 +1,6 @@
-import { ClientOptions, Snowflake, PermissionResolvable, TextBasedChannelTypes } from 'discord.js';
+import { ClientOptions, Snowflake, PermissionResolvable } from 'discord.js';
 
-import { LanguageType, CommandType } from '../util/Constants';
+import { LanguageType, CommandType, ChannelType } from '../util/Constants';
 
 export interface GCommandsClientOptions extends ClientOptions {
     language: LanguageType;
@@ -26,7 +26,7 @@ export interface GCommandsClientOptions extends ClientOptions {
     caseSensitivePrefixes?: boolean;
     defaultCooldown?: string;
     database?: string;
-    ownLanguageFile?: object;
+    ownLanguageFile?: Record<string, Record<string, string>>;
 }
 
 export interface CommandOptions {
@@ -41,7 +41,7 @@ export interface CommandOptions {
   userRequiredPermissions?: Array<PermissionResolvable>;
   userRequiredRoles?: Array<Snowflake>;
   userOnly?: Array<Snowflake>;
-  channelTypeOnly?: Array<TextBasedChannelTypes>
+  channelTypeOnly?: Array<ChannelType>
   allowDm?: boolean;
   guildOnly?: Array<Snowflake>;
   nsfw?: boolean;

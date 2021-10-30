@@ -9,7 +9,7 @@ export * from '@gcommands/events';
 export * from './base/GCommandsClient';
 export * from './structures/Command';
 
-export { LanguageType, CommandType } from './util/Constants';
+export { LanguageType, CommandType, ArgumentType, ChannelType } from './util/Constants';
 
 declare module 'discord.js' {
   interface Guild {

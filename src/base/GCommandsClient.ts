@@ -14,16 +14,13 @@ import { GCommandLoader } from '../managers/GCommandLoader';
 export class GCommandsClient extends Client {
     public commands: Collection<string, Command>;
     public aliases: Collection<string, string>;
-    public languageFile: object;
+    public languageFile: Record<string, Record<string, string>>;
     public options: GCommandsClientOptions;
     public dispatcher: GCommandsDispatcher;
     public database: Keyv | null;
 
     public constructor(options: GCommandsClientOptions) {
         super(Object.assign(GCommandsClientOptionsDefaults, options));
-
-        if (!this.options.ownLanguageFile) this.languageFile = import('../util/message.json');
-        else this.languageFile = this.options.ownLanguageFile;
 
         this.commands = new Collection();
         this.aliases = new Collection();
@@ -40,7 +37,9 @@ export class GCommandsClient extends Client {
     private loadSys(): void {
         new GGuild();
 
-        setTimeout(() => {
+        setTimeout(async () => {
+            if (!this.options.ownLanguageFile) this.languageFile = await import('../util/message.json');
+            else this.languageFile = this.options.ownLanguageFile;
             // New GEventHandling(this);
             // if (this.eventDir) new GEventLoader(this);
             if (this.options.loader.componentDir) new GComponents(this, { dir: this.options.loader.componentDir });
