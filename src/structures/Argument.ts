@@ -12,8 +12,8 @@ export class Argument {
     public language: LanguageType;
     public argument: BaseArgument;
     public name: string;
-    private type: string;
-    private required: boolean;
+    public type: string;
+    public required: boolean;
     public choices: Array<CommandArgsOptionChoice>;
     public subcommands: Array<CommandArgsOption>;
 
