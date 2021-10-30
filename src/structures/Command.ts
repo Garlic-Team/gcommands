@@ -28,7 +28,9 @@ export class Command {
     public usage?: string;
     private _path: string;
 
-    public constructor(client: GCommandsClient, options: CommandOptions = CommandOptionsDefaults) {
+    public constructor(client: GCommandsClient, options: CommandOptions) {
+        options = Object.assign(CommandOptionsDefaults, options);
+
         this.client = client;
         this.name = options.name;
         this.contextMenuName = options.contextMenuName;

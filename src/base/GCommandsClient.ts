@@ -18,8 +18,8 @@ export class GCommandsClient extends Client {
     public dispatcher: GCommandsDispatcher;
     public database: Keyv;
 
-    public constructor(options: GCommandsClientOptions = GCommandsClientOptionsDefaults) {
-        super(options);
+    public constructor(options: GCommandsClientOptions) {
+        super(Object.assign(GCommandsClientOptionsDefaults, options));
 
         if (!this.options.ownLanguageFile) this.languageFile = import('../util/message.json');
         else this.languageFile = this.options.ownLanguageFile;

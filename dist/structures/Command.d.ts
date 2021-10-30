@@ -23,7 +23,7 @@ export declare class Command {
     category?: string;
     usage?: string;
     private _path;
-    constructor(client: GCommandsClient, options?: CommandOptions);
+    constructor(client: GCommandsClient, options: CommandOptions);
     run(): void;
     reload(): Promise<boolean>;
 }

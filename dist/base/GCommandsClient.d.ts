@@ -10,6 +10,6 @@ export declare class GCommandsClient extends Client {
     options: GCommandsClientOptions;
     dispatcher: GCommandsDispatcher;
     database: Keyv;
-    constructor(options?: GCommandsClientOptions);
+    constructor(options: GCommandsClientOptions);
     private loadSys;
 }
