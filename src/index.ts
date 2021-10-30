@@ -11,5 +11,9 @@ declare module 'discord.js' {
         data: Record<string, unknown>;
         getData: (options?: { force?: boolean }) => Promise<Record<string, unknown>>;
         setData: (options: object) => Promise<boolean>;
+        getCommandPrefix: (options?: { force?: boolean }) => Promise<string>;
+        setCommandPrefix: (prefix: string) => Promise<boolean>;
+        getLanguage: (options?: { force?: boolean }) => Promise<string>;
+        setLanguage: (language: string) => Promise<boolean>;
       }
 }

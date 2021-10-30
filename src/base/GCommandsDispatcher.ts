@@ -1,6 +1,9 @@
-import { Collection, User, Team, Guild } from 'discord.js';
+import { Collection, User, Team, Guild, Snowflake } from 'discord.js';
+import { Command } from '../structures/Command';
 
 import { GCommandsClient } from './GCommandsClient';
+import * as ms from 'ms';
+import { Color } from '../structures/Color';
 
 export class GCommandsDispatcher {
     private client: GCommandsClient;
@@ -64,7 +67,8 @@ export class GCommandsDispatcher {
             const isSet = await guild.setData(data);
 
             return isSet;
-        } catch { return false; }
+        // eslint-disable-next-line no-useless-return
+        } catch { return; }
     }
     public async getGuildPrefix(guild: Guild, options?: { force?: boolean }): Promise<string> {
         if (!this.client.database) return;
@@ -76,5 +80,90 @@ export class GCommandsDispatcher {
             if (data?.prefix) return String(data.prefix);
         // eslint-disable-next-line no-useless-return
         } catch { return; }
+    }
+    public async setGuildLanguage(guild: Guild, language: string): Promise<boolean> {
+        if (!this.client.database) return;
+        if (!language) return;
+
+        try {
+            const data = await guild.getData();
+
+            data.language = language;
+
+            const isSet = await guild.setData(data);
+
+            return isSet;
+        // eslint-disable-next-line no-useless-return
+        } catch { return; }
+    }
+    public async getGuildLanguage(guild: Guild, options?: { force?: boolean }): Promise<string> {
+        if (!this.client.database) return;
+        if (guild.data?.language && !options.force) return String(guild.data.language);
+
+        try {
+            const data = await guild.getData({ force: true });
+
+            if (data?.language) return String(data.language);
+        // eslint-disable-next-line no-useless-return
+        } catch { return; }
+    }
+    public async getCooldown(userId: Snowflake, guild: Guild, command: Command) {
+        if (this.owners.has(userId)) return { cooldown: false };
+        const now = Date.now();
+
+        let cooldown;
+        if (typeof command.cooldown === 'string') cooldown = ms(command.cooldown);
+        else cooldown = ms(this.client.options.defaultCooldown);
+
+        if (cooldown < 1800000 || !this.client.database) {
+            if (!this.cooldowns.has(command.name)) this.cooldowns.set(command.name, new Collection());
+
+            const timestamps = this.cooldowns.get(command.name);
+
+            if (timestamps.has(userId)) {
+                const expirationTime = timestamps.get(userId);
+
+                if (Number(now) > Number(expirationTime)) {
+                    timestamps.delete(userId);
+                } else {
+                    const timeLeft = ms(Number(expirationTime) - now);
+                    return { cooldown: true, wait: timeLeft };
+                }
+            }
+            timestamps.set(userId, (now + cooldown));
+            return { cooldown: false };
+        } else if (this.client.database) {
+            const data = await guild.getData();
+
+            if (!data.users) data.users = {};
+            if (!data.users[userId]) data.users[userId] = {};
+            if (!data.users[userId]?.cooldowns) data.users[userId].cooldowns = {};
+
+            const cooldowns = data.users[userId].cooldowns;
+
+            if (cooldowns[command.name]) {
+                const expirationTime = cooldowns[command.name];
+
+                if (now > expirationTime) {
+                    delete cooldowns[command.name];
+                } else {
+                    const timeLeft = ms(expirationTime - now);
+                    return { cooldown: true, wait: timeLeft };
+                }
+            }
+            cooldowns[command.name] = (now + cooldown);
+            await guild.setData(data);
+            return { cooldown: false };
+        }
+    }
+    public addInhibitor(inhibitor) {
+        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+        if (this.inhibitors.has(inhibitor)) return false;
+        this.inhibitors.add(inhibitor);
+        return true;
+    }
+    public removeInhibitor(inhibitor) {
+        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
+        return this.inhibitors.delete(inhibitor);
     }
 }

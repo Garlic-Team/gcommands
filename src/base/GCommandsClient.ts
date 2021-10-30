@@ -5,9 +5,10 @@ import { GCommandsClientOptions } from '../typings/interfaces';
 import { GCommandsClientOptionsDefaults } from '../typings/defaults';
 import { GCommandsDispatcher } from './GCommandsDispatcher';
 import { GDatabaseLoader } from '../managers/GDatabaseLoader';
+import { Command } from '../structures/Command';
 
 export class GCommandsClient extends Client {
-    public commands: Collection<string, object>;
+    public commands: Collection<string, Command>;
     public aliases: Collection<string, string>;
     public languageFile: object;
     public options: GCommandsClientOptions;

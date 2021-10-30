@@ -27,3 +27,24 @@ export const GCommandsClientOptionsDefaults = {
     ownLanguageFile: undefined,
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 };
+
+export const CommandOptionsDefaults = {
+  name: 'undefined',
+  contextMenuName: undefined,
+  description: 'undefined',
+  type: [],
+  cooldown: undefined,
+  args: undefined,
+  alwaysObtain: false,
+  clientRequiredPermissions: undefined,
+  userRequiredPermissions: undefined,
+  userRequiredRoles: undefined,
+  userOnly: undefined,
+  channelTypeOnly: undefined,
+  allowDm: false,
+  guildOnly: undefined,
+  nsfw: false,
+  aliases: undefined,
+  category: undefined,
+  usage: undefined,
+};
