@@ -55,10 +55,10 @@ Added support for deleting prompts and input
 ## Command
 
 ### args
-Arguments are no longer arrays, they are now [CommandInteractionOptionResolver](https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver) <img src="https://i.imgur.com/3hzpeBf.png" height="15" width="15">.
+Arguments are no longer arrays, they are now [CommandInteractionOptionResolver](https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver) <img src="https://i.imgur.com/3hzpeBf.png" height="15" width="15"> instead.
 
 ### arrayArgs
-Since [arguments are no longer arrays], you can now use `arrayArgs` to get them with arrays.
+Since [arguments are no longer arrays](#args), you can now use `arrayArgs` to get them with arrays.
 
 ### respond & edit & followUp
 MessageOptions (also for Interactions) are now [GPayloadOptions](https://gcommands.js.org/docs/#/docs/main/dev/typedef/GPayloadOptions) 📙 in GCommands. You can use `respond()` like in [discord.js v12](https://discord.js.org/#/docs/main/v12/class/TextChannel?scrollTo=send) <img src="https://i.imgur.com/3hzpeBf.png" height="15" width="15"> (similar to the second and third example).
