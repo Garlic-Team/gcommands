@@ -29,27 +29,9 @@ export class Command {
     private _path: string;
 
     public constructor(client: GCommandsClient, options: CommandOptions) {
-        options = Object.assign(CommandOptionsDefaults, options);
-
         this.client = client;
-        this.name = options.name;
-        this.contextMenuName = options.contextMenuName;
-        this.description = options.description;
-        this.type = options.type;
-        this.cooldown = options.cooldown;
-        this.args = options.args;
-        this.alwaysObtain = options.alwaysObtain;
-        this.clientRequiredPermissions = options.clientRequiredPermissions;
-        this.userRequiredPermissions = options.userRequiredPermissions;
-        this.userRequiredRoles = options.userRequiredRoles;
-        this.userOnly = options.userOnly;
-        this.channelTypeOnly = options.channelTypeOnly;
-        this.allowDm = options.allowDm;
-        this.guildOnly = options.guildOnly;
-        this.nsfw = options.nsfw;
-        this.aliases = options.aliases;
-        this.category = options.category;
-        this.usage = options.usage;
+
+        Object.assign(this, Object.assign(CommandOptionsDefaults, options));
     }
     
     public run() {

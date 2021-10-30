@@ -15,6 +15,19 @@ deploy/
 docs/
 .github/
 
-# NPM ignore
-jsdoc.json
+# ts
+babel.config.js
+build.js
+build.bash
+src/
+
+# Eslint
 .eslintrc.json
+.eslintignore
+
+# git
+.gitignore
+.github
+
+# Docs
+docs/
