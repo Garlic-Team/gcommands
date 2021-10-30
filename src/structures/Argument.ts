@@ -33,6 +33,8 @@ export class Argument {
         if (message.author.bot) return;
         if (!this.type) return false;
 
+        if (!prompt) prompt = this.client.languageFile.ARGS_PROMPT[this.language].replace('{argument}', this.name);
+
         const wait = this.client.options.arguments.wait;
 
         const getComponents = (disabled: boolean) => {

@@ -22,10 +22,7 @@ export declare class GCommandsDispatcher {
     }): Promise<string>;
     getCooldown(userId: Snowflake, guild: Guild, command: Command): Promise<{
         cooldown: boolean;
-        wait?: undefined;
-    } | {
-        cooldown: boolean;
-        wait: any;
+        wait?: string;
     }>;
     addInhibitor(inhibitor: any): boolean | void;
     removeInhibitor(inhibitor: any): boolean | void;

@@ -1,0 +1,4 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.BaseArgument=void 0;var _GError=require("../GError");class BaseArgument{constructor(client,type){this.type=type;this.client=client;this.value={};return this}// eslint-disable-next-line @typescript-eslint/no-unused-vars
+validate(argument,message,language){// eslint-disable-line no-unused-vars, require-await
+throw new _GError.GError("[ARGUMENTS]","Argument doesnt have provided validate() method")}get(){var _this$value;// eslint-disable-line no-unused-vars, require-await
+return(_this$value=this.value)===null||_this$value===void 0?void 0:_this$value.value}resolve(option){return option}}exports.BaseArgument=BaseArgument;

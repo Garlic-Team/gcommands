@@ -6,10 +6,10 @@ import { Command } from '../structures/Command';
 export declare class GCommandsClient extends Client {
     commands: Collection<string, Command>;
     aliases: Collection<string, string>;
-    languageFile: object;
+    languageFile: Record<string, Record<string, string>>;
     options: GCommandsClientOptions;
     dispatcher: GCommandsDispatcher;
-    database: Keyv;
+    database: Keyv | null;
     constructor(options: GCommandsClientOptions);
     private loadSys;
 }

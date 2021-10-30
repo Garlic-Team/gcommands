@@ -1,7 +1,7 @@
-import { Snowflake, PermissionResolvable, TextBasedChannelTypes } from 'discord.js';
+import { Snowflake, PermissionResolvable } from 'discord.js';
 import { GCommandsClient } from '../base/GCommandsClient';
-import { CommandOptions } from '../typings/interfaces';
-import { CommandType } from '../util/Constants';
+import { CommandOptions, CommandArgsOption } from '../typings/interfaces';
+import { CommandType, ChannelType } from '../util/Constants';
 export declare class Command {
     client: GCommandsClient;
     name: string;
@@ -9,13 +9,13 @@ export declare class Command {
     description: string;
     type: Array<CommandType>;
     cooldown: string;
-    args: Array<boolean>;
+    args: Array<CommandArgsOption>;
     alwaysObtain: boolean;
     clientRequiredPermissions?: Array<PermissionResolvable>;
     userRequiredPermissions?: Array<PermissionResolvable>;
     userRequiredRoles?: Array<Snowflake>;
     userOnly?: Array<Snowflake>;
-    channelTypeOnly?: Array<TextBasedChannelTypes>;
+    channelTypeOnly?: Array<ChannelType>;
     allowDm?: boolean;
     guildOnly?: Array<Snowflake>;
     nsfw?: boolean;

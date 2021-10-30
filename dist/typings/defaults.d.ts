@@ -12,6 +12,8 @@ export declare const GCommandsClientOptionsDefaults: {
         deletePrompt: boolean;
         deleteInput: boolean;
         wait: number;
+        addSkipToPrompt: boolean;
+        promptIfSkippable: boolean;
     };
     commands: {
         defaultType: any[];
