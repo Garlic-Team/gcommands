@@ -33,9 +33,11 @@ export class Command {
 
         Object.assign(this, Object.assign(CommandOptionsDefaults, options));
     }
+
     public run() {
         throw new GError('[COMMAND]',`Command ${this.name} doesn't provide a run method!`);
     }
+
     public async reload(): Promise<boolean> {
         const cmdPath = this.client.commands.get(this.name)._path;
 

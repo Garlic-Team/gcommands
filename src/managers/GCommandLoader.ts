@@ -4,14 +4,14 @@ import * as ms from 'ms';
 import { Routes } from 'discord-api-types/v9';
 const base = 'https://discord.com/api/v9/';
 import { Snowflake } from 'discord.js';
-import hyttpo from 'hyttpo';
+// Import hyttpo from 'hyttpo';
 
 import { Command } from '../structures/Command';
 import { GCommandsClient } from '../base/GCommandsClient';
 import { Color } from '../structures/Color';
 import { GError } from '../structures/GError';
 import { InternalEvents, CommandType } from '../util/Constants';
-import { isClass, getAllObjects } from '../util/util';
+import Util from '../util/util';
 
 export class GCommandLoader {
     private client: GCommandsClient;
@@ -31,9 +31,11 @@ export class GCommandLoader {
 
         this.load();
     }
+
     private async load() {
         await this.loadFiles(this.dir);
     }
+
     private async loadFiles(dir: string) {
         for await (const fsDirent of fs.readdirSync(dir, { withFileTypes: true })) {
             const rawFileName = fsDirent.name;
@@ -49,7 +51,7 @@ export class GCommandLoader {
             if (file.default) file = file.default;
             else if (!file.name) file = Object.values(file)[0];
 
-            if (isClass(file)) {
+            if (Util.isClass(file)) {
                 file = new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
@@ -65,6 +67,7 @@ export class GCommandLoader {
             this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`).getText());
         }
     }
+
     /**
     Private async loadSlashCommands() {
         const keys = Array.from(this.client.commands.keys());
