@@ -21,6 +21,7 @@ export interface GCommandsClientOptions extends ClientOptions {
     commands?: {
       defaultType?: Array<CommandType>;
       prefix?: string;
+      allowDm?: boolean;
     },
     caseSensitiveCommands?: boolean;
     caseSensitivePrefixes?: boolean;

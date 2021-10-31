@@ -1,10 +1,23 @@
-import { Snowflake, PermissionResolvable } from 'discord.js';
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Snowflake, PermissionResolvable, Interaction, Message, User, GuildMember, MessagePayload } from 'discord.js';
 
 import { GCommandsClient } from '../base/GCommandsClient';
 import { CommandOptions, CommandArgsOption } from '../typings/interfaces';
 import { CommandOptionsDefaults } from '../typings/defaults';
 import { CommandType, ChannelType } from '../util/Constants';
 import { GError } from './GError';
+
+type CommandRunOptions = {
+    interaction?: Interaction,
+    message?: Message,
+    author: User,
+    member?: GuildMember,
+    respond(options: MessagePayload): Promise<Message>,
+    followUp(options: MessagePayload):Promise<Message>,
+    args: Record<string, unknown>,
+    arrayArgs: Array<unknown>
+}
 
 export class Command {
     public client: GCommandsClient;
@@ -19,7 +32,7 @@ export class Command {
     public userRequiredPermissions?: Array<PermissionResolvable>;
     public userRequiredRoles?: Array<Snowflake>;
     public userOnly?: Array<Snowflake>;
-    public channelTypeOnly?: Array<ChannelType>;
+    public channelType?: Array<ChannelType>;
     public allowDm?: boolean;
     public guildOnly?: Array<Snowflake>;
     public nsfw?: boolean;
@@ -34,7 +47,7 @@ export class Command {
         Object.assign(this, Object.assign(CommandOptionsDefaults, options));
     }
 
-    public run() {
+    public run(options: CommandRunOptions) {
         throw new GError('[COMMAND]',`Command ${this.name} doesn't provide a run method!`);
     }
 

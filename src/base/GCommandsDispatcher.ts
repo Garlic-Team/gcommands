@@ -7,12 +7,14 @@ import { Color } from '../structures/Color';
 
 export class GCommandsDispatcher {
     private client: GCommandsClient;
+    private caseSensitiveCommands: boolean;
     private inhibitors: Set<() => boolean>;
     private cooldowns: Collection<string, Collection<string, string>>;
     public owners: Collection<string, User>;
 
     public constructor(client: GCommandsClient) {
         this.client = client;
+        this.caseSensitiveCommands = client.options.caseSensitiveCommands;
         this.inhibitors = new Set();
         this.cooldowns = new Collection();
         this.owners = new Collection();
@@ -165,5 +167,13 @@ export class GCommandsDispatcher {
     public removeInhibitor(inhibitor): boolean | void {
         if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
         return this.inhibitors.delete(inhibitor);
+    }
+    public getCommand(name: string): Command {
+        let command = this.client.commands.get(this.caseSensitiveCommands ? name : name.toLowerCase());
+        if (!command) {
+            const alias = this.client.aliases.get(this.caseSensitiveCommands ? name : name.toLowerCase());
+            if (alias) command = this.client.commands.get(alias);
+        }
+        return command;
     }
 }
