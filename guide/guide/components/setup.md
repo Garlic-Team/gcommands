@@ -22,7 +22,7 @@ const { Client } = require("discord.js");
 const { join } = require("path");
 const client = new Client();
 
-new GEvents(client, { dir: join(__dirname, "components") })
+new GComponents(client, { dir: join(__dirname, "components") })
 ```
 
 Then you just create a file in the `components` folder or you can also create a category.
