@@ -24,7 +24,7 @@ export class Command {
     public name: string;
     public contextMenuName: string;
     public description: string;
-    public type: Array<CommandType>;
+    public type: CommandType[];
     public cooldown: string;
     public args: Array<CommandArgsOption>;
     public alwaysObtain: boolean;
@@ -32,7 +32,7 @@ export class Command {
     public userRequiredPermissions?: Array<PermissionResolvable>;
     public userRequiredRoles?: Array<Snowflake>;
     public userOnly?: Array<Snowflake>;
-    public channelType?: Array<ChannelType>;
+    public channelTypeOnly?: Array<ChannelType>;
     public allowDm?: boolean;
     public guildOnly?: Array<Snowflake>;
     public nsfw?: boolean;
@@ -52,17 +52,17 @@ export class Command {
     }
 
     public async reload(): Promise<boolean> {
-        const cmdPath = this.client.commands.get(this.name)._path;
+        const cmdPath = this.client.gcommands.get(this.name)._path;
 
         delete require.cache[require.resolve(cmdPath)];
-        this.client.commands.delete(this.name);
+        this.client.gcommands.delete(this.name);
 
         let newCommand = await require(cmdPath);
 
         newCommand = new newCommand(this.client);
 
         newCommand._path = cmdPath;
-        this.client.commands.set(newCommand.name, newCommand);
+        this.client.gcommands.set(newCommand.name, newCommand);
         return true;
     }
 }

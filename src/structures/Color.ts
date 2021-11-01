@@ -3,7 +3,7 @@ import Util from "../util/util";
 export class Color {
     public text: string;
 
-	constructor(text: string | Array<string>) {
+	constructor(text: string | Array<string>, options?: object) {
 		this.text = Util.resolveString(text);
 
         this.text = this.text

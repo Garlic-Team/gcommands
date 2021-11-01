@@ -4,25 +4,26 @@ import { GCommandsClient } from '../base/GCommandsClient';
 import { Color } from '../structures/Color';
 import { InternalEvents } from './Constants';
 
-    export function isClass(input: unknown) {
+class Util {
+    static isClass(input: unknown) {
         return typeof input === 'function' &&
         typeof input.prototype === 'object' &&
         input.toString().substring(0, 5) === 'class';
     }
 
-    export function resolveString(input: unknown) {
+    static resolveString(input: unknown) {
         if (typeof input === 'string') return input;
         if (Array.isArray(input)) return input.join('\n');
         return String(input);
     }
 
-    export function getAllObjects(client: GCommandsClient, ob: object) {
+    static getAllObjects(client: GCommandsClient, ob: object) {
         if (typeof ob !== 'object') return;
         for (const v of Object.values(ob)) {
             if (Array.isArray(v)) {
-                getAllObjects(client, v[0]);
+                Util.getAllObjects(client, v[0]);
             } else if (typeof v === 'object') {
-                getAllObjects(client, v);
+                Util.getAllObjects(client, v);
             } else {
                 client.emit(InternalEvents.DEBUG, new Color([
                     `&b${v}`,
@@ -31,7 +32,7 @@ import { InternalEvents } from './Constants';
         }
     }
 
-    export function resolveMessageOptions(options) {
+    static resolveMessageOptions(options) {
         if (!options) return {};
 
         const embeds = [];
@@ -63,7 +64,7 @@ import { InternalEvents } from './Constants';
         };
     }
 
-    export function inhibit(client, data: () => boolean) {
+    static inhibit(client, data: () => boolean) {
 		for (const inhibitor of client.inhibitors) {
 			const inhibit = inhibitor(data);
 			return inhibit;
@@ -71,11 +72,11 @@ import { InternalEvents } from './Constants';
 		return null;
     }
 
-    export function comparable(o) {
-        return (typeof o !== 'object' || !o) ? o : (Object.keys(o).sort().reduce((c, key) => (c[key] = comparable(o[key]), c), {})); // eslint-disable-line no-return-assign, no-sequences
+    static comparable(o) {
+        return (typeof o !== 'object' || !o) ? o : (Object.keys(o).sort().reduce((c, key) => (c[key] = Util.comparable(o[key]), c), {})); // eslint-disable-line no-return-assign, no-sequences
     }
 
-    export function unescape(a: string, b?: string, c?: string): string {
+    static unescape(a: string, b?: string, c?: string): string {
         a = a.split(b || '-')
             .map(x => x[0].toUpperCase() + x.slice(1).toLowerCase()) // eslint-disable-line comma-dangle
             .join(c || ' ');
@@ -83,7 +84,7 @@ import { InternalEvents } from './Constants';
         return a;
     }
 
-    export async function __deleteCmd(client, commandId: number, guildId = undefined) {
+    static async __deleteCmd(client, commandId: number, guildId = undefined) {
         try {
             const app = client.api.applications(client.user.id);
             if (guildId) {
@@ -96,7 +97,7 @@ import { InternalEvents } from './Constants';
         }
     }
 
-    export async function __getAllCommands(client, guildId = undefined) {
+    static async __getAllCommands(client, guildId = undefined) {
         try {
             const app = client.api.applications(client.user.id);
             if (guildId) {
@@ -108,3 +109,6 @@ import { InternalEvents } from './Constants';
             else return [];
         } catch { return []; }
     }
+}
+
+export default Util;

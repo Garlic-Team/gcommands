@@ -2,7 +2,7 @@ import { GCommandsClient } from '../base/GCommandsClient';
 import { Color } from '../structures/Color';
 import { Command } from '../structures/Command';
 import { CommandType, InternalEvents } from '../util/Constants';
-import { resolveMessageOptions, unescape } from '../util/util';
+import Util from '../util/util';
 import { ArgumentsCollector } from '../structures/ArgumentsCollector';
 import { readdirSync } from 'fs';
 
@@ -68,8 +68,8 @@ export class GEventHandler {
                     bot: this.client,
                     language: language,
 
-                    respond: (options = undefined) => message.reply(resolveMessageOptions(options)),
-                    followUp: (options = undefined) => message.reply(resolveMessageOptions(options)),
+                    respond: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
+                    followUp: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
                 };
 
                 /**
@@ -93,8 +93,8 @@ export class GEventHandler {
                     if (!command.userOnly.includes(message.author.id)) return;
                 }
 
-                if (command.channelType[0]) {
-                    if (!command.channelType.includes(message.channel.type)) return;
+                if (command.channelTypeOnly[0]) {
+                    if (!command.channelTypeOnly.includes(message.channel.type)) return;
                 }
 
                 const NSFW = message.guild ? command.nsfw && !message.channel.nsfw : null;
@@ -102,13 +102,13 @@ export class GEventHandler {
 
                 if (NSFW) return message.reply(getNsfwMessage());
 
-                const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', command.clientRequiredPermissions.map(v => unescape(String(v), '_')).join(', '));
+                const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', command.clientRequiredPermissions.map(v => Util.unescape(String(v), '_')).join(', '));
 
                 if (command.clientRequiredPermissions[0]) {
                     if (message.channel.permissionsFor(message.guild.me).has(command.clientRequiredPermissions)) return message.reply(getMissingClientPermissionsMessage());
                 }
 
-                const getMissingPermissionsMessage = () => this.client.languageFile.MISSING_PERMISSIONS[language].replace('{PERMISSION}', command.userRequiredPermissions.map(v => unescape(String(v), '_')).join(', '));
+                const getMissingPermissionsMessage = () => this.client.languageFile.MISSING_PERMISSIONS[language].replace('{PERMISSION}', command.userRequiredPermissions.map(v => Util.unescape(String(v), '_')).join(', '));
 
                 if (command.userRequiredPermissions[0]) {
                     if (!message.member.permissions.has(command.userRequiredPermissions)) return message.reply(getMissingPermissionsMessage());
@@ -142,12 +142,14 @@ export class GEventHandler {
             }
         };
     }
+
     private loadMoreEvents() {
         readdirSync(`${__dirname}/../base/actions/`).forEach(async fileName => {
             const file = await import(`../base/actions/${fileName}`);
             file.default(this.client);
         });
     }
+
     private argsToObject(options: object) {
         if (!Array.isArray(options)) return {};
         const args = {};
@@ -162,6 +164,7 @@ export class GEventHandler {
 
         return args;
     }
+
     private argsToArray(options: object) {
         const args = [];
 
