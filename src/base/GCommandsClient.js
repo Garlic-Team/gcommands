@@ -22,20 +22,19 @@ class GCommandsClient extends Client {
   constructor(options = {}) {
     super(options);
 
-    if (!options.loader?.cmdDir)
-      throw new GError("[DEFAULT OPTIONS]", "You must specify the cmdDir");
-    if (!options.language)
-      throw new GError("[DEFAULT OPTIONS]", "You must specify the language");
+    if (!options.loader?.cmdDir) throw new GError("[DEFAULT OPTIONS]", "You must specify the cmdDir");
+    if (!options.language) throw new GError("[DEFAULT OPTIONS]", "You must specify the language");
 
     const isClientMessageEnabled = ["false", "both"].includes(
       String(options.commands?.slash)
     );
 
-    if (isClientMessageEnabled && !options.commands?.prefix)
-      throw new GError(
+    if (isClientMessageEnabled && !options.commands?.prefix) {
+ throw new GError(
         "[DEFAULT OPTIONS]",
         "You must specify the commands#prefix"
       );
+}
 
     /**
      * The path to the command files
@@ -97,9 +96,7 @@ class GCommandsClient extends Client {
      * The own language file
      * @type {?Object}
      */
-    if (!options.ownLanguageFile)
-      this.languageFile = require("../util/message.json");
-    else this.languageFile = options.ownLanguageFile;
+    if (!options.ownLanguageFile) { this.languageFile = require("../util/message.json"); } else { this.languageFile = options.ownLanguageFile; }
 
     /**
      * The default language
