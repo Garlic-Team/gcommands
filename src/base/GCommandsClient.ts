@@ -44,7 +44,7 @@ export class GCommandsClient extends Client {
             else this.languageFile = this.options.ownLanguageFile;
 
             new GEventHandler(this);
-            // if (this.eventDir) new GEventLoader(this);
+            // If (this.eventDir) new GEventLoader(this);
 
             if (this.options.loader.componentDir) new GComponents(this, { dir: this.options.loader.componentDir });
             new GCommandLoader(this);

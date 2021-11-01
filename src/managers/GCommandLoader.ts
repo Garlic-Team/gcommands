@@ -32,7 +32,7 @@ export class GCommandLoader {
         this.defaultType = this.client.options.commands.defaultType;
         this.allGlobalCommands = Util.__getAllCommands(this.client);
 
-        this.client['_applicationCommandsCache'] = [];
+        this.client._applicationCommandsCache = [];
 
         this.load();
     }
@@ -173,11 +173,11 @@ export class GCommandLoader {
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
             if (![CommandType.MESSAGE_CONTEXT_MENU, CommandType.USER_CONTEXT_MENU].includes(cmd.type)) continue;
-            if (![CommandType.MESSAGE_CONTEXT_MENU, CommandType.USER_CONTEXT_MENU].includes(cmd.type) && String(this.client['context']) === 'false') continue;
+            if (![CommandType.MESSAGE_CONTEXT_MENU, CommandType.USER_CONTEXT_MENU].includes(cmd.type) && String(this.client.context) === 'false') continue;
 
             let url = `${base}${Routes.applicationCommands(this.clientId)}`;
             const loadContextMenu = async (guildOnly?: string) => {
-                if (this.client['loadFromCache']) {
+                if (this.client.loadFromCache) {
                     let ifAlready;
                     if (guildOnly) ifAlready = (await Util.__getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
                     else ifAlready = (await this.allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
@@ -204,9 +204,9 @@ export class GCommandLoader {
                 hyttpo.request(config).then(() => {
                     this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
                     if (type === 4) {
-                        config['data'] = JSON.parse(config['data']);
-                        config['data'].type = 3;
-                        config['data'] = JSON.stringify(config['data']);
+                        config.data = JSON.parse(config.data);
+                        config.data.type = 3;
+                        config.data = JSON.stringify(config.data);
                         this.tryAgain(cmd, config, 'Context Menu (message)');
                     }
                 })
@@ -268,7 +268,7 @@ export class GCommandLoader {
 
             if ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined) continue;
 
-            const loadCommandPermission = async (apiCommands) => {
+            const loadCommandPermission = async apiCommands => {
                 for (const apiCommand of apiCommands) {
                     if (![1].includes(apiCommand.type)) continue;
 
@@ -393,7 +393,7 @@ export class GCommandLoader {
      * @returns {void}
      */
     async deleteNonExistCommands(commandFiles) {
-        if (!this.client['deleteNonExistent']) return;
+        if (!this.client.deleteNonExistent) return;
 
         const deleteAllGlobalCommands = async () => {
             const allSlashCommands = await Util.__getAllCommands(this.client);
