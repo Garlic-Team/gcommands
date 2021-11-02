@@ -29,6 +29,9 @@ export enum InternalEvents {
     COMMAND_ERROR = 'commandError',
     COMMANDS_LOADED = 'commandsLoaded',
     COMMAND_NOT_FOUND = 'commandNotFound',
+    INHIBITOR_EXECUTE = 'inhibitorExecute',
+    INHIBITOR_ERROR = 'inhibitorError',
+    INHIBITORS_LOADED = 'inhibitorsLoaded'
 }
 
 export enum ArgumentType {

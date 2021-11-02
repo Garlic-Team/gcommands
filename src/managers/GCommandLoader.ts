@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ms from 'ms';
@@ -40,9 +41,9 @@ export class GCommandLoader {
     private async load() {
         await this.loadFiles(this.dir);
 
-        await this.loadSlashCommands();
-        await this.loadContextMenuCommands();
-        await this.loadCommandPermissions();
+        // Await this.loadSlashCommands();
+        // Await this.loadContextMenuCommands();
+        // await this.loadCommandPermissions();
 
         this.client.emit(InternalEvents.COMMANDS_LOADED, this.client.gcommands);
     }
@@ -67,7 +68,7 @@ export class GCommandLoader {
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
             }
 
-            file._path = `${dir}/${fileName}${fileType}`;
+            file.path = `${dir}/${fileName}${fileType}`;
             if (this.autoCategory && !file.category) {
                 const category = dir.replace(`${this.dir}/`, '');
                 if (category && category !== this.dir) file.category = category.split('/').join(' ');
@@ -75,11 +76,12 @@ export class GCommandLoader {
 
             this.client.gcommands.set(file.name, file);
             if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
-            this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (File): &e➜   &3${fileName}`).getText());
+            this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded command (File): &e➜   &3${fileName}`).getText());
         }
     }
 
-    private async loadSlashCommands() {
+    /**
+    Private async loadSlashCommands() {
         const keys = Array.from(this.client.gcommands.keys());
         this.deleteNonExistCommands(keys);
 
@@ -116,8 +118,7 @@ export class GCommandLoader {
                     }),
                     url,
                 };
-
-                hyttpo.request(config)
+                Hyttpo.request(config)
                     .then(() => this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`).getText()))
                     .catch(error => {
                         this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error.status} ${error.data.message} &e(${cmd.name})`).getText());
@@ -166,8 +167,10 @@ export class GCommandLoader {
             } else { await loadSlashCommand(); }
         }
     }
+    */
 
-    async loadContextMenuCommands() {
+    /**
+    Async loadContextMenuCommands() {
         const keys = Array.from(this.client.gcommands.keys());
 
         for (const commandName of keys) {
@@ -183,7 +186,7 @@ export class GCommandLoader {
                     else ifAlready = (await this.allGlobalCommands).filter(c => c.name === cmd.name && [2, 3].includes(c.type));
 
                     if (ifAlready.length > 0 && ifAlready[0].name === cmd.name) {
-                        this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`, { json: false }).getText());
+                        this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded from cache (Context Menu): &e➜   &3${cmd.name}`).getText());
                         return;
                     }
                 }
@@ -202,7 +205,7 @@ export class GCommandLoader {
                 };
 
                 hyttpo.request(config).then(() => {
-                    this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`, { json: false }).getText());
+                    this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (Context Menu (user)): &e➜   &3${cmd.name}`).getText());
                     if (type === 4) {
                         config.data = JSON.parse(config.data);
                         config.data.type = 3;
@@ -211,7 +214,7 @@ export class GCommandLoader {
                     }
                 })
                     .catch(error => {
-                        this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`).getText());
 
                         if (error) {
                             if (error.status === 429) {
@@ -255,11 +258,13 @@ export class GCommandLoader {
             }
         }
     }
+    */
 
     /**
      * Internal method to load command permissions
      * @returns {void}
      */
+    /**
     async loadCommandPermissions() {
         const keys = Array.from(this.client.gcommands.keys());
 
@@ -312,9 +317,9 @@ export class GCommandLoader {
                             url,
                         };
 
-                        hyttpo.request(config).then(() => this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText()))
+                        hyttpo.request(config).then(() => this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`).getText()))
                             .catch(error => {
-                                this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                                this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`).getText());
 
                                 if (error) {
                                     if (error.status === 429) {
@@ -370,15 +375,16 @@ export class GCommandLoader {
             }
         }
     }
+    */
 
     /**
      * Internal method to try loading again
      * @returns {void}
     */
     tryAgain(cmd, config, type) {
-        hyttpo.request(config).then(() => this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText()))
+        hyttpo.request(config).then(() => this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`).getText()))
             .catch(error => {
-                this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`).getText());
 
                 if (error && error.status === 429) {
                     setTimeout(() => {
@@ -392,6 +398,7 @@ export class GCommandLoader {
      * Internal method to delete non existent commands
      * @returns {void}
      */
+    /**
     async deleteNonExistCommands(commandFiles) {
         if (!this.client.deleteNonExistent) return;
 
@@ -404,7 +411,7 @@ export class GCommandLoader {
                 else if (this.client.gcommands.get(slashCmd.name) && ['false', 'message'].includes(String(this.client.gcommands.get(slashCmd.name).slash))) Util.__deleteCmd(this.client, slashCmd.id);
                 else if (!this.client.gcommands.get(slashCmd.name).slash && ['false', 'message'].includes(String(this.client.slash))) Util.__deleteCmd(this.client, slashCmd.id);
                 else continue;
-                this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aDeleted: &e➜   &3${slashCmd.name}`, { json: false }).getText());
+                this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aDeleted: &e➜   &3${slashCmd.name}`).getText());
             }
         };
 
@@ -419,11 +426,12 @@ export class GCommandLoader {
                     else if (this.client.gcommands.get(slashCmd.name) && ['false', 'message'].includes(String(this.client.gcommands.get(slashCmd.name).slash))) Util.__deleteCmd(this.client, slashCmd.id, guild);
                     else if (!this.client.gcommands.get(slashCmd.name).slash && ['false', 'message'].includes(String(this.client.slash))) Util.__deleteCmd(this.client, slashCmd.id, guild);
                     else continue;
-                    this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aDeleted (guild: ${guild}): &e➜   &3${slashCmd.name}`, { json: false }).getText());
+                    this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aDeleted (guild: ${guild}): &e➜   &3${slashCmd.name}`).getText());
                 }
             }
         };
         await deleteAllGlobalCommands();
         await deleteAllGuildCommands();
     }
+    */
 }

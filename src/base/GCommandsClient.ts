@@ -8,23 +8,28 @@ import { GCommandsClientOptionsDefaults } from '../typings/defaults';
 import { GCommandsDispatcher } from './GCommandsDispatcher';
 import { GDatabaseLoader } from '../managers/GDatabaseLoader';
 import { Command } from '../structures/Command';
+import { Inhibitor } from '../structures/Inhibitor';
 import { GGuild } from '../structures/GGuild';
-import { GCommandLoader } from '../managers/GCommandLoader';
+// Import { GCommandLoader } from '../managers/GCommandLoader';
+import { GInhibitorLoader } from '../managers/GInhibitorLoader';
 import { GEventHandler } from '../managers/GEventHandler';
 
 export class GCommandsClient extends Client {
     public gcommands: Collection<string, Command>;
     public galiases: Collection<string, string>;
+    public ginhibitors: Collection<string, Inhibitor>;
     public languageFile: Record<string, Record<string, string>>;
     public options: GCommandsClientOptions;
     public dispatcher: GCommandsDispatcher;
     public database: Keyv | null;
+    public _applicationCommandsCache: Array<unknown>;
 
     public constructor(options: GCommandsClientOptions) {
         super(Object.assign(GCommandsClientOptionsDefaults, options));
 
         this.gcommands = new Collection();
         this.galiases = new Collection();
+        this.ginhibitors = new Collection();
         this.dispatcher = new GCommandsDispatcher(this);
 
         new GDatabaseLoader(this);
@@ -47,7 +52,8 @@ export class GCommandsClient extends Client {
             // If (this.eventDir) new GEventLoader(this);
 
             if (this.options.loader.componentDir) new GComponents(this, { dir: this.options.loader.componentDir });
-            new GCommandLoader(this);
+            new GInhibitorLoader(this);
+            // New GCommandLoader(this);
         }, 1000);
     }
 }

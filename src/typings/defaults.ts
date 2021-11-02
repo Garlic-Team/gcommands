@@ -7,6 +7,7 @@ export const GCommandsClientOptionsDefaults = {
     loader: {
       cmdDir: undefined,
       eventDir: undefined,
+      inhibitorDir: undefined,
       componentDir: undefined,
       autoCategory: false,
       loadFromCache: true,
@@ -36,6 +37,7 @@ export const CommandOptionsDefaults = {
   contextMenuName: undefined,
   description: 'undefined',
   type: [],
+  inhibitors: [],
   cooldown: undefined,
   args: undefined,
   alwaysObtain: false,
@@ -50,4 +52,9 @@ export const CommandOptionsDefaults = {
   aliases: undefined,
   category: undefined,
   usage: undefined,
+};
+
+export const InhibitorOptionsDefaults = {
+  name: 'undefined',
+  enableByDefault: false,
 };

@@ -3,6 +3,7 @@ import { Command } from '../structures/Command';
 import { GCommandsClient } from './GCommandsClient';
 export declare class GCommandsDispatcher {
     private client;
+    private caseSensitiveCommands;
     private inhibitors;
     private cooldowns;
     owners: Collection<string, User>;
@@ -26,4 +27,5 @@ export declare class GCommandsDispatcher {
     }>;
     addInhibitor(inhibitor: any): boolean | void;
     removeInhibitor(inhibitor: any): boolean | void;
+    getCommand(name: string): Command;
 }

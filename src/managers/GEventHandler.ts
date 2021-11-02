@@ -58,6 +58,38 @@ export class GEventHandler {
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
 
+                const inhibitorRunOptions = {
+                    member: message.member,
+                    author: message.author,
+                    guild: message.guild,
+                    channel: message.channel,
+                    message: message,
+                    client: this.client,
+                    language: language,
+                    command: command,
+
+                    respond: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
+                    followUp: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
+                };
+
+                const inhibitors = this.client.ginhibitors.filter(inhibitor => {
+                    if (inhibitor.enableByDefault) return true;
+                    else if (command.inhibitors.includes(inhibitor.name)) return true;
+                    else return false;
+                }).values();
+
+                if (inhibitors[0]) {
+                    for await (const inhibitor of inhibitors) {
+                        try {
+                            await inhibitor.run(inhibitorRunOptions);
+                            this.client.emit(InternalEvents.INHIBITOR_EXECUTE, { inhibitor: inhibitor, member: message.member, channel: message.channel, guild: message.guild });
+                        } catch (err) {
+                            this.client.emit(InternalEvents.INHIBITOR_ERROR, { inhibitor: inhibitor, member: message.member, channel: message.channel, guild: message.guild, error: err });
+                            this.client.emit(InternalEvents.DEBUG, err);
+                        }
+                    }
+                }
+
                 const runOptions = {
                     member: message.member,
                     author: message.author,
@@ -71,55 +103,6 @@ export class GEventHandler {
                     respond: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
                     followUp: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
                 };
-
-                /**
-                Const inhibitReturn = await inhibit(this.client, {
-                    ...runOptions,
-                    args: args,
-                });
-                if (inhibitReturn === false) return;
-                */
-
-                const cooldown = await this.client.dispatcher.getCooldown(message.author.id, message.guild, command);
-                const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, command.name);
-
-                if (cooldown?.cooldown) return message.reply(getCooldownMessage());
-
-                if (command.guildOnly[0]) {
-                    if (!command.guildOnly.includes(message.guild.id)) return;
-                }
-
-                if (command.userOnly[0]) {
-                    if (!command.userOnly.includes(message.author.id)) return;
-                }
-
-                if (command.channelTypeOnly[0]) {
-                    if (!command.channelTypeOnly.includes(message.channel.type)) return;
-                }
-
-                const NSFW = message.guild ? command.nsfw && !message.channel.nsfw : null;
-                const getNsfwMessage = () => this.client.languageFile.NSFW[language];
-
-                if (NSFW) return message.reply(getNsfwMessage());
-
-                const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', command.clientRequiredPermissions.map(v => Util.unescape(String(v), '_')).join(', '));
-
-                if (command.clientRequiredPermissions[0]) {
-                    if (message.channel.permissionsFor(message.guild.me).has(command.clientRequiredPermissions)) return message.reply(getMissingClientPermissionsMessage());
-                }
-
-                const getMissingPermissionsMessage = () => this.client.languageFile.MISSING_PERMISSIONS[language].replace('{PERMISSION}', command.userRequiredPermissions.map(v => Util.unescape(String(v), '_')).join(', '));
-
-                if (command.userRequiredPermissions[0]) {
-                    if (!message.member.permissions.has(command.userRequiredPermissions)) return message.reply(getMissingPermissionsMessage());
-                }
-
-                const getMissingRolesMessage = () => this.client.languageFile.MISSING_ROLES[language].replace('{ROLES}', `\`${command.userRequiredRoles.map(r => message.guild.roles.cache.get(r).name).join(', ')}\``);
-
-                if (command.userRequiredRoles[0]) {
-                    const roles = command.userRequiredRoles.some(v => message.member._roles.includes(v));
-                    if (!roles) return message.reply(getMissingRolesMessage());
-                }
 
                 let finalArgs;
                 if (command.args && command.args[0]) {

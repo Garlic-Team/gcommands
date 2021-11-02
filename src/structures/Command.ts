@@ -1,45 +1,36 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Snowflake, PermissionResolvable, Interaction, Message, User, GuildMember, MessagePayload } from 'discord.js';
+/* eslint-disable no-unused-vars */
+import { Snowflake, PermissionResolvable } from 'discord.js';
 
 import { GCommandsClient } from '../base/GCommandsClient';
 import { CommandOptions, CommandArgsOption } from '../typings/interfaces';
 import { CommandOptionsDefaults } from '../typings/defaults';
 import { CommandType, ChannelType } from '../util/Constants';
+import { CommandRunOptions } from '../typings/types';
 import { GError } from './GError';
 
-type CommandRunOptions = {
-    interaction?: Interaction,
-    message?: Message,
-    author: User,
-    member?: GuildMember,
-    respond(options: MessagePayload): Promise<Message>,
-    followUp(options: MessagePayload):Promise<Message>,
-    args: Record<string, unknown>,
-    arrayArgs: Array<unknown>
-}
-
 export class Command {
-    public client: GCommandsClient;
-    public name: string;
-    public contextMenuName: string;
-    public description: string;
-    public type: CommandType[];
-    public cooldown: string;
-    public args: Array<CommandArgsOption>;
-    public alwaysObtain: boolean;
-    public clientRequiredPermissions?: Array<PermissionResolvable>;
-    public userRequiredPermissions?: Array<PermissionResolvable>;
-    public userRequiredRoles?: Array<Snowflake>;
-    public userOnly?: Array<Snowflake>;
-    public channelTypeOnly?: Array<ChannelType>;
-    public allowDm?: boolean;
-    public guildOnly?: Array<Snowflake>;
-    public nsfw?: boolean;
-    public aliases?: Array<string>;
-    public category?: string;
-    public usage?: string;
-    private _path: string;
+    readonly client: GCommandsClient;
+    readonly name: string;
+    readonly contextMenuName: string;
+    readonly description: string;
+    readonly type: CommandType[];
+    readonly inhibitors: Array<string>;
+    readonly cooldown: string;
+    readonly args: Array<CommandArgsOption>;
+    readonly alwaysObtain: boolean;
+    readonly clientRequiredPermissions?: Array<PermissionResolvable>;
+    readonly userRequiredPermissions?: Array<PermissionResolvable>;
+    readonly userRequiredRoles?: Array<Snowflake>;
+    readonly userOnly?: Array<Snowflake>;
+    readonly channelTypeOnly?: Array<ChannelType>;
+    readonly allowDm?: boolean;
+    readonly guildOnly?: Array<Snowflake>;
+    readonly nsfw?: boolean;
+    readonly aliases?: Array<string>;
+    readonly category?: string;
+    readonly usage?: string;
+    private path: string;
 
     public constructor(client: GCommandsClient, options: CommandOptions) {
         this.client = client;
@@ -52,7 +43,7 @@ export class Command {
     }
 
     public async reload(): Promise<boolean> {
-        const cmdPath = this.client.gcommands.get(this.name)._path;
+        const cmdPath = this.client.gcommands.get(this.name).path;
 
         delete require.cache[require.resolve(cmdPath)];
         this.client.gcommands.delete(this.name);

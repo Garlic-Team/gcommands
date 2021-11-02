@@ -6,6 +6,7 @@ export interface GCommandsClientOptions extends ClientOptions {
         cmdDir: string;
         eventDir?: string;
         componentDir?: string;
+        inhibitorDir?: string;
         autoCategory?: boolean;
         loadFromCache?: boolean;
     };
@@ -19,6 +20,7 @@ export interface GCommandsClientOptions extends ClientOptions {
     commands?: {
         defaultType?: Array<CommandType>;
         prefix?: string;
+        allowDm?: boolean;
     };
     caseSensitiveCommands?: boolean;
     caseSensitivePrefixes?: boolean;
@@ -31,6 +33,7 @@ export interface CommandOptions {
     contextMenuName?: string;
     description: string;
     type: Array<CommandType>;
+    inhibitors: Array<string>;
     cooldown?: string;
     args?: Array<boolean>;
     alwaysObtain?: boolean;
@@ -59,4 +62,8 @@ export interface CommandArgsOption {
     channelType?: Array<ChannelType>;
     options: Array<CommandArgsOption>;
     choices?: Array<CommandArgsOptionChoice>;
+}
+export interface InhibitorOptions {
+    name: string;
+    enableByDefault?: boolean;
 }

@@ -1,9 +1,11 @@
 import { Collection } from 'discord.js';
 import { Command } from './structures/Command';
+import { Inhibitor } from './structures/Inhibitor';
 export * from '@gcommands/components';
 export * from '@gcommands/events';
 export * from './base/GCommandsClient';
 export * from './structures/Command';
+export * from './structures/Inhibitor';
 export { LanguageType, CommandType, ArgumentType, ChannelType } from './util/Constants';
 declare module 'discord.js' {
     interface Guild {
@@ -25,10 +27,35 @@ declare module 'discord.js' {
         selectMenu: [SelectMenuInteraction];
         clickButton: [ButtonInteraction];
         commandPrefixChange: [Guild, string];
-        commandExecute: [Command, GuildMember];
-        commandError: [Command, GuildMember, string];
+        commandExecute: [{
+            command: Command;
+            member: GuildMember;
+            channel: TextChannel;
+            guild: Guild;
+        }];
+        commandError: [{
+            command: Command;
+            member: GuildMember;
+            channel: TextChannel;
+            guild: Guild;
+            error: unknown;
+        }];
         commandsLoaded: [Collection<string, Command>];
         commandNotFound: [string];
+        inhibitorExecute: [{
+            inhibitor: Inhibitor;
+            member: GuildMember;
+            channel: TextChannel;
+            guild: Guild;
+        }];
+        inhibitorError: [{
+            inhibitor: Inhibitor;
+            member: GuildMember;
+            channel: TextChannel;
+            guild: Guild;
+            error: unknown;
+        }];
+        inhibitorsLoaded: [Collection<string, Inhibitor>];
         log: [string];
         debug: [string];
         guildLanguageChange: [Guild, string];

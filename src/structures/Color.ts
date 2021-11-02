@@ -1,9 +1,9 @@
-import Util from "../util/util";
+import Util from '../util/util';
 
 export class Color {
     public text: string;
 
-	constructor(text: string | Array<string>, options?: object) {
+	constructor(text: string | Array<string>) {
 		this.text = Util.resolveString(text);
 
         this.text = this.text

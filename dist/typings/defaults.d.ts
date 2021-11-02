@@ -4,6 +4,7 @@ export declare const GCommandsClientOptionsDefaults: {
     loader: {
         cmdDir: any;
         eventDir: any;
+        inhibitorDir: any;
         componentDir: any;
         autoCategory: boolean;
         loadFromCache: boolean;
@@ -18,6 +19,7 @@ export declare const GCommandsClientOptionsDefaults: {
     commands: {
         defaultType: any[];
         prefix: any;
+        allowDm: boolean;
     };
     caseSensitiveCommands: boolean;
     caseSensitivePrefixes: boolean;
@@ -31,18 +33,23 @@ export declare const CommandOptionsDefaults: {
     contextMenuName: any;
     description: string;
     type: any[];
+    inhibitors: any[];
     cooldown: any;
     args: any;
     alwaysObtain: boolean;
-    clientRequiredPermissions: any;
-    userRequiredPermissions: any;
-    userRequiredRoles: any;
-    userOnly: any;
-    channelTypeOnly: any;
+    clientRequiredPermissions: any[];
+    userRequiredPermissions: any[];
+    userRequiredRoles: any[];
+    userOnly: any[];
+    channelType: any[];
     allowDm: boolean;
-    guildOnly: any;
+    guildOnly: any[];
     nsfw: boolean;
     aliases: any;
     category: any;
     usage: any;
+};
+export declare const InhibitorOptionsDefaults: {
+    name: string;
+    enableByDefault: boolean;
 };

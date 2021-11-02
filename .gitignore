@@ -10,3 +10,6 @@ logs/
 .tmp/
 .vscode/
 .idea/
+
+# TS
+dist/

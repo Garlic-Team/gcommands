@@ -169,10 +169,10 @@ export class GCommandsDispatcher {
         return this.inhibitors.delete(inhibitor);
     }
     public getCommand(name: string): Command {
-        let command = this.client.commands.get(this.caseSensitiveCommands ? name : name.toLowerCase());
+        let command = this.client.gcommands.get(this.caseSensitiveCommands ? name : name.toLowerCase());
         if (!command) {
-            const alias = this.client.aliases.get(this.caseSensitiveCommands ? name : name.toLowerCase());
-            if (alias) command = this.client.commands.get(alias);
+            const alias = this.client.galiases.get(this.caseSensitiveCommands ? name : name.toLowerCase());
+            if (alias) command = this.client.gcommands.get(alias);
         }
         return command;
     }

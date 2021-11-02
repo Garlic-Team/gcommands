@@ -8,7 +8,8 @@
       "removeComments": true,
       "noImplicitAny": false,
       "declaration": true,
-      "resolveJsonModule": true
+      "resolveJsonModule": true,
+      "downlevelIteration": true
     },
     "typedocOptions": {
       "entryPoints": ["src/index.ts"],
