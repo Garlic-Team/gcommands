@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.GError=void 0;var _Color=require("./Color");class GError extends Error{constructor(name,message){super(message);this.message=new _Color.Color(`&c${message}`).getText();this.name=new _Color.Color(`&a${name}`).getText()}}exports.GError=GError;
