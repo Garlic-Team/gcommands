@@ -13,6 +13,7 @@ export class GEventHandler {
         this.client = client;
 
         this.messageEvent();
+        this.slashEvent();
     }
 
     private messageEvent() {
@@ -45,18 +46,13 @@ export class GEventHandler {
             let command: Command;
             try {
                 command = this.client.dispatcher.getCommand(cmd);
-
                 if (!command) return this.client.emit(InternalEvents.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`).getText());
-
-                // Const isDmEnabled = ['false'].includes(String(command.allowDm));
-                // const isClientDmEnabled = !command.allowDm && ['false'].includes(String(this.client.options.commands.allowDm));
-
-                // If (!isNotDm && isDmEnabled) return;
-                // if (!isNotDm && isClientDmEnabled) return;
+                if (command.allowDm !== undefined && !command.allowDm && message.channel.type === 'DM') return;
+                if (command.allowDm === undefined && !this.client.options.commands.allowDm && message.channel.type === 'DM') return;
                 if (command.type[0] && !command.type.includes(CommandType.MESSAGE)) return;
                 if (!command.type[0] && !this.client.options.commands.defaultType.includes(CommandType.MESSAGE)) return;
 
-                const inhibitorRunOptions = {
+                const baseRunOptions = {
                     member: message.member,
                     author: message.author,
                     guild: message.guild,
@@ -64,10 +60,14 @@ export class GEventHandler {
                     message: message,
                     client: this.client,
                     language: language,
-                    command: command,
 
                     respond: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
                     followUp: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
+                };
+
+                const inhibitorRunOptions = {
+                    command: command,
+                    ...baseRunOptions,
                 };
 
                 const inhibitors = this.client.ginhibitors.filter(inhibitor => {
@@ -89,20 +89,6 @@ export class GEventHandler {
                     }
                 }
 
-                const runOptions = {
-                    member: message.member,
-                    author: message.author,
-                    guild: message.guild,
-                    channel: message.channel,
-                    message: message,
-                    client: this.client,
-                    bot: this.client,
-                    language: language,
-
-                    respond: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
-                    followUp: (options = undefined) => message.reply(Util.resolveMessageOptions(options)),
-                };
-
                 let finalArgs;
                 if (command.args && command.args[0]) {
                     const collector = new ArgumentsCollector(this.client, { message, args, language, isNotDm, command });
@@ -110,17 +96,100 @@ export class GEventHandler {
 
                     finalArgs = collector.options;
                 }
+                const runOptions = {
+                    args: this.argsToObject(finalArgs) || {},
+                    arrayArgs: this.argsToArray(finalArgs) || [],
+                    ...baseRunOptions,
+                };
 
                 this.client.emit(InternalEvents.COMMAND_EXECUTE, { command: command, member: message.member, channel: message.channel, guild: message.guild });
 
-                await command.run({
-                    ...runOptions,
-                    args: this.argsToObject(finalArgs) || {},
-                    arrayArgs: this.argsToArray(finalArgs) || [],
-                });
+                await command.run(runOptions);
             } catch (e) {
                 this.client.emit(InternalEvents.COMMAND_ERROR, { command: command, member: message.member, channel: message.channel, guild: message.guild, error: e });
                 this.client.emit(InternalEvents.DEBUG, e);
+            }
+        };
+    }
+    private slashEvent() {
+        this.client.on('interactionCreate', interaction => { handle(interaction); });
+        const handle = async interaction => {
+            if (interaction.isMessageComponent()) return;
+
+            const isNotDm = interaction.channel.type !== 'DM';
+            const language = isNotDm ? await interaction.guild.getLanguage() : this.client.options.language;
+
+            if (interaction.guild && !interaction.guild.available) {
+                return interaction.reply({
+                    content: this.client.languageFile.GUILD_UNAVAILABLE[language],
+                    ephemeral: true,
+                });
+            }
+
+            let command: Command;
+            try {
+                command = this.client.dispatcher.getCommand(interaction.commandName);
+                if (!command) return this.client.emit(InternalEvents.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (slash): &e➜   &3${interaction.commandName ? String(interaction.commandName) : null}`).getText());
+                if (command.allowDm !== undefined && !command.allowDm && interaction.channel.type === 'DM') return;
+                if (command.allowDm === undefined && !this.client.options.commands.allowDm && interaction.channel.type === 'DM') return;
+                if (interaction.isCommand()) {
+                    if (command.type[0] && !command.type.includes(CommandType.SLASH)) return;
+                    if (!command.type[0] && !this.client.options.commands.defaultType.includes(CommandType.SLASH)) return;
+                } else if (interaction.isContextMenu()) {
+                    if (command.type[0] && !command.type.includes(CommandType.MESSAGE_CONTEXT_MENU || CommandType.USER_CONTEXT_MENU)) return;
+                    if (!command.type[0] && !this.client.options.commands.defaultType.includes(CommandType.MESSAGE_CONTEXT_MENU || CommandType.USER_CONTEXT_MENU)) return;
+                }
+
+                const baseRunOptions = {
+                    member: interaction.member,
+                    author: interaction.author,
+                    guild: interaction.guild,
+                    channel: interaction.channel,
+                    interaction: interaction,
+                    client: this.client,
+                    language: language,
+
+                    respond: (options = undefined) => interaction.reply(Util.resolveMessageOptions(options)),
+                    followUp: (options = undefined) => interaction.followUp(Util.resolveMessageOptions(options)),
+                };
+
+                const inhibitorRunOptions = {
+                    command: command,
+                    ...baseRunOptions,
+                };
+
+                const inhibitors = this.client.ginhibitors.filter(inhibitor => {
+                    if (inhibitor.enableByDefault) return true;
+                    else if (command.inhibitors.includes(inhibitor.name)) return true;
+                    else return false;
+                }).values();
+
+                if (inhibitors[0]) {
+                    for await (const inhibitor of inhibitors) {
+                        try {
+                            const response = await inhibitor.run(inhibitorRunOptions);
+                            this.client.emit(InternalEvents.INHIBITOR_EXECUTE, { inhibitor: inhibitor, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
+                            if (!response) return;
+                        } catch (err) {
+                            this.client.emit(InternalEvents.INHIBITOR_ERROR, { inhibitor: inhibitor, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: err });
+                            this.client.emit(InternalEvents.DEBUG, err);
+                        }
+                    }
+                }
+
+                const runOptions = {
+                    args: this.argsToObject(interaction.options.data) || {},
+                    arrayArgs: this.argsToArray(interaction.options.data) || [],
+                    ...baseRunOptions,
+                };
+
+
+                this.client.emit(InternalEvents.COMMAND_EXECUTE, { command: command, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
+
+                await command.run(runOptions);
+            } catch (err) {
+                this.client.emit(InternalEvents.COMMAND_ERROR, { command: command, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: err });
+                this.client.emit(InternalEvents.DEBUG, err);
             }
         };
     }

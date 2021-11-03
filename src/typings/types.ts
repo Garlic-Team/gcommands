@@ -18,6 +18,7 @@ export type BaseRunOptions = {
 export type CommandRunOptions = BaseRunOptions & {
     args: Record<string, unknown>,
     arrayArgs: Array<unknown>,
+    edit?(options: string | MessagePayload): Promise<Message>,
 }
 
 export type InhibitorRunOptions = BaseRunOptions & {
