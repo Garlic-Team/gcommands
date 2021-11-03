@@ -137,7 +137,7 @@ export class Argument {
                 content = resFirst.values[0];
             } else { content = resFirst.customId.split('_')[1]; }
         } else if (resFirst instanceof Message) {
-            content = message.content;
+            content = resFirst.content;
         }
 
         if (this.client.options.arguments.deletePrompt) await msgReply.delete();

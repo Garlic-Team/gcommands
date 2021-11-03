@@ -56,8 +56,6 @@ export class GEventHandler {
                 if (command.type[0] && !command.type.includes(CommandType.MESSAGE)) return;
                 if (!command.type[0] && !this.client.options.commands.defaultType.includes(CommandType.MESSAGE)) return;
 
-                console.log('test');
-
                 const inhibitorRunOptions = {
                     member: message.member,
                     author: message.author,
@@ -141,20 +139,21 @@ export class GEventHandler {
         for (const o of options) {
           if ([1, 2].includes(o.type)) {
             args[o.name] = this.argsToObject(o.options);
-          } else {
-            args[o.name] = o.value;
-          }
+          } else if (o.user || o.member || o.channel || o.role) {
+                args[o.name] = o.member || o.user || o.channel || o.role;
+          } else { args[o.name] = o.value; }
         }
 
         return args;
     }
 
-    private argsToArray(options: object) {
+    private argsToArray(options: Record<string, unknown>) {
         const args = [];
 
         const check = option => {
           if (!option) return;
-          if (option.value) args.push(option.value);
+          if (option.user || option.member || option.channel || option.role) args.push(option.member || option.user || option.channel || option.role);
+          else if (option.value) args.push(option.value);
           else args.push(option.name);
 
           if (option.options) {

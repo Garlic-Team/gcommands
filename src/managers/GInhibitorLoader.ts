@@ -18,7 +18,7 @@ export class GInhibitorLoader {
         this.load();
     }
     private async load() {
-        await this.loadFiles(path.join(__dirname, '../structures/Inhibitors'), true);
+        await this.loadFiles(path.join(__dirname, '../structures/Inhibitors'));
         if (this.dir) await this.loadFiles(this.dir, true);
 
         this.client.emit(InternalEvents.INHIBITORS_LOADED, this.client.ginhibitors);

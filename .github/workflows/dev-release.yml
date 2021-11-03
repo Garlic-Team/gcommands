@@ -21,6 +21,12 @@ jobs:
       #  env:
       #    NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+      - name: Install
+        run: npm install --save-dev @babel/cli @babel/core @babel/preset-env @babel/preset-typescript babel-plugin-add-module-exports typescript @types/node
+
+      - name: build
+        run: npm run build
+        
       - name: publish
         run: |
           npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)

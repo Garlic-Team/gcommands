@@ -9,7 +9,7 @@ export class UserArgument extends BaseArgument {
     }
 
 	validate(argument, message: { content: string, guild: Guild }, language: LanguageType) {
-		const matches = message.content.match(/([0-9]+)/);
+		const matches = message.content.match(/[0-9]+/);
 
 		if (!matches?.[0]) return this.client.languageFile.ARGS_MUST_CONTAIN[language].replace('{argument}', argument.name).replace('{type}', 'user');
         this.value.value = matches[0];

@@ -2,21 +2,7 @@
 import { Interaction, Message, User, GuildMember, MessagePayload, Guild, TextChannel } from 'discord.js';
 import { Command, GCommandsClient, LanguageType } from '..';
 
-export type CommandRunOptions = {
-    interaction?: Interaction,
-    message?: Message,
-    author: User,
-    member?: GuildMember,
-    guild?: Guild,
-    respond(options: string | MessagePayload): Promise<Message>,
-    followUp(options: string | MessagePayload): Promise<Message>,
-    args: Record<string, unknown>,
-    arrayArgs: Array<unknown>,
-    client: GCommandsClient,
-    language: LanguageType,
-}
-
-export type InhibitorRunOptions = {
+export type BaseRunOptions = {
     interaction?: Interaction,
     message?: Message,
     author: User,
@@ -25,7 +11,15 @@ export type InhibitorRunOptions = {
     channel: TextChannel,
     respond(options: string | MessagePayload): Promise<Message>,
     followUp(options: string | MessagePayload): Promise<Message>,
-    command: Command,
     client: GCommandsClient,
     language: LanguageType,
+}
+
+export type CommandRunOptions = BaseRunOptions & {
+    args: Record<string, unknown>,
+    arrayArgs: Array<unknown>,
+}
+
+export type InhibitorRunOptions = BaseRunOptions & {
+    command: Command,
 }

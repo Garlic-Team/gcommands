@@ -47,6 +47,7 @@
     "url": "https://github.com/Garlic-Team/GCommands/issues"
   },
   "scripts": {
+    "build": "bash build.bash",
     "test": "eslint src",
     "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
     "tscbuild": "tsc --emitDeclarationOnly",
