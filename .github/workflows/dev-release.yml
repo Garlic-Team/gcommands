@@ -26,7 +26,7 @@ jobs:
 
       - name: build
         run: npm run build
-        
+      
       - name: publish
         run: |
           npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)
