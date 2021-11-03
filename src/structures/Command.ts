@@ -38,7 +38,7 @@ export class Command {
         Object.assign(this, Object.assign(CommandOptionsDefaults, options));
     }
 
-    public run(options: CommandRunOptions) {
+    public run(options: CommandRunOptions): unknown | Promise<unknown> {
         throw new GError('[COMMAND]',`Command ${this.name} doesn't provide a run method!`);
     }
 

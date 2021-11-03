@@ -3,7 +3,6 @@ import * as ms from 'ms';
 
 import { Command } from '../structures/Command';
 import { GCommandsClient } from './GCommandsClient';
-import { Color } from '../structures/Color';
 
 export class GCommandsDispatcher {
     private client: GCommandsClient;
@@ -157,16 +156,6 @@ export class GCommandsDispatcher {
             await guild.setData(data);
             return { cooldown: false };
         }
-    }
-    public addInhibitor(inhibitor): boolean | void {
-        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-        if (this.inhibitors.has(inhibitor)) return false;
-        this.inhibitors.add(inhibitor);
-        return true;
-    }
-    public removeInhibitor(inhibitor): boolean | void {
-        if (typeof inhibitor !== 'function') return console.log(new Color('&d[GCommands] &cThe inhibitor must be a function.').getText());
-        return this.inhibitors.delete(inhibitor);
     }
     public getCommand(name: string): Command {
         let command = this.client.gcommands.get(this.caseSensitiveCommands ? name : name.toLowerCase());

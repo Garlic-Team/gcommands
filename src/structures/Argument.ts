@@ -38,20 +38,23 @@ export class Argument {
         const wait = this.client.options.arguments.wait;
 
         const getComponents = (disabled: boolean) => {
-            const components = [
-                new MessageActionRow().addComponents([
-                        new MessageButton()
+            const defaultComponents = [
+                new MessageButton()
                             .setLabel('Cancel')
                             .setStyle('DANGER')
                             .setCustomId(`argument_cancel_${message.id}_${this.name}`)
                             .setDisabled(disabled),
-                        !this.required ? new MessageButton()
-                            .setLabel('Skip')
-                            .setStyle('PRIMARY')
-                            .setCustomId(`argument_skip_${message.id}_${this.name}`)
-                            .setDisabled(disabled)
-                            : undefined,
-                    ]),
+            ];
+            if (!this.required) {
+                defaultComponents.push(new MessageButton()
+                    .setLabel('Skip')
+                    .setStyle('PRIMARY')
+                    .setCustomId(`argument_skip_${message.id}_${this.name}`)
+                    .setDisabled(disabled),
+                );
+            }
+            const components = [
+                new MessageActionRow().addComponents(defaultComponents),
             ];
             if (this.type === 'boolean') {
                 components[1] = new MessageActionRow().addComponents([
@@ -133,6 +136,8 @@ export class Argument {
             if (resFirst.isSelectMenu()) {
                 content = resFirst.values[0];
             } else { content = resFirst.customId.split('_')[1]; }
+        } else if (resFirst instanceof Message) {
+            content = message.content;
         }
 
         if (this.client.options.arguments.deletePrompt) await msgReply.delete();

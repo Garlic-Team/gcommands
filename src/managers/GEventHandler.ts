@@ -48,15 +48,15 @@ export class GEventHandler {
 
                 if (!command) return this.client.emit(InternalEvents.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`).getText());
 
-                const isDmEnabled = ['false'].includes(String(command.allowDm));
-                const isClientDmEnabled = !command.allowDm && ['false'].includes(String(this.client.options.commands.allowDm));
-                const isMessageEnabled = command.type.includes(CommandType.MESSAGE);
-                const isClientMessageEnabled = !command.type[0] && this.client.options.commands.defaultType.includes(CommandType.MESSAGE);
+                // Const isDmEnabled = ['false'].includes(String(command.allowDm));
+                // const isClientDmEnabled = !command.allowDm && ['false'].includes(String(this.client.options.commands.allowDm));
 
-                if (!isNotDm && isDmEnabled) return;
-                if (!isNotDm && isClientDmEnabled) return;
-                if (isMessageEnabled) return;
-                if (isClientMessageEnabled) return;
+                // If (!isNotDm && isDmEnabled) return;
+                // if (!isNotDm && isClientDmEnabled) return;
+                if (command.type[0] && !command.type.includes(CommandType.MESSAGE)) return;
+                if (!command.type[0] && !this.client.options.commands.defaultType.includes(CommandType.MESSAGE)) return;
+
+                console.log('test');
 
                 const inhibitorRunOptions = {
                     member: message.member,
@@ -81,8 +81,9 @@ export class GEventHandler {
                 if (inhibitors[0]) {
                     for await (const inhibitor of inhibitors) {
                         try {
-                            await inhibitor.run(inhibitorRunOptions);
+                            const response = await inhibitor.run(inhibitorRunOptions);
                             this.client.emit(InternalEvents.INHIBITOR_EXECUTE, { inhibitor: inhibitor, member: message.member, channel: message.channel, guild: message.guild });
+                            if (!response) return;
                         } catch (err) {
                             this.client.emit(InternalEvents.INHIBITOR_ERROR, { inhibitor: inhibitor, member: message.member, channel: message.channel, guild: message.guild, error: err });
                             this.client.emit(InternalEvents.DEBUG, err);
@@ -109,15 +110,15 @@ export class GEventHandler {
                     const collector = new ArgumentsCollector(this.client, { message, args, language, isNotDm, command });
                     if (await collector.get() === false) return;
 
-                    finalArgs = collector.resolve();
+                    finalArgs = collector.options;
                 }
 
                 this.client.emit(InternalEvents.COMMAND_EXECUTE, { command: command, member: message.member, channel: message.channel, guild: message.guild });
 
-                command.run({
+                await command.run({
                     ...runOptions,
-                    args: this.argsToObject(finalArgs._hoistedOptions) || {},
-                    arrayArgs: this.argsToArray(finalArgs._hoistedOptions) || [],
+                    args: this.argsToObject(finalArgs) || {},
+                    arrayArgs: this.argsToArray(finalArgs) || [],
                 });
             } catch (e) {
                 this.client.emit(InternalEvents.COMMAND_ERROR, { command: command, member: message.member, channel: message.channel, guild: message.guild, error: e });

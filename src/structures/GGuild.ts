@@ -6,7 +6,7 @@ export class GGuild {
             getCommandPrefix: {
                 value: async function() {
                     const prefix = await this.client.dispatcher.getGuildPrefix(this);
-                    return prefix || this.client.prefix;
+                    return prefix || this.client.options.commands.prefix;
                 },
             },
             setCommandPrefix: {
@@ -19,7 +19,7 @@ export class GGuild {
             getLanguage: {
                 value: async function() {
                     const language = await this.client.dispatcher.getGuildLanguage(this);
-                    return language || this.client.language || 'english';
+                    return language || this.client.options.language;
                 },
             },
             setLanguage: {

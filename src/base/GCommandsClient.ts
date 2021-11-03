@@ -10,7 +10,7 @@ import { GDatabaseLoader } from '../managers/GDatabaseLoader';
 import { Command } from '../structures/Command';
 import { Inhibitor } from '../structures/Inhibitor';
 import { GGuild } from '../structures/GGuild';
-// Import { GCommandLoader } from '../managers/GCommandLoader';
+import { GCommandLoader } from '../managers/GCommandLoader';
 import { GInhibitorLoader } from '../managers/GInhibitorLoader';
 import { GEventHandler } from '../managers/GEventHandler';
 
@@ -53,7 +53,7 @@ export class GCommandsClient extends Client {
 
             if (this.options.loader.componentDir) new GComponents(this, { dir: this.options.loader.componentDir });
             new GInhibitorLoader(this);
-            // New GCommandLoader(this);
+            new GCommandLoader(this);
         }, 1000);
     }
 }
