@@ -2,8 +2,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ms from 'ms';
-import { Routes } from 'discord-api-types/v9';
-const base = 'https://discord.com/api/v9/';
+// Import { Routes } from 'discord-api-types/v9';
+// const base = 'https://discord.com/api/v9/';
 
 import { Snowflake } from 'discord.js';
 import hyttpo from 'hyttpo';
@@ -74,8 +74,16 @@ export class GCommandLoader {
                 if (category && category !== this.dir) file.category = category.split('/').join(' ');
             }
 
+            if (this.client.ginhibitors.has(file.name)) throw new GError('[COMMAND]', `Duplicate command found: ${file.name}`);
             this.client.gcommands.set(file.name, file);
-            if (file && file.aliases && Array.isArray(file.aliases)) file.aliases.forEach(alias => this.client.galiases.set(alias, file.name));
+
+            if (file && file.aliases && Array.isArray(file.aliases)) {
+                file.aliases.forEach((alias: string) => {
+                    if (this.client.galiases.has(file.name)) throw new GError('[COMMAND]', `Duplicate alias found: ${alias}`);
+                    this.client.galiases.set(alias, file.name);
+                });
+            }
+
             this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded command (File): &e➜   &3${fileName}`).getText());
         }
     }
@@ -118,7 +126,7 @@ export class GCommandLoader {
                     }),
                     url,
                 };
-                Hyttpo.request(config)
+                hyttpo.request(config)
                     .then(() => this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`).getText()))
                     .catch(error => {
                         this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error.status} ${error.data.message} &e(${cmd.name})`).getText());
