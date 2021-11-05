@@ -17,6 +17,7 @@ export class Inhibitor {
 
         Object.assign(this, Object.assign(InhibitorOptionsDefaults, options));
     }
+
     run(options: InhibitorRunOptions): boolean | unknown | Promise<boolean | unknown> {
         throw new GError('[INHIBITOR]',`Inhibitor ${this.name} doesn't provide a run method!`);
     }
