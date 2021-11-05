@@ -6,14 +6,14 @@ import { Inhibitor } from '../Inhibitor';
 export default class extends Inhibitor {
     constructor(client: GCommandsClient) {
         super(client, {
-            name: 'channelTypeOnly',
+            name: 'channelType',
             enableByDefault: true,
         });
     }
     run({ command, guild, channel }: InhibitorRunOptions) {
         if (!guild) return false;
-        if (command.channelTypeOnly[0]) {
-            if (!command.channelTypeOnly.includes(ChannelType[channel.type])) return false;
+        if (command.channelType[0]) {
+            if (!command.channelType.includes(ChannelType[channel.type])) return false;
         }
         return true;
     }

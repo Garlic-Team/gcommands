@@ -74,14 +74,14 @@ export class GEventHandler {
                     if (inhibitor.enableByDefault) return true;
                     else if (command.inhibitors.includes(inhibitor.name)) return true;
                     else return false;
-                }).values();
+                });
 
-                if (inhibitors[0]) {
-                    for await (const inhibitor of inhibitors) {
+                if (inhibitors.first()) {
+                    for await (const inhibitor of inhibitors.values()) {
                         try {
                             const response = await inhibitor.run(inhibitorRunOptions);
                             this.client.emit(InternalEvents.INHIBITOR_EXECUTE, { inhibitor: inhibitor, member: message.member, channel: message.channel, guild: message.guild });
-                            if (!response) return;
+                            if (response !== true) return;
                         } catch (err) {
                             this.client.emit(InternalEvents.INHIBITOR_ERROR, { inhibitor: inhibitor, member: message.member, channel: message.channel, guild: message.guild, error: err });
                             this.client.emit(InternalEvents.DEBUG, err);

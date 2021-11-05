@@ -23,7 +23,7 @@ export class Command {
     readonly userRequiredPermissions?: Array<PermissionResolvable>;
     readonly userRequiredRoles?: Array<Snowflake>;
     readonly userOnly?: Array<Snowflake>;
-    readonly channelTypeOnly?: Array<ChannelType>;
+    readonly channelType?: Array<ChannelType>;
     readonly allowDm?: boolean;
     readonly guildOnly?: Array<Snowflake>;
     readonly nsfw?: boolean;
