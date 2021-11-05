@@ -12,13 +12,28 @@ export class Inhibitor {
     readonly enableByDefault: boolean;
     private path: string;
 
-    constructor(client: GCommandsClient, options: InhibitorOptions) {
+    public constructor(client: GCommandsClient, options: InhibitorOptions) {
         this.client = client;
 
         Object.assign(this, Object.assign(InhibitorOptionsDefaults, options));
     }
 
-    run(options: InhibitorRunOptions): boolean | unknown | Promise<boolean | unknown> {
+    public run(options: InhibitorRunOptions): boolean | unknown | Promise<boolean | unknown> {
         throw new GError('[INHIBITOR]',`Inhibitor ${this.name} doesn't provide a run method!`);
+    }
+
+    public async reload(): Promise<boolean> {
+        const cmdPath = this.client.ginhibitors.get(this.name).path;
+
+        delete require.cache[require.resolve(cmdPath)];
+        this.client.ginhibitors.delete(this.name);
+
+        let newInhibitor = await require(cmdPath);
+
+        newInhibitor = new newInhibitor(this.client);
+
+        newInhibitor.path = cmdPath;
+        this.client.ginhibitors.set(newInhibitor.name, newInhibitor);
+        return true;
     }
 }
