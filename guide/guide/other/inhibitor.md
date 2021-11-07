@@ -6,8 +6,8 @@ Here is a blacklist example:
 ```js
 let blacklist = (await client.database.get("blacklist")) || [];
 
-client.dispatcher.addInhibitor((interaction, { respond, message, author }) => {
-  if ((message || interaction.isCommand()) && blacklist.includes(author.id)) {
+client.dispatcher.addInhibitor((client, { respond, message, interaction, author }) => {
+  if ((message) && blacklist.includes(author.id)) {
     respond({
       content: "You are blacklisted from using this bot!",
       ephemeral: true,
@@ -69,7 +69,7 @@ client.dispatcher.addInhibitor((interaction, { respond, message, author }) => {
 ```js
 let blacklist = (await client.database.get("blacklist")) || [];
 
-client.dispatcher.addInhibitor((interaction, { respond, message, author }) => {
+client.dispatcher.addInhibitor((client, { respond, interaction, message, author }) => {
   if (
     interaction &&
     interaction.isMessageComponent() &&
