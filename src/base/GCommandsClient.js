@@ -1,14 +1,14 @@
-const GCommandLoader = require("../managers/GCommandLoader"),
-  GCommandsDispatcher = require("./GCommandsDispatcher"),
-  { GEvents: GEventLoader } = require("@gcommands/events"),
-  { GComponents } = require("@gcommands/components"),
-  GEventHandling = require("../managers/GEventHandling"),
-  GDatabaseLoader = require("../managers/GDatabaseLoader"),
-  GUpdater = require("../util/updater");
+const GCommandLoader = require('../managers/GCommandLoader'),
+  GCommandsDispatcher = require('./GCommandsDispatcher'),
+  { GEvents: GEventLoader } = require('@gcommands/events'),
+  { GComponents } = require('@gcommands/components'),
+  GEventHandling = require('../managers/GEventHandling'),
+  GDatabaseLoader = require('../managers/GDatabaseLoader'),
+  GUpdater = require('../util/updater');
 
-const { Collection, Client } = require("discord.js");
-const fs = require("fs");
-const GError = require("../structures/GError");
+const { Collection, Client } = require('discord.js');
+const fs = require('fs');
+const GError = require('../structures/GError');
 
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
@@ -22,17 +22,17 @@ class GCommandsClient extends Client {
   constructor(options = {}) {
     super(options);
 
-    if (!options.loader?.cmdDir) throw new GError("[DEFAULT OPTIONS]", "You must specify the cmdDir");
-    if (!options.language) throw new GError("[DEFAULT OPTIONS]", "You must specify the language");
+    if (!options.loader?.cmdDir) throw new GError('[DEFAULT OPTIONS]', 'You must specify the cmdDir');
+    if (!options.language) throw new GError('[DEFAULT OPTIONS]', 'You must specify the language');
 
-    const isClientMessageEnabled = ["false", "both"].includes(
+    const isClientMessageEnabled = ['false', 'both'].includes(
       String(options.commands?.slash)
     );
 
     if (isClientMessageEnabled && !options.commands?.prefix) {
       throw new GError(
-              "[DEFAULT OPTIONS]",
-              "You must specify the commands#prefix"
+              '[DEFAULT OPTIONS]',
+              'You must specify the commands#prefix'
       );
     }
 
@@ -96,7 +96,7 @@ class GCommandsClient extends Client {
      * The own language file
      * @type {?Object}
      */
-    if (!options.ownLanguageFile) { this.languageFile = require("../util/message.json"); } else { this.languageFile = options.ownLanguageFile; }
+    if (!options.ownLanguageFile) { this.languageFile = require('../util/message.json'); } else { this.languageFile = options.ownLanguageFile; }
 
     /**
      * The default language
@@ -225,7 +225,7 @@ class GCommandsClient extends Client {
     this.defaultCooldown =
       options.defaultCooldown !== undefined
         ? String(options.defaultCooldown)
-        : "0s";
+        : '0s';
 
     /**
      * The dispatcher
@@ -238,7 +238,7 @@ class GCommandsClient extends Client {
     new GDatabaseLoader(this);
 
     setImmediate(() => {
-      super.on("ready", () => {
+      super.on('ready', () => {
         this.loadSys();
       });
     });
@@ -246,7 +246,7 @@ class GCommandsClient extends Client {
   }
 
   loadSys() {
-    new (require("../structures/GGuild"))();
+    new (require('../structures/GGuild'))();
 
     setTimeout(() => {
       new GEventHandling(this);
