@@ -30,11 +30,11 @@ class GCommandsClient extends Client {
     );
 
     if (isClientMessageEnabled && !options.commands?.prefix) {
- throw new GError(
-        "[DEFAULT OPTIONS]",
-        "You must specify the commands#prefix"
+      throw new GError(
+              "[DEFAULT OPTIONS]",
+              "You must specify the commands#prefix"
       );
-}
+    }
 
     /**
      * The path to the command files

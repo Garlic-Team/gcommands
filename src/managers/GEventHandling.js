@@ -92,6 +92,7 @@ class GEventHandling {
                     client: this.client,
                     bot: this.client,
                     language: language,
+                    command: commandos,
 
                     respond: (options = undefined) => message.reply(resolveMessageOptions(options)),
                     followUp: (options = undefined) => message.reply(resolveMessageOptions(options)),
@@ -242,6 +243,7 @@ class GEventHandling {
                     args: interaction.options,
                     objectArgs: this.argsToObject(interaction.options.data) || {},
                     arrayArgs: this.argsToArray(interaction.options.data) || [],
+                    command: commandos,
 
                     respond: (options = undefined) => interaction.reply(resolveMessageOptions(options)),
                     edit: (options = undefined) => interaction.editReply(resolveMessageOptions(options)),
