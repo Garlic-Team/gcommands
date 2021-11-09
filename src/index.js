@@ -15,9 +15,9 @@ module.exports = {
     Component: require('@gcommands/components').Component,
     CustomId: require('@gcommands/components').CustomId,
     ComponentType: require('@gcommands/components').ComponentType,
-    Button: require('@gcommands/components').Button,
-    SelectMenu: require('@gcommands/components').SelectMenu,
-    ActionRow: require('@gcommands/components').ActionRow,
+    MessageButton: require('@gcommands/components').MessageButton,
+    MessageSelectMenu: require('@gcommands/components').MessageSelectMenu,
+    MessageActionRow: require('@gcommands/components').MessageActionRow,
 
     Command: require('./structures/Command'),
     Event: require('@gcommands/events').Event,
