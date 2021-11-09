@@ -180,8 +180,8 @@ class GEventHandling {
                 commandos.run({
                     ...runOptions,
                     args: finalArgs,
-                    objectArgs: this.argsToObject(finalArgs._hoistedOptions) || {},
-                    arrayArgs: this.argsToArray(finalArgs._hoistedOptions) || [],
+                    objectArgs: finalArgs?._hoistedOptions ? this.argsToObject(finalArgs._hoistedOptions) : {},
+                    arrayArgs: finalArgs?._hoistedOptions ? this.argsToArray(finalArgs._hoistedOptions) : [],
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
