@@ -94,7 +94,7 @@ class GCommandsClient extends Client {
      * The own language file
      * @type {?Object}
      */
-    this.languageFile = 
+    this.languageFile =
       options.ownLanguageFile
         ? this.languageFile = require('../util/message.json')
         : this.languageFile = options.ownLanguageFile;
