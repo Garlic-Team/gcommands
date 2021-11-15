@@ -1,35 +1,52 @@
 const { Guild } = require('discord.js');
 
 /**
- * The GGuild class
+ * The GGuild
  * @extends Guild
  */
- class GGuild {
+class GGuild {
     constructor() {
         Object.defineProperties(Guild.prototype, {
             getCommandPrefix: {
-                value: async function(cache = true) {
-                    const prefix = await this.client.dispatcher.getGuildPrefix(this.id, cache);
-                    return prefix || this.client.prefix || [];
+                value: async function() {
+                    const prefix = await this.client.dispatcher.getGuildPrefix(this);
+                    return prefix || this.client.prefix;
                 },
             },
             setCommandPrefix: {
-                value: function(prefix) {
-                    this.client.dispatcher.setGuildPrefix(this.id, prefix);
+                value: async function(prefix) {
+                    const isSet = await this.client.dispatcher.setGuildPrefix(this, prefix);
                     this.client.emit('commandPrefixChange', this, prefix);
+                    return isSet;
                 },
             },
 
             getLanguage: {
-                value: async function(cache = true) {
-                    const language = await this.client.dispatcher.getGuildLanguage(this.id, cache);
+                value: async function() {
+                    const language = await this.client.dispatcher.getGuildLanguage(this);
                     return language || this.client.language || 'english';
                 },
             },
             setLanguage: {
-                value: function(lang) {
-                    this.client.dispatcher.setGuildLanguage(this.id, lang);
+                value: async function(lang) {
+                    const isSet = await this.client.dispatcher.setGuildLanguage(this, lang);
                     this.client.emit('guildLanguageChange', this, lang);
+                    return isSet;
+                },
+            },
+            getData: {
+                value: async function(options = {}) {
+                    const data = await this.client.dispatcher.getGuildData(this, options);
+                    if (data) this.data = data;
+                    return data;
+                },
+            },
+            setData: {
+                value: async function(data) {
+                    if (!data) data = this.data;
+                    const isSet = await this.client.dispatcher.setGuildData(this, data);
+                    if (isSet) this.data = data;
+                    return isSet;
                 },
             },
         });
@@ -37,32 +54,46 @@ const { Guild } = require('discord.js');
 
     /* eslint-disable no-empty-function */
     /**
-     * Method to getCommandPrefix
-     * @param {boolean} cache
-     * @returns {Promise}
+     * Method to get command prefix
+     * @param {object} options
+     * @returns {string}
     */
-    getCommandPrefix() {}
+    getCommandPrefix() { }
 
     /**
-     * Method to setCommandPrefix
+     * Method to set command prefix
      * @param {string} prefix
-     * @returns {void}
+     * @returns {boolean}
     */
-    setCommandPrefix() {}
+    setCommandPrefix() { }
 
     /**
-     * Method to getLanguage
-     * @param {boolean} cache
-     * @returns {Promise}
+     * Method to get language
+     * @param {object} options
+     * @returns {string}
     */
-    getLanguage() {}
+    getLanguage() { }
 
     /**
-     * Method to setLanguage
-     * @param {string} lang
-     * @returns {void}
+     * Method to set language
+     * @param {string} language
+     * @returns {boolean}
     */
-    setLanguage() {}
+    setLanguage() { }
+
+    /**
+     * Method to get data
+     * @param {object} options
+     * @returns {object}
+    */
+    getData() { }
+
+    /**
+     * Method to set data
+     * @param {object} data
+     * @returns {boolean}
+    */
+    setData() { }
 }
 
 module.exports = GGuild;

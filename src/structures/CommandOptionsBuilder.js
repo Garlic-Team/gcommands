@@ -1,152 +1,152 @@
 const { resolveString } = require('../util/util');
 
 /**
- * The CommandOptionsBuilder class
+ * The builder for a command
  */
 class CommandOptionsBuilder {
   /**
-   * Creates new CommandOptionsBuilder instance
    * @param {CommandOptions} data
+   * @constructor
   */
   constructor(data = {}) {
     this.setup(data);
   }
 
   /**
-   * Setup
+   * Setup function
    * @param {CommandOptions} data
    * @returns {CommandOptions}
    * @private
    */
   setup(data) {
     /**
-      * Name
+      * The name
       * @type {string}
      */
     this.name = 'name' in data ? resolveString(data.name) : null;
 
     /**
-      * ContextMenuName
+      * The context menu name
       * @type {string}
      */
     this.contextMenuName = 'contextMenuName' in data ? resolveString(data.contextMenuName) : null;
 
     /**
-      * Description
+      * The description
       * @type {string}
      */
     this.description = 'description' in data ? resolveString(data.description) : null;
 
     /**
-     * Usage
+     * The usage
      * @type {string}
     */
     this.usage = 'usage' in data ? resolveString(data.usage) : null;
 
     /**
-      * Args
+      * The arguments
       * @type {Array<CommandArgsOption>}
      */
     this.args = 'args' in data ? data.args : null;
 
     /**
-      * AlwaysObtain
+      * Whether always obtain is enabled
       * @type {boolean}
      */
     this.alwaysObtain = 'alwaysObtain' in data ? data.alwaysObtain : null;
 
     /**
-      * Cooldown
+      * The cooldown
       * @type {string}
      */
     this.cooldown = 'cooldown' in data ? resolveString(data.cooldown) : null;
 
     /**
-      * Category
+      * The category
       * @type {string}
      */
     this.category = 'category' in data ? resolveString(data.category) : null;
 
     /**
-      * Aliases
+      * The aliases
       * @type {Array}
      */
     this.aliases = 'aliases' in data ? data.aliases : null;
 
     /**
-      * User
+      * The permissions required by a user
       * @type {string | Array}
      */
     this.userRequiredPermissions = 'userRequiredPermissions' in data ? data.userRequiredPermissions : null;
 
     /**
-      * UserRequiredRoles
+      * The roles required by a user
       * @type {string | Array}
      */
     this.userRequiredRoles = 'userRequiredRoles' in data ? data.userRequiredRoles : null;
 
     /**
-      * ClientRequiredPermissions
+      * The permissions required by the client
       * @type {string | Array}
      */
     this.clientRequiredPermissions = 'clientRequiredPermissions' in data ? data.clientRequiredPermissions : null;
 
     /**
-      * UserOnly
+      * The users who can use this command
       * @type {Snowflake | Array}
      */
     this.userOnly = 'userOnly' in data ? data.userOnly : null;
 
     /**
-      * ChannelOnly
+      * The channels in wich this command can get used
       * @type {Snowflake | Array}
      */
     this.channelOnly = 'channelOnly' in data ? data.channelOnly : null;
 
     /**
-      * GuildOnly
+      * The guilds in wich this command can get used
       * @type {Snowflake}
      */
     this.guildOnly = 'guildOnly' in data ? data.guildOnly : null;
 
     /**
-      * ChannelTextOnly
+      * Wheter the command can only be used inside a text channel
       * @type {boolean}
      */
     this.channelTextOnly = 'channelTextOnly' in data ? Boolean(data.channelTextOnly) : null;
 
     /**
-      * ChannelNewsOnly
+      * Wheter the command can only be used inside a news channel
       * @type {boolean}
      */
     this.channelNewsOnly = 'channelNewsOnly' in data ? Boolean(data.channelNewsOnly) : null;
 
     /**
-      * ChannelThreadOnly
+      * Wheter the command can only be used inside a thread channel
       * @type {boolean}
      */
     this.channelThreadOnly = 'channelThreadOnly' in data ? Boolean(data.channelThreadOnly) : null;
 
     /**
-      * AllowDm
+      * Wheter the command can be used in DM's
       * @type {boolean}
      */
     this.allowDm = 'allowDm' in data ? Boolean(data.allowDm) : null;
 
     /**
-      * Nsfw
+      * Wheter this command can be only be used inside NSFW channels
       * @type {boolean}
      */
     this.nsfw = 'nsfw' in data ? Boolean(data.nsfw) : null;
 
     /**
-      * Slash
+      * Wheter this command should be a slash command
       * @type {boolean}
      */
     this.slash = 'slash' in data ? Boolean(data.slash) : null;
 
     /**
-      * Context
+      * Wheter this command should be a context menu
       * @type {string | boolean}
      */
     this.context = 'context' in data ? data.context : null;
@@ -155,7 +155,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setName
+   * Method to set name
    * @param {string} name
   */
   setName(name) {
@@ -164,7 +164,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setContextMenuName
+   * Method to set context menu name
    * @param {string} contextMenuName
   */
   setContextMenuName(contextMenuName) {
@@ -173,7 +173,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setDescription
+   * Method to set description
    * @param {string} description
   */
   setDescription(description) {
@@ -182,7 +182,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setUsage
+   * Method to set usage
    * @param {string} usage
   */
   setUsage(usage) {
@@ -191,7 +191,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to addArg
+   * Method to add arg
    * @param {CommandArgsOption} arg
   */
   addArg(arg) {
@@ -201,7 +201,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to addArgs
+   * Method to add args
    * @param {Array<CommandArgsOption>} args
   */
   addArgs(args) {
@@ -212,7 +212,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setAlwaysObtain
+   * Method to set always obtain
    * @param {boolean} alwaysObtain
   */
   setAlwaysObtain(alwaysObtain) {
@@ -221,7 +221,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setCooldown
+   * Method to set cooldown
    * @param {string} cooldown
   */
   setCooldown(cooldown) {
@@ -230,7 +230,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setCategory
+   * Method to set category
    * @param {string} category
   */
   setCategory(category) {
@@ -239,7 +239,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setAliases
+   * Method to set aliases
    * @param {Array} aliases
   */
   setAliases(aliases) {
@@ -248,7 +248,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setUserRequiredPermissions
+   * Method to set user required permissions
    * @param {string | Array} permissions
   */
   setUserRequiredPermissions(permissions) {
@@ -257,7 +257,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setUserRequiredRoles
+   * Method to set user required roles
    * @param {string | Array} roles
   */
   setUserRequiredRoles(roles) {
@@ -266,7 +266,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setClientRequiredPermissions
+   * Method to set client required permissions
    * @param {string | Array} permissions
   */
   setClientRequiredPermissions(permissions) {
@@ -275,7 +275,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setUserOnly
+   * Method to set user only
    * @param {Snowflake | Array} userOnly
   */
   setUserOnly(userOnly) {
@@ -284,7 +284,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setChannelOnly
+   * Method to set channel only
    * @param {Snowflake | Array} channelOnly
   */
   setChannelOnly(channelOnly) {
@@ -293,7 +293,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setGuildOnly
+   * Method to set guild only
    * @param {Snowflake | Array} guildOnly
   */
   setGuildOnly(guildOnly) {
@@ -302,7 +302,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setChannelTextOnly
+   * Method to set channel text only
    * @param {boolean} channelTextOnly
   */
   setChannelTextOnly(channelTextOnly) {
@@ -311,7 +311,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setChannelNewsOnly
+   * Method to set channel news only
    * @param {boolean} channelNewsOnly
   */
   setChannelNewsOnly(channelNewsOnly) {
@@ -320,7 +320,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setChannelThreadOnly
+   * Method to set channel thread only
    * @param {boolean} channelThreadOnly
   */
   setChannelThreadOnly(channelThreadOnly) {
@@ -329,7 +329,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setAllowDm
+   * Method to set allow DM
    * @param {boolean} allowDm
   */
    setAllowDm(allowDm) {
@@ -338,7 +338,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setNsfw
+   * Method to set nsfw
    * @param {boolean} nsfw
   */
   setNsfw(nsfw) {
@@ -347,7 +347,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setSlash
+   * Method to set slash
    * @param {boolean} slash
   */
   setSlash(slash) {
@@ -356,7 +356,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to setContext
+   * Method to set context
    * @param {string | boolean} context
   */
   setContext(context) {
@@ -365,7 +365,7 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to toJSON
+   * Method to convert to JSON
    * @returns {Object}
   */
   toJSON() {

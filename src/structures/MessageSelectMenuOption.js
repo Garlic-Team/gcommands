@@ -1,50 +1,52 @@
 const { resolveString, parseEmoji, resolvePartialEmoji } = require('../util/util');
 
 /**
- * The MessageSelectMenuOption class
+ * The builder for the MessageSelectMenuOption
+ * @deprecated
  */
 class MessageSelectMenuOption {
     /**
-     * Creates new MessageSelectMenuOption instance
      * @param {Object} data
+     * @constructor
+     * @deprecated
     */
     constructor(data = {}) {
         this.setup(data);
     }
 
     /**
-     * Setup
+     * Setup function
      * @param {Object} data
      * @returns {MessageButton}
      * @private
      */
     setup(data) {
         /**
-         * Label
+         * The label
          * @type {string}
         */
         this.label = 'label' in data ? resolveString(data.label) : null;
 
         /**
-         * Value
+         * The value
          * @type {string}
         */
         this.value = 'value' in data ? resolveString(data.value) : null;
 
         /**
-         * Description
+         * The description
          * @type {string}
         */
         this.description = 'description' in data ? resolveString(data.description) : null;
 
         /**
-         * Emoji
+         * The emoji
          * @type {string}
         */
         this.emoji = 'emoji' in data ? resolvePartialEmoji(data.emoji) : null;
 
         /**
-         * Default
+         * The default
          * @type {boolean}
         */
         this.default = 'default' in data ? Boolean(data.default) : false;
@@ -53,7 +55,7 @@ class MessageSelectMenuOption {
     }
 
     /**
-     * Method to setLabel
+     * Method to set label
      * @param {string} label
     */
     setLabel(label) {
@@ -62,7 +64,7 @@ class MessageSelectMenuOption {
     }
 
     /**
-     * Method to setValue
+     * Method to set value
      * @param {string} value
     */
     setValue(value) {
@@ -71,7 +73,7 @@ class MessageSelectMenuOption {
     }
 
     /**
-     * Method to setValue
+     * Method to set description
      * @param {string} desc
     */
     setDescription(desc) {
@@ -80,7 +82,7 @@ class MessageSelectMenuOption {
     }
 
     /**
-     * Method to setEmoji
+     * Method to set emoji
      * @param {string} emoji
     */
     setEmoji(emoji) {
@@ -89,7 +91,7 @@ class MessageSelectMenuOption {
     }
 
     /**
-     * Method to setDefault
+     * Method to set default
      * @param {boolean} default
     */
     setDefault(def = true) {
@@ -98,7 +100,7 @@ class MessageSelectMenuOption {
     }
 
     /**
-     * Method to toJSON
+     * Method to convert to JSON
      * @return {Object}
     */
     toJSON() {

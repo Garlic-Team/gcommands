@@ -1,23 +1,24 @@
 const { resolveString } = require('../util/util');
 
 /**
- * The Color class
+ * The color for console messages
+ * @private
  */
 class Color {
     /**
-     * Creates new Color instance
      * @param {string} text
      * @param {ColorOptions} options
+	 * @constructor
      */
 	constructor(text = '', options = {}) {
         /**
-         * Text
+         * The text
          * @type {string}
         */
 		this.text = resolveString(text);
 
         /**
-         * Json
+         * The json
          * @type {Object}
         */
 		this.json = options.json;
@@ -68,7 +69,7 @@ class Color {
 
 
     /**
-     * Internal method to getText
+     * Internal method to get text
      * @returns {json}
 	 * @returns {string}
      */
@@ -80,7 +81,7 @@ class Color {
 	}
 
     /**
-     * Internal method to getRGB
+     * Internal method to get RGB
      * @returns {json}
 	 * @returns {string}
      */

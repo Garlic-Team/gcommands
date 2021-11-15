@@ -1,49 +1,43 @@
 /**
- * Debug Event
+ * Emitted for general debugging information.
  * @event GCommandsClient#debug
  * @param {string} info The message that was emitted.
- * @example
- * client.on('debug', (info) => { console.log(info); });
+ * @example client.on('debug', (info) => { console.log(info); });
 */
 
 /**
- * Log Event
+ * Emitted for command loading/deletion
  * @event GCommandsClient#log
  * @param {string} info The message that was emitted.
- * @example
- * client.on('log', (info) => { console.log(info); });
+ * @example client.on('log', (info) => { console.log(info); });
 */
 
 /**
- * commandExecute
+ * Emitted when a command executes
  * @event GCommandsClient#commandExecute
  * @param {string} info Running the command.
- * @example
- * client.on('commandExecute', (info) => { console.log(info); });
+ * @example client.on('commandExecute', (info) => { console.log(info); });
 */
 
 /**
- * commandError
+ * Emitted when a error occurs inside a command
  * @event GCommandsClient#commandError
  * @param {string} info Error from command
- * @example
- * client.on('commandError', (info) => { console.log(info); });
+ * @example client.on('commandError', (info) => { console.log(info); });
 */
 
 /**
- * commandsLoaded
+ * Emitted when all commands are loaded
  * @event GCommandsClient#commandsLoaded
  * @param {string} info All commands loaded
- * @example
- * client.on('commandsLoaded', (info) => { console.log(info); });
+ * @example client.on('commandsLoaded', (info) => { console.log(info); });
 */
 
 /**
- * commandNotFound
+ * Emitted when a command is not found
  * @event GCommandsClient#commandNotFound
  * @param {string} info Command not found
- * @example
- * client.on('commandNotFound', (info) => { console.log(info); });
+ * @example client.on('commandNotFound', (info) => { console.log(info); });
 */
 
 /**
@@ -93,81 +87,11 @@ exports.ArgumentType = {
 };
 
 /**
- * ButtonType
- * * blurple
- * * gray
- * * grey
- * * green
- * * red
- * * url
- * * primary
- * * secondary
- * * danger
- * * link
- * @type {Object}
- */
- exports.ButtonType = {
-    blurple: 'blurple',
-    gray: 'gray',
-    grey: 'gray',
-    green: 'green',
-    red: 'red',
-    url: 'url',
-    primary: 'green',
-    secondary: 'gray',
-    danger: 'red',
-    link: 'url',
-};
-
-/**
- * The type of an {@link ApplicationCommand} object:
- * * CHAT_INPUT
- * * USER
- * * MESSAGE
- * @typedef {string} ApplicationCommandType
- */
- exports.ApplicationCommandTypes = createEnum([null, 'CHAT_INPUT', 'USER', 'MESSAGE']);
- exports.ApplicationCommandTypesRaw = {
-    user: 2,
-    message: 3,
-    both: 4,
- };
-
-/**
- * The type of an {@link GInteraction} object:
- * * PING
- * * APPLICATION_COMMAND
- * * MESSAGE_COMPONENT
- * @typedef {string} GInteractionType
- */
- exports.InteractionTypes = createEnum([null, 'PING', 'APPLICATION_COMMAND', 'MESSAGE_COMPONENT']);
-
-/**
- * The type of a message component
- * * ACTION_ROW
- * * BUTTON
- * * SELECT_MENU
- * @typedef {string} MessageComponentType
- */
- exports.MessageComponentTypes = createEnum([null, 'ACTION_ROW', 'BUTTON', 'SELECT_MENU']);
-
-function createEnum(keys) {
-    const obj = {};
-    for (const [index, key] of keys.entries()) {
-        if (key === null) continue;
-        obj[key] = index;
-        obj[index] = key;
-    }
-    return obj;
-}
-
-/**
  * The GCommandsOptions
- * @property {string} cmdDir
- * @property {string} eventDir
  * @property {GCommandsOptionsLanguage} language
  * @property {GCommandsOptionsCommands} commands
  * @property {GCommandsOptionsArguments} arguments
+ * @property {GCommandsOptionsLoader} loader
  * @property {boolean} caseSensitiveCommands
  * @property {boolean} caseSensitivePrefixes
  * @property {string} defaultCooldown
@@ -227,27 +151,12 @@ function createEnum(keys) {
  */
 
 /**
- * The GPayloadOptions
- * @property {string} content
- * @property {MessageEmbed[]} embeds
- * @property {MessageActionRow[]} components
- * @property {MessageAttachment[]} attachments
- * @property {boolean} ephemeral
- * @property {Object} allowedMentions
- * @property {(string | boolean)} inlineReply
- * @property {(string | Array)} stickers
- * @example .send({
- *  content: 'hello',
- *  embeds: [embed],
- *  components: [actionRow],
- *  attachments: [myMessageAttachment],
- *  ephemeral: false,
- *  allowedMentions: { parse: ['users','roles','everyone'] },
- *  inlineReply: true,
- *  stickers: ['sticker id']
- * })
- * @typedef {(string | Object)} GPayloadOptions
-*/
+ * The GCommandsOptionsLoader
+ * @property {string} cmdDir
+ * @property {string} eventDir
+ * @property {boolean} autoCategory
+ * @typedef {(object)} GCommandsOptionsLoader
+ */
 
 /**
  * The CommandRunOptions
@@ -260,8 +169,7 @@ function createEnum(keys) {
  * @property {string | GPayloadOptions} respond
  * @property {string | GPayloadOptions} edit
  * @property {string | GPayloadOptions} followUp
- * @property {Array} args
- * @property {Object} objectArgs
+ * @property {Object} args
  * @property {string} language
  * @typedef {(Object)} CommandRunOptions
 */
@@ -278,18 +186,26 @@ function createEnum(keys) {
  * @property {string | GPayloadOptions} respond
  * @property {string | GPayloadOptions} edit
  * @property {string | GPayloadOptions} followUp
- * @property {Array} args
  * @property {string} language
  * @typedef {(Object)} Inhibitor
  */
 
 /**
- * The InteractionEventClicker
+ * Base options provided when sending.
+ * <info>You can also see [discord.js docs](https://discord.js.org/#/docs/main/stable/typedef/MessageOptions) for more info.</info>
  *
- * @property {GuildMember} member
- * @property {User} user
- * @property {Snowflake} id
- * @typedef {(Object)} InteractionEventClicker
+ * @typedef {Object} GPayloadOptions
+ * @property {boolean} [tts=false]
+ * @property {string} [nonce='']
+ * @property {string} [content='']
+ * @property {boolean} [ephemeral=false]
+ * @property {boolean|string} [inlineReply]
+ * @property {MessageEmbed[]} [embeds]
+ * @property {MessageMentionOptions} [allowedMentions]
+ * @property {FileOptions[]|BufferResolvable[]|MessageAttachment[]} [files]
+ * @property {MessageActionRow[]|MessageActionRowOptions[]} [components]
+ * @property {StickerResolvable[]} [stickers]
+ * @property {MessageAttachment[]} [attachments]
  */
 
 /**
@@ -365,3 +281,45 @@ module.exports.ArgumentChannelTypes = {
     GUILD_PRIVATE_THREAD: 12,
     GUILD_STAGE_VOICE: 13,
 };
+
+/**
+ * The type of an {@link ApplicationCommand} object:
+ * * CHAT_INPUT
+ * * USER
+ * * MESSAGE
+ * @typedef {string} ApplicationCommandType
+ */
+ exports.ApplicationCommandTypes = createEnum([null, 'CHAT_INPUT', 'USER', 'MESSAGE']);
+ exports.ApplicationCommandTypesRaw = {
+    user: 2,
+    message: 3,
+    both: 4,
+ };
+
+/**
+ * The type of an {@link GInteraction} object:
+ * * PING
+ * * APPLICATION_COMMAND
+ * * MESSAGE_COMPONENT
+ * @typedef {string} GInteractionType
+ */
+ exports.InteractionTypes = createEnum([null, 'PING', 'APPLICATION_COMMAND', 'MESSAGE_COMPONENT']);
+
+/**
+ * The type of a message component
+ * * ACTION_ROW
+ * * BUTTON
+ * * SELECT_MENU
+ * @typedef {string} MessageComponentType
+ */
+ exports.MessageComponentTypes = createEnum([null, 'ACTION_ROW', 'BUTTON', 'SELECT_MENU']);
+
+function createEnum(keys) {
+    const obj = {};
+    for (const [index, key] of keys.entries()) {
+        if (key === null) continue;
+        obj[key] = index;
+        obj[index] = key;
+    }
+    return obj;
+}

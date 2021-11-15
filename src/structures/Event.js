@@ -7,25 +7,25 @@ const GEvents = require('@gcommands/events');
 class Event extends null {}
 
 /**
- * Name
+ * The name
  * @type {string}
  */
 Event.name = GEvents.Event.name;
 
 /**
- * Once
+ * Wheter the event should be executed once
  * @type {boolean}
  */
 Event.once = GEvents.Event.once;
 
 /**
- * Ws
+ * Wheter the event should be from the web socket
  * @type {boolean}
  */
 Event.ws = GEvents.Event.ws;
 
 /**
- * Run function
+ * The run function
  * @param {Client}
  * @param {string}
  */

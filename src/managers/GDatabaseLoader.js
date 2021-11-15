@@ -1,16 +1,17 @@
 const GError = require('../structures/GError');
 
 /**
- * The GDatabaseLoader class
+ * The loader for the sequelize database and sequelize models
+ * @private
  */
 class GDatabaseLoader {
     /**
-     * The GDatabaseLoader class
      * @param {GCommandsClient} client
+     * @constructor
     */
     constructor(client) {
         /**
-         * Client
+         * The client
          * @type {GCommandsClient}
         */
         this.client = client;
@@ -19,15 +20,14 @@ class GDatabaseLoader {
     }
 
     /**
-     * Internal method to dbLoad
-     * @returns {boolean}
-     * @private
+     * Internal method to load database
+     * @returns {void}
      */
-    __loadDB() {
+     __loadDB() {
         const dbType = this.client.database;
         if (!dbType) { this.client.database = undefined; } else {
             try {
-                const Keyv = require('keyv');
+                const Keyv = require('@keyvhq/core');
 
                 this.client.database = new Keyv(dbType);
             } catch (e) {

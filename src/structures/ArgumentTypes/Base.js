@@ -1,4 +1,4 @@
-const GError = require('../../structures/GError');
+const GError = require('../GError');
 
 /**
  * The ArgumentType class
@@ -39,11 +39,17 @@ class ArgumentType {
 
     /**
      * Method to get
-     * @param {Argument}
-     * @param {Message|Object}
     */
-    get(argument, message) { // eslint-disable-line no-unused-vars, require-await
-        throw new GError('[ARGUMENTS]', 'Argument doesnt have provided get() method');
+    get() { // eslint-disable-line no-unused-vars, require-await
+        return this.value?.value;
+    }
+
+    /**
+     * Method to resolve
+     * @param {Object} option
+    */
+    resolve(option) {
+        return option;
     }
 }
 

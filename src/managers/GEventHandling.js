@@ -1,21 +1,20 @@
 const { readdirSync } = require('fs');
-const Argument = require('../commands/argument');
-const ArgumentType = require('../util/Constants').ArgumentType;
-const GError = require('../structures/GError'), { Events } = require('../util/Constants'), Color = require('../structures/Color');
-const { inhibit, interactionRefactor, channelTypeRefactor, unescape } = require('../util/util');
-const ifDjsV13 = require('../util/util').checkDjsVersion('13');
+const ArgumentsCollector = require('../structures/ArgumentsCollector');
+const { Events } = require('../util/Constants'), Color = require('../structures/Color');
+const { inhibit, unescape, resolveMessageOptions } = require('../util/util');
 
 /**
- * The GEventHandling class
+ * The handler for message and slash commands
+ * @private
 */
 class GEventHandling {
     /**
-     * Creates new GEventHandling instance
      * @param {GCommandsClient} client
+     * @constructor
      */
     constructor(client) {
         /**
-         * Client
+         * The client
          * @type {GCommandsClient}
         */
         this.client = client;
@@ -26,12 +25,11 @@ class GEventHandling {
     }
 
     /**
-     * Internal method to messageEvent
+     * Internal method to handle message event
      * @returns {void}
-     * @private
     */
     messageEvent() {
-        this.client.on(ifDjsV13 ? 'messageCreate' : 'message', message => {
+        this.client.on('messageCreate', message => {
             messageEventUse(message);
         });
 
@@ -41,10 +39,19 @@ class GEventHandling {
         });
 
         const messageEventUse = async message => {
-            if (!message || !message.author || message.author.bot || (!this.client.allowDm && message.channel.type === 'dm')) return;
+            if (!message || !message.author || message.author.bot) return;
 
-            const mention = message.content.match(new RegExp(`^<@!?(${this.client.user.id})> `));
-            const prefix = mention ? mention[0] : (message.guild ? (await message.guild.getCommandPrefix())[0] : this.client.prefix[0]);
+            const isNotDm = message.channel.type !== 'dm';
+            const language = isNotDm ? await message.guild.getLanguage() : this.client.language;
+
+            if (message.guild && !message.guild.available) {
+                return message.reply({
+                    content: this.client.languageFile.GUILD_UNAVAILABLE[language],
+                });
+            }
+
+            const mention = message.content.split(' ')[0].match(new RegExp(`^<@!?(${this.client.user.id})>`));
+            const prefix = mention ? mention[0] : (message.guild ? await message.guild.getCommandPrefix() : this.client.prefix);
 
             const messageContainsPrefix = this.client.caseSensitivePrefixes ? message.content.startsWith(prefix) : message.content.toLowerCase().startsWith(prefix.toLowerCase());
             if (!messageContainsPrefix) return;
@@ -64,21 +71,17 @@ class GEventHandling {
                         String(cmd.name),
                 );
 
+                if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
+
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
                 const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
                 const isClientMessageEnabled = !commandos.slash && ['false', 'slash'].includes(String(this.client.slash));
 
-                const channelType = channelTypeRefactor(message.channel);
-                const isNotDm = channelType !== 'dm';
-
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
-                if (!commandos) return this.client.emit(Events.COMMAND_NOT_FOUND, new Color(`&d[GCommands] &cCommand not found (message): &e➜   &3${cmd ? cmd.name ? String(cmd.name) : String(cmd) : null}`, { json: false }).getText());
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
-
-                const language = isNotDm ? await this.client.dispatcher.getGuildLanguage(message.guild.id) : this.client.language;
 
                 const runOptions = {
                     member: message.member,
@@ -89,43 +92,20 @@ class GEventHandling {
                     client: this.client,
                     bot: this.client,
                     language: language,
+                    command: commandos,
+
+                    respond: (options = undefined) => message.reply(resolveMessageOptions(options)),
+                    followUp: (options = undefined) => message.reply(resolveMessageOptions(options)),
                 };
 
-                let botMessageInhibit;
-                const inhibitRunOptions = {
-                    respond: async (options = undefined) => {
-                        if (this.client.autoTyping) ifDjsV13 ? message.sendTyping() : message.startTyping();
-
-                        const msg = await message.reply(options);
-                        botMessageInhibit = msg;
-
-                        if (this.client.autoTyping) message.channel.stopTyping(true);
-                        return msg;
-                    },
-                    edit: async (options = undefined) => {
-                        if (!botMessageInhibit) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
-                        const editedMsg = await botMessageInhibit.edit(options);
-                        return editedMsg;
-                    },
-                    followUp: async (options = undefined) => {
-                        if (this.client.autoTyping) ifDjsV13 ? message.sendTyping() : message.startTyping();
-
-                        const msg = await message.reply(options);
-
-                        if (this.client.autoTyping && !ifDjsV13) message.stopTyping(true);
-                        return msg;
-                    },
-                    args: args,
-                };
-
-                const inhibitReturn = await inhibit(this.client, interactionRefactor(message, commandos), {
+                const inhibitReturn = await inhibit(this.client, {
                     ...runOptions,
-                    ...inhibitRunOptions,
+                    args: args,
                 });
 
                 if (inhibitReturn === false) return;
 
-                const cooldown = message.guild ? await this.client.dispatcher.getCooldown(message.guild.id, message.author.id, commandos) : null;
+                const cooldown = await this.client.dispatcher.getCooldown(message.author.id, message.guild, commandos);
                 const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
 
                 if (cooldown?.cooldown) return message.reply(getCooldownMessage());
@@ -148,7 +128,7 @@ class GEventHandling {
                     } else if (message.channel.id !== commandos.channelOnly) { return; }
                 }
 
-                const isNotChannelType = type => channelType !== type;
+                const isNotChannelType = type => message.channel.type !== type;
                 const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
                 const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
                 const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];
@@ -187,191 +167,21 @@ class GEventHandling {
                     if (!roles) return message.reply(getMissingRolesMessage());
                 }
 
-                const getArgsTimeLimitMessage = () => this.client.languageFile.ARGS_TIME_LIMIT[language];
+                let finalArgs;
+                if (commandos.args && commandos.args[0]) {
+                    const collector = new ArgumentsCollector(this.client, { message, args, language, isNotDm, commandos });
+                    if (await collector.get() === false) return;
 
-                let cmdArgs = commandos.args ? JSON.parse(JSON.stringify(commandos.args)) : [];
-                const objectArgs = [];
-                const finalArgs = [];
-                const missingInput = [];
-
-                const getArgsObject = options => {
-                    if (!Array.isArray(options)) return {};
-                    const oargs = {};
-
-                    for (const o of options) {
-                        if ([1, 2].includes(o.type)) {
-                            oargs[o.name] = getArgsObject(o.options);
-                        } else {
-                            oargs[o.name] = o.value;
-                        }
-                    }
-
-                    return oargs;
-                };
-
-                const validArg = async (arg, prompt) => {
-                    const final = await arg.obtain(message, language, prompt);
-                    if (!final.valid) return validArg(arg, prompt);
-
-                    return final;
-                };
-
-                const getSubCommand = async (type, cmdSubcommands) => {
-                    const options = {
-                        type: type,
-                        subcommands: cmdSubcommands,
-                        required: true,
-                    };
-                    const arg = new Argument(this.client, options, isNotDm);
-                    let subcommandInput;
-
-                    if (args[0]) {
-                        const subcommandInvalid = await arg.argument.validate(arg, { content: args[0].toLowerCase(), guild: message.guild }, language);
-                        if (subcommandInvalid) {
-                            subcommandInput = await arg.obtain(message, language, subcommandInvalid);
-                            if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
-
-                            if (subcommandInput.timeLimit) return message.reply(getArgsTimeLimitMessage());
-                        } else {
-                            subcommandInput = { content: arg.get(args[0]) };
-                        }
-                    } else {
-                        subcommandInput = await arg.obtain(message, language);
-                        if (!subcommandInput.valid) subcommandInput = await validArg(arg, subcommandInput.prompt);
-
-                        if (subcommandInput.timeLimit) return message.reply(getArgsTimeLimitMessage());
-                    }
-                    if (subcommandInput && typeof subcommandInput.content === 'object') {
-                        cmdArgs = subcommandInput.content.options;
-
-                        finalArgs.push(subcommandInput.content.name);
-
-                        if (commandos.args.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP).length === 0 && subcommandInput.content.options.filter(o => o.type === 1).length === 0) objectArgs.push(subcommandInput.content);
-                        for (const option of subcommandInput.content.options) {
-                            if (option.type === 1) {
-                                objectArgs.push(subcommandInput.content);
-                            } else {
-                                for (const missingOption of subcommandInput.content.options) {
-                                    missingInput.push(missingOption);
-                                }
-                            }
-                        }
-
-                        if (args[0]) args.shift();
-
-                        return subcommandInput.content.options;
-                    }
-                };
-
-                const ifNotSubOrGroup = cmdArgs.filter(a => [ArgumentType.SUB_COMMAND, ArgumentType.SUB_COMMAND_GROUP].includes(a.type)).length === 0;
-
-                const cmdsubcommandgroups = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND_GROUP);
-                if (isNotDm && Array.isArray(cmdsubcommandgroups) && cmdsubcommandgroups[0]) {
-                    await getSubCommand(ArgumentType.SUB_COMMAND_GROUP, cmdsubcommandgroups);
+                    finalArgs = collector.resolve(collector.finalArgs);
                 }
-
-                const cmdsubcommands = cmdArgs.filter(a => a.type === ArgumentType.SUB_COMMAND);
-                if (isNotDm && Array.isArray(cmdsubcommands) && cmdsubcommands[0]) {
-                    await getSubCommand(ArgumentType.SUB_COMMAND, cmdsubcommands);
-                }
-
-                for (const i in cmdArgs) {
-                    const arg = new Argument(this.client, cmdArgs[i], isNotDm);
-                    if (arg.type === 'invalid') continue;
-                    const rawArg = cmdArgs[1] ? args[i] : args.join(' ');
-
-                    if (rawArg && !commandos.alwaysObtain) {
-                        const argInvalid = await arg.argument.validate(arg, { content: args[0].toLowerCase(), guild: message.guild }, language);
-                        if (argInvalid) {
-                            let argInput = await arg.obtain(message, language, argInvalid);
-                            if (!argInput.valid) {
-                                if (argInput.reason === 'skip') continue;
-                                if (argInput.reason === 'cancel') return;
-                                argInput = await validArg(arg, argInput.prompt);
-                            }
-
-                            if (argInput.timeLimit) return message.reply(getArgsTimeLimitMessage);
-                            finalArgs.push(argInput.content);
-
-                            args[i] = argInput.content;
-
-                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
-
-                            for (const input of missingInput) {
-                                if (input.name === arg.name) {
-                                    input.value = argInput.content;
-                                }
-                            }
-                        } else {
-                            finalArgs.push(arg.get(rawArg));
-
-                            if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: arg.get(rawArg), type: arg.type });
-
-                            for (const input of missingInput) {
-                                if (input.name === arg.name) {
-                                    input.value = arg.get(rawArg);
-                                }
-                            }
-                        }
-
-                        continue;
-                    }
-
-                    let argInput = await arg.obtain(message, language);
-                    if (!argInput.valid) {
-                        if (argInput.reason === 'skip') continue;
-                        if (argInput.reason === 'cancel') return;
-                        argInput = await validArg(arg, argInput.prompt);
-                    }
-
-                    if (argInput.timeLimit) return message.reply(getArgsTimeLimitMessage());
-
-                    finalArgs.push(argInput.content);
-
-                    args[i] = argInput.content;
-
-                    if (ifNotSubOrGroup) objectArgs.push({ name: arg.name, value: argInput.content, type: arg.type });
-
-                    for (const input of missingInput) {
-                        if (input.name === arg.name) {
-                            input.value = argInput.content;
-                        }
-                    }
-                }
-
-                let botMessage;
-                const commandRunOptions = {
-                    respond: async (options = undefined) => {
-                        if (this.client.autoTyping) ifDjsV13 ? message.channel.sendTyping() : message.channel.startTyping();
-
-                        const msg = await message.reply(options);
-                        botMessage = msg;
-
-                        if (this.client.autoTyping && !ifDjsV13) message.channel.stopTyping(true);
-                        return msg;
-                    },
-                    edit: async (options = undefined) => {
-                        if (!botMessage) throw new GError('[NEED RESPOND]', `First you need to send a respond.`);
-                        const editedMsg = await botMessage.edit(options);
-                        return editedMsg;
-                    },
-                    followUp: async (options = undefined) => {
-                        if (this.client.autoTyping) ifDjsV13 ? message.channel.sendTyping() : message.channel.startTyping();
-
-                        const msg = await message.reply(options);
-
-                        if (this.client.autoTyping && !ifDjsV13) message.channel.stopTyping(true);
-                        return msg;
-                    },
-                    args: !isNotDm ? finalArgs : args,
-                    objectArgs: getArgsObject(objectArgs),
-                };
 
                 this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: message.member, channel: message.channel, guild: message.guild });
 
                 commandos.run({
                     ...runOptions,
-                    ...commandRunOptions,
+                    args: finalArgs,
+                    objectArgs: finalArgs?._hoistedOptions ? this.argsToObject(finalArgs._hoistedOptions) : {},
+                    arrayArgs: finalArgs?._hoistedOptions ? this.argsToArray(finalArgs._hoistedOptions) : [],
                 });
             } catch (e) {
                 this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: message.member, channel: message.channel, guild: message.guild, error: e });
@@ -381,13 +191,22 @@ class GEventHandling {
     }
 
     /**
-     * Internal method to slashEvent
+     * Internal method to handle interaction event
      * @returns {void}
-     * @private
     */
     slashEvent() {
-        this.client.on('GInteraction', async interaction => {
-            if (!interaction.isApplication()) return;
+        this.client.on('interactionCreate', async interaction => {
+            if (!(interaction.isCommand() || interaction.isContextMenu())) return;
+
+            const isNotDm = interaction.channel.type !== 'dm';
+            const language = isNotDm ? await interaction.guild.getLanguage() : this.client.language;
+
+            if (interaction.guild && !interaction.guild.available) {
+                return interaction.reply({
+                    content: this.client.languageFile.GUILD_UNAVAILABLE[language],
+                    ephemeral: true,
+                });
+            }
 
             let commandos;
             try {
@@ -405,9 +224,6 @@ class GEventHandling {
                 const isContextEnabled = String(commandos.context) === 'false';
                 const isClientContextEnabled = String(this.client.context) === 'false';
 
-                const channelType = channelTypeRefactor(interaction.channel);
-                const isNotDm = channelType !== 'dm';
-
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
                 if (interaction.isCommand() && isSlashEnabled) return;
@@ -415,42 +231,39 @@ class GEventHandling {
                 if (interaction.isContextMenu() && isContextEnabled) return;
                 if (interaction.isContextMenu() && !commandos.context && isClientContextEnabled) return;
 
-                const language = interaction.guild ? await this.client.dispatcher.getGuildLanguage(interaction.guild.id) : this.client.language;
-
                 const runOptions = {
                     member: interaction.member,
-                    author: interaction.author,
+                    author: interaction.user,
                     guild: interaction.guild,
                     channel: interaction.channel,
                     interaction: interaction,
                     client: this.client,
                     bot: this.client,
                     language: language,
+                    args: interaction.options,
+                    objectArgs: this.argsToObject(interaction.options.data) || {},
+                    arrayArgs: this.argsToArray(interaction.options.data) || [],
+                    command: commandos,
+
+                    respond: (options = undefined) => interaction.reply(resolveMessageOptions(options)),
+                    edit: (options = undefined) => interaction.editReply(resolveMessageOptions(options)),
+                    followUp: (options = undefined) => interaction.followUp(resolveMessageOptions(options)),
                 };
 
-                const inhibitRunOptions = {
-                    respond: result => interaction.reply.send(result),
-                    edit: result => interaction.reply.edit(result),
-                    followUp: result => interaction.reply.followUp(result),
-                    args: interaction.arrayArguments,
-                };
+                const inhibitReturn = await inhibit(this.client, runOptions);
 
-                const inhibitReturn = await inhibit(this.client, interactionRefactor(interaction, commandos), {
-                    ...runOptions,
-                    ...inhibitRunOptions,
-                });
                 if (inhibitReturn === false) return;
 
-                const cooldown = interaction.guild ? await this.client.dispatcher.getCooldown(interaction.guild.id, interaction.author.id, commandos) : null;
+                const cooldown = interaction.guild ? this.client.dispatcher.getCooldown(interaction.member.id, interaction.guild, commandos) : null;
                 const getCooldownMessage = () => this.client.languageFile.COOLDOWN[language].replace(/{COOLDOWN}/g, cooldown.wait).replace(/{CMDNAME}/g, commandos.name);
 
-                if (cooldown?.cooldown) return interaction.reply.send(getCooldownMessage());
+                if (cooldown?.cooldown) return interaction.reply(getCooldownMessage());
 
                 if (commandos.userOnly) {
                     if (typeof commandos.userOnly === 'object') {
-                        const users = commandos.userOnly.some(v => interaction.author.id === v);
+                        const users = commandos.userOnly.some(v => interaction.user.id === v);
                         if (!users) return;
-                    } else if (interaction.author.id !== commandos.userOnly) { return; }
+                    } else if (interaction.user.id !== commandos.userOnly) { return; }
                 }
 
                 if (isNotDm && commandos.channelOnly) {
@@ -463,16 +276,16 @@ class GEventHandling {
                 const NSFW = interaction.guild ? commandos.nsfw && !interaction.channel.nsfw : null;
                 const getNsfwMessage = () => this.client.languageFile.NSFW[language];
 
-                if (isNotDm && NSFW) { return interaction.reply.send({ content: getNsfwMessage(), ephemeral: true }); }
+                if (isNotDm && NSFW) { return interaction.reply({ content: getNsfwMessage(), ephemeral: true }); }
 
-                const isNotChannelType = type => channelType !== type;
+                const isNotChannelType = type => interaction.channel.type !== type;
                 const getChannelTextOnlyMessage = () => this.client.languageFile.CHANNEL_TEXT_ONLY[language];
                 const getChannelNewsOnlyMessage = () => this.client.languageFile.CHANNEL_NEWS_ONLY[language];
                 const getChannelThreadOnlyMessage = () => this.client.languageFile.CHANNEL_THREAD_ONLY[language];
 
-                if (isNotDm && commandos.channelTextOnly && isNotChannelType('text')) { return interaction.reply.send({ content: getChannelTextOnlyMessage(), ephemeral: true }); }
-                if (isNotDm && commandos.channelNewsOnly && isNotChannelType('news')) { return interaction.reply.send({ content: getChannelNewsOnlyMessage(), ephemeral: true }); }
-                if (isNotDm && commandos.channelThreadOnly && isNotChannelType('thread')) { return interaction.reply.send({ content: getChannelThreadOnlyMessage(), ephemeral: true }); }
+                if (isNotDm && commandos.channelTextOnly && isNotChannelType('text')) { return interaction.reply({ content: getChannelTextOnlyMessage(), ephemeral: true }); }
+                if (isNotDm && commandos.channelNewsOnly && isNotChannelType('news')) { return interaction.reply({ content: getChannelNewsOnlyMessage(), ephemeral: true }); }
+                if (isNotDm && commandos.channelThreadOnly && isNotChannelType('thread')) { return interaction.reply({ content: getChannelThreadOnlyMessage(), ephemeral: true }); }
 
                 const getMissingClientPermissionsMessage = () => this.client.languageFile.MISSING_CLIENT_PERMISSIONS[language].replace('{PERMISSION}', commandos.clientRequiredPermissions.map(v => unescape(v, '_')).join(', '));
 
@@ -480,7 +293,7 @@ class GEventHandling {
                     if (!Array.isArray(commandos.clientRequiredPermissions)) commandos.clientRequiredPermissions = [commandos.clientRequiredPermissions];
 
                     if (interaction.guild.channels.cache.get(interaction.channel.id).permissionsFor(interaction.guild.me).missing(commandos.clientRequiredPermissions).length > 0) {
-                        return interaction.reply.send({
+                        return interaction.reply({
                             content: getMissingClientPermissionsMessage(),
                             ephemeral: true,
                         });
@@ -493,7 +306,7 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredPermissions)) commandos.userRequiredPermissions = [commandos.userRequiredPermissions];
 
                     if (!interaction.member.permissions.has(commandos.userRequiredPermissions)) {
-                        return interaction.reply.send({
+                        return interaction.reply({
                             content: getMissingPermissionsMessage(),
                             ephemeral: true,
                         });
@@ -506,39 +319,74 @@ class GEventHandling {
                     if (!Array.isArray(commandos.userRequiredRoles)) commandos.userRequiredRoles = [commandos.userRequiredRoles];
 
                     const roles = commandos.userRequiredRoles.some(v => interaction.member._roles.includes(v));
-                    if (!roles) return interaction.reply.send({ content: getMissingRolesMessage(), ephemeral: true });
+                    if (!roles) return interaction.reply({ content: getMissingRolesMessage(), ephemeral: true });
                 }
 
-                const commandRunOptions = {
-                    respond: result => interaction.reply.send(result),
-                    edit: result => interaction.reply.edit(result),
-                    followUp: result => interaction.reply.followUp(result),
-                    args: interaction.arrayArguments,
-                    objectArgs: interaction.objectArguments,
-                };
+                this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, user: interaction.user, channel: interaction.channel, guild: interaction.guild });
 
-                this.client.emit(Events.COMMAND_EXECUTE, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
-
-                commandos.run({
-                    ...runOptions,
-                    ...commandRunOptions,
-                });
+                commandos.run(runOptions);
             } catch (e) {
-                this.client.emit(Events.COMMAND_ERROR, { command: commandos, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: e });
+                this.client.emit(Events.COMMAND_ERROR, { command: commandos, user: interaction.user, channel: interaction.channel, guild: interaction.guild, error: e });
                 this.client.emit(Events.DEBUG, e);
             }
         });
     }
 
     /**
-     * Internal method to loadMoreEvents
+     * Internal method to load more events
      * @returns {void}
-     * @private
     */
     async loadMoreEvents() {
         await readdirSync(`${__dirname}/../base/actions/`).forEach(file => {
             require(`../base/actions/${file}`)(this.client);
         });
+    }
+
+    /**
+     * Change arguments to object
+     */
+    argsToObject(options) {
+        if (!Array.isArray(options)) return {};
+        const args = {};
+
+        for (const o of options) {
+          if ([1, 2].includes(o.type)) {
+            args[o.name] = this.argsToObject(o.options);
+          } else {
+            args[o.name] = o.value;
+          }
+        }
+
+        return args;
+    }
+
+    /**
+     * Change arguments to array
+     */
+    argsToArray(options) {
+        const args = [];
+
+        const check = option => {
+          if (!option) return;
+          if (option.value) args.push(option.value);
+          else args.push(option.name);
+
+          if (option.options) {
+            for (let o = 0; o < option.options.length; o++) {
+              check(option.options[o]);
+            }
+          }
+        };
+
+        if (Array.isArray(options)) {
+          for (let o = 0; o < options.length; o++) {
+            check(options[o]);
+          }
+        } else {
+          check(options);
+        }
+
+        return args;
     }
 }
 
