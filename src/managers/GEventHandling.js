@@ -350,7 +350,7 @@ class GEventHandling {
         const args = {};
 
         for (const o of options) {
-          if ([1, 2].includes(o.type)) {
+          if (['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(o.type)) {
             args[o.name] = this.argsToObject(o.options);
           } else {
             args[o.name] = o.value;
