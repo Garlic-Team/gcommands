@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "types": "./typings/index.d.ts",
   "dependencies": {
-    "@gcommands/events": "^2.0.7",
+    "@gcommands/events": "^2.0.8",
     "@gcommands/components": "^1.0.4",
     "discord.js": "^13.2.0",
     "hyttpo": "^0.2.4",
