@@ -200,7 +200,7 @@ class Argument {
         if (!this.required && resFirst.content === 'skip') return 'skip';
         else if (resFirst.content === 'cancel') return 'cancel';
 
-        const invalid = await this.argument.validate(this, { content: resFirst.content.toLowerCase(), guild: resFirst.guild }, language);
+        const invalid = await this.argument.validate(this, { content: resFirst.content, guild: resFirst.guild }, language);
 
         if (invalid) {
             return this.obtain(message, language, invalid);
