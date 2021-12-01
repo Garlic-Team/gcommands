@@ -1,6 +1,7 @@
 import { ClientOptions, PermissionResolvable, Snowflake } from 'discord.js';
 
 import { ArgumentType, ChannelType, CommandType, LanguageType } from '../util/Constants';
+import { CommandRunOptions } from './types';
 
 export interface GCommandsClientOptions extends ClientOptions {
     language: LanguageType;
@@ -51,6 +52,8 @@ export interface CommandOptions {
     aliases?: Array<string>;
     category?: string;
     usage?: string;
+    // eslint-disable-next-line no-unused-vars
+    run: (options: CommandRunOptions) => unknown;
 }
 
 export interface CommandArgsOptionChoice {

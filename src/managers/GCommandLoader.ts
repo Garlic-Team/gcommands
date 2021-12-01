@@ -4,7 +4,6 @@ import * as path from 'path';
 import * as ms from 'ms';
 // Import { Routes } from 'discord-api-types/v9';
 // const base = 'https://discord.com/api/v9/';
-
 import { Snowflake } from 'discord.js';
 import hyttpo from 'hyttpo';
 
@@ -12,16 +11,16 @@ import { Command } from '../structures/Command';
 import { GCommandsClient } from '../base/GCommandsClient';
 import { Color } from '../structures/Color';
 import { GError } from '../structures/GError';
-import { InternalEvents, CommandType } from '../util/Constants';
+import { InternalEvents } from '../util/Constants';
 import Util from '../util/util';
 
 export class GCommandLoader {
-    private client: GCommandsClient;
+    private readonly client: GCommandsClient;
     private clientId: Snowflake;
-    private dir: string;
-    private autoCategory: boolean;
+    private readonly dir: string;
+    private readonly autoCategory: boolean;
     private loadFromCache: boolean;
-    private defaultType: Array<CommandType>;
+    // Private defaultType: Array<CommandType>;
     private allGlobalCommands;
 
     public constructor(client: GCommandsClient) {
@@ -30,7 +29,7 @@ export class GCommandLoader {
         this.dir = this.client.options.loader.cmdDir;
         this.autoCategory = this.client.options.loader.autoCategory;
         this.loadFromCache = this.client.options.loader.loadFromCache;
-        this.defaultType = this.client.options.commands.defaultType;
+        // This.defaultType = this.client.options.commands.defaultType;
         this.allGlobalCommands = Util.__getAllCommands(this.client);
 
         this.client._applicationCommandsCache = [];
@@ -57,7 +56,9 @@ export class GCommandLoader {
             if (fsDirent.isDirectory()) {
                 await this.loadFiles(path.join(dir, rawFileName));
                 continue;
-            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
+            } else if (!['.js', '.ts'].includes(fileType)) {
+                continue;
+            }
 
             let file = await import(path.join(dir, rawFileName));
             if (file.default) file = file.default;
@@ -66,6 +67,12 @@ export class GCommandLoader {
             if (Util.isClass(file)) {
                 file = new file(this.client);
                 if (!(file instanceof Command)) throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in Commands.`);
+            } else if (typeof file === 'object') {
+                try {
+                    file = new Command(this.client, file);
+                } catch {
+                    throw new GError('[COMMAND]', `Command ${fileName} doesnt belong in commands.`);
+                }
             }
 
             file.path = `${dir}/${fileName}${fileType}`;
@@ -89,7 +96,7 @@ export class GCommandLoader {
     }
 
     /**
-    Private async loadSlashCommands() {
+     Private async loadSlashCommands() {
         const keys = Array.from(this.client.gcommands.keys());
         this.deleteNonExistCommands(keys);
 
@@ -175,10 +182,10 @@ export class GCommandLoader {
             } else { await loadSlashCommand(); }
         }
     }
-    */
+     */
 
     /**
-    Async loadContextMenuCommands() {
+     Async loadContextMenuCommands() {
         const keys = Array.from(this.client.gcommands.keys());
 
         for (const commandName of keys) {
@@ -266,14 +273,15 @@ export class GCommandLoader {
             }
         }
     }
-    */
+     */
 
     /**
      * Internal method to load command permissions
      * @returns {void}
      */
+
     /**
-    async loadCommandPermissions() {
+     async loadCommandPermissions() {
         const keys = Array.from(this.client.gcommands.keys());
 
         for (const commandName in keys) {
@@ -383,12 +391,12 @@ export class GCommandLoader {
             }
         }
     }
-    */
+     */
 
     /**
      * Internal method to try loading again
      * @returns {void}
-    */
+     */
     tryAgain(cmd, config, type) {
         hyttpo.request(config).then(() => this.client.emit(InternalEvents.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`).getText()))
             .catch(error => {
@@ -407,7 +415,7 @@ export class GCommandLoader {
      * @returns {void}
      */
     /**
-    async deleteNonExistCommands(commandFiles) {
+     async deleteNonExistCommands(commandFiles) {
         if (!this.client.deleteNonExistent) return;
 
         const deleteAllGlobalCommands = async () => {
@@ -441,5 +449,5 @@ export class GCommandLoader {
         await deleteAllGlobalCommands();
         await deleteAllGuildCommands();
     }
-    */
+     */
 }

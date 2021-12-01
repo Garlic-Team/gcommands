@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { Snowflake, PermissionResolvable } from 'discord.js';
+import { PermissionResolvable, Snowflake } from 'discord.js';
 
 import { GCommandsClient } from '../base/GCommandsClient';
-import { CommandOptions, CommandArgsOption } from '../typings/interfaces';
+import { CommandArgsOption, CommandOptions } from '../typings/interfaces';
 import { CommandOptionsDefaults } from '../typings/defaults';
-import { CommandType, ChannelType } from '../util/Constants';
+import { ChannelType, CommandType } from '../util/Constants';
 import { CommandRunOptions } from '../typings/types';
-import { GError } from './GError';
 
 export class Command {
     readonly client: GCommandsClient;
@@ -30,16 +29,13 @@ export class Command {
     readonly aliases?: Array<string>;
     readonly category?: string;
     readonly usage?: string;
+    readonly run: (options: CommandRunOptions) => unknown;
     private path: string;
 
     public constructor(client: GCommandsClient, options: CommandOptions) {
         this.client = client;
 
-        Object.assign(this, Object.assign(CommandOptionsDefaults, options));
-    }
-
-    public run(options: CommandRunOptions): unknown | Promise<unknown> {
-        throw new GError('[COMMAND]',`Command ${this.name} doesn't provide a run method!`);
+        Object.assign(this, { ...CommandOptionsDefaults, ...options });
     }
 
     public async reload(): Promise<boolean> {
