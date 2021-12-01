@@ -7,7 +7,7 @@ import { ArgumentsCollector } from '../structures/ArgumentsCollector';
 import { readdirSync } from 'fs';
 
 export class GEventHandler {
-    private client: GCommandsClient;
+    private readonly client: GCommandsClient;
 
     constructor(client: GCommandsClient) {
         this.client = client;
@@ -72,18 +72,28 @@ export class GEventHandler {
 
                 const inhibitors = this.client.ginhibitors.filter(inhibitor => {
                     if (inhibitor.enableByDefault) return true;
-                    else if (command.inhibitors.includes(inhibitor.name)) return true;
-                    else return false;
+                    else return command.inhibitors.includes(inhibitor.name);
                 });
 
                 if (inhibitors.first()) {
                     for await (const inhibitor of inhibitors.values()) {
                         try {
                             const response = await inhibitor.run(inhibitorRunOptions);
-                            this.client.emit(InternalEvents.INHIBITOR_EXECUTE, { inhibitor: inhibitor, member: message.member, channel: message.channel, guild: message.guild });
+                            this.client.emit(InternalEvents.INHIBITOR_EXECUTE, {
+                                inhibitor: inhibitor,
+                                member: message.member,
+                                channel: message.channel,
+                                guild: message.guild,
+                            });
                             if (response !== true) return;
                         } catch (err) {
-                            this.client.emit(InternalEvents.INHIBITOR_ERROR, { inhibitor: inhibitor, member: message.member, channel: message.channel, guild: message.guild, error: err });
+                            this.client.emit(InternalEvents.INHIBITOR_ERROR, {
+                                inhibitor: inhibitor,
+                                member: message.member,
+                                channel: message.channel,
+                                guild: message.guild,
+                                error: err,
+                            });
                             this.client.emit(InternalEvents.DEBUG, err);
                         }
                     }
@@ -102,17 +112,31 @@ export class GEventHandler {
                     ...baseRunOptions,
                 };
 
-                this.client.emit(InternalEvents.COMMAND_EXECUTE, { command: command, member: message.member, channel: message.channel, guild: message.guild });
+                this.client.emit(InternalEvents.COMMAND_EXECUTE, {
+                    command: command,
+                    member: message.member,
+                    channel: message.channel,
+                    guild: message.guild,
+                });
 
                 await command.run(runOptions);
             } catch (e) {
-                this.client.emit(InternalEvents.COMMAND_ERROR, { command: command, member: message.member, channel: message.channel, guild: message.guild, error: e });
+                this.client.emit(InternalEvents.COMMAND_ERROR, {
+                    command: command,
+                    member: message.member,
+                    channel: message.channel,
+                    guild: message.guild,
+                    error: e,
+                });
                 this.client.emit(InternalEvents.DEBUG, e);
             }
         };
     }
+
     private slashEvent() {
-        this.client.on('interactionCreate', interaction => { handle(interaction); });
+        this.client.on('interactionCreate', interaction => {
+            handle(interaction);
+        });
         const handle = async interaction => {
             if (interaction.isMessageComponent()) return;
 
@@ -160,18 +184,28 @@ export class GEventHandler {
 
                 const inhibitors = this.client.ginhibitors.filter(inhibitor => {
                     if (inhibitor.enableByDefault) return true;
-                    else if (command.inhibitors.includes(inhibitor.name)) return true;
-                    else return false;
+                    else return command.inhibitors.includes(inhibitor.name);
                 }).values();
 
                 if (inhibitors[0]) {
                     for await (const inhibitor of inhibitors) {
                         try {
                             const response = await inhibitor.run(inhibitorRunOptions);
-                            this.client.emit(InternalEvents.INHIBITOR_EXECUTE, { inhibitor: inhibitor, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
+                            this.client.emit(InternalEvents.INHIBITOR_EXECUTE, {
+                                inhibitor: inhibitor,
+                                member: interaction.member,
+                                channel: interaction.channel,
+                                guild: interaction.guild,
+                            });
                             if (!response) return;
                         } catch (err) {
-                            this.client.emit(InternalEvents.INHIBITOR_ERROR, { inhibitor: inhibitor, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: err });
+                            this.client.emit(InternalEvents.INHIBITOR_ERROR, {
+                                inhibitor: inhibitor,
+                                member: interaction.member,
+                                channel: interaction.channel,
+                                guild: interaction.guild,
+                                error: err,
+                            });
                             this.client.emit(InternalEvents.DEBUG, err);
                         }
                     }
@@ -184,11 +218,22 @@ export class GEventHandler {
                 };
 
 
-                this.client.emit(InternalEvents.COMMAND_EXECUTE, { command: command, member: interaction.member, channel: interaction.channel, guild: interaction.guild });
+                this.client.emit(InternalEvents.COMMAND_EXECUTE, {
+                    command: command,
+                    member: interaction.member,
+                    channel: interaction.channel,
+                    guild: interaction.guild,
+                });
 
                 await command.run(runOptions);
             } catch (err) {
-                this.client.emit(InternalEvents.COMMAND_ERROR, { command: command, member: interaction.member, channel: interaction.channel, guild: interaction.guild, error: err });
+                this.client.emit(InternalEvents.COMMAND_ERROR, {
+                    command: command,
+                    member: interaction.member,
+                    channel: interaction.channel,
+                    guild: interaction.guild,
+                    error: err,
+                });
                 this.client.emit(InternalEvents.DEBUG, err);
             }
         };
@@ -206,11 +251,13 @@ export class GEventHandler {
         const args = {};
 
         for (const o of options) {
-          if ([1, 2].includes(o.type)) {
-            args[o.name] = this.argsToObject(o.options);
-          } else if (o.user || o.member || o.channel || o.role) {
+            if ([1, 2].includes(o.type)) {
+                args[o.name] = this.argsToObject(o.options);
+            } else if (o.user || o.member || o.channel || o.role) {
                 args[o.name] = o.member || o.user || o.channel || o.role;
-          } else { args[o.name] = o.value; }
+            } else {
+                args[o.name] = o.value;
+            }
         }
 
         return args;
@@ -220,24 +267,24 @@ export class GEventHandler {
         const args = [];
 
         const check = option => {
-          if (!option) return;
-          if (option.user || option.member || option.channel || option.role) args.push(option.member || option.user || option.channel || option.role);
-          else if (option.value) args.push(option.value);
-          else args.push(option.name);
+            if (!option) return;
+            if (option.user || option.member || option.channel || option.role) args.push(option.member || option.user || option.channel || option.role);
+            else if (option.value) args.push(option.value);
+            else args.push(option.name);
 
-          if (option.options) {
-            for (let o = 0; o < option.options.length; o++) {
-              check(option.options[o]);
+            if (option.options) {
+                for (let o = 0; o < option.options.length; o++) {
+                    check(option.options[o]);
+                }
             }
-          }
         };
 
         if (Array.isArray(options)) {
-          for (let o = 0; o < options.length; o++) {
-            check(options[o]);
-          }
+            for (let o = 0; o < options.length; o++) {
+                check(options[o]);
+            }
         } else {
-          check(options);
+            check(options);
         }
 
         return args;

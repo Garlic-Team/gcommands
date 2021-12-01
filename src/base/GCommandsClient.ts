@@ -25,7 +25,7 @@ export class GCommandsClient extends Client {
     public _applicationCommandsCache: Array<unknown>;
 
     public constructor(options: GCommandsClientOptions) {
-        super(Object.assign(GCommandsClientOptionsDefaults, options));
+        super({ ...GCommandsClientOptionsDefaults, ...options });
 
         this.gcommands = new Collection();
         this.galiases = new Collection();
@@ -49,7 +49,7 @@ export class GCommandsClient extends Client {
             else this.languageFile = this.options.ownLanguageFile;
 
             new GEventHandler(this);
-            // If (this.eventDir) new GEventLoader(this);
+            // If (this.options.loader.eventDir) new GEventLoader(this);
 
             if (this.options.loader.componentDir) new GComponents(this, { dir: this.options.loader.componentDir });
             new GInhibitorLoader(this);

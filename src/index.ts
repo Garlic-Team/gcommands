@@ -11,8 +11,9 @@ export * from './base/GCommandsClient';
 export * from './structures/Command';
 export * from './structures/Inhibitor';
 
-
 export { LanguageType, CommandType, ArgumentType, ChannelType } from './util/Constants';
+
+export { CommandOptions } from './typings/interfaces';
 
 declare module 'discord.js' {
     interface Guild {

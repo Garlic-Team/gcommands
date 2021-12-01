@@ -8,8 +8,8 @@ import * as path from 'path';
 import Util from '../util/util';
 
 export class GInhibitorLoader {
-    private client: GCommandsClient;
-    private dir: string;
+    private readonly client: GCommandsClient;
+    private readonly dir: string;
 
     public constructor(client: GCommandsClient) {
         this.client = client;
@@ -17,12 +17,14 @@ export class GInhibitorLoader {
 
         this.load();
     }
+
     private async load() {
         await this.loadFiles(path.join(__dirname, '../structures/Inhibitors'));
         if (this.dir) await this.loadFiles(this.dir, true);
 
         this.client.emit(InternalEvents.INHIBITORS_LOADED, this.client.ginhibitors);
     }
+
     private async loadFiles(dir: string, emit = false) {
         for await (const fsDirent of fs.readdirSync(dir, { withFileTypes: true })) {
             const rawFileName = fsDirent.name;
@@ -32,7 +34,9 @@ export class GInhibitorLoader {
             if (fsDirent.isDirectory()) {
                 await this.loadFiles(path.join(dir, rawFileName));
                 continue;
-            } else if (!['.js', '.ts'].includes(fileType)) { continue; }
+            } else if (!['.js', '.ts'].includes(fileType)) {
+                continue;
+            }
 
             let file = await import(path.join(dir, rawFileName));
             if (file.default) file = file.default;

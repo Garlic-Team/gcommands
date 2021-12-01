@@ -53,7 +53,7 @@ export interface CommandOptions {
     category?: string;
     usage?: string;
     // eslint-disable-next-line no-unused-vars
-    run: (options: CommandRunOptions) => unknown;
+    run?: (options: CommandRunOptions) => unknown;
 }
 
 export interface CommandArgsOptionChoice {
