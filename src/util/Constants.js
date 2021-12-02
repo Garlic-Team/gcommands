@@ -87,6 +87,21 @@ exports.ArgumentType = {
 };
 
 /**
+ * CommandType
+ * * SLASH
+ * * CONTEXT_USER
+ * * CONTEXT_MESSAGE
+ * * MESSAGE
+ * @typedef {(string)} CommandType
+ */
+exports.CommandType = {
+    SLASH: 'SLASH',
+    CONTEXT_USER: 'CONTEXT_USER',
+    CONTEXT_MESSAGE: 'CONTEXT_MESSAGE',
+    MESSAGE: 'MESSAGE'
+}
+
+/**
  * The GCommandsOptions
  * @property {GCommandsOptionsLanguage} language
  * @property {GCommandsOptionsCommands} commands

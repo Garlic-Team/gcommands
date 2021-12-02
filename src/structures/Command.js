@@ -145,6 +145,12 @@ class Command {
         this.context = options.context;
 
         /**
+         * The command type
+         * @type {CommandType}
+         */
+        this.type = options.type;
+
+        /**
          * The aliases
          * @type {Array}
          */

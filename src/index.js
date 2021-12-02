@@ -33,7 +33,7 @@ module.exports = {
     Color: require('./structures/Color'),
     Util: require('./util/util'),
     ArgumentType: require('./util/Constants').ArgumentType,
-    ButtonType: require('./util/Constants').ButtonType,
+    CommandType: require('./util/Constants').ArgumentType,
 
     version: require('../package.json').version,
 };

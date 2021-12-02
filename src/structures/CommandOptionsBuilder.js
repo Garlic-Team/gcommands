@@ -1,3 +1,4 @@
+const { CommandType } = require('../util/Constants');
 const { resolveString } = require('../util/util');
 
 /**
@@ -151,6 +152,12 @@ class CommandOptionsBuilder {
      */
     this.context = 'context' in data ? data.context : null;
 
+    /**
+     * The command type
+     * @type {CommandType}
+     */
+    this.type = 'type' in data ? data.type : null;
+
     return this.toJSON();
   }
 
@@ -187,6 +194,15 @@ class CommandOptionsBuilder {
   */
   setUsage(usage) {
     this.usage = resolveString(usage);
+    return this;
+  }
+
+  /**
+   * Method to set type
+   * @param {Array<CommandType} type
+  */
+  setType(type) {
+    this.type = type;
     return this;
   }
 

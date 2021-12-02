@@ -1,6 +1,6 @@
 const { readdirSync } = require('fs');
 const ArgumentsCollector = require('../structures/ArgumentsCollector');
-const { Events } = require('../util/Constants'), Color = require('../structures/Color');
+const { Events, CommandType } = require('../util/Constants'), Color = require('../structures/Color');
 const { inhibit, unescape, resolveMessageOptions } = require('../util/util');
 
 /**
@@ -75,8 +75,8 @@ class GEventHandling {
 
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
-                const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
-                const isClientMessageEnabled = !commandos.slash && ['false', 'slash'].includes(String(this.client.slash));
+                const isMessageEnabled = ![CommandType.MESSAGE].includes(commandos.type);
+                const isClientMessageEnabled = ![CommandType.MESSAGE].includes(commandos.type) && ['false', 'slash'].includes(String(this.client.slash));
 
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
@@ -219,9 +219,9 @@ class GEventHandling {
 
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
-                const isSlashEnabled = ['false', 'message'].includes(String(commandos.slash));
-                const isClientSlashEnabled = !commandos.slash && ['false', 'message'].includes(String(this.client.slash));
-                const isContextEnabled = String(commandos.context) === 'false';
+                const isSlashEnabled = ![CommandType.SLASH].includes(commandos.type);
+                const isClientSlashEnabled = ![CommandType.SLASH].includes(commandos.type) && ['false', 'message'].includes(String(this.client.slash));
+                const isContextEnabled = ![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => commandos.type.includes(type));
                 const isClientContextEnabled = String(this.client.context) === 'false';
 
                 if (!isNotDm && isDmEnabled) return;

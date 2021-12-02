@@ -1,4 +1,4 @@
-const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
+const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw, CommandType } = require('../util/Constants');
 const { default: hyttpo } = require('hyttpo');
 const path = require('path');
 const fs = require('fs');
@@ -101,8 +101,9 @@ class GCommandLoader {
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (['false', 'message'].includes(String(cmd.slash))) continue;
-            if (!cmd.slash && ['false', 'message'].includes(String(this.client.slash))) continue;
+            if (![CommandType.SLASH].includes(cmd.type)) continue;
+            //if (['false', 'message'].includes(String(cmd.slash))) continue;
+            if (![CommandType.SLASH].includes(cmd.type) && ['false', 'message'].includes(String(this.client.slash))) continue;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
 
@@ -112,6 +113,7 @@ class GCommandLoader {
                     if (guildOnly) ifAlready = (await __getAllCommands(this.client, guildOnly)).filter(c => c.name === cmd.name && c.type === 1);
                     else ifAlready = (await this._allGlobalCommands).filter(c => c.name === cmd.name && c.type === 1);
 
+                    console.log(Object.values(cmd));
                     if (ifAlready.length > 0 && ((ifAlready[0].default_permission === false && ((Object.values(cmd)[10] || Object.values(cmd)[12]) !== undefined)) || (ifAlready[0].default_permission === true && ((Object.values(cmd)[10] || Object.values(cmd)[12]) === undefined))) && ifAlready[0].description === cmd.description && JSON.stringify(comparable(cmd.args)) === JSON.stringify(comparable(ifAlready[0].options))) { // eslint-disable-line max-len
                         this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded from cache (Slash): &e➜   &3${cmd.name}`, { json: false }).getText());
                         return;
@@ -190,8 +192,9 @@ class GCommandLoader {
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (String(cmd.context) === 'false') continue;
-            if (!cmd.context && String(this.client.context) === 'false') continue;
+            if (![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => cmd.type.includes(type))) continue;
+            //if (String(cmd.context) === 'false') continue;
+            if (![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => cmd.type.includes(type)) && String(this.client.context) === 'false') continue;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             const loadContextMenu = async guildOnly => {
@@ -418,13 +421,17 @@ class GCommandLoader {
             if (!allSlashCommands || allSlashCommands.length < 0) return;
 
             for (const slashCmd of allSlashCommands) {
+                const clientCommand = this.client.gcommands.get(slashCmd.name);
+
                 if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
-                else if (this.client.gcommands.get(slashCmd.name) && ['false', 'message'].includes(String(this.client.gcommands.get(slashCmd.name).slash))) __deleteCmd(this.client, slashCmd.id);
-                else if (!this.client.gcommands.get(slashCmd.name).slash && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id);
+
+                else if (![CommandType.SLASH].includes(clientCommand.type)) __deleteCmd(this.client, slashCmd.id);
+                else if (![CommandType.SLASH].includes(clientCommand.type) && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id);
                 else continue;
                 this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted: &e➜   &3${slashCmd.name}`, { json: false }).getText());
             }
         };
+
         const deleteAllGuildCommands = async () => {
             const guilds = this.client.guilds.cache.map(guild => guild.id);
             for (const guild of guilds) {
@@ -432,9 +439,12 @@ class GCommandLoader {
                 if (!allGuildSlashCommands || allGuildSlashCommands.length < 0) return;
 
                 for (const slashCmd of allGuildSlashCommands) {
+                    const clientCommand = this.client.gcommands.get(slashCmd.name);
+
                     if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id, guild);
-                    else if (this.client.gcommands.get(slashCmd.name) && ['false', 'message'].includes(String(this.client.gcommands.get(slashCmd.name).slash))) __deleteCmd(this.client, slashCmd.id, guild);
-                    else if (!this.client.gcommands.get(slashCmd.name).slash && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id, guild);
+
+                    else if (![CommandType.SLASH].includes(clientCommand.type)) __deleteCmd(this.client, slashCmd.id, guild);
+                    else if (![CommandType.SLASH].includes(clientCommand.type) && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id, guild);
                     else continue;
                     this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted (guild: ${guild}): &e➜   &3${slashCmd.name}`, { json: false }).getText());
                 }
