@@ -98,7 +98,7 @@ exports.CommandType = {
     SLASH: 'SLASH',
     CONTEXT_USER: 'CONTEXT_USER',
     CONTEXT_MESSAGE: 'CONTEXT_MESSAGE',
-    MESSAGE: 'MESSAGE'
+    MESSAGE: 'MESSAGE',
 };
 
 /**

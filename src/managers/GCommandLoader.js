@@ -422,9 +422,7 @@ class GCommandLoader {
                 const clientCommand = this.client.gcommands.get(slashCmd.name);
 
                 if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
-
                 else if (!clientCommand.type.includes(CommandType.SLASH)) __deleteCmd(this.client, slashCmd.id);
-                else if (!clientCommand.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id);
                 else continue;
                 this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted: &e➜   &3${slashCmd.name}`, { json: false }).getText());
             }
@@ -440,9 +438,7 @@ class GCommandLoader {
                     const clientCommand = this.client.gcommands.get(slashCmd.name);
 
                     if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id, guild);
-
                     else if (!clientCommand.type.includes(CommandType.SLASH)) __deleteCmd(this.client, slashCmd.id, guild);
-                    else if (!clientCommand.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id, guild);
                     else continue;
                     this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted (guild: ${guild}): &e➜   &3${slashCmd.name}`, { json: false }).getText());
                 }

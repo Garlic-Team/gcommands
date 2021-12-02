@@ -1,4 +1,3 @@
-const { CommandType } = require('../util/Constants');
 const { resolveString } = require('../util/util');
 
 /**
@@ -372,7 +371,7 @@ class CommandOptionsBuilder {
       channelNewsOnly: this.channelNewsOnly,
       channelThreadOnly: this.channelThreadOnly,
       nsfw: this.nsfw,
-      type: this.type
+      type: this.type,
     };
   }
 }
