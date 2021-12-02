@@ -99,7 +99,7 @@ exports.CommandType = {
     CONTEXT_USER: 'CONTEXT_USER',
     CONTEXT_MESSAGE: 'CONTEXT_MESSAGE',
     MESSAGE: 'MESSAGE'
-}
+};
 
 /**
  * The GCommandsOptions
