@@ -101,9 +101,8 @@ class GCommandLoader {
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (![CommandType.SLASH].includes(cmd.type)) continue;
-            //if (['false', 'message'].includes(String(cmd.slash))) continue;
-            if (![CommandType.SLASH].includes(cmd.type) && ['false', 'message'].includes(String(this.client.slash))) continue;
+            if (!cmd.type.includes(CommandType.SLASH)) continue;
+            if (!cmd.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash))) continue;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
 
@@ -193,7 +192,6 @@ class GCommandLoader {
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
             if (![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => cmd.type.includes(type))) continue;
-            //if (String(cmd.context) === 'false') continue;
             if (![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => cmd.type.includes(type)) && String(this.client.context) === 'false') continue;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
@@ -425,8 +423,8 @@ class GCommandLoader {
 
                 if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
 
-                else if (![CommandType.SLASH].includes(clientCommand.type)) __deleteCmd(this.client, slashCmd.id);
-                else if (![CommandType.SLASH].includes(clientCommand.type) && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id);
+                else if (!clientCommand.type.includes(CommandType.SLASH)) __deleteCmd(this.client, slashCmd.id);
+                else if (!clientCommand.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id);
                 else continue;
                 this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted: &e➜   &3${slashCmd.name}`, { json: false }).getText());
             }
@@ -443,8 +441,8 @@ class GCommandLoader {
 
                     if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id, guild);
 
-                    else if (![CommandType.SLASH].includes(clientCommand.type)) __deleteCmd(this.client, slashCmd.id, guild);
-                    else if (![CommandType.SLASH].includes(clientCommand.type) && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id, guild);
+                    else if (!clientCommand.type.includes(CommandType.SLASH)) __deleteCmd(this.client, slashCmd.id, guild);
+                    else if (!clientCommand.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id, guild);
                     else continue;
                     this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted (guild: ${guild}): &e➜   &3${slashCmd.name}`, { json: false }).getText());
                 }

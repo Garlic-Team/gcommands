@@ -75,8 +75,8 @@ class GEventHandling {
 
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
-                const isMessageEnabled = ![CommandType.MESSAGE].includes(commandos.type);
-                const isClientMessageEnabled = ![CommandType.MESSAGE].includes(commandos.type) && ['false', 'slash'].includes(String(this.client.slash));
+                const isMessageEnabled = !commandos.type.includes(CommandType.MESSAGE);
+                const isClientMessageEnabled = !commandos.type.includes(CommandType.MESSAGE) && ['false', 'slash'].includes(String(this.client.slash));
 
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
@@ -219,8 +219,8 @@ class GEventHandling {
 
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
-                const isSlashEnabled = ![CommandType.SLASH].includes(commandos.type);
-                const isClientSlashEnabled = ![CommandType.SLASH].includes(commandos.type) && ['false', 'message'].includes(String(this.client.slash));
+                const isSlashEnabled = commandos.type.includes(CommandType.SLASH);
+                const isClientSlashEnabled = commandos.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash));
                 const isContextEnabled = ![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => commandos.type.includes(type));
                 const isClientContextEnabled = String(this.client.context) === 'false';
 
