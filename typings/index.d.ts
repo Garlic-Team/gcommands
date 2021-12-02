@@ -158,9 +158,7 @@ declare module 'gcommands' {
     public aliases: Array<string>;
     public category: string;
     public usage: string;
-    public slash: GCommandsOptionsCommandsSlash;
-    public context: GCommandsOptionsCommandsContext;
-    public type: Array<CommandType>;
+    public type: CommandType[];
 
     public setName(name: string): CommandOptionsBuilder;
     public setContextMenuName(name: string): CommandOptionsBuilder;
@@ -183,9 +181,7 @@ declare module 'gcommands' {
     public setAliases(aliases: Array<string>): CommandOptionsBuilder;
     public setCategory(category: string): CommandOptionsBuilder;
     public setUsage(usage: string): CommandOptionsBuilder;
-    public setSlash(slash: GCommandsOptionsCommandsSlash): CommandOptionsBuilder;
-    public setContext(context: GCommandsOptionsCommandsContext): CommandOptionsBuilder;
-    public setType(type: Array<CommandType>): CommandOptionsBuilder;
+    public setType(type: CommandType[]): CommandOptionsBuilder;
     public toJSON(): CommandOptionsBuilder;
   }
 
@@ -310,9 +306,7 @@ declare module 'gcommands' {
     public aliases: Array<string>;
     public category: string;
     public usage: string;
-    public slash: GCommandsOptionsCommandsSlash;
-    public context: GCommandsOptionsCommandsContext;
-    public type: Array<CommandType>;
+    public type: CommandType[];
 
     public run(options: CommandRunOptions): void;
   }

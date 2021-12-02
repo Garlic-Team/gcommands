@@ -243,8 +243,7 @@ exports.CommandType = {
  * @property {boolean} channelNewsOnly
  * @property {boolean} channelThreadOnly
  * @property {boolean} nsfw
- * @property {GCommandsOptionsCommandsSlash} slash
- * @property {GCommandsOptionsCommandsContext} context
+ * @property {CommandType} type
  * @typedef {(Object)} CommandOptions
  */
 

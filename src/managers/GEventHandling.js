@@ -219,8 +219,8 @@ class GEventHandling {
 
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
-                const isSlashEnabled = commandos.type.includes(CommandType.SLASH);
-                const isClientSlashEnabled = commandos.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash));
+                const isSlashEnabled = !commandos.type.includes(CommandType.SLASH);
+                const isClientSlashEnabled = !commandos.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash));
                 const isContextEnabled = ![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => commandos.type.includes(type));
                 const isClientContextEnabled = String(this.client.context) === 'false';
 
