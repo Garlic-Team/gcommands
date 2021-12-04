@@ -2,7 +2,6 @@ const Color = require('../structures/Color'), GError = require('../structures/GE
 const { default: hyttpo } = require('hyttpo');
 const path = require('path');
 const fs = require('fs');
-const ms = require('ms');
 const { isClass, __deleteCmd, __getAllCommands, comparable, getAllObjects } = require('../util/util');
 const Command = require('../structures/Command');
 /**
@@ -139,7 +138,7 @@ class GCommandLoader {
                 hyttpo.request(config)
                     .then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText()))
                     .catch(error => {
-                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error.status} ${error.data.message} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data.retry_after * 1000}` : ''} &c${error.status} ${error.data.message} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error) {
                             if (error.status === 429) {
@@ -231,7 +230,7 @@ class GCommandLoader {
                     }
                 })
                     .catch(error => {
-                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error) {
                             if (error.status === 429) {
@@ -334,7 +333,7 @@ class GCommandLoader {
 
                         hyttpo.request(config).then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText()))
                             .catch(error => {
-                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                                 if (error) {
                                     if (error.status === 429) {
@@ -398,7 +397,7 @@ class GCommandLoader {
     __tryAgain(cmd, config, type) {
         hyttpo.request(config).then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText()))
             .catch(error => {
-                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                 if (error && error.status === 429) {
                     setTimeout(() => {
