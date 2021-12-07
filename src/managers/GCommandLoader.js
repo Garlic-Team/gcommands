@@ -149,8 +149,8 @@ class GCommandLoader {
                                 this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
                                     '  &d[GCommands Debug] &3',
-                                    `&aCode: &b${error.data.code}`,
-                                    `&aMessage: &b${error.data.message}`,
+                                    `&aCode: &b${error.data?.code}`,
+                                    `&aMessage: &b${error.data?.message}`,
                                     '',
                                     `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
                                 ]).getText());
@@ -241,8 +241,8 @@ class GCommandLoader {
                                 this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
                                     '  &d[GCommands Debug] &3',
-                                    `&aCode: &b${error.data.code}`,
-                                    `&aMessage: &b${error.data.message}`,
+                                    `&aCode: &b${error.data?.code}`,
+                                    `&aMessage: &b${error.data?.message}`,
                                     '',
                                     `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
                                 ]).getText());
@@ -344,8 +344,8 @@ class GCommandLoader {
                                         this.client.emit(Events.DEBUG, new Color([
                                             '&a----------------------',
                                             '  &d[GCommands Debug] &3',
-                                            `&aCode: &b${error.data.code}`,
-                                            `&aMessage: &b${error.data.message}`,
+                                            `&aCode: &b${error.data?.code}`,
+                                            `&aMessage: &b${error.data?.message}`,
                                             '',
                                             `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
                                         ]).getText());
