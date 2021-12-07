@@ -41,7 +41,7 @@ class GEventHandling {
         const messageEventUse = async message => {
             if (!message || !message.author || message.author.bot) return;
 
-            const isNotDm = message.channel.type !== 'dm';
+            const isNotDm = message.inGuild();
             const language = isNotDm ? await message.guild.getLanguage() : this.client.language;
 
             if (message.guild && !message.guild.available) {
