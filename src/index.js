@@ -1,4 +1,6 @@
 'use strict';
+const components = require('@gcommands/components');
+const events = require('@gcommands/events');
 
 module.exports = {
     // Root classes
@@ -12,12 +14,12 @@ module.exports = {
     GDatabaseLoader: require('./managers/GDatabaseLoader'),
 
     // Components
-    Component: require('@gcommands/components').Component,
-    CustomId: require('@gcommands/components').CustomId,
-    ComponentType: require('@gcommands/components').ComponentType,
-    MessageButton: require('@gcommands/components').MessageButton,
-    MessageSelectMenu: require('@gcommands/components').MessageSelectMenu,
-    MessageActionRow: require('@gcommands/components').MessageActionRow,
+    Component: components.Component,
+    CustomId: components.CustomId,
+    ComponentType: components.ComponentType,
+    MessageButton: components.MessageButton,
+    MessageSelectMenu: components.MessageSelectMenu,
+    MessageActionRow: components.MessageActionRow,
 
     Command: require('./structures/Command'),
     Event: require('@gcommands/events').Event,
@@ -27,7 +29,7 @@ module.exports = {
     CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),
     CommandArgsOptionBuilder: require('./structures/CommandArgsOptionBuilder'),
     CommandArgsChoiceBuilder: require('./structures/CommandArgsChoiceBuilder'),
-    EventOptionsBuilder: require('@gcommands/events').EventOptionsBuilder,
+    EventOptionsBuilder: events.EventOptionsBuilderRaw.default,
 
     // Other
     Color: require('./structures/Color'),
