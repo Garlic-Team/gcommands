@@ -22,14 +22,14 @@ module.exports = {
     MessageActionRow: components.MessageActionRow,
 
     Command: require('./structures/Command'),
-    Event: require('@gcommands/events').Event,
+    Event: events.Event,
     GError: require('./structures/GError'),
 
     // Builders
     CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),
     CommandArgsOptionBuilder: require('./structures/CommandArgsOptionBuilder'),
     CommandArgsChoiceBuilder: require('./structures/CommandArgsChoiceBuilder'),
-    EventOptionsBuilder: events.EventOptionsBuilderRaw.default,
+    EventOptionsBuilder: events.EventOptionsBuilder,
 
     // Other
     Color: require('./structures/Color'),
