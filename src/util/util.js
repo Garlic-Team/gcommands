@@ -13,6 +13,7 @@ class Util {
      * @returns {string}
     */
     static resolveString(data) {
+	if (typeof data === 'undefined') return undefined;
         if (typeof data === 'string') return data;
         if (Array.isArray(data)) return data.join('\n');
         return String(data);
