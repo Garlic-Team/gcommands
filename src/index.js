@@ -5,7 +5,7 @@ const events = require('@gcommands/events');
 module.exports = {
     // Root classes
     GCommandsClient: require('./base/GCommandsClient.js'),
-    GEventLoader: require('@gcommands/events').GEvents,
+    GEventLoader: events.GEvents,
     GCommandsDispatcher: require('./base/GCommandsDispatcher'),
 
     // Loaders
