@@ -3,8 +3,7 @@ const GCommandLoader = require('../managers/GCommandLoader'),
   { GEvents: GEventLoader } = require('@gcommands/events'),
   { GComponents } = require('@gcommands/components'),
   GEventHandling = require('../managers/GEventHandling'),
-  GDatabaseLoader = require('../managers/GDatabaseLoader'),
-  GUpdater = require('../util/updater');
+  GDatabaseLoader = require('../managers/GDatabaseLoader');
 
 const { Collection, Client } = require('discord.js');
 const fs = require('fs');
@@ -243,7 +242,6 @@ class GCommandsClient extends Client {
         this.loadSys();
       });
     });
-    GUpdater.__updater();
   }
 
   loadSys() {

@@ -198,7 +198,7 @@ class GEventHandling {
         this.client.on('interactionCreate', async interaction => {
             if (!(interaction.isCommand() || interaction.isContextMenu())) return;
 
-            const isNotDm = interaction.channel.type !== 'dm';
+            const isNotDm = interaction.inGuild();
             const language = isNotDm ? await interaction.guild.getLanguage() : this.client.language;
 
             if (interaction.guild && !interaction.guild.available) {

@@ -185,6 +185,7 @@ class Util {
     */
     static getAllObjects(client, ob) {
 	    if (typeof ob !== 'object') return;
+        
         for (const v of Object.values(ob)) {
             if (Array.isArray(v)) {
                 Util.getAllObjects(v[0]);

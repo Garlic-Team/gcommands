@@ -230,13 +230,13 @@ class GCommandLoader {
                     }
                 })
                     .catch(error => {
-                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data?.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error) {
                             if (error.status === 429) {
                                 setTimeout(() => {
                                     this.__tryAgain(cmd, config, 'Context Menu');
-                                }, (error.data.retry_after) * 1000);
+                                }, (error.data?.retry_after) * 1000);
                             } else {
                                 this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
@@ -244,11 +244,11 @@ class GCommandLoader {
                                     `&aCode: &b${error.data?.code}`,
                                     `&aMessage: &b${error.data?.message}`,
                                     '',
-                                    `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                                    `${error.data?.errors ? '&aErrors:' : '&a----------------------'}`,
                                 ]).getText());
 
-                                if (error.data.errors) {
-                                    getAllObjects(this.client, error.data.errors);
+                                if (error.data?.errors) {
+                                    getAllObjects(this.client, error.data?.errors);
 
                                     this.client.emit(Events.DEBUG, new Color([
                                         `&a----------------------`,
@@ -333,13 +333,13 @@ class GCommandLoader {
 
                         hyttpo.request(config).then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText()))
                             .catch(error => {
-                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data?.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                                 if (error) {
                                     if (error.status === 429) {
                                         setTimeout(() => {
                                             this.__tryAgain(cmd, config, 'Permission');
-                                        }, (error.data.retry_after) * 1000);
+                                        }, (error.data?.retry_after) * 1000);
                                     } else {
                                         this.client.emit(Events.DEBUG, new Color([
                                             '&a----------------------',
@@ -347,11 +347,11 @@ class GCommandLoader {
                                             `&aCode: &b${error.data?.code}`,
                                             `&aMessage: &b${error.data?.message}`,
                                             '',
-                                            `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                                            `${error.data?.errors ? '&aErrors:' : '&a----------------------'}`,
                                         ]).getText());
 
-                                        if (error.data.errors) {
-                                            getAllObjects(this.client, error.data.errors);
+                                        if (error.data?.errors) {
+                                            getAllObjects(this.client, error.data?.errors);
 
                                             this.client.emit(Events.DEBUG, new Color([
                                                 `&a----------------------`,
@@ -397,12 +397,12 @@ class GCommandLoader {
     __tryAgain(cmd, config, type) {
         hyttpo.request(config).then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText()))
             .catch(error => {
-                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data?.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                 if (error && error.status === 429) {
                     setTimeout(() => {
                         this.__tryAgain(cmd, config, type);
-                    }, (error.data.retry_after) * 1000);
+                    }, (error.data?.retry_after) * 1000);
                 }
             });
     }

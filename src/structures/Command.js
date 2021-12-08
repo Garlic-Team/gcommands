@@ -133,18 +133,6 @@ class Command {
         this.nsfw = options.nsfw;
 
         /**
-         * Wheter this command should be a slash command
-         * @type {boolean}
-         */
-        this.slash = options.slash;
-
-        /**
-         * Wheter this command should be a context menu
-         * @type {GCommandsOptionsCommandsContext}
-         */
-        this.context = options.context;
-
-        /**
          * The command type
          * @type {CommandType}
          */
