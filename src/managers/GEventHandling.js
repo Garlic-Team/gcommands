@@ -2,6 +2,7 @@ const { readdirSync } = require('fs');
 const ArgumentsCollector = require('../structures/ArgumentsCollector');
 const { Events, CommandType } = require('../util/Constants'), Color = require('../structures/Color');
 const { inhibit, unescape, resolveMessageOptions } = require('../util/util');
+const GError = require('../structures/GError');
 
 /**
  * The handler for message and slash commands
