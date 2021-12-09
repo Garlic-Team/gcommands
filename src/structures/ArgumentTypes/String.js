@@ -25,7 +25,7 @@ class StringArgumentType extends ArgumentType {
     }
 
 	validate(argument, message, language) {
-        const choice = argument.choices?.find(ch => ch.name.toLowerCase() === message.content);
+        const choice = argument.choices?.find(ch => ch.name.toLowerCase() === message.content.toLowerCase());
         if (argument.choices && !choice) return this.client.languageFile.ARGS_CHOICES[language].replace('{choices}', argument.choices.map(opt => `\`${opt.name}\``).join(', '));
         else if (choice) this.value.value = choice.value;
         else this.value.value = message.content;

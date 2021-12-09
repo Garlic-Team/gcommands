@@ -197,10 +197,10 @@ class Command {
 
         if (newCommand.name !== this.name) throw new GError('[COMMAND]','Command name cannot change.');
 
-        const nglds = newCommand.guildOnly ? Array.isArray(newCommand.guildOnly) ? newCommand.guildOnly : Array(newCommand.guildOnly) : undefined;
+        const nglds = newCommand.guildOnly ? Array.isArray(newCommand.guildOnly) ? newCommand.guildOnly : Array(newCommand.guildOnly) : [];
 
         const check1 = nglds?.every((x, i) => x === this.guildOnly[i]);
-        const check2 = this?.guildOnly?.every((x, i) => x === nglds[i]);
+        const check2 = this?.guildOnly?.every((x, i) => x === nglds[i]) || [];
         if (this.guildOnly && (!check1 || !check2)) throw new GError('[COMMAND]','Command guildOnly cannot change.');
 
         newCommand._path = cmdPath;

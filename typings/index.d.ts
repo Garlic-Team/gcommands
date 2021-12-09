@@ -70,6 +70,12 @@ declare module 'discord.js' {
     guildPartnerUpdate: [Guild, Boolean, Boolean];
     guildVerifyUpdate: [Guild, Boolean, Boolean];
 
+    threadStateUpdate: [ThreadChannel, ThreadChannel];
+    threadNameUpdate: [ThreadChannel, string, string];
+    threadLockStateUpdate: [ThreadChannel, ThreadChannel];
+    threadRateLimitPerUserUpdate: [ThreadChannel, Number, Number];
+    threadAutoArchiveDurationUpdate: [ThreadChannel, Number, Number];
+
     voiceChannelJoin: [Channel, VoiceState];
     voiceChannelLeave: [Channel, VoiceState];
     voiceChannelSwitch: [Channel, Channel, VoiceState];
