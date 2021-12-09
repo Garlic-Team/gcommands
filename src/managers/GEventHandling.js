@@ -83,6 +83,8 @@ class GEventHandling {
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
 
+                let botMsg;
+
                 const runOptions = {
                     member: message.member,
                     author: message.author,
@@ -94,7 +96,14 @@ class GEventHandling {
                     language: language,
                     command: commandos,
 
-                    respond: (options = undefined) => message.reply(resolveMessageOptions(options)),
+                    respond: async(options = undefined) => {
+                        botMsg = await message.reply(resolveMessageOptions(options))
+                    },
+                    edit: async(options = undefined) => {
+                        if (!botMsg) throw new GError('[NEED RESPOND]', 'Send a message before editing.');
+                        const editedMsg = await botMsg.edit(resolveMessageOptions(options));
+                        return editedMsg;
+                    },
                     followUp: (options = undefined) => message.reply(resolveMessageOptions(options)),
                 };
 
