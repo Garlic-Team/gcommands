@@ -16,4 +16,4 @@ module.exports = client => {
             client.emit('threadAutoArchiveDurationUpdate', newThread, oldThread.autoArchiveDuration, newThread.autoArchiveDuration);
         }
     });
-}
+};
