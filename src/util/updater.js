@@ -1,4 +1,4 @@
-const hyttpo = require('hyttpo');
+const hyttpo = require('hyttpo').default;
 
 module.exports = {
     /**
