@@ -38,7 +38,7 @@ export class Command {
 	public client: GClient;
 	public readonly name: string;
 	public readonly description?: string;
-	public type: Array<CommandType>;
+	public readonly type: Array<CommandType>;
 	public readonly arguments?: Array<CommandArgument | Argument>;
 	public readonly inhibitors: CommandInhibitors = [];
 	public guildId?: string;
