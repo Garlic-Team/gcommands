@@ -98,6 +98,8 @@ export class CommandContext {
 	}
 
 	public static createWithMessage(message: Message, args: Array<string> | Array<object>, command: Command): CommandContext {
+
+		let replied: Message;
 		return new this(message.client as GClient, command, {
 			message: message,
 			arguments: new ArgumentResolver(args),
@@ -117,10 +119,29 @@ export class CommandContext {
 			userId: message.author.id,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			reply: message.reply.bind(message),
+			reply: async (options) => {
+				const msg = await message.reply(options);
+
+				replied = msg;
+
+				return msg;
+			},
+			editReply: async (options) => {
+				const msg = await replied.edit(options);
+
+				replied = msg;
+
+				return msg;
+			},
+			deleteReply: async () => {
+				await replied.delete();
+			},
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			followUp: message.reply.bind(message)
+			followUp: message.reply.bind(message),
+			deferReply: () => {
+				return undefined;
+			}
 		});
 	}
 }

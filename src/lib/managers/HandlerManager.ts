@@ -1,6 +1,6 @@
 import {Collection, CommandInteraction, ContextMenuInteraction, Message, MessageComponentInteraction} from 'discord.js';
-import {interactionCommandHandler} from '../../handlers/interactionCommandHandler';
-import {messageCommandHandler} from '../../handlers/messageCommandHandler';
+import {InteractionCommandHandler} from '../../handlers/InteractionCommandHandler';
+import {MessageCommandHandler} from '../../handlers/MessageCommandHandler';
 import {ComponentHandler} from '../../handlers/ComponentHandler';
 import {CooldownHandler} from '../../handlers/CooldownHandler';
 import {Command} from '../structures/Command';
@@ -13,8 +13,8 @@ export class HandlerManager {
 	public cooldownHandler: (userId: string, item: Command | Component, collection: Collection<string, Collection<string, number>>) => void | number;
 
 	constructor() {
-		this.interactionCommandHandler = interactionCommandHandler;
-		this.messageCommandHandler = messageCommandHandler;
+		this.interactionCommandHandler = InteractionCommandHandler;
+		this.messageCommandHandler = MessageCommandHandler;
 		this.componentHandler = ComponentHandler;
 		this.cooldownHandler = CooldownHandler;
 	}

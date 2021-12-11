@@ -6,6 +6,7 @@ import {Interaction} from 'discord.js';
 new Listener('interactionCreate', {
 	name: 'gcommands-interactionCommandHandler',
 	run: async (interaction: Interaction): Promise<void> => {
-		if (interaction.isCommand() || interaction.isContextMenu()) await GClient.ghandlers.interactionCommandHandler(interaction).catch(error => interaction.client.emit(Events.ERROR, error));
+		const client = interaction.client as GClient;
+		if (interaction.isCommand() || interaction.isContextMenu()) await Promise.resolve(client.ghandlers.interactionCommandHandler(interaction)).catch(error => client.emit(Events.ERROR, error));
 	}
 });

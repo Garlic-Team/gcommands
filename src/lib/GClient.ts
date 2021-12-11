@@ -16,7 +16,7 @@ export interface GClientOptions extends ClientOptions {
 	messagePrefix?: string;
 	dir?: string;
 	dirs?: Array<string>;
-	devServer?: string;
+	devGuildId?: string;
 	cooldown?: string;
 }
 
@@ -27,18 +27,14 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public static gcomponents: ComponentManager = new ComponentManager();
 	public static glisteners: ListenerManager = new ListenerManager();
 	public static responses: Record<string, string> = Responses;
-	public static devGuildId?: string;
-	public static cooldown?: string;
-	public static messagePrefix?: string;
-	public options: GClientOptions;
+	public static options: GClientOptions;
 
 	constructor(options: GClientOptions) {
 		super(options);
+		this.options = options;
 
-		if (this.options.dir) this.registerDirectory(this.options.dir);
-		if (this.options.dirs) this.registerDirectories(this.options.dirs);
-		if (this.options.devServer) this.setDevServer(this.options.devServer);
-		if (this.options.cooldown) this.setCooldown(this.options.cooldown);
+		if (options.dir) this.registerDirectory(options.dir);
+		if (options.dirs) this.registerDirectories(options.dirs);
 
 		setImmediate(async (): Promise<void> => {
 			await Promise.all([
@@ -67,7 +63,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	}
 
 	public static setDevServer(guildId: string): void {
-		this.devGuildId = guildId;
+		this.options.devGuildId = guildId;
 	}
 
 	public static setResponses(responses: Record<string, string>): void {
@@ -75,11 +71,11 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	}
 
 	public static setCooldown(cooldown: string): void {
-		this.cooldown = cooldown;
+		this.options.cooldown = cooldown;
 	}
 
 	public static setMessagePrefix(prefix: string): void {
-		this.messagePrefix = prefix;
+		this.options.messagePrefix = prefix;
 	}
 
 	public async login(token?: string): Promise<string> {
@@ -97,15 +93,14 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public gcommands: CommandManager = GClient.gcommands;
 	public gcomponents: ComponentManager = GClient.gcomponents;
 	public glisteners: ListenerManager = GClient.glisteners;
-	public devGuildId = GClient.devGuildId;
 	public responses = GClient.responses;
-	public cooldown = GClient.cooldown;
-	public messagePrefix = GClient.messagePrefix;
+	public options: GClientOptions = GClient.options;
 	public registerDirectory = GClient.registerDirectory;
 	public registerDirectories = GClient.registerDirectories;
 	public setResponses = GClient.setResponses;
 	public setDevServer = GClient.setDevServer;
 	public setCooldown = GClient.setCooldown;
+	public setMessagePrefix = GClient.setMessagePrefix;
 }
 
 declare module 'discord.js' {

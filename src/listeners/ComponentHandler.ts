@@ -6,6 +6,7 @@ import {Events} from '../lib/util/Events';
 new Listener('interactionCreate', {
 	name: 'gcommands-componentHandler',
 	run: async (interaction: Interaction): Promise<void> => {
-		if (interaction.isMessageComponent()) await GClient.ghandlers.componentHandler(interaction).catch(error => interaction.client.emit(Events.ERROR, error));
+		const client = interaction.client as GClient;
+		if (interaction.isMessageComponent()) await client.ghandlers.componentHandler(interaction).catch(error => client.emit(Events.ERROR, error));
 	}
 });

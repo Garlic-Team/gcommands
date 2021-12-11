@@ -40,8 +40,8 @@ export class Component {
 	public initialize(client: GClient): void {
 		this.client = client;
 
-		if (!this.guildId && client.devGuildId) this.guildId = client.devGuildId;
-		if (!this.cooldown && client.cooldown) this.cooldown = client.cooldown;
+		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
+		if (!this.cooldown && client.options?.cooldown) this.cooldown = client.options.cooldown;
 	}
 
 	public unregister() {
