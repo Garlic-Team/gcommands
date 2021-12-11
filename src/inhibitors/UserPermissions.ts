@@ -2,7 +2,7 @@ import {PermissionResolvable} from 'discord.js';
 import {CommandContext} from '../lib/structures/CommandContext';
 import {ComponentContext} from '../lib/structures/ComponentContext';
 
-class UserPermissions {
+export class UserPermissions {
 	public readonly permissions: Array<PermissionResolvable>;
 
 	constructor(permissions: Array<PermissionResolvable>) {

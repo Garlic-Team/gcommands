@@ -5,7 +5,7 @@ import {CommandContext} from '../lib/structures/CommandContext';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
-export async function CommandHandler(interaction: CommandInteraction | ContextMenuInteraction) {
+export async function interactionCommandHandler(interaction: CommandInteraction | ContextMenuInteraction) {
 	const command = GClient.gcommands.get(interaction.commandName);
 	if (!command) return interaction.reply({
 		content: GClient.responses.NOT_FOUND,
