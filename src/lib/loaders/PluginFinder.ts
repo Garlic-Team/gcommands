@@ -23,7 +23,7 @@ export async function PluginFinder(basedir: string) {
 		const modulesPath = path.join(basedir, 'node_modules');
 		if (fs.existsSync(modulesPath)) {
 			for await(const folder of fs.readdirSync(modulesPath, {withFileTypes: true})) {
-				if (!folder.name.includes('gcommands-next-plugin-')) continue;
+				if (!folder.name.includes('gcommands-plugin-')) continue;
 				await LoadPluginFolder(modulesPath, folder);
 			}
 		}

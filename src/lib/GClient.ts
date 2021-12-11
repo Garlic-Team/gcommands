@@ -17,6 +17,7 @@ export interface GClientOptions extends ClientOptions {
 	dir?: string;
 	dirs?: Array<string>;
 	devServer?: string;
+	cooldown?: string;
 }
 
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
@@ -36,6 +37,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 		if (this.options.dir) this.registerDirectory(this.options.dir);
 		if (this.options.dirs) this.registerDirectories(this.options.dirs);
 		if (this.options.devServer) this.setDevServer(this.options.devServer);
+		if (this.options.cooldown) this.setCooldown(this.options.cooldown);
 
 		setImmediate(async (): Promise<void> => {
 			await Promise.all([

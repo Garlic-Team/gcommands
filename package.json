@@ -1,11 +1,13 @@
 {
-  "name": "gcommands-next",
+  "name": "gcommands",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.ts",
   "scripts": {
-    "test": "nodemon test/index.js"
+    "build": "bash build.bash",
+    "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified",
+    "tscbuild": "tsc --emitDeclarationOnly"
   },
   "keywords": [],
   "author": "Garlic-Team",
@@ -14,11 +16,19 @@
     "@discordjs/rest": "^0.1.0-canary.0",
     "discord-api-types": "^0.25.2",
     "discord.js": "^13.3.1",
-    "ms": "^2.1.3"
+    "ms": "^2.1.3",
+    "typescript": "^4.5.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.16.0",
+    "@types/node": "^16.11.12",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "eslint": "^8.3.0"
   }
 }
