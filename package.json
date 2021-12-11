@@ -7,7 +7,9 @@
   "scripts": {
     "build": "bash build.bash",
     "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
-    "tscbuild": "tsc --emitDeclarationOnly"
+    "tscbuild": "tsc --emitDeclarationOnly",
+    "docs:build": "typedoc --json docs/out-main.json src/index.ts && node scripts/docs.mjs",
+    "docs:devbuild": "typedoc --json docs/out-dev.json src/index.ts && node scripts/devdocs.mjs"
   },
   "keywords": [],
   "author": "Garlic-Team",
