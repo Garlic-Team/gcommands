@@ -3,6 +3,7 @@ name: "Build docs"
 on:
   push:
     branches: [next]
+  workflow_dispatch:
 
 jobs:
   deploy:
