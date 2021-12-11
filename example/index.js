@@ -1,4 +1,5 @@
 // const {GClient} = require('gcommands')!
+require('dotenv').config();
 const {GClient} = require('../dist');
 const {Intents} = require('discord.js');
 const path = require('path');
@@ -9,9 +10,10 @@ GClient.gplugins.search(__dirname);
 const client = new GClient({
 	dirs: [
 		path.join(__dirname, 'commands'),
-		path.join(__dirname, 'components')
+		path.join(__dirname, 'components'),
+		path.join(__dirname, 'events')
 	],
-	devServer: '801033840059088897',
+	devServer: process.env.DEV_SERVER,
 	cooldown: '30s',
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
@@ -23,4 +25,4 @@ const client = new GClient({
 client.on('error', console.log);
 client.on('warn', console.log);
 
-client.login('some-token');
+client.login(process.env.token);
