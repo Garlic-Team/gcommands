@@ -4,10 +4,10 @@ import {ComponentHandler} from '../../handlers/ComponentHandler';
 import {CooldownHandler} from '../../handlers/CooldownHandler';
 import {Command} from '../structures/Command';
 import {Component} from '../structures/Component';
-import {InteractionContext} from '../structures/InteractionContext';
+import {CommandContext} from '../structures/CommandContext';
 
 export class HandlerManager {
-	public commandHandler: (ctx: InteractionContext) => any;
+	public commandHandler: (ctx: CommandInteraction | ContextMenuInteraction) => any;
 	public componentHandler: (interaction: MessageComponentInteraction) => any;
 	public cooldownHandler: (userId: string, item: Command | Component, collection: Collection<string, Collection<string, number>>) => void | number;
 
@@ -17,7 +17,7 @@ export class HandlerManager {
 		this.cooldownHandler = CooldownHandler;
 	}
 
-	public setCommandHandler(handler: (ctx: InteractionContext) => any): HandlerManager {
+	public setCommandHandler(handler: (ctx: CommandContext) => any): HandlerManager {
 		this.commandHandler = handler;
 
 		return this;

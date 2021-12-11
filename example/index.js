@@ -20,6 +20,9 @@ const client = new GClient({
 
 // See commands/introduce.js
 // See components/introduce.js
+// See events/ready.js
+
+// Plugins Example
 // See plugins/basicListeners/
 
 client.on('error', console.log);

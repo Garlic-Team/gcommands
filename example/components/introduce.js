@@ -1,5 +1,6 @@
 const {Component, ComponentType} = require('../../dist');
 
+// You can still use classes, but you will need to put the "new" keyword front of it
 new Component('introduce', {
 	type: [ComponentType.BUTTON],
 	run: (ctx) => {
