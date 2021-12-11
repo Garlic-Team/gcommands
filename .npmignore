@@ -1,6 +1,8 @@
 src/
 test/
 example/
+scripts/
+docs/
 package-lock.json
 .eslintignore
 .eslintrc.json
