@@ -6,3 +6,4 @@ docs/
 package-lock.json
 .eslintignore
 .eslintrc.json
+docs.yml
