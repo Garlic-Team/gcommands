@@ -9,13 +9,12 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-        
+
       - name: Install Node v16
         uses: actions/setup-node@v2
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-          cache: npm
 
       - name: Install
         run: npm install --save-dev discord-api-types @discordjs/rest ms discord.js @babel/cli @babel/core @babel/preset-env @babel/preset-typescript babel-plugin-add-module-exports typescript @types/node
