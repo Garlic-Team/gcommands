@@ -23,4 +23,4 @@ const client = new GClient({
 client.on('error', console.log);
 client.on('warn', console.log);
 
-client.login('ODAyNTYyNDcxMDU0NDA5NzU4.YAxCiw.gXtzZ3PACzwufZEfSxoPNyAOdU0');
+client.login('some-token');
