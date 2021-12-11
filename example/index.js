@@ -32,11 +32,12 @@ const client = new GClient({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
 
-// See commands/introduce.js
-// See components/introduce.js
-// See listeners/ready.js
+// See commands/introduce.js (new syntax)
+// See commands/class.js (old class syntax)
+// See components/introduce.js (new syntax)
+// See listeners/ready.js (new syntax)
 
-// Plugins Example
+// Plugins Example (NEW FEATURE)
 // See plugins/basicListeners/
 
 client.on('error', console.log);
