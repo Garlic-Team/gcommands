@@ -1,0 +1,5 @@
+{
+  "NOT_FOUND": "Looks like that command went to play hide and seek!",
+  "ERROR": "Something went wrong",
+  "COOLDOWN": "You have to wait {time} before using the {name} again"
+}
