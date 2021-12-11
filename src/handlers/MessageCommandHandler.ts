@@ -32,7 +32,7 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 		};
 	});
 
-	const ctx = CommandContext.createWithMessage(message, args, command);
+	const ctx = CommandContext.createWithMessage(message, command, args);
 
 	if (!await command.inhibit(ctx)) return;
 	await Promise.resolve(command.run(ctx)).catch(async (error) => {
