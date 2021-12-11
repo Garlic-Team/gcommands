@@ -16,7 +16,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Install
-        run: npm install --save-dev @babel/cli @babel/core @babel/preset-env @babel/preset-typescript babel-plugin-add-module-exports typescript @types/node
+        run: npm install --save-dev discord.js @babel/cli @babel/core @babel/preset-env @babel/preset-typescript babel-plugin-add-module-exports typescript @types/node
 
       - name: build
         run: npm run build
@@ -24,6 +24,6 @@ jobs:
       - name: publish
         run: |
           npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)
-          npm publish --tag dev || true
+          npm publish --tag next-dev || true
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
