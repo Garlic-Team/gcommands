@@ -3,6 +3,7 @@ import {Argument, ArgumentResolveType, ArgumentType} from '../arguments/Argument
 import {CommandContext} from './CommandContext';
 
 export enum CommandType {
+	MESSAGE = 0,
 	SLASH = 1,
 	CONTEXT_USER = 2,
 	CONTEXT_MESSAGE = 3,
@@ -37,7 +38,7 @@ export class Command {
 	public client: GClient;
 	public readonly name: string;
 	public readonly description?: string;
-	public readonly type: Array<CommandType>;
+	public type: Array<CommandType>;
 	public readonly arguments?: Array<CommandArgument | Argument>;
 	public readonly inhibitors: CommandInhibitors = [];
 	public guildId?: string;
@@ -81,7 +82,7 @@ export class Command {
 	private static validate(name: string, options: CommandOptions, run: (ctx: CommandContext) => any): void {
 		if (!name) throw new TypeError('Command must have a name');
 		if (typeof name !== 'string') throw new TypeError('Command name must be a string');
-		if (!options.type.every(type => [1, 2, 3].includes(type))) throw new TypeError('Command type must be one of CommandType');
+		if (!options.type.every(type => [0, 1, 2, 3].includes(type))) throw new TypeError('Command type must be one of CommandType');
 		if (typeof options.run !== 'function' && typeof run !== 'function') throw new TypeError('Command must have a run function');
 	}
 }

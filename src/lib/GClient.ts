@@ -1,4 +1,4 @@
-import {Client, ClientOptions, CommandInteraction, MessageComponentInteraction} from 'discord.js';
+import {Client, ClientOptions} from 'discord.js';
 import {PluginManager, PluginType} from './managers/PluginManager';
 import {CommandManager} from './managers/CommandManager';
 import {Command} from './structures/Command';
@@ -13,7 +13,7 @@ import Responses from '../responses.json';
 import {HandlerManager} from './managers/HandlerManager';
 
 export interface GClientOptions extends ClientOptions {
-	prefix?: string;
+	messagePrefix?: string;
 	dir?: string;
 	dirs?: Array<string>;
 	devServer?: string;
@@ -29,6 +29,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public static responses: Record<string, string> = Responses;
 	public static devGuildId?: string;
 	public static cooldown?: string;
+	public static messagePrefix?: string;
 	public options: GClientOptions;
 
 	constructor(options: GClientOptions) {
@@ -77,6 +78,10 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 		this.cooldown = cooldown;
 	}
 
+	public static setMessagePrefix(prefix: string): void {
+		this.messagePrefix = prefix;
+	}
+
 	public async login(token?: string): Promise<string> {
 		await this.gplugins.load(PluginType.BEFORE_LOGIN);
 
@@ -95,6 +100,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public devGuildId = GClient.devGuildId;
 	public responses = GClient.responses;
 	public cooldown = GClient.cooldown;
+	public messagePrefix = GClient.messagePrefix;
 	public registerDirectory = GClient.registerDirectory;
 	public registerDirectories = GClient.registerDirectories;
 	public setResponses = GClient.setResponses;

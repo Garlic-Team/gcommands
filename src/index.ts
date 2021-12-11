@@ -27,7 +27,8 @@ export {MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} from '
 
 // Listeners
 import './listeners/Ready';
-import './listeners/CommandHandler';
+import './listeners/interactionCommandHandler';
+import './listeners/messageCommandHandler';
 import './listeners/ComponentHandler';
 
 // TODO add more validators

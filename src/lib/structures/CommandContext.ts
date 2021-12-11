@@ -20,6 +20,7 @@ import {ArgumentResolver} from './ArgumentResolver';
 
 export interface CommandContextOptions {
 	interaction?: CommandInteraction | ContextMenuInteraction;
+	message?: Message;
 	arguments: ArgumentResolver;
 	guild?: Guild;
 	guildId?: Snowflake;
@@ -39,6 +40,7 @@ export interface CommandContextOptions {
 export class CommandContext {
 	public client: GClient;
 	public interaction?: CommandInteraction | ContextMenuInteraction;
+	public message?: Message;
 	public guild?: Guild;
 	public guildId?: Snowflake;
 	public channel: TextChannel;
@@ -51,10 +53,10 @@ export class CommandContext {
 	public command: Command;
 	public arguments: ArgumentResolver;
 	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
-	public editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
-	public deleteReply: () => Promise<void>;
+	public editReply?: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
+	public deleteReply?: () => Promise<void>;
 	public followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
-	public deferReply: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
+	public deferReply?: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
 
 	protected constructor(client: GClient, command: Command, options: CommandContextOptions) {
 		this.client = client;
@@ -92,6 +94,33 @@ export class CommandContext {
 			// @ts-ignore
 			followUp: interaction.followUp.bind(interaction),
 			deferReply: interaction.deferReply.bind(interaction),
+		});
+	}
+
+	public static createWithMessage(message: Message, args: Array<string> | Array<object>, command: Command): CommandContext {
+		return new this(message.client as GClient, command, {
+			message: message,
+			arguments: new ArgumentResolver(args),
+			guild: message.guild,
+			guildId: message.guildId,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			channel: message.channel,
+			channelId: message.channelId,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			member: message.member,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			memberPermissions: message.member.permissions,
+			user: message.author,
+			userId: message.author.id,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			reply: message.reply.bind(message),
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			followUp: message.reply.bind(message)
 		});
 	}
 }

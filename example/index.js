@@ -13,10 +13,13 @@ const client = new GClient({
 		path.join(__dirname, 'components'),
 		path.join(__dirname, 'events')
 	],
+	messagePrefix: '!',
 	devServer: process.env.DEV_SERVER,
 	cooldown: '30s',
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
+
+GClient.setMessagePrefix('!')
 
 // See commands/introduce.js
 // See components/introduce.js

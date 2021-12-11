@@ -11,7 +11,7 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 		guildId ? Routes.applicationGuildCommands(client.user.id, guildId) : Routes.applicationCommands(client.user.id),
 		{
 			body: commands.flatMap(command => {
-				return command.type.map(type => {
+				return command.type.filter(type => type !== CommandType.MESSAGE).map(type => {
 					if (type === CommandType.SLASH) return {
 						name: command.name,
 						description: command.description,
@@ -33,7 +33,6 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 
 export async function Sync(client: GClient) {
 	if (client.gcommands.size === 0) return;
-
 
 	const [guild, global] = client.gcommands.partition(command => typeof command.guildId === 'string');
 

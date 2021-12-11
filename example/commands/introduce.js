@@ -3,7 +3,7 @@ const {Argument, ArgumentType, Command, CommandType, CustomId, MessageActionRow,
 // You can still use classes, but you will need to put the "new" keyword front of it
 new Command('introduce', {
 	description: 'Introduce yourself',
-	type: [CommandType.SLASH, CommandType.CONTEXT_USER],
+	type: [CommandType.SLASH, CommandType.CONTEXT_USER, CommandType.MESSAGE],
 	arguments: [
 		new Argument('name', {
 			description: 'Your name',
