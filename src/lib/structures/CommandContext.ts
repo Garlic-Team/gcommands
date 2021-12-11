@@ -29,6 +29,7 @@ export interface CommandContextOptions {
 	member?: GuildMember;
 	memberPermissions?: Permissions;
 	user: User;
+	username: string;
 	userId: Snowflake;
 	reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
 	editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
@@ -38,20 +39,21 @@ export interface CommandContextOptions {
 }
 
 export class CommandContext {
-	public client: GClient;
-	public interaction?: CommandInteraction | ContextMenuInteraction;
-	public message?: Message;
-	public guild?: Guild;
-	public guildId?: Snowflake;
-	public channel: TextChannel;
-	public channelId: Snowflake;
-	public member?: GuildMember;
-	public memberPermissions?: Permissions;
-	public user: User;
-	public userId: Snowflake;
-	public commandName: string;
-	public command: Command;
-	public arguments: ArgumentResolver;
+	public readonly client: GClient;
+	public readonly interaction?: CommandInteraction | ContextMenuInteraction;
+	public readonly message?: Message;
+	public readonly guild?: Guild;
+	public readonly guildId?: Snowflake;
+	public readonly channel: TextChannel;
+	public readonly channelId: Snowflake;
+	public readonly member?: GuildMember;
+	public readonly memberPermissions?: Permissions;
+	public readonly user: User;
+	public readonly username: string;
+	public readonly userId: Snowflake;
+	public readonly commandName: string;
+	public readonly command: Command;
+	public readonly arguments: ArgumentResolver;
 	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
 	public editReply?: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
 	public deleteReply?: () => Promise<void>;
@@ -84,6 +86,7 @@ export class CommandContext {
 			// @ts-ignore
 			memberPermissions: interaction.memberPermissions,
 			user: interaction.user,
+			username: interaction.user.username,
 			userId: interaction.user.id,
 			reply: interaction.reply.bind(interaction),
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -116,6 +119,7 @@ export class CommandContext {
 			// @ts-ignore
 			memberPermissions: message.member.permissions,
 			user: message.author,
+			username: message.author.username,
 			userId: message.author.id,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore

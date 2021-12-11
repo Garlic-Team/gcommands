@@ -28,6 +28,7 @@ export interface ComponentContextOptions {
 	member?: GuildMember;
 	memberPermissions?: Permissions;
 	user: User;
+	username: string;
 	userId: Snowflake;
 	reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
 	editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
@@ -37,21 +38,22 @@ export interface ComponentContextOptions {
 }
 
 export class ComponentContext {
-	public client: GClient;
-	public interaction?: MessageComponentInteraction;
-	public arguments: Array<string>;
-	public customId: string;
-	public guild?: Guild;
-	public guildId?: Snowflake;
-	public channel: TextChannel;
-	public channelId: Snowflake;
-	public member?: GuildMember;
-	public memberPermissions?: Permissions;
-	public user: User;
-	public userId: Snowflake;
-	public componentName: string;
-	public component: Component;
-	public values: Array<any>;
+	public readonly client: GClient;
+	public readonly interaction?: MessageComponentInteraction;
+	public readonly arguments: Array<string>;
+	public readonly customId: string;
+	public readonly guild?: Guild;
+	public readonly guildId?: Snowflake;
+	public readonly channel: TextChannel;
+	public readonly channelId: Snowflake;
+	public readonly member?: GuildMember;
+	public readonly memberPermissions?: Permissions;
+	public readonly user: User;
+	public readonly username: string;
+	public readonly userId: Snowflake;
+	public readonly componentName: string;
+	public readonly component: Component;
+	public readonly values: Array<any>;
 	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
 	public editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
 	public deleteReply: () => Promise<void>;
@@ -86,6 +88,7 @@ export class ComponentContext {
 			// @ts-ignore
 			memberPermissions: interaction.memberPermissions,
 			user: interaction.user,
+			username: interaction.user.username,
 			userId: interaction.user.id,
 			reply: interaction.reply.bind(interaction),
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
