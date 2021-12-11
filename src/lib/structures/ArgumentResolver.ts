@@ -16,11 +16,11 @@ export class ArgumentResolver {
 		this.object = ArgumentsToObject(options);
 		this.array = ArgumentsToArray(options);
 
-		if (options[0] && options[0].type === ArgumentType.SUB_COMMAND_GROUP) {
+		if (options[0]?.type === ArgumentType.SUB_COMMAND_GROUP) {
 			this.subcommandgroup = options[0].name;
 			this.options = options[0].options;
 		}
-		if (options[0] && options[0].type === ArgumentType.SUB_COMMAND) {
+		if (options[0]?.type === ArgumentType.SUB_COMMAND) {
 			this.subcommand = options[0].name;
 			this.options = options[0].options;
 		}
