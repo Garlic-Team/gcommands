@@ -1,6 +1,6 @@
 {
   "name": "gcommands",
-  "version": "0.1.0",
+  "version": "0.1.0-nextdev",
   "description": "Powerful and flexible framework!",
   "main": "dist/index.js",
   "types": "dist/index.ts",
