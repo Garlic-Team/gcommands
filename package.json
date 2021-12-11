@@ -6,7 +6,7 @@
   "types": "dist/index.ts",
   "scripts": {
     "build": "bash build.bash",
-    "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified",
+    "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
     "tscbuild": "tsc --emitDeclarationOnly"
   },
   "keywords": [],

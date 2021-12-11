@@ -1,5 +1,6 @@
-/src
-/test
-/package-lock.json
+src/
+test/
+example/
+package-lock.json
 .eslintignore
 .eslintrc.json
