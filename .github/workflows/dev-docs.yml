@@ -1,0 +1,28 @@
+name: "Build Dev docs"
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Download
+      run: npm i @discordjs/ts-docgen
+
+    - name: Build
+      run: npm run docs:devbuild
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        publish_dir: ./docs
+        publish_branch: docs
+        destination_dir: ./docs/
+        keep_files: true
