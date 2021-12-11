@@ -18,13 +18,13 @@
 ## 📂 | Installation
 
 ```sh
-# Latest
-npm install gcommands@latest
-yarn add gcommands@latest
-
 # Next (recommended)
 npm install gcommands@next
 yarn add gcommands@next
+
+# Latest
+npm install gcommands@latest
+yarn add gcommands@latest
 
 # Dev Build
 npm install gcommands@dev
