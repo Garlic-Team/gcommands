@@ -5,7 +5,6 @@
 .idea/
 test/
 dist/
-package-lock.json
 
 ### Node ###
 # Logs
