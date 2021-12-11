@@ -17,7 +17,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Install
-        run: npm install --save-dev discord.js @babel/cli @babel/core @babel/preset-env @babel/preset-typescript babel-plugin-add-module-exports typescript @types/node
+        run: npm install --save-dev discord-api-types @discordjs/rest ms discord.js @babel/cli @babel/core @babel/preset-env @babel/preset-typescript babel-plugin-add-module-exports typescript @types/node
 
       - name: build
         run: npm run build
