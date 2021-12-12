@@ -1,14 +1,14 @@
 import {CommandContext} from '../lib/structures/CommandContext';
 import {ComponentContext} from '../lib/structures/ComponentContext';
 
-export class UserOnly {
-	public readonly userId: string;
+export class ChannelOnlyInhibitor {
+	public readonly channelId: string;
 
-	constructor(userId: string) {
-		this.userId = userId;
+	constructor(channelId: string) {
+		this.channelId = channelId;
 	}
 
 	run(ctx: CommandContext | ComponentContext) {
-		return ctx.userId === this.userId;
+		return ctx.channelId === this.channelId;
 	}
 }

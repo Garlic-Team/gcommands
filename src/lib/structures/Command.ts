@@ -1,6 +1,7 @@
 import {GClient} from '../GClient';
-import {Argument, ArgumentResolveType, ArgumentType} from '../arguments/Argument';
+import {Argument, ArgumentType} from '../arguments/Argument';
 import {CommandContext} from './CommandContext';
+import {AutocompleteContext} from './AutocompleteContext';
 
 export enum CommandType {
 	MESSAGE = 0,
@@ -9,18 +10,23 @@ export enum CommandType {
 	CONTEXT_MESSAGE = 3,
 }
 
+export interface CommandArgumentChoice {
+	name: string;
+	value: any;
+}
+
 export interface CommandArgument {
 	name: string;
 	description: string;
-	resolve: ArgumentResolveType;
-	type: keyof ArgumentType;
+	type: ArgumentType;
 	required?: boolean;
-	choices?: Array<string>;
+	choices?: Array<CommandArgumentChoice>;
 	options?: Array<CommandArgument | Argument>;
+	run?: (ctx: AutocompleteContext) => any;
 }
 
-type CommandInhibitor = (ctx: CommandContext) => (boolean | void | Promise<boolean> | Promise<void>);
-type CommandInhibitors = Array<{ run: CommandInhibitor } | CommandInhibitor>;
+export type CommandInhibitor = (ctx: CommandContext) => (boolean | void | Promise<boolean> | Promise<void>);
+export type CommandInhibitors = Array<{ run: CommandInhibitor } | CommandInhibitor>;
 
 
 export interface CommandOptions {

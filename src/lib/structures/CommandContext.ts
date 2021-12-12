@@ -14,14 +14,16 @@ import {Command} from './Command';
 import {ArgumentResolver} from './ArgumentResolver';
 
 export interface CommandContextOptions extends BaseContextOptions {
+	interaction?: CommandInteraction | ContextMenuInteraction;
+	message?: Message;
 	command: Command;
 	commandName: string;
 	arguments: ArgumentResolver;
 	reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
-	editReply?: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
-	deleteReply?: () => Promise<void>;
+	editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
+	deleteReply: () => Promise<void>;
 	followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
-	deferReply?: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
+	deferReply: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
 }
 
 export class CommandContext extends BaseContext {
@@ -43,6 +45,7 @@ export class CommandContext extends BaseContext {
 	public static createWithInteraction(interaction: CommandInteraction | ContextMenuInteraction, command: Command): CommandContext {
 		return new this(interaction.client as GClient, {
 			...(super.createBaseWithInteraction(interaction)),
+			interaction: interaction,
 			command: command,
 			commandName: command.name,
 			arguments: new ArgumentResolver(interaction.options.data),
@@ -57,6 +60,7 @@ export class CommandContext extends BaseContext {
 	public static createWithMessage(message: Message, command: Command, args: Array<any>): CommandContext {
 		let replied: Message;
 		return new this(message.client as GClient, {
+			message: message,
 			command: command,
 			commandName: command.name,
 			arguments: new ArgumentResolver(args),

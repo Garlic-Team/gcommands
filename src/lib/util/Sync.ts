@@ -1,8 +1,23 @@
 import {GClient} from '../GClient';
-import {Command, CommandType} from '../structures/Command';
+import {Command, CommandArgument, CommandType} from '../structures/Command';
 import {REST} from '@discordjs/rest';
 import {Routes} from 'discord-api-types/v9';
 import {Events} from './Events';
+import {Argument, ArgumentType} from '../arguments/Argument';
+
+function ResolveArgument(argument: CommandArgument | Argument): any {
+	if (argument.type === (ArgumentType.SUB_COMMAND || ArgumentType.SUB_COMMAND_GROUP)) {
+		return argument.options ? {
+			...argument,
+			options: argument.options.map(a => ResolveArgument(a)),
+		} : argument;
+	}
+
+	return {
+		...argument,
+		autocomplete: typeof argument.run === 'function',
+	};
+}
 
 async function _sync(client: GClient, commands: Array<Command>, guildId?: string) {
 	const rest = new REST({version: '9'}).setToken(client.token);
@@ -15,7 +30,7 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 					if (type === CommandType.SLASH) return {
 						name: command.name,
 						description: command.description,
-						options: command.arguments,
+						options: command.arguments.map(argument => ResolveArgument(argument)),
 						type: type,
 					};
 					else return {

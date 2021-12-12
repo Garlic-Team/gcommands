@@ -2,7 +2,7 @@ import {GClient} from '../GClient';
 import {ClientEvents} from 'discord.js';
 import {Events} from '../util/Events';
 
-interface ListenerOptions<Event extends keyof ClientEvents> {
+export interface ListenerOptions<Event extends keyof ClientEvents> {
 	name: string;
 	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 }

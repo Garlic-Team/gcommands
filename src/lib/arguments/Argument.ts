@@ -1,4 +1,5 @@
 import {CommandArgument} from '../structures/Command';
+import {AutocompleteContext} from '../structures/AutocompleteContext';
 
 export enum ArgumentType {
 	SUB_COMMAND = 1,
@@ -13,40 +14,26 @@ export enum ArgumentType {
 	NUMBER = 10,
 }
 
-export enum ArgumentResolveType {
-	VALUE = 'value',
-	USER = 'user',
-	MEMBER = 'member',
-	ROLE = 'role',
-	CHANNEL = 'channel'
-}
-
 export interface ArgumentOptions {
 	type: ArgumentType;
 	description: string;
-	resolve?: ArgumentResolveType;
 	required?: boolean;
 	choices?: Array<string>;
 	options?: Array<CommandArgument | Argument>;
+	run?: (ctx: AutocompleteContext) => any;
 }
 
 export class Argument {
 	public readonly name: string;
 	public readonly type?: ArgumentType;
 	public readonly description: string;
-	public readonly resolve: ArgumentResolveType;
 	public readonly required: boolean = false;
 	public readonly choices?: Array<string>;
 	public readonly options?: Array<CommandArgument | Argument>;
+	public run?: (ctx: AutocompleteContext) => any;
 
 	constructor(name: string, options: ArgumentOptions) {
 		Argument.validate(name, options);
-
-		if (!options.resolve) {
-			if (options.type === ArgumentType.USER) options.resolve = ArgumentResolveType.USER;
-			else if (options.type === ArgumentType.ROLE) options.resolve = ArgumentResolveType.ROLE;
-			else if (options.type === ArgumentType.CHANNEL) options.resolve = ArgumentResolveType.CHANNEL;
-		}
 
 		this.name = name;
 		Object.assign(this, options);

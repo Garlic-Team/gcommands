@@ -1,14 +1,8 @@
 import {CommandContext} from '../lib/structures/CommandContext';
 import {ComponentContext} from '../lib/structures/ComponentContext';
 
-export class ChannelOnly {
-	public readonly channelId: string;
-
-	constructor(channelId: string) {
-		this.channelId = channelId;
-	}
-
+export class NsfwInhibitor {
 	run(ctx: CommandContext | ComponentContext) {
-		return ctx.channelId === this.channelId;
+		return !!(ctx.channel.type === 'GUILD_TEXT' && ctx.channel.nsfw);
 	}
 }

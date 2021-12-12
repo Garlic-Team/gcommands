@@ -8,15 +8,22 @@ export * from './lib/structures/Command';
 export * from './lib/structures/Component';
 export * from './lib/structures/CommandContext';
 
+// Managers
+export * from './lib/managers/CommandManager';
+export * from './lib/managers/ComponentManager';
+export * from './lib/managers/HandlerManager';
+export * from './lib/managers/ListenerManager';
+export * from './lib/managers/PluginManager';
+
 // Arguments
 export * from './lib/arguments/Argument';
 
 // Inhibitors
-export * from './inhibitors/Nswf';
-export * from './inhibitors/ChannelOnly';
-export * from './inhibitors/UserOnly';
-export * from './inhibitors/UserPermissions';
-export * from './inhibitors/ClientPermissions';
+export * from './inhibitors/NsfwInhibitor';
+export * from './inhibitors/ChannelOnlyInhibitor';
+export * from './inhibitors/UserOnlyInhibitor';
+export * from './inhibitors/UserPermissionsInhibitor';
+export * from './inhibitors/ClientPermissionsInhibitor';
 
 // Util
 export * from './util/CustomId';
@@ -30,5 +37,6 @@ import './listeners/Ready';
 import './listeners/InteractionCommandHandler';
 import './listeners/MessageCommandHandler';
 import './listeners/ComponentHandler';
+import './listeners/AutocompleteHandler';
 
 // TODO add more validators
