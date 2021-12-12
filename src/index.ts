@@ -26,6 +26,7 @@ export * from './lib/arguments/Argument';
 export * from './inhibitors/NsfwInhibitor';
 export * from './inhibitors/ChannelOnlyInhibitor';
 export * from './inhibitors/UserOnlyInhibitor';
+export * from './inhibitors/UserRolesInhibitor';
 export * from './inhibitors/UserPermissionsInhibitor';
 export * from './inhibitors/ClientPermissionsInhibitor';
 
