@@ -11,7 +11,7 @@
     "docs:build": "typedoc --json docs/out-next.json src/index.ts && node scripts/docs.mjs",
     "docs:devbuild": "typedoc --json docs/out-dev.json src/index.ts && node scripts/devdocs.mjs"
   },
-  "keywords": [],
+  "homepage": "https://garlic-team.js.org/#/docs/gcommands/next/general/welcome",
   "author": "Garlic-Team",
   "license": "ISC",
   "dependencies": {
