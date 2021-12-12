@@ -1,4 +1,4 @@
-import {PermissionResolvable, RoleResolvable} from 'discord.js';
+import {RoleResolvable} from 'discord.js';
 import {CommandContext} from '../lib/structures/CommandContext';
 import {ComponentContext} from '../lib/structures/ComponentContext';
 
