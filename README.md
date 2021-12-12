@@ -22,6 +22,10 @@
 npm install gcommands@next
 yarn add gcommands@next
 
+# Next Dev (until the stable next version is released)
+npm install gcommands@next-dev
+yarn add gcommands@next-dev
+
 # Latest
 npm install gcommands@latest
 yarn add gcommands@latest
