@@ -3,6 +3,7 @@ import {GClient} from '../lib/GClient';
 import {Events} from '../lib/util/Events';
 import {CommandContext} from '../lib/structures/CommandContext';
 import {CommandType} from '../lib/structures/Command';
+import {ArgumentType} from '../lib/arguments/Argument';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -23,14 +24,20 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 		});
 	}
 
-	args = args.map((arg, i) => {
-		return {
-			name: command.arguments[i].name,
-			type: command.arguments[i].type,
-			choices: command.arguments[i].choices,
-			value: arg
-		};
-	});
+	args = args.map((arg, i) => new Object({
+		name: command.arguments[i].name,
+		type: command.arguments[i].type,
+		choices: command.arguments[i].choices,
+		options: [],
+		value: arg
+	}));
+
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	if (args[0]?.type === (ArgumentType.SUB_COMMAND_GROUP || ArgumentType.SUB_COMMAND)) args[0].options = args.splice(1);
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	if (args[0]?.type === ArgumentType.SUB_COMMAND_GROUP && args[0]?.options[0]?.type === ArgumentType.SUB_COMMAND) args[0].options[0].options = args[0].options.splice(1);
 
 	const ctx = CommandContext.createWithMessage(message, command, args);
 
