@@ -22,6 +22,12 @@ jobs:
       - name: build
         run: npm run build
 
+      - name: Deprecate old versions
+        run: |
+          npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)" "no longer supported" || true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
       - name: publish
         run: |
           npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)
