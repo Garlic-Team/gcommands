@@ -8,7 +8,7 @@ export class ChannelOnlyInhibitor {
 		this.channelId = channelId;
 	}
 
-	run(ctx: CommandContext | ComponentContext) {
+	run(ctx: CommandContext | ComponentContext): boolean {
 		return ctx.channelId === this.channelId;
 	}
 }

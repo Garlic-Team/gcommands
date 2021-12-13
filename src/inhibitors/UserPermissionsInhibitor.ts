@@ -9,7 +9,7 @@ export class UserPermissionsInhibitor {
 		this.permissions = permissions;
 	}
 
-	run(ctx: CommandContext | ComponentContext) {
+	run(ctx: CommandContext | ComponentContext): boolean {
 		return ctx.guild && ctx.memberPermissions.has(this.permissions);
 	}
 }

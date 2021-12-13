@@ -9,7 +9,7 @@ export class ClientPermissionsInhibitor {
 		this.permissions = permissions;
 	}
 
-	run(ctx: CommandContext | ComponentContext) {
+	run(ctx: CommandContext | ComponentContext): boolean {
 		return ctx.guild && ctx.guild.me.permissions.has(this.permissions);
 	}
 }

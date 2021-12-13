@@ -8,7 +8,7 @@ export class UserOnlyInhibitor {
 		this.userId = userId;
 	}
 
-	run(ctx: CommandContext | ComponentContext) {
+	run(ctx: CommandContext | ComponentContext): boolean {
 		return ctx.userId === this.userId;
 	}
 }

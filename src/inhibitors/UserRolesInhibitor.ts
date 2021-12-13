@@ -10,7 +10,7 @@ export class UserRolesInhibitor {
 		this.every = every;
 	}
 
-	run(ctx: CommandContext | ComponentContext) {
+	run(ctx: CommandContext | ComponentContext): boolean {
 		return ctx.guild && this.roles[this.every ? 'every' : 'some'](role => ctx.member.roles.cache.has(role));
 	}
 }
