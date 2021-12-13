@@ -1,4 +1,3 @@
-import {ArgumentType} from '../arguments/Argument';
 import {Channel, GuildMember, Role, User} from 'discord.js';
 import {ArgumentsToObject} from '../util/ArgumentsToObject';
 import {ArgumentsToArray} from '../util/ArgumentsToArray';
@@ -16,19 +15,18 @@ export class ArgumentResolver {
 		this.object = ArgumentsToObject(options);
 		this.array = ArgumentsToArray(options);
 
-		if (options[0]?.type === ArgumentType.SUB_COMMAND_GROUP) {
+		if (options[0]?.type === 'SUB_COMMAND_GROUP') {
 			this.subcommandgroup = options[0].name;
 			this.options = options[0].options;
 		}
-		if (options[0]?.type === ArgumentType.SUB_COMMAND) {
+		if (options[0]?.type === 'SUB_COMMAND') {
 			this.subcommand = options[0].name;
 			this.options = options[0].options;
 		}
 	}
 
-	private get(name: string, value: string) {
-		const argument = this.options.find(argument => argument.name === name);
-		return argument ? argument[value] : undefined;
+	public getMentionable(name: string): User | GuildMember | Role {
+		return this.get(name, 'user') || this.get(name, 'member') || this.get(name, 'role');
 	}
 
 	public getString(name: string): string {
@@ -71,6 +69,11 @@ export class ArgumentResolver {
 		const argument = this.get(name, 'role');
 
 		return argument || undefined;
+	}
+
+	private get(name: string, value: string) {
+		const argument = this.options?.find(argument => argument.name === name);
+		return argument ? argument[value] : undefined;
 	}
 
 	public getNumber(name: string): number {

@@ -1,5 +1,6 @@
 // Client
 export * from './lib/GClient';
+export {ClientEvents} from 'discord.js';
 
 // Structures
 export * from './lib/structures/Plugin';
