@@ -1,14 +1,14 @@
-import {CommandContext} from '../lib/structures/CommandContext';
-import {ComponentContext} from '../lib/structures/ComponentContext';
+import {BaseContext} from '../lib/structures/BaseContext';
+import {Snowflake} from 'discord.js';
 
 export class UserOnlyInhibitor {
-	public readonly userId: string;
+	public readonly userIds: Array<Snowflake>;
 
-	constructor(userId: string) {
-		this.userId = userId;
+	constructor(userId: Array<Snowflake>) {
+		this.userIds = userId;
 	}
 
-	run(ctx: CommandContext | ComponentContext): boolean {
-		return ctx.userId === this.userId;
+	run(ctx: BaseContext): boolean {
+		return this.userIds.includes(ctx.userId);
 	}
 }

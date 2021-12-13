@@ -30,6 +30,7 @@ export * from './inhibitors/UserOnlyInhibitor';
 export * from './inhibitors/UserRolesInhibitor';
 export * from './inhibitors/UserPermissionsInhibitor';
 export * from './inhibitors/ClientPermissionsInhibitor';
+export * from './inhibitors/OrInhibitor';
 
 // Util
 export * from './util/CustomId';

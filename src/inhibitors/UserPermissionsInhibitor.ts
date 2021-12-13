@@ -1,6 +1,5 @@
 import {PermissionResolvable} from 'discord.js';
-import {CommandContext} from '../lib/structures/CommandContext';
-import {ComponentContext} from '../lib/structures/ComponentContext';
+import {BaseContext} from '../lib/structures/BaseContext';
 
 export class UserPermissionsInhibitor {
 	public readonly permissions: Array<PermissionResolvable>;
@@ -9,7 +8,7 @@ export class UserPermissionsInhibitor {
 		this.permissions = permissions;
 	}
 
-	run(ctx: CommandContext | ComponentContext): boolean {
+	run(ctx: BaseContext): boolean {
 		return ctx.guild && ctx.memberPermissions.has(this.permissions);
 	}
 }

@@ -1,14 +1,14 @@
-import {CommandContext} from '../lib/structures/CommandContext';
-import {ComponentContext} from '../lib/structures/ComponentContext';
+import {BaseContext} from '../lib/structures/BaseContext';
+import {Snowflake} from 'discord.js';
 
 export class ChannelOnlyInhibitor {
-	public readonly channelId: string;
+	public readonly channelIds: Array<Snowflake>;
 
-	constructor(channelId: string) {
-		this.channelId = channelId;
+	constructor(channelIds: Array<Snowflake>) {
+		this.channelIds = channelIds;
 	}
 
-	run(ctx: CommandContext | ComponentContext): boolean {
-		return ctx.channelId === this.channelId;
+	run(ctx: BaseContext): boolean {
+		return this.channelIds.includes(ctx.channelId);
 	}
 }
