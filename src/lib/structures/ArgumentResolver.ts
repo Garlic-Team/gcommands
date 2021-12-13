@@ -25,8 +25,9 @@ export class ArgumentResolver {
 		}
 	}
 
-	public getMentionable(name: string): User | GuildMember | Role {
-		return this.get(name, 'user') || this.get(name, 'member') || this.get(name, 'role');
+	private get(name: string, value: string) {
+		const argument = this.options?.find(argument => argument.name === name);
+		return argument ? argument[value] : undefined;
 	}
 
 	public getString(name: string): string {
@@ -71,9 +72,8 @@ export class ArgumentResolver {
 		return argument || undefined;
 	}
 
-	private get(name: string, value: string) {
-		const argument = this.options?.find(argument => argument.name === name);
-		return argument ? argument[value] : undefined;
+	public getMentionable(name: string): User | GuildMember | Role {
+		return this.get(name, 'user') || this.get(name, 'member') || this.get(name, 'role');
 	}
 
 	public getNumber(name: string): number {
