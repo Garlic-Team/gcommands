@@ -1,6 +1,7 @@
 import {Channel, GuildMember, Role, User} from 'discord.js';
 import {ArgumentsToObject} from '../util/ArgumentsToObject';
 import {ArgumentsToArray} from '../util/ArgumentsToArray';
+import {StringToBoolean} from '../util/StringToBoolean';
 
 export class ArgumentResolver {
 	public options: Array<any>;
@@ -45,7 +46,7 @@ export class ArgumentResolver {
 	public getBoolean(name: string): boolean {
 		const argument = this.get(name, 'value');
 
-		return argument ? Boolean(argument) : undefined;
+		return argument ? StringToBoolean(argument) : undefined;
 	}
 
 	public getUser(name: string): User {
