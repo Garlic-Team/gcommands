@@ -1,5 +1,6 @@
 import {GClient} from '../GClient';
 import {ComponentContext} from './ComponentContext';
+import {Events} from '../util/Events';
 
 export enum ComponentType {
 	BUTTON = 'BUTTON',
@@ -52,9 +53,9 @@ export class Component {
 		for await(const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
-				result = await inhibitor(ctx);
+				result = await Promise.resolve(inhibitor(ctx)).catch(error => this.client.emit(Events.ERROR, error));
 			} else if (typeof inhibitor.run === 'function') {
-				result = await inhibitor.run(ctx);
+				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => this.client.emit(Events.ERROR, error));
 			}
 			if (result !== true) return false;
 		}
