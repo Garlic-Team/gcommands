@@ -1,15 +1,16 @@
-import {RoleResolvable} from 'discord.js';
 import {CommandContext} from '../lib/structures/CommandContext';
 import {ComponentContext} from '../lib/structures/ComponentContext';
 
 export class UserRolesInhibitor {
-	public readonly roles: Array<RoleResolvable>;
+	public readonly roles: Array<string>;
+	public readonly every?: boolean;
 
-	constructor(roles: Array<RoleResolvable>) {
+	constructor(roles: Array<string>, every?: boolean) {
 		this.roles = roles;
+		this.every = every;
 	}
 
 	run(ctx: CommandContext | ComponentContext) {
-		return ctx.guild && ctx.member.roles.cache.some(role => ctx.member.roles.cache.has(role.id));
+		return ctx.guild && this.roles[this.every ? 'every' : 'some'](role => ctx.member.roles.cache.has(role));
 	}
 }
