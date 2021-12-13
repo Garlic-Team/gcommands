@@ -17,7 +17,7 @@ export class Listener<Event extends keyof ClientEvents> {
 	public readonly run: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 
 	public constructor(event: Event, options: ListenerOptions<Event>) {
-		Listener.validate(event, options);
+		Listener.validate(event, options, this.run);
 
 		this.event = event;
 		Object.assign(this, options);
@@ -39,11 +39,11 @@ export class Listener<Event extends keyof ClientEvents> {
 		return GClient.glisteners.unregister(this.name);
 	}
 
-	private static validate(event: string, options: ListenerOptions<any>) {
+	private static validate(event: string, options: ListenerOptions<any>, run: (...args: Array<any>) => any) {
 		if (!event) throw new TypeError('Listener must have a event');
 		if (!options.name) throw new TypeError('Listener must have a name');
 		if (typeof options.name !== 'string') throw new TypeError('Listener name must be a string');
 		if (typeof event !== 'string') throw new TypeError('Listener event must be a string');
-		if (typeof options.run !== 'function') throw new TypeError('Listener must have a run function');
+		if (typeof options.run !== 'function' && typeof run !== 'function') throw new TypeError('Listener must have a run function');
 	}
 }
