@@ -17,7 +17,7 @@ new Command('hello', {
 
 new class extends Command {
 	constructor() {
-		super('hello-class', {
+		super('hello', {
 			description: 'Says hello!',
 			type: [CommandType.SLASH, CommandType.MESSAGE],
 		});
