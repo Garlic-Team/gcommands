@@ -1,2 +1,2 @@
-npm run babelbuild
-npm run tscbuild
+npm run build:babel
+npm run build:types

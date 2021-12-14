@@ -17,7 +17,7 @@ jobs:
       run: npm i @discordjs/ts-docgen
 
     - name: Build
-      run: npm run docs:devbuild
+      run: npm run build:devdocs
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3

@@ -6,10 +6,11 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "bash build.bash",
-    "babelbuild": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
-    "tscbuild": "tsc --emitDeclarationOnly",
-    "docs:build": "typedoc --json docs/out-next.json src/index.ts && node scripts/docs.mjs",
-    "docs:devbuild": "typedoc --json docs/out-dev.json src/index.ts && node scripts/devdocs.mjs"
+    "lint": "npx eslint .",
+    "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:docs": "typedoc --json docs/out-next.json src/index.ts && node scripts/docs.mjs",
+    "build:devdocs": "typedoc --json docs/out-dev.json src/index.ts && node scripts/devdocs.mjs"
   },
   "homepage": "https://garlic-team.js.org/#/docs/gcommands/next/general/welcome",
   "author": "Garlic-Team",
