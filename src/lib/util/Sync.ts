@@ -30,7 +30,7 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 					if (type === CommandType.SLASH) return {
 						name: command.name,
 						description: command.description,
-						options: command.arguments?.map(argument => ResolveArgument(argument)) ?? [],
+						options: (Array.isArray(command.arguments) && command.arguments[0]) ? command.arguments.map(argument => ResolveArgument(argument)) : undefined,
 						type: type,
 					};
 					else return {
