@@ -5,6 +5,8 @@ import {CommandContext} from '../lib/structures/CommandContext';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
+// TODO add auto defer
+
 export async function InteractionCommandHandler(interaction: CommandInteraction | ContextMenuInteraction) {
 	const client = interaction.client as GClient;
 

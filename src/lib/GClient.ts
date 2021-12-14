@@ -20,6 +20,8 @@ export interface GClientOptions extends ClientOptions {
 	cooldown?: string;
 }
 
+// TODO Add interface for database
+
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public static ghandlers: HandlerManager = new HandlerManager();
 	public static gplugins: PluginManager = new PluginManager();

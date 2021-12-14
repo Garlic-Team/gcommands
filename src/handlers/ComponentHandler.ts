@@ -5,6 +5,8 @@ import {ComponentContext} from '../lib/structures/ComponentContext';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
+// TODO add auto defer
+
 export async function ComponentHandler(interaction: MessageComponentInteraction) {
 	const client = interaction.client as GClient;
 
