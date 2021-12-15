@@ -26,7 +26,8 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 
 	if (!await command.inhibit(ctx)) return;
 
-	const autoDeferTimeout = setTimeout(() => {
+	let autoDeferTimeout;
+	if (command.autoDefer) autoDeferTimeout = setTimeout(() => {
 		if (command.autoDefer) interaction.deferReply({ephemeral: command.autoDefer === AutoDeferType.EPHEMERAL});
 	}, 2500 - client.ws.ping);
 
@@ -38,5 +39,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		});
 		if (typeof command.onError === 'function') await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();
-	}).then(() => clearTimeout(autoDeferTimeout));
+	}).then(() => {
+		if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
+	});
 }

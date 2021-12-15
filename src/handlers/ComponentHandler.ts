@@ -26,7 +26,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 
 	if (!await component.inhibit(ctx)) return;
 
-	const autoDeferTimeout = setTimeout(() => {
+	let autoDeferTimeout;
+	if (component.autoDefer) autoDeferTimeout = setTimeout(() => {
 		if (component.autoDefer) interaction.deferReply({ephemeral: component.autoDefer === AutoDeferType.EPHEMERAL});
 	}, 2500 - client.ws.ping);
 
@@ -37,5 +38,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		});
 		if (typeof component.onError === 'function') await Promise.resolve(component.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();
-	}).then(() => clearTimeout(autoDeferTimeout));
+	}).then(() => {
+		if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
+	});
 }
