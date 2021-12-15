@@ -12,12 +12,18 @@ import {Events} from './util/Events';
 import Responses from '../responses.json';
 import {HandlerManager} from './managers/HandlerManager';
 
+export enum AutoDeferType {
+	EPHEMERAL = 1,
+	NORMAL = 2,
+}
+
 export interface GClientOptions extends ClientOptions {
 	messagePrefix?: string;
 	dir?: string;
 	dirs?: Array<string>;
 	devGuildId?: string;
 	cooldown?: string;
+	autoDefer?: AutoDeferType;
 }
 
 // TODO Add interface for database
@@ -78,6 +84,10 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 
 	public static setMessagePrefix(prefix: string): void {
 		this.options.messagePrefix = prefix;
+	}
+
+	public static setAutoDefer(type: AutoDeferType) {
+		this.options.autoDefer = type;
 	}
 
 	public async login(token?: string): Promise<string> {

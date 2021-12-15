@@ -1,11 +1,9 @@
 import {Collection, CommandInteraction, ContextMenuInteraction} from 'discord.js';
-import {GClient} from '../lib/GClient';
+import {AutoDeferType, GClient} from '../lib/GClient';
 import {Events} from '../lib/util/Events';
 import {CommandContext} from '../lib/structures/CommandContext';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
-
-// TODO add auto defer
 
 export async function InteractionCommandHandler(interaction: CommandInteraction | ContextMenuInteraction) {
 	const client = interaction.client as GClient;
@@ -27,6 +25,11 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	const ctx = CommandContext.createWithInteraction(interaction, command);
 
 	if (!await command.inhibit(ctx)) return;
+
+	const autoDeferTimeout = setTimeout(() => {
+		if (command.autoDefer) interaction.deferReply({ephemeral: command.autoDefer === AutoDeferType.EPHEMERAL});
+	}, 2500 - client.ws.ping);
+
 	await Promise.resolve(command.run(ctx)).catch(async (error) => {
 		ctx.client.emit(Events.ERROR, error);
 		const errorReply = () => ctx.interaction.replied ? ctx.editReply(client.responses.ERROR) : ctx.reply({
@@ -35,5 +38,5 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		});
 		if (typeof command.onError === 'function') await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();
-	});
+	}).then(() => clearTimeout(autoDeferTimeout));
 }

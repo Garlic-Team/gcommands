@@ -1,4 +1,4 @@
-import {GClient} from '../GClient';
+import {AutoDeferType, GClient} from '../GClient';
 import {ComponentContext} from './ComponentContext';
 import {Events} from '../util/Events';
 
@@ -15,6 +15,7 @@ export interface ComponentOptions {
 	inhibitors?: ComponentInhibitors;
 	guildId?: string;
 	cooldown?: string;
+	autoDefer?: AutoDeferType;
 	run?: (interaction: ComponentContext) => any;
 	onError?: (interaction: ComponentContext, error: any) => any;
 }
@@ -26,6 +27,7 @@ export class Component {
 	public readonly inhibitors: ComponentInhibitors = [];
 	public guildId?: string;
 	public cooldown?: string;
+	public autoDefer?: AutoDeferType;
 	public readonly run: (ctx: ComponentContext) => any;
 	public readonly onError?: (ctx: ComponentContext, error: any) => any;
 
@@ -43,6 +45,7 @@ export class Component {
 
 		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
 		if (!this.cooldown && client.options?.cooldown) this.cooldown = client.options.cooldown;
+		if (!this.autoDefer && client.options?.autoDefer) this.autoDefer = client.options.autoDefer;
 	}
 
 	public unregister() {

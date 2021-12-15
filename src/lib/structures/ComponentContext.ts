@@ -49,7 +49,11 @@ export class ComponentContext extends BaseContext {
 			arguments: args,
 			values: interaction.isSelectMenu() ? interaction.values : [],
 			customId: interaction.customId,
-			reply: interaction.reply.bind(interaction),
+			// @ts-expect-error Typings are broken LOL
+			reply: async (options) => {
+				if (!await interaction.fetchReply()) return await interaction.reply(options);
+				else return await interaction.editReply(options);
+			},
 			editReply: interaction.editReply.bind(interaction),
 			deleteReply: interaction.deleteReply.bind(interaction),
 			followUp: interaction.followUp.bind(interaction),

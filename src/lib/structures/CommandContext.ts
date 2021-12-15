@@ -49,7 +49,11 @@ export class CommandContext extends BaseContext {
 			command: command,
 			commandName: command.name,
 			arguments: new ArgumentResolver(interaction.options.data),
-			reply: interaction.reply.bind(interaction),
+			// @ts-expect-error Typings are broken LOL
+			reply: async (options) => {
+				if (!await interaction.fetchReply()) return await interaction.reply(options);
+				else return await interaction.editReply(options);
+			},
 			editReply: interaction.editReply.bind(interaction),
 			deleteReply: interaction.deleteReply.bind(interaction),
 			followUp: interaction.followUp.bind(interaction),

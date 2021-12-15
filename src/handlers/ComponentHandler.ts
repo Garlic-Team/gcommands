@@ -1,11 +1,9 @@
 import {Collection, MessageComponentInteraction} from 'discord.js';
-import {GClient} from '../lib/GClient';
+import {AutoDeferType, GClient} from '../lib/GClient';
 import {ComponentType} from '../lib/structures/Component';
 import {ComponentContext} from '../lib/structures/ComponentContext';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
-
-// TODO add auto defer
 
 export async function ComponentHandler(interaction: MessageComponentInteraction) {
 	const client = interaction.client as GClient;
@@ -28,6 +26,10 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 
 	if (!await component.inhibit(ctx)) return;
 
+	const autoDeferTimeout = setTimeout(() => {
+		if (component.autoDefer) interaction.deferReply({ephemeral: component.autoDefer === AutoDeferType.EPHEMERAL});
+	}, 2500 - client.ws.ping);
+
 	await Promise.resolve(component.run(ctx)).catch(async (error) => {
 		const errorReply = () => ctx.interaction.replied ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
@@ -35,5 +37,5 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		});
 		if (typeof component.onError === 'function') await Promise.resolve(component.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();
-	});
+	}).then(() => clearTimeout(autoDeferTimeout));
 }

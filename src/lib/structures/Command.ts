@@ -1,4 +1,4 @@
-import {GClient} from '../GClient';
+import {AutoDeferType, GClient} from '../GClient';
 import {Argument, ArgumentType} from '../arguments/Argument';
 import {CommandContext} from './CommandContext';
 import {AutocompleteContext} from './AutocompleteContext';
@@ -37,6 +37,7 @@ export interface CommandOptions {
 	inhibitors?: CommandInhibitors;
 	guildId?: string;
 	cooldown?: string;
+	autoDefer?: AutoDeferType;
 	run?: (ctx: CommandContext) => any;
 	onError?: (ctx: CommandContext, error: any) => any;
 }
@@ -50,6 +51,7 @@ export class Command {
 	public readonly inhibitors: CommandInhibitors = [];
 	public guildId?: string;
 	public cooldown?: string;
+	public autoDefer?: AutoDeferType;
 	public readonly run: (ctx: CommandContext) => any;
 	public readonly onError?: (ctx: CommandContext, error: any) => any;
 
@@ -67,6 +69,7 @@ export class Command {
 
 		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
 		if (!this.cooldown && client.options?.cooldown) this.cooldown = client.options.cooldown;
+		if (!this.autoDefer && client.options?.autoDefer) this.autoDefer = client.options.autoDefer;
 	}
 
 	public unregister(): Command {
