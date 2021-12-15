@@ -1,7 +1,9 @@
 import {BaseContext, BaseContextOptions} from './BaseContext';
 import {
+	CacheType,
 	CommandInteraction,
 	ContextMenuInteraction,
+	GuildCacheMessage,
 	InteractionDeferReplyOptions,
 	InteractionReplyOptions,
 	Message,
@@ -19,7 +21,7 @@ export interface CommandContextOptions extends BaseContextOptions {
 	command: Command;
 	commandName: string;
 	arguments: ArgumentResolver;
-	reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
+	reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | GuildCacheMessage<CacheType> | void>;
 	editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
 	deleteReply: () => Promise<void>;
 	followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
@@ -32,7 +34,7 @@ export class CommandContext extends BaseContext {
 	public readonly command: Command;
 	public readonly commandName: string;
 	public readonly arguments: ArgumentResolver;
-	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
+	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | GuildCacheMessage<CacheType> | void>;
 	public editReply?: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
 	public deleteReply?: () => Promise<void>;
 	public followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
@@ -49,7 +51,6 @@ export class CommandContext extends BaseContext {
 			command: command,
 			commandName: command.name,
 			arguments: new ArgumentResolver(interaction.options.data),
-			// @ts-expect-error Typings are broken LOL
 			reply: async (options) => {
 				if (!await interaction.fetchReply()) return await interaction.reply(options);
 				else return await interaction.editReply(options);
@@ -96,8 +97,6 @@ export class CommandContext extends BaseContext {
 			deleteReply: async () => {
 				await replied.delete();
 			},
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			followUp: message.reply.bind(message),
 			deferReply: () => {
 				return undefined;

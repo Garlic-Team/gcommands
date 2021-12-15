@@ -39,9 +39,7 @@ export class BaseContext {
 		return new this(interaction.client as GClient, {
 			guild: interaction.guild,
 			guildId: interaction.guildId,
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			member: interaction.member,
+			member: interaction.member as GuildMember,
 			memberPermissions: interaction.memberPermissions,
 			user: interaction.user,
 			username: interaction.user.username,
