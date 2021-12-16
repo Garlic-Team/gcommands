@@ -37,6 +37,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 			content: client.responses.ERROR,
 			ephemeral: true,
 		});
+
 		if (typeof command.onError === 'function') await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();
 	}).then(() => {

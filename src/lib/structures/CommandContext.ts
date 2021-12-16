@@ -10,7 +10,7 @@ import {
 	MessagePayload,
 	WebhookEditMessageOptions
 } from 'discord.js';
-import {APIMessage} from 'discord-api-types';
+import {APIMessage} from 'discord-api-types/v9';
 import {GClient} from '../GClient';
 import {Command} from './Command';
 import {ArgumentResolver} from './ArgumentResolver';
@@ -52,7 +52,7 @@ export class CommandContext extends BaseContext {
 			commandName: command.name,
 			arguments: new ArgumentResolver(interaction.options.data),
 			reply: async (options) => {
-				if (!await interaction.fetchReply()) return await interaction.reply(options);
+				if (!interaction.replied) return await interaction.reply(options);
 				else return await interaction.editReply(options);
 			},
 			editReply: interaction.editReply.bind(interaction),
