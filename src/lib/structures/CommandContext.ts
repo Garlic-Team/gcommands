@@ -45,6 +45,7 @@ export class CommandContext extends BaseContext {
 	}
 
 	public static createWithInteraction(interaction: CommandInteraction | ContextMenuInteraction, command: Command): CommandContext {
+		let replied = false;
 		return new this(interaction.client as GClient, {
 			...(super.createBaseWithInteraction(interaction)),
 			interaction: interaction,
@@ -52,13 +53,19 @@ export class CommandContext extends BaseContext {
 			commandName: command.name,
 			arguments: new ArgumentResolver(interaction.options.data),
 			reply: async (options) => {
-				if (!interaction.replied) return await interaction.reply(options);
-				else return await interaction.editReply(options);
+				if (!replied) return await interaction.reply(options);
+				else {
+					replied = true;
+					return await interaction.editReply(options);
+				}
 			},
 			editReply: interaction.editReply.bind(interaction),
 			deleteReply: interaction.deleteReply.bind(interaction),
 			followUp: interaction.followUp.bind(interaction),
-			deferReply: interaction.deferReply.bind(interaction),
+			deferReply: (options) => {
+				replied = true;
+				return interaction.deferReply(options);
+			},
 		});
 	}
 

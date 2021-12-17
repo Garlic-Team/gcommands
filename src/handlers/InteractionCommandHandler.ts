@@ -30,7 +30,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 
 	let autoDeferTimeout;
 	if (command.autoDefer) autoDeferTimeout = setTimeout(() => {
-		if (command.autoDefer) interaction.deferReply({ephemeral: command.autoDefer === AutoDeferType.EPHEMERAL});
+		ctx.deferReply({ephemeral: command.autoDefer === AutoDeferType.EPHEMERAL});
 	}, 2500 - client.ws.ping);
 
 	await Promise.resolve(command.run(ctx)).catch(async (error) => {

@@ -42,6 +42,7 @@ export class ComponentContext extends BaseContext {
 	}
 
 	public static createWithInteraction(interaction: MessageComponentInteraction, component: Component, args: Array<string>): ComponentContext {
+		let replied = false;
 		return new this(interaction.client as GClient, {
 			...(super.createBaseWithInteraction(interaction)),
 			component: component,
@@ -51,13 +52,19 @@ export class ComponentContext extends BaseContext {
 			customId: interaction.customId,
 			// @ts-expect-error Typings are broken LOL
 			reply: async (options) => {
-				if (!interaction.replied) return await interaction.reply(options);
-				else return await interaction.editReply(options);
+				if (!replied) return await interaction.reply(options);
+				else {
+					replied = true;
+					return await interaction.editReply(options);
+				}
 			},
 			editReply: interaction.editReply.bind(interaction),
 			deleteReply: interaction.deleteReply.bind(interaction),
 			followUp: interaction.followUp.bind(interaction),
-			deferReply: interaction.deferReply.bind(interaction),
+			deferReply: (options) => {
+				replied = true;
+				return interaction.deferReply(options);
+			},
 		});
 	}
 }
