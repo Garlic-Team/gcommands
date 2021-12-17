@@ -2,7 +2,8 @@ import {AutoDeferType, GClient} from '../GClient';
 import {Argument, ArgumentType} from '../arguments/Argument';
 import {CommandContext} from './CommandContext';
 import {AutocompleteContext} from './AutocompleteContext';
-import {Events} from '../util/Events';
+import {Commands} from '../managers/CommandManager';
+import Logger from 'js-logger';
 
 export enum CommandType {
 	MESSAGE = 0,
@@ -56,12 +57,10 @@ export class Command {
 	public readonly onError?: (ctx: CommandContext, error: any) => any;
 
 	public constructor(name: string, options: CommandOptions) {
-		Command.validate(name, options, this.run);
-
 		this.name = name;
 		Object.assign(this, options);
 
-		GClient.gcommands.register(this);
+		Commands.register(this);
 	}
 
 	public initialize(client: GClient): void {
@@ -72,27 +71,34 @@ export class Command {
 		if (!this.autoDefer && client.options?.autoDefer) this.autoDefer = client.options.autoDefer;
 	}
 
+	public static validate(command: Command): boolean | void {
+		if (!command.name) return Logger.warn('Command must have a name');
+		else if (typeof command.name !== 'string') return Logger.warn('Command name must be a string');
+		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command', command.name, 'description must be a string');
+		else if (typeof command.run !== 'function') return Logger.warn('Command', command.name, 'must have a run function');
+		else return true;
+	}
+
 	public unregister(): Command {
-		return GClient.gcommands.unregister(this.name);
+		return Commands.unregister(this.name);
 	}
 
 	public async inhibit(ctx: CommandContext): Promise<boolean> {
 		for await(const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch(error => this.client.emit(Events.ERROR, error));
+				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
+					Logger.error(error.code, error.message);
+					Logger.trace(error.trace);
+				});
 			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => this.client.emit(Events.ERROR, error));
+				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
+					Logger.error(error.code, error.message);
+					Logger.trace(error.trace);
+				});
 			}
 			if (result !== true) return false;
 		}
 		return true;
-	}
-
-	private static validate(name: string, options: CommandOptions, run: (ctx: CommandContext) => any): void {
-		if (!name) throw new TypeError('Command must have a name');
-		if (typeof name !== 'string') throw new TypeError('Command name must be a string');
-		if (!options.type.every(type => [0, 1, 2, 3].includes(type))) throw new TypeError('Command type must be one of CommandType');
-		if (typeof options.run !== 'function' && typeof run !== 'function') throw new TypeError('Command must have a run function');
 	}
 }

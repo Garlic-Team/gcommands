@@ -1,19 +1,19 @@
 import {Collection} from 'discord.js';
 import {Command} from '../structures/Command';
 import {GClient} from '../GClient';
-import {Events} from '../util/Events';
+import Logger from 'js-logger';
 
 export class CommandManager extends Collection<string, Command> {
 	private client: GClient;
 
 	public register(command: any): CommandManager {
 		if (command instanceof Command) {
+			if (this.has(command.name)) Logger.warn('Overriding command', command.name);
+			if (!Command.validate(command)) return;
 			if (this.client) command.initialize(this.client);
-			if (this.has(command.name) && this.client) this.client.emit(Events.WARN, `Overwriting command ${command.name}`);
 			this.set(command.name, command);
-		} else throw new TypeError('Command does not implement or extend the Command class');
-
-		if (this.client) this.client.emit(Events.COMMAND_REGISTER, command);
+			Logger.debug('Registered command', command.name);
+		} else Logger.warn('Command must be a instance of Command');
 
 		return this;
 	}
@@ -22,7 +22,7 @@ export class CommandManager extends Collection<string, Command> {
 		const command = this.get(commandName);
 		if (command) {
 			this.delete(commandName);
-			this.client.emit(Events.COMMAND_UNREGISTER, command);
+			Logger.debug('Unregistered command', command.name);
 		}
 
 		return command;
@@ -33,3 +33,5 @@ export class CommandManager extends Collection<string, Command> {
 		this.forEach(command => command.initialize(client));
 	}
 }
+
+export const Commands = new CommandManager();

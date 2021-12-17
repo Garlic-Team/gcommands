@@ -1,12 +1,14 @@
 import {Listener} from '../lib/structures/Listener';
 import {Interaction} from 'discord.js';
-import {GClient} from '../lib/GClient';
-import {Events} from '../lib/util/Events';
+import {Handlers} from '../lib/managers/HandlerManager';
+import Logger from 'js-logger';
 
 new Listener('interactionCreate', {
 	name: 'gcommands-componentHandler',
 	run: async (interaction: Interaction): Promise<void> => {
-		const client = interaction.client as GClient;
-		if (interaction.isMessageComponent()) await client.ghandlers.componentHandler(interaction).catch(error => client.emit(Events.ERROR, error));
+		if (interaction.isMessageComponent()) await Handlers.componentHandler(interaction).catch(error => {
+			Logger.error(error.code, error.message);
+			Logger.trace(error.trace);
+		});
 	}
 });

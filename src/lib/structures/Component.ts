@@ -1,6 +1,7 @@
 import {AutoDeferType, GClient} from '../GClient';
 import {ComponentContext} from './ComponentContext';
-import {Events} from '../util/Events';
+import {Components} from '../managers/ComponentManager';
+import Logger from 'js-logger';
 
 export enum ComponentType {
 	BUTTON = 'BUTTON',
@@ -32,12 +33,10 @@ export class Component {
 	public readonly onError?: (ctx: ComponentContext, error: any) => any;
 
 	public constructor(name: string, options: ComponentOptions) {
-		Component.validate(name, options, this.run);
-
 		this.name = name;
 		Object.assign(this, options);
 
-		GClient.gcomponents.register(this);
+		Components.register(this);
 	}
 
 	public initialize(client: GClient): void {
@@ -48,28 +47,33 @@ export class Component {
 		if (!this.autoDefer && client.options?.autoDefer) this.autoDefer = client.options.autoDefer;
 	}
 
+	public static validate(component: Component): boolean | void {
+		if (!component.name) return Logger.warn('Component must have a name');
+		else if (typeof component.name !== 'string') return Logger.warn('Component name must be a string');
+		else if (typeof component.run !== 'function') return Logger.warn('Component', component.name, 'must have a run function');
+		else return true;
+	}
+
 	public unregister() {
-		GClient.gcomponents.unregister(this.name);
+		Components.unregister(this.name);
 	}
 
 	public async inhibit(ctx: ComponentContext): Promise<boolean> {
 		for await(const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch(error => this.client.emit(Events.ERROR, error));
+				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
+					Logger.error(error.code, error.message);
+					Logger.trace(error.trace);
+				});
 			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => this.client.emit(Events.ERROR, error));
+				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
+					Logger.error(error.code, error.message);
+					Logger.trace(error.trace);
+				});
 			}
 			if (result !== true) return false;
 		}
 		return true;
-	}
-
-	private static validate(name: string, options: ComponentOptions, run: (ctx: ComponentContext) => any) {
-		if (!name) throw new TypeError('Component must have a name');
-		if (typeof name !== 'string') throw new TypeError('Component name must be a string');
-		if (!options.type) throw new TypeError('Component must have a type');
-		if (!options.type.every(type => ComponentType[type])) throw new TypeError('Component type must be one of ComponentType');
-		if (typeof options.run !== 'function' && typeof run !== 'function') throw new TypeError('Component must have a run function');
 	}
 }

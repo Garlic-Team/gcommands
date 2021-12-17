@@ -59,3 +59,5 @@ export class HandlerManager {
 		return this;
 	}
 }
+
+export const Handlers = new HandlerManager();

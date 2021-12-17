@@ -51,7 +51,7 @@ export class ComponentContext extends BaseContext {
 			customId: interaction.customId,
 			// @ts-expect-error Typings are broken LOL
 			reply: async (options) => {
-				if (!await interaction.fetchReply()) return await interaction.reply(options);
+				if (!interaction.replied) return await interaction.reply(options);
 				else return await interaction.editReply(options);
 			},
 			editReply: interaction.editReply.bind(interaction),

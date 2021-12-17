@@ -1,4 +1,6 @@
 import {GClient} from '../GClient';
+import {Plugins} from '../managers/PluginManager';
+import Logger from 'js-logger';
 
 export interface PluginOptions {
 	beforeInitialization?: (client: GClient) => any;
@@ -13,17 +15,16 @@ export class Plugin {
 	public readonly afterLogin?: (client: GClient) => any;
 
 	public constructor(name: string, options: PluginOptions) {
-		Plugin.validate(name, options);
-
 		this.name = name;
 		Object.assign(this, options);
 
-		GClient.gplugins.register(this);
+		Plugins.register(this);
 	}
 
-	private static validate(name: string, options: PluginOptions): void {
-		if (!name) throw new TypeError('Plugin must have a name');
-		if (typeof name !== 'string') throw new TypeError('Plugin name must be a string');
-		if (typeof options.beforeInitialization !== 'function' && typeof options.beforeLogin !== 'function' && typeof options.afterLogin !== 'function') throw new TypeError('Plugin must provide a function');
+	public static validate(plugin: Plugin): boolean | void {
+		if (!plugin.name) return Logger.warn('Plugin must have a name');
+		else if (typeof plugin.name !== 'string') return Logger.warn('Plugin name must be a string');
+		else if (typeof plugin.beforeInitialization !== 'function' && typeof plugin.beforeLogin !== 'function' && typeof plugin.afterLogin !== 'function') return Logger.warn('Plugin', plugin.name, 'must provide a function');
+		else return true;
 	}
 }

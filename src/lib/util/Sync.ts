@@ -2,8 +2,9 @@ import {GClient} from '../GClient';
 import {Command, CommandArgument, CommandType} from '../structures/Command';
 import {REST} from '@discordjs/rest';
 import {Routes} from 'discord-api-types/v9';
-import {Events} from './Events';
 import {Argument, ArgumentType} from '../arguments/Argument';
+import Logger from 'js-logger';
+import {Commands} from '../managers/CommandManager';
 
 function ResolveArgument(argument: CommandArgument | Argument): any {
 	if (argument.type === (ArgumentType.SUB_COMMAND || ArgumentType.SUB_COMMAND_GROUP)) {
@@ -42,14 +43,17 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 		},
 	).catch(error => {
 		if (error.status === 429) setTimeout(() => _sync(client, commands, guildId), error.data.retry_after * 1000);
-		else client.emit(Events.ERROR, error);
+		else {
+			Logger.error(error.code, error.message);
+			Logger.trace(error.trace);
+		}
 	});
 }
 
 export async function Sync(client: GClient) {
-	if (client.gcommands.size === 0) return;
+	if (Commands.size === 0) return;
 
-	const [guild, global] = client.gcommands.partition(command => typeof command.guildId === 'string');
+	const [guild, global] = Commands.partition(command => typeof command.guildId === 'string');
 
 	const guildIds = new Set(guild.map(c => c.guildId));
 	for await(const guildId of guildIds) {

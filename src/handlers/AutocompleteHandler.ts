@@ -1,14 +1,12 @@
 import {AutocompleteInteraction} from 'discord.js';
-import {GClient} from '../lib/GClient';
 import {CommandArgument} from '../lib/structures/Command';
-import {Events} from '../lib/util/Events';
 import {AutocompleteContext} from '../lib/structures/AutocompleteContext';
 import {Argument} from '../lib/arguments/Argument';
+import {Commands} from '../lib/managers/CommandManager';
+import Logger from 'js-logger';
 
 export async function AutocompleteHandler(interaction: AutocompleteInteraction) {
-	const client = interaction.client as GClient;
-
-	const command = client.gcommands.get(interaction.commandName);
+	const command = Commands.get(interaction.commandName);
 	if (!command) return;
 
 	let args: Array<CommandArgument | Argument> = command.arguments;
@@ -21,5 +19,8 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 
 	const ctx = AutocompleteContext.createWithInteraction(interaction, argument, focused.value);
 
-	if (argument) await Promise.resolve(argument.run(ctx)).catch(error => client.emit(Events.ERROR, error));
+	if (argument) await Promise.resolve(argument.run(ctx)).catch(error => {
+		Logger.error(error.code, error.message);
+		Logger.trace(error.trace);
+	});
 }

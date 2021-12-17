@@ -1,19 +1,19 @@
 import {Collection} from 'discord.js';
 import {Component} from '../structures/Component';
 import {GClient} from '../GClient';
-import {Events} from '../util/Events';
+import Logger from 'js-logger';
 
 export class ComponentManager extends Collection<string, Component> {
 	private client: GClient;
 
 	public register(component: Component): ComponentManager {
 		if (component instanceof Component) {
+			if (this.has(component.name)) Logger.warn('Overwriting component', component.name);
+			if (!Component.validate(component)) return;
 			if (this.client) component.initialize(this.client);
-			if (this.has(component.name) && this.client) this.client.emit(Events.WARN, `Overwriting component ${component.name}`);
 			this.set(component.name, component);
-		} else throw new TypeError('Component does not implement or extend the Component class');
-
-		if (this.client) this.client.emit(Events.COMPONENT_REGISTER, component);
+			Logger.debug('Registered component', component.name);
+		} else Logger.warn('Component must be a instance of Component');
 
 		return this;
 	}
@@ -22,7 +22,7 @@ export class ComponentManager extends Collection<string, Component> {
 		const component = this.get(componentName);
 		if (component) {
 			this.delete(componentName);
-			this.client.emit(Events.COMPONENT_REGISTER, component);
+			Logger.debug('Unregistered component', component.name);
 		}
 
 		return component;
@@ -33,3 +33,5 @@ export class ComponentManager extends Collection<string, Component> {
 		this.forEach(component => component.initialize(client));
 	}
 }
+
+export const Components = new ComponentManager();

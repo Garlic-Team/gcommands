@@ -1,3 +1,11 @@
+import Logger from 'js-logger';
+// Listeners
+import './listeners/Ready';
+import './listeners/InteractionCommandHandler';
+import './listeners/MessageCommandHandler';
+import './listeners/ComponentHandler';
+import './listeners/AutocompleteHandler';
+
 // Client
 export * from './lib/GClient';
 export {ClientEvents} from 'discord.js';
@@ -14,11 +22,15 @@ export * from './lib/structures/AutocompleteContext';
 export * from './lib/structures/ArgumentResolver';
 
 // Managers
-export * from './lib/managers/CommandManager';
-export * from './lib/managers/ComponentManager';
-export * from './lib/managers/HandlerManager';
-export * from './lib/managers/ListenerManager';
-export * from './lib/managers/PluginManager';
+export {Plugins, PluginManager} from './lib/managers/PluginManager';
+export {Commands, CommandManager} from './lib/managers/CommandManager';
+export {Components, ComponentManager} from './lib/managers/ComponentManager';
+export {Listeners, ListenerManager} from './lib/managers/ListenerManager';
+export {Handlers, HandlerManager} from './lib/managers/HandlerManager';
+
+// Logger
+Logger.useDefaults();
+export {Logger};
 
 // Arguments
 export * from './lib/arguments/Argument';
@@ -34,16 +46,10 @@ export * from './inhibitors/OrInhibitor';
 
 // Util
 export * from './util/CustomId';
-export * from './util/init';
+export * from './lib/util/registerDirectory';
+export * from './lib/util/registerDirectories';
 
 // Re-exports
 export {MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} from 'discord.js';
-
-// Listeners
-import './listeners/Ready';
-import './listeners/InteractionCommandHandler';
-import './listeners/MessageCommandHandler';
-import './listeners/ComponentHandler';
-import './listeners/AutocompleteHandler';
 
 // TODO add more validators

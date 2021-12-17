@@ -1,8 +1,8 @@
 import {Collection} from 'discord.js';
 import {Plugin} from '../structures/Plugin';
 import {GClient} from '../GClient';
-import {Events} from '../util/Events';
 import {PluginFinder} from '../loaders/PluginFinder';
+import Logger from 'js-logger';
 
 export enum PluginType {
 	BEFORE_INITIALIZATION = 'beforeInitialization',
@@ -15,11 +15,11 @@ export class PluginManager extends Collection<string, Plugin> {
 
 	public register(plugin: any): PluginManager {
 		if (plugin instanceof Plugin) {
-			if (this.has(plugin.name) && this.client) this.client.emit(Events.WARN, `Overwriting plugin ${plugin.name}`);
+			if (this.has(plugin.name)) Logger.warn('Overwriting plugin', plugin.name);
+			if (!Plugin.validate(plugin)) return;
 			this.set(plugin.name, plugin);
-		} else throw new TypeError('Plugin does not implement or extend the Plugin class');
-
-		if (this.client) this.client.emit(Events.PLUGIN_REGISTER, plugin);
+			Logger.debug('Registered plugin', plugin.name);
+		} else Logger.warn('Plugin must be a instance of plugin');
 
 		return this;
 	}
@@ -39,3 +39,5 @@ export class PluginManager extends Collection<string, Plugin> {
 		this.client = client;
 	}
 }
+
+export const Plugins = new PluginManager();
