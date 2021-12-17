@@ -8,7 +8,7 @@ new Listener('interactionCreate', {
 	run: async (interaction: Interaction): Promise<void> => {
 		if (interaction.isAutocomplete()) await Promise.resolve(Handlers.autocompleteHandler(interaction)).catch(error => {
 			Logger.error(error.code, error.message);
-			Logger.trace(error.trace);
+			if (error.trace) Logger.trace(error.trace);
 		});
 	}
 });

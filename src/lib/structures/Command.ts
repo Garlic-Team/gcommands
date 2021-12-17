@@ -89,12 +89,12 @@ export class Command {
 			if (typeof inhibitor === 'function') {
 				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
 					Logger.error(error.code, error.message);
-					Logger.trace(error.trace);
+					if (error.trace) Logger.trace(error.trace);
 				});
 			} else if (typeof inhibitor.run === 'function') {
 				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
 					Logger.error(error.code, error.message);
-					Logger.trace(error.trace);
+					if (error.trace) Logger.trace(error.trace);
 				});
 			}
 			if (result !== true) return false;

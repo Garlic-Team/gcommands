@@ -20,7 +20,7 @@ new Listener('messageCreate', {
 
 		await Promise.resolve(Handlers.messageCommandHandler(message, commandName, args)).catch(error => {
 			Logger.error(error.code, error.message);
-			Logger.trace(error.trace);
+			if (error.trace) Logger.trace(error.trace);
 		});
 	}
 });

@@ -46,7 +46,7 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 	if (!await command.inhibit(ctx)) return;
 	await Promise.resolve(command.run(ctx)).catch(async (error) => {
 		Logger.error(error.code, error.message);
-		Logger.trace(error.trace);
+		if (error.trace) Logger.trace(error.trace);
 		const errorReply = () => ctx.reply(client.responses.ERROR);
 		if (typeof command.onError === 'function') await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();
