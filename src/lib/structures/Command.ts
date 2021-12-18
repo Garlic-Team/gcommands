@@ -39,6 +39,7 @@ export interface CommandOptions {
 	guildId?: string;
 	cooldown?: string;
 	autoDefer?: AutoDeferType;
+	filePath?: string;
 	run?: (ctx: CommandContext) => any;
 	onError?: (ctx: CommandContext, error: any) => any;
 }
@@ -53,8 +54,10 @@ export class Command {
 	public guildId?: string;
 	public cooldown?: string;
 	public autoDefer?: AutoDeferType;
+	public readonly filePath?: string;
 	public readonly run: (ctx: CommandContext) => any;
 	public readonly onError?: (ctx: CommandContext, error: any) => any;
+	public reloading = false;
 
 	public constructor(name: string, options: CommandOptions) {
 		this.name = name;
@@ -77,6 +80,17 @@ export class Command {
 		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command', command.name, 'description must be a string');
 		else if (typeof command.run !== 'function') return Logger.warn('Command', command.name, 'must have a run function');
 		else return true;
+	}
+
+	public async reload(): Promise<Command> {
+		if (!this.filePath) return;
+
+		this.reloading = true;
+
+		delete require.cache[require.resolve(this.filePath)];
+		await import(this.filePath);
+
+		return Commands.get(this.name);
 	}
 
 	public unregister(): Command {

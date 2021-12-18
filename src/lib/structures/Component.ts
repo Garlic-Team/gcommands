@@ -17,6 +17,7 @@ export interface ComponentOptions {
 	guildId?: string;
 	cooldown?: string;
 	autoDefer?: AutoDeferType;
+	filePath?: string;
 	run?: (interaction: ComponentContext) => any;
 	onError?: (interaction: ComponentContext, error: any) => any;
 }
@@ -29,8 +30,10 @@ export class Component {
 	public guildId?: string;
 	public cooldown?: string;
 	public autoDefer?: AutoDeferType;
+	public readonly filePath?: string;
 	public readonly run: (ctx: ComponentContext) => any;
 	public readonly onError?: (ctx: ComponentContext, error: any) => any;
+	public reloading = false;
 
 	public constructor(name: string, options: ComponentOptions) {
 		this.name = name;
@@ -52,6 +55,17 @@ export class Component {
 		else if (typeof component.name !== 'string') return Logger.warn('Component name must be a string');
 		else if (typeof component.run !== 'function') return Logger.warn('Component', component.name, 'must have a run function');
 		else return true;
+	}
+
+	public async reload(): Promise<Component> {
+		if (!this.filePath) return;
+
+		this.reloading = true;
+
+		delete require.cache[require.resolve(this.filePath)];
+		await import(this.filePath);
+
+		return Components.get(this.name);
 	}
 
 	public unregister() {

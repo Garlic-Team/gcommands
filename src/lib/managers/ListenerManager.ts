@@ -10,7 +10,7 @@ export class ListenerManager extends Collection<string, Listener<any>> {
 		if (listener instanceof Listener) {
 			if (this.has(listener.name)) {
 				this.get(listener.name).unregister();
-				Logger.warn('Overwriting listener', listener.name);
+				if (!this.get(listener.name)?.reloading) Logger.warn('Overwriting listener', listener.name);
 			}
 			if (!Listener.validate(listener)) return;
 			if (this.client) this.initialize(listener);

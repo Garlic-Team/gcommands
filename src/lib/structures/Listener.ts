@@ -5,6 +5,7 @@ import Logger from 'js-logger';
 
 export interface ListenerOptions<Event extends keyof ClientEvents> {
 	name: string;
+	filePath?: string;
 	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 }
 
@@ -15,7 +16,9 @@ export class Listener<Event extends keyof ClientEvents> {
 	public readonly event: Event;
 	public readonly name: string;
 	public readonly once: boolean;
+	public readonly filePath?: string;
 	public readonly run: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
+	public reloading = false;
 
 	public constructor(event: Event, options: ListenerOptions<Event>) {
 		this.event = event;
@@ -37,6 +40,17 @@ export class Listener<Event extends keyof ClientEvents> {
 		else if (typeof listener.event !== 'string') return Logger.warn('Listener', listener.name, 'event must be a string');
 		else if (typeof listener.run !== 'function') return Logger.warn('Listener', listener.name, 'must have a run function');
 		else return true;
+	}
+
+	public async reload(): Promise<Listener<Event>> {
+		if (!this.filePath) return;
+
+		this.reloading = true;
+
+		delete require.cache[require.resolve(this.filePath)];
+		await import(this.filePath);
+
+		return Listeners.get(this.name);
 	}
 
 	public unregister() {

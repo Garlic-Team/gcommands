@@ -8,7 +8,7 @@ export class CommandManager extends Collection<string, Command> {
 
 	public register(command: any): CommandManager {
 		if (command instanceof Command) {
-			if (this.has(command.name)) Logger.warn('Overriding command', command.name);
+			if (this.has(command.name) && !this.get(command.name)?.reloading) Logger.warn('Overriding command', command.name);
 			if (!Command.validate(command)) return;
 			if (this.client) command.initialize(this.client);
 			this.set(command.name, command);
