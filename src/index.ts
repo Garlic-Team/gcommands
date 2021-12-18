@@ -42,7 +42,6 @@ Logger.useDefaults({
 
 		const date = new Date();
 		messages.unshift(`${color}[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}/${ctx.level.name}]\x1b[0m`);
-		messages.push('\x1b[0m');
 	}
 });
 export {Logger};

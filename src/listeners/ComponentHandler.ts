@@ -8,7 +8,7 @@ new Listener('interactionCreate', {
 	run: async (interaction: Interaction): Promise<void> => {
 		if (interaction.isMessageComponent()) await Handlers.componentHandler(interaction).catch(error => {
 			Logger.error(error.code, error.message);
-			if (error.trace) Logger.trace(error.trace);
+			if (error.stack) Logger.trace(error.stack);
 		});
 	}
 });

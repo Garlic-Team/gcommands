@@ -46,7 +46,7 @@ export class Listener<Event extends keyof ClientEvents> {
 	private async _run(...args: Array<any>): Promise<void> {
 		await Promise.resolve(this.run.call(this, ...args)).catch((error) => {
 			Logger.error(error.code, error.message);
-			if (error.trace) Logger.trace(error.trace);
+			if (error.stack) Logger.trace(error.stack);
 		});
 	}
 }

@@ -45,7 +45,7 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 		if (error.status === 429) setTimeout(() => _sync(client, commands, guildId), error.data.retry_after * 1000);
 		else {
 			Logger.error(error.code, error.message);
-			if (error.trace) Logger.trace(error.trace);
+			if (error.stack) Logger.trace(error.stack);
 		}
 	});
 }
