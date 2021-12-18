@@ -6,7 +6,7 @@ import Logger from 'js-logger';
 new Listener('ready', {
 	name: 'gcommands-ready',
 	run: async (client: GClient) => {
-		Logger.info('Client is ready with', client.guilds.cache.size, 'guild(s)');
+		Logger.info('Client is ready with', String(client.guilds.cache.size), 'guild(s)');
 		await Sync(client);
 	}
 });

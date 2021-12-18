@@ -31,8 +31,15 @@ export {Handlers, HandlerManager} from './lib/managers/HandlerManager';
 // Logger
 Logger.useDefaults({
 	defaultLevel: Logger.TRACE,
-	formatter: function (messages) {
-		return messages.unshift(`\x1b[2m[${new Date().toUTCString()}]\x1b[0m`);
+	formatter: function (messages: any, ctx) {
+		let color = '\x1b[0m';
+		if (ctx.level === Logger.INFO) color = '\x1b[32m';
+		if (ctx.level === Logger.WARN) color = '\x1b[33m';
+		if (ctx.level === Logger.ERROR) color = '\x1b[31m';
+
+		const date = new Date();
+		messages.unshift(`\x1b[2m[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] [${ctx.level.name}]\x1b[0m${color}`);
+		messages.push('\x1b[0m');
 	}
 });
 export {Logger};
