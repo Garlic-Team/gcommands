@@ -29,7 +29,12 @@ export {Listeners, ListenerManager} from './lib/managers/ListenerManager';
 export {Handlers, HandlerManager} from './lib/managers/HandlerManager';
 
 // Logger
-Logger.useDefaults();
+Logger.useDefaults({
+	defaultLevel: Logger.TRACE,
+	formatter: function (messages) {
+		return messages.unshift(`[${new Date().toUTCString()}]`);
+	}
+});
 export {Logger};
 
 // Arguments
