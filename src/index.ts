@@ -32,7 +32,7 @@ export {Handlers, HandlerManager} from './lib/managers/HandlerManager';
 Logger.useDefaults({
 	defaultLevel: Logger.TRACE,
 	formatter: function (messages) {
-		return messages.unshift(`[${new Date().toUTCString()}]`);
+		return messages.unshift(`\x1b[2m[${new Date().toUTCString()}]\x1b[0m`);
 	}
 });
 export {Logger};
