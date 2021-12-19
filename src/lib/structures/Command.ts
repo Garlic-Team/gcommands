@@ -39,7 +39,7 @@ export interface CommandOptions {
 	guildId?: string;
 	cooldown?: string;
 	autoDefer?: AutoDeferType;
-	filePath?: string;
+	fileName?: string;
 	run?: (ctx: CommandContext) => any;
 	onError?: (ctx: CommandContext, error: any) => any;
 }
@@ -54,7 +54,7 @@ export class Command {
 	public guildId?: string;
 	public cooldown?: string;
 	public autoDefer?: AutoDeferType;
-	public readonly filePath?: string;
+	public readonly fileName?: string;
 	public readonly run: (ctx: CommandContext) => any;
 	public readonly onError?: (ctx: CommandContext, error: any) => any;
 	public reloading = false;
@@ -75,22 +75,21 @@ export class Command {
 	}
 
 	public static validate(command: Command): boolean | void {
+		const locate = `(${command.name}${command.fileName ? `-> ${command.fileName}` : ''})`;
+
 		if (!command.name) return Logger.warn('Command must have a name');
 		else if (typeof command.name !== 'string') return Logger.warn('Command name must be a string');
-		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command', command.name, 'description must be a string');
-		else if (typeof command.run !== 'function') return Logger.warn('Command', command.name, 'must have a run function');
+		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command description must be a string', locate);
+		else if (!Array.isArray(command.type) || !command.type.every(type => Object.values(CommandType).includes(type))) return Logger.warn('Command type must be a array of CommandType', locate);
+		else if (command.arguments && !command.arguments.every(argument => typeof argument.name === 'string' && typeof argument.description === 'string' && Object.values(ArgumentType).includes(argument.type))) return Logger.warn('Command arguments must be a array of CommandArgument/Argument or undefined', locate);
+		else if (!command.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Command inhibitors must be a array of functions/object with run function or undefined', locate);
+		else if (command.guildId && typeof command.guildId !== 'string') return Logger.warn('Command guildId must be a string or undefined', locate);
+		else if (command.cooldown && typeof command.cooldown !== 'string') return Logger.warn('Command cooldown must be a string or undefined', locate);
+		else if (command.autoDefer && !Object.values(AutoDeferType).includes(command.autoDefer)) return Logger.warn('Command autoDefer must be one of AutoDeferType or undefined', locate);
+		else if (command.fileName && typeof command.fileName !== 'string') return Logger.warn('Command filePath must be a string or undefined', locate);
+		else if (typeof command.run !== 'function') return Logger.warn('Command', command.name, 'must have a run function', locate);
+		else if (command.onError && typeof command.onError !== 'function') return Logger.warn('Command onError must be a function or undefined', locate);
 		else return true;
-	}
-
-	public async reload(): Promise<Command> {
-		if (!this.filePath) return;
-
-		this.reloading = true;
-
-		delete require.cache[require.resolve(this.filePath)];
-		await import(this.filePath);
-
-		return Commands.get(this.name);
 	}
 
 	public unregister(): Command {
@@ -114,5 +113,16 @@ export class Command {
 			if (result !== true) return false;
 		}
 		return true;
+	}
+
+	public async reload(): Promise<Command> {
+		if (!this.fileName) return;
+
+		this.reloading = true;
+
+		delete require.cache[require.resolve(this.fileName)];
+		await import(this.fileName);
+
+		return Commands.get(this.name);
 	}
 }

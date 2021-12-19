@@ -1,4 +1,4 @@
-import {CommandArgument} from '../structures/Command';
+import {CommandArgument, CommandArgumentChoice} from '../structures/Command';
 import {AutocompleteContext} from '../structures/AutocompleteContext';
 
 export enum ArgumentType {
@@ -18,7 +18,7 @@ export interface ArgumentOptions {
 	type: ArgumentType;
 	description: string;
 	required?: boolean;
-	choices?: Array<string>;
+	choices?: Array<CommandArgumentChoice>;
 	options?: Array<CommandArgument | Argument>;
 	run?: (ctx: AutocompleteContext) => any;
 }
