@@ -8,8 +8,8 @@ import {registerDirectory} from './util/registerDirectory';
 import {registerDirectories} from './util/registerDirectories';
 
 export enum AutoDeferType {
-	EPHEMERAL = 1,
-	NORMAL = 2,
+	'EPHEMERAL' = 1,
+	'NORMAL' = 2,
 }
 
 export interface GClientOptions extends ClientOptions {
