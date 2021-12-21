@@ -12,7 +12,6 @@ export class CommandManager extends Collection<string, Command> {
 			if (this.has(command.name) && !this.get(command.name)?.reloading) Logger.warn('Overriding command', command.name);
 			if (!Command.validate(command)) return;
 			if (this.client) command.initialize(this.client);
-			console.log(Plugins.currentlyLoading);
 			if (Plugins.currentlyLoading) command.owner = Plugins.currentlyLoading;
 			this.set(command.name, command);
 			Logger.debug('Registered command', command.name, command.owner ? `(by plugin ${command.owner})` : '');

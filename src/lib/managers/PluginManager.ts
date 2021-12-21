@@ -33,7 +33,6 @@ export class PluginManager extends Collection<string, Plugin> {
 		this.client = client;
 		for await(const plugin of this.values()) {
 			this.currentlyLoading = plugin.name;
-			console.log(plugin.name);
 			await Promise.resolve(plugin.run(client)).catch(error => {
 				Logger.error(error.code, error.message);
 				if (error.stack) Logger.trace(error.stack);
