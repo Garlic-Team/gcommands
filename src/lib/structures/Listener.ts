@@ -2,10 +2,11 @@ import {GClient} from '../GClient';
 import {ClientEvents} from 'discord.js';
 import {Listeners} from '../managers/ListenerManager';
 import Logger from 'js-logger';
+import {ResolveValidationErrorLocate} from '../util/ResolveValidationErrorLocate';
 
 export interface ListenerOptions<Event extends keyof ClientEvents> {
 	name: string;
-	filePath?: string;
+	fileName?: string;
 	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 }
 
@@ -16,7 +17,7 @@ export class Listener<Event extends keyof ClientEvents> {
 	public readonly event: Event;
 	public readonly name: string;
 	public readonly once: boolean;
-	public readonly filePath?: string;
+	public readonly fileName?: string;
 	public readonly run: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 	public reloading = false;
 
@@ -34,21 +35,26 @@ export class Listener<Event extends keyof ClientEvents> {
 	}
 
 	public static validate(listener: Listener<any>): boolean | void {
-		if (!listener.name) return Logger.warn('Listener must have a name');
-		else if (typeof listener.name !== 'string') return Logger.warn('Listener name must be a string');
-		else if (!listener.event) return Logger.warn('Listener', listener.name, 'must have a event');
-		else if (typeof listener.event !== 'string') return Logger.warn('Listener', listener.name, 'event must be a string');
-		else if (typeof listener.run !== 'function') return Logger.warn('Listener', listener.name, 'must have a run function');
+		const locate = ResolveValidationErrorLocate([
+			listener.name,
+			listener.fileName,
+		]);
+
+		if (!listener.name) return Logger.warn('Listener must have a name', locate);
+		else if (typeof listener.name !== 'string') return Logger.warn('Listener name must be a string', locate);
+		else if (!listener.event) return Logger.warn('Listener must have a event', locate);
+		else if (typeof listener.event !== 'string') return Logger.warn('Listener event must be a string', locate);
+		else if (typeof listener.run !== 'function') return Logger.warn('Listener must have a run function', locate);
 		else return true;
 	}
 
 	public async reload(): Promise<Listener<Event>> {
-		if (!this.filePath) return;
+		if (!this.fileName) return;
 
 		this.reloading = true;
 
-		delete require.cache[require.resolve(this.filePath)];
-		await import(this.filePath);
+		delete require.cache[require.resolve(this.fileName)];
+		await import(this.fileName);
 
 		return Listeners.get(this.name);
 	}

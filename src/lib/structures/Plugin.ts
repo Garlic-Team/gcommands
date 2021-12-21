@@ -1,6 +1,7 @@
 import {GClient} from '../GClient';
 import {Plugins} from '../managers/PluginManager';
 import Logger from 'js-logger';
+import {ResolveValidationErrorLocate} from '../util/ResolveValidationErrorLocate';
 
 export interface PluginOptions {
 	beforeInitialization?: (client: GClient) => any;
@@ -22,9 +23,13 @@ export class Plugin {
 	}
 
 	public static validate(plugin: Plugin): boolean | void {
-		if (!plugin.name) return Logger.warn('Plugin must have a name');
-		else if (typeof plugin.name !== 'string') return Logger.warn('Plugin name must be a string');
-		else if (typeof plugin.beforeInitialization !== 'function' && typeof plugin.beforeLogin !== 'function' && typeof plugin.afterLogin !== 'function') return Logger.warn('Plugin', plugin.name, 'must provide a function');
+		const locate = ResolveValidationErrorLocate([
+			plugin.name,
+		]);
+
+		if (!plugin.name) return Logger.warn('Plugin must have a name', locate);
+		else if (typeof plugin.name !== 'string') return Logger.warn('Plugin name must be a string', locate);
+		else if (typeof plugin.beforeInitialization !== 'function' && typeof plugin.beforeLogin !== 'function' && typeof plugin.afterLogin !== 'function') return Logger.warn('Plugin must have run a function', locate);
 		else return true;
 	}
 }

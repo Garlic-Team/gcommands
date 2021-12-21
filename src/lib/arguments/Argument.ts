@@ -1,6 +1,7 @@
 import {Command, CommandArgument, CommandArgumentChoice} from '../structures/Command';
 import {AutocompleteContext} from '../structures/AutocompleteContext';
 import Logger from 'js-logger';
+import {ResolveValidationErrorLocate} from '../util/ResolveValidationErrorLocate';
 
 export enum ArgumentType {
 	'SUB_COMMAND' = 1,
@@ -41,7 +42,11 @@ export class Argument {
 	}
 
 	public static validate(argument: Argument | CommandArgument, command: Command): boolean | void {
-		const locate = `(${argument.name} -> ${command.name}${command.fileName ? ` -> ${command.fileName}` : ''})`;
+		const locate = ResolveValidationErrorLocate([
+			argument.name,
+			command.name,
+			command.fileName,
+		]);
 
 		if (!argument.name) return Logger.warn('Argument must have a name');
 		else if (typeof argument.name !== 'string') return Logger.warn('Argument name must be a string');

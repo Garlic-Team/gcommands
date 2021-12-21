@@ -4,6 +4,7 @@ import {CommandContext} from './CommandContext';
 import {AutocompleteContext} from './AutocompleteContext';
 import {Commands} from '../managers/CommandManager';
 import Logger from 'js-logger';
+import {ResolveValidationErrorLocate} from '../util/ResolveValidationErrorLocate';
 
 export enum CommandType {
 	'MESSAGE' = 0,
@@ -112,10 +113,13 @@ export class Command {
 	}
 
 	public static validate(command: Command): boolean | void {
-		const locate = `(${command.name}${command.fileName ? `-> ${command.fileName}` : ''})`;
+		const locate = ResolveValidationErrorLocate([
+			command.name,
+			command.fileName,
+		]);
 
-		if (!command.name) return Logger.warn('Command must have a name');
-		else if (typeof command.name !== 'string') return Logger.warn('Command name must be a string');
+		if (!command.name) return Logger.warn('Command must have a name', locate);
+		else if (typeof command.name !== 'string') return Logger.warn('Command name must be a string', locate);
 		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command description must be a string', locate);
 		else if (!Array.isArray(command.type) || !command.type.every(type => Object.values(CommandType).includes(type))) return Logger.warn('Command type must be a array of CommandType', locate);
 		else if (command.arguments && !command.arguments.every(argument => Argument.validate(argument, command))) return;
