@@ -12,6 +12,7 @@ export enum PluginType {
 
 export class PluginManager extends Collection<string, Plugin> {
 	private client: GClient;
+	public currentlyLoading: string = null;
 
 	public register(plugin: any): PluginManager {
 		if (plugin instanceof Plugin) {
@@ -28,15 +29,18 @@ export class PluginManager extends Collection<string, Plugin> {
 		await PluginFinder(basedir);
 	}
 
-	public async load(type: PluginType): Promise<void> {
-		const plugins = this.filter(plugin => typeof plugin[type] === 'function');
-		for await(const plugin of plugins.values()) {
-			await plugin[type](this.client);
-		}
-	}
-
 	public async initiate(client: GClient): Promise<void> {
 		this.client = client;
+		for await(const plugin of this.values()) {
+			this.currentlyLoading = plugin.name;
+			console.log(plugin.name);
+			await Promise.resolve(plugin.run(client)).catch(error => {
+				Logger.error(error.code, error.message);
+				if (error.stack) Logger.trace(error.stack);
+			}).then(() => {
+				this.currentlyLoading = null;
+			});
+		}
 	}
 }
 

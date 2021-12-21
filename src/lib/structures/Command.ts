@@ -58,6 +58,7 @@ export class Command {
 	public readonly fileName?: string;
 	public readonly run: (ctx: CommandContext) => any;
 	public readonly onError?: (ctx: CommandContext, error: any) => any;
+	public owner?: string;
 	public reloading = false;
 
 	public constructor(name: string, options: CommandOptions) {

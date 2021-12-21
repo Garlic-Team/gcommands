@@ -2,6 +2,7 @@ import {GClient} from '../GClient';
 import {Listener} from '../structures/Listener';
 import {Collection} from 'discord.js';
 import Logger from 'js-logger';
+import {Plugins} from './PluginManager';
 
 export class ListenerManager extends Collection<string, Listener<any>> {
 	private client: GClient;
@@ -14,8 +15,9 @@ export class ListenerManager extends Collection<string, Listener<any>> {
 			}
 			if (!Listener.validate(listener)) return;
 			if (this.client) this.initialize(listener);
+			if (Plugins.currentlyLoading) listener.owner = Plugins.currentlyLoading;
 			this.set(listener.name, listener);
-			Logger.debug('Registered listener', listener.name, 'listening to', listener.event);
+			Logger.debug('Registered listener', listener.name, 'listening to', listener.event, listener.owner ? `(by plugin ${listener.owner})` : '');
 		} else Logger.warn('Listener must be a instance of Listener');
 
 		return this;

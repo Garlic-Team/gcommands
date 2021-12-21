@@ -2,6 +2,7 @@ import {Collection} from 'discord.js';
 import {Command} from '../structures/Command';
 import {GClient} from '../GClient';
 import Logger from 'js-logger';
+import {Plugins} from './PluginManager';
 
 export class CommandManager extends Collection<string, Command> {
 	private client: GClient;
@@ -11,8 +12,10 @@ export class CommandManager extends Collection<string, Command> {
 			if (this.has(command.name) && !this.get(command.name)?.reloading) Logger.warn('Overriding command', command.name);
 			if (!Command.validate(command)) return;
 			if (this.client) command.initialize(this.client);
+			console.log(Plugins.currentlyLoading);
+			if (Plugins.currentlyLoading) command.owner = Plugins.currentlyLoading;
 			this.set(command.name, command);
-			Logger.debug('Registered command', command.name);
+			Logger.debug('Registered command', command.name, command.owner ? `(by plugin ${command.owner})` : '');
 		} else Logger.warn('Command must be a instance of Command');
 
 		return this;

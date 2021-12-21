@@ -34,6 +34,7 @@ export class Component {
 	public readonly fileName?: string;
 	public readonly run: (ctx: ComponentContext) => any;
 	public readonly onError?: (ctx: ComponentContext, error: any) => any;
+	public owner?: string;
 	public reloading = false;
 
 	public constructor(name: string, options: ComponentOptions) {

@@ -1,5 +1,5 @@
 import {Client, ClientOptions} from 'discord.js';
-import {Plugins, PluginType} from './managers/PluginManager';
+import {Plugins} from './managers/PluginManager';
 import {Commands} from './managers/CommandManager';
 import {Listeners} from './managers/ListenerManager';
 import {Components} from './managers/ComponentManager';
@@ -36,21 +36,10 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 		setImmediate(async (): Promise<void> => {
 			await Promise.all([
 				Plugins.initiate(this),
-				Plugins.load(PluginType.BEFORE_INITIALIZATION),
 				Commands.initiate(this),
 				Components.initiate(this),
 				Listeners.initiate(this),
 			]);
 		});
-	}
-
-	public async login(token?: string): Promise<string> {
-		await Plugins.load(PluginType.BEFORE_LOGIN);
-
-		const login = await super.login(token);
-
-		await Plugins.load(PluginType.AFTER_LOGIN);
-
-		return login;
 	}
 }

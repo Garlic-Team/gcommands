@@ -19,6 +19,7 @@ export class Listener<Event extends keyof ClientEvents> {
 	public readonly once: boolean;
 	public readonly fileName?: string;
 	public readonly run: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
+	public owner?: string;
 	public reloading = false;
 
 	public constructor(event: Event, options: ListenerOptions<Event>) {
@@ -32,20 +33,6 @@ export class Listener<Event extends keyof ClientEvents> {
 		this.client = client;
 
 		client[this.once ? 'once' : 'on'](this.event, this._run.bind(this));
-	}
-
-	public static validate(listener: Listener<any>): boolean | void {
-		const locate = ResolveValidationErrorLocate([
-			listener.name,
-			listener.fileName,
-		]);
-
-		if (!listener.name) return Logger.warn('Listener must have a name', locate);
-		else if (typeof listener.name !== 'string') return Logger.warn('Listener name must be a string', locate);
-		else if (!listener.event) return Logger.warn('Listener must have a event', locate);
-		else if (typeof listener.event !== 'string') return Logger.warn('Listener event must be a string', locate);
-		else if (typeof listener.run !== 'function') return Logger.warn('Listener must have a run function', locate);
-		else return true;
 	}
 
 	public async reload(): Promise<Listener<Event>> {
@@ -68,5 +55,19 @@ export class Listener<Event extends keyof ClientEvents> {
 			Logger.error(error.code, error.message);
 			if (error.stack) Logger.trace(error.stack);
 		});
+	}
+
+	public static validate(listener: Listener<any>): boolean | void {
+		const locate = ResolveValidationErrorLocate([
+			listener.name,
+			listener.fileName,
+		]);
+
+		if (!listener.name) return Logger.warn('Listener must have a name', locate);
+		else if (typeof listener.name !== 'string') return Logger.warn('Listener name must be a string', locate);
+		else if (!listener.event) return Logger.warn('Listener must have a event', locate);
+		else if (typeof listener.event !== 'string') return Logger.warn('Listener event must be a string', locate);
+		else if (typeof listener.run !== 'function') return Logger.warn('Listener must have a run function', locate);
+		else return true;
 	}
 }
