@@ -14,7 +14,7 @@ export enum CommandType {
 
 export interface CommandArgumentChoice {
 	name: string;
-	value: any;
+	value: string;
 }
 
 export interface CommandArgument {
@@ -118,7 +118,7 @@ export class Command {
 		else if (typeof command.name !== 'string') return Logger.warn('Command name must be a string');
 		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command description must be a string', locate);
 		else if (!Array.isArray(command.type) || !command.type.every(type => Object.values(CommandType).includes(type))) return Logger.warn('Command type must be a array of CommandType', locate);
-		else if (command.arguments && !command.arguments.every(argument => typeof argument.name === 'string' && typeof argument.description === 'string' && Object.values(ArgumentType).includes(argument.type))) return Logger.warn('Command arguments must be a array of CommandArgument/Argument or undefined', locate);
+		else if (command.arguments && !command.arguments.every(argument => Argument.validate(argument, command))) return;
 		else if (!command.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Command inhibitors must be a array of functions/object with run function or undefined', locate);
 		else if (command.guildId && typeof command.guildId !== 'string') return Logger.warn('Command guildId must be a string or undefined', locate);
 		else if (command.cooldown && typeof command.cooldown !== 'string') return Logger.warn('Command cooldown must be a string or undefined', locate);

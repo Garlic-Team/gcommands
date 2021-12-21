@@ -24,6 +24,6 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 		Logger.error(error.code, error.message);
 		if (error.stack) Logger.trace(error.stack);
 	}).then(() => {
-		Logger.debug(`Successfully ran autocomplete (${command.name} -> ${argument.name}) for ${interaction.user.username}`);
+		Logger.debug(`Successfully ran autocomplete (${argument.name} -> ${command.name}) for ${interaction.user.username}`);
 	});
 }
