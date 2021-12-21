@@ -4,6 +4,7 @@ import {ComponentType} from '../lib/structures/Component';
 import {ComponentContext} from '../lib/structures/ComponentContext';
 import {Components} from '../lib/managers/ComponentManager';
 import {Handlers} from '../lib/managers/HandlerManager';
+import Logger from 'js-logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -34,6 +35,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 	}, 2500 - client.ws.ping);
 
 	await Promise.resolve(component.run(ctx)).catch(async (error) => {
+		Logger.error(error.code, error.message);
+		if (error.stack) Logger.trace(error.stack);
 		const errorReply = () => ctx.interaction.replied ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
 			ephemeral: true,
@@ -42,5 +45,6 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		else await errorReply();
 	}).then(() => {
 		if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
+		Logger.debug(`Successfully ran component (${component.name}) for ${interaction.user.username}`);
 	});
 }

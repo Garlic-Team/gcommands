@@ -16,11 +16,14 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 
 	const focused = interaction.options.getFocused(true);
 	const argument = args.find(argument => argument.name === focused.name);
+	if (!argument) return;
 
 	const ctx = AutocompleteContext.createWithInteraction(interaction, argument, focused.value);
 
-	if (argument) await Promise.resolve(argument.run(ctx)).catch(error => {
+	await Promise.resolve(argument.run(ctx)).catch(error => {
 		Logger.error(error.code, error.message);
 		if (error.stack) Logger.trace(error.stack);
+	}).then(() => {
+		Logger.debug(`Successfully ran autocomplete (${command.name} -> ${argument.name}) for ${interaction.user.username}`);
 	});
 }

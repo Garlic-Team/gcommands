@@ -25,7 +25,7 @@ export interface ArgumentOptions {
 
 export class Argument {
 	public readonly name: string;
-	public readonly type?: ArgumentType;
+	public readonly type: ArgumentType;
 	public readonly description: string;
 	public readonly required: boolean = false;
 	public readonly choices?: Array<string>;

@@ -50,5 +50,7 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 		const errorReply = () => ctx.reply(client.responses.ERROR);
 		if (typeof command.onError === 'function') await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();
+	}).then(() => {
+		Logger.debug(`Successfully ran command (${command.name}) for ${message.author.username}`);
 	});
 }

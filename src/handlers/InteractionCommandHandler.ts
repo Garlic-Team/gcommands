@@ -45,5 +45,6 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		else await errorReply();
 	}).then(() => {
 		if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
+		Logger.debug(`Successfully ran command (${command.name}) for ${interaction.user.username}`);
 	});
 }
