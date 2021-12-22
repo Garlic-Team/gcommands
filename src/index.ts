@@ -65,5 +65,3 @@ export * from './lib/util/registerDirectories';
 
 // Re-exports
 export {MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} from 'discord.js';
-
-// TODO add more validators

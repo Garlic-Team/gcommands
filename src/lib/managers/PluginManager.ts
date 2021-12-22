@@ -4,12 +4,6 @@ import {GClient} from '../GClient';
 import {PluginFinder} from '../loaders/PluginFinder';
 import Logger from 'js-logger';
 
-export enum PluginType {
-	BEFORE_INITIALIZATION = 'beforeInitialization',
-	BEFORE_LOGIN = 'beforeLogin',
-	AFTER_LOGIN = 'afterLogin',
-}
-
 export class PluginManager extends Collection<string, Plugin> {
 	private client: GClient;
 	public currentlyLoading: string = null;
