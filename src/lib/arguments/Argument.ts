@@ -16,12 +16,24 @@ export enum ArgumentType {
 	'NUMBER' = 10,
 }
 
+export enum ChannelType {
+	'GUILD_TEXT' = 0,
+	'GUILD_VOICE' = 2,
+	'GUILD_CATEGORY' = 4,
+	'GUILD_STORE' = 6,
+	'GUILD_NEWS_THREAD' = 10,
+	'GUILD_PUBLIC_THREAD' = 11,
+	'GUILD_PRIVATE_THREAD' = 12,
+	'GUILD_STAGE_VOICE' = 13,
+}
+
 export interface ArgumentOptions {
 	description: string;
 	type: ArgumentType | keyof typeof ArgumentType;
 	required?: boolean;
 	choices?: Array<CommandArgumentChoice>;
 	options?: Array<CommandArgument | Argument>;
+	channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	run?: (ctx: AutocompleteContext) => any;
 }
 
@@ -32,6 +44,7 @@ export class Argument {
 	public readonly required: boolean = false;
 	public readonly choices?: Array<CommandArgumentChoice>;
 	public readonly options?: Array<CommandArgument | Argument>;
+	public readonly channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	public run?: (ctx: AutocompleteContext) => any;
 
 	constructor(name: string, options: ArgumentOptions) {
@@ -55,6 +68,7 @@ export class Argument {
 		else if (argument.required && typeof argument.required !== 'boolean') return Logger.warn('Argument required must be a boolean or undefined', locate);
 		else if (argument.choices && !argument.choices.every(choice => typeof choice.name === 'string' && typeof choice.value === 'string')) return Logger.warn('Argument choices must be a array of CommandArgumentChoice or undefined', locate);
 		else if (argument.options && !argument.options.every(option => Argument.validate(option, command))) return;
+		else if (argument.channelTypes && argument.type !== ArgumentType.CHANNEL) return Logger.warn('Argument options cannot have the channelTypes property if argument type is not a channel', locate);
 		else return true;
 	}
 }

@@ -1,5 +1,5 @@
 import {AutoDeferType, GClient} from '../GClient';
-import {Argument, ArgumentType} from '../arguments/Argument';
+import {Argument, ArgumentType, ChannelType} from '../arguments/Argument';
 import {CommandContext} from './CommandContext';
 import {AutocompleteContext} from './AutocompleteContext';
 import {Commands} from '../managers/CommandManager';
@@ -25,6 +25,7 @@ export interface CommandArgument {
 	required?: boolean;
 	choices?: Array<CommandArgumentChoice>;
 	options?: Array<CommandArgument | Argument>;
+	channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	run?: (ctx: AutocompleteContext) => any;
 }
 
@@ -124,7 +125,7 @@ export class Command {
 		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command description must be a string', locate);
 		else if (!Array.isArray(command.type) || !command.type.every(type => Object.values(CommandType).includes(type))) return Logger.warn('Command type must be a array of CommandType', locate);
 		else if (command.arguments && !command.arguments.every(argument => Argument.validate(argument, command))) return;
-		else if (command.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Command inhibitors must be a array of functions/object with run function or undefined', locate);
+		else if (command.inhibitors.length >= 1 && command.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Command inhibitors must be a array of functions/object with run function or undefined', locate);
 		else if (command.guildId && typeof command.guildId !== 'string') return Logger.warn('Command guildId must be a string or undefined', locate);
 		else if (command.cooldown && typeof command.cooldown !== 'string') return Logger.warn('Command cooldown must be a string or undefined', locate);
 		else if (command.autoDefer && !Object.values(AutoDeferType).includes(command.autoDefer)) return Logger.warn('Command autoDefer must be one of AutoDeferType or undefined', locate);

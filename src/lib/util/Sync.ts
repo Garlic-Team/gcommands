@@ -6,6 +6,20 @@ import {Argument, ArgumentType} from '../arguments/Argument';
 import Logger from 'js-logger';
 import {Commands} from '../managers/CommandManager';
 
+function ResolveArgumentOptions(options): any {
+	for (const [ key, value ] of Object.entries(options)) {
+		const option = key.match(/[A-Z]/g)?.[0] ? key.replace(key.match(/[A-Z]/g)[0], `_${key.match(/[A-Z]/g)[0].toLowerCase()}`) : key;
+
+		if (option !== key) {
+			delete options[key];
+
+			options[option] = value;
+		}
+	}
+
+	return options;
+}
+
 function ResolveArgument(argument: CommandArgument | Argument): any {
 	if (argument.type === (ArgumentType.SUB_COMMAND || ArgumentType.SUB_COMMAND_GROUP)) {
 		return argument.options ? {
@@ -15,7 +29,7 @@ function ResolveArgument(argument: CommandArgument | Argument): any {
 	}
 
 	return {
-		...argument,
+		...ResolveArgumentOptions(argument),
 		autocomplete: typeof argument.run === 'function',
 	};
 }
@@ -32,7 +46,7 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 						name: command.name,
 						description: command.description,
 						options: (Array.isArray(command.arguments) && command.arguments[0]) ? command.arguments.map(argument => ResolveArgument(argument)) : undefined,
-						type: type,
+						type: type
 					};
 					else return {
 						name: command.name,

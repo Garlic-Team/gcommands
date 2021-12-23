@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "bash build.bash",
+    "build": "bash scripts/build.bash",
     "lint": "npx eslint .",
     "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
     "build:types": "tsc --emitDeclarationOnly",
