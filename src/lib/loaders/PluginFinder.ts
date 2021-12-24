@@ -3,28 +3,36 @@ import * as path from 'path';
 
 export async function LoadPluginFolder(basedir: string, folder: fs.Dirent) {
 	if (folder.isDirectory()) {
-		if (fs.existsSync(path.join(basedir, folder.name, 'index.js')) || fs.existsSync(path.join(basedir, folder.name, 'index.ts'))) {
-			await import(path.join(basedir, folder.name, 'index'));
-		} else if (fs.existsSync(path.join(basedir, folder.name, 'register.js')) || fs.existsSync(path.join(basedir, folder.name, 'register.ts'))) {
-			await import(path.join(basedir, folder.name, 'register'));
+		if (fs.existsSync(path.join(basedir, folder.name, 'index.js'))) {
+			await import(path.join(basedir, folder.name, 'index.js'));
+		} else if (fs.existsSync(path.join(basedir, folder.name, 'index.ts'))) {
+			await import(path.join(basedir, folder.name, 'index.ts'));
+		} else if (fs.existsSync(path.join(basedir, folder.name, 'register.js'))) {
+			await import(path.join(basedir, folder.name, 'register.js'));
+		} else if (fs.existsSync(path.join(basedir, folder.name, 'register.ts'))) {
+			await import(path.join(basedir, folder.name, 'register.ts'));
 		}
 	}
 }
 
 export async function PluginFinder(basedir: string) {
 	if (fs.existsSync(basedir)) {
-		const pluginPath = path.join(basedir, 'plugins');
-		if (fs.existsSync(pluginPath)) {
-			for await(const folder of fs.readdirSync(pluginPath, {withFileTypes: true})) {
-				await LoadPluginFolder(pluginPath, folder);
+		if (fs.existsSync(path.join(basedir, 'plugins'))) {
+			for await(const folder of fs.readdirSync(path.join(basedir, 'plugins'), {withFileTypes: true})) {
+				await LoadPluginFolder(path.join(basedir, 'plugins'), folder);
 			}
 		}
 
-		const modulesPath = path.join(basedir, 'node_modules');
-		if (fs.existsSync(modulesPath)) {
-			for await(const folder of fs.readdirSync(modulesPath, {withFileTypes: true})) {
+		if (fs.existsSync(path.join(basedir, 'src', 'plugins'))) {
+			for await(const folder of fs.readdirSync(path.join(basedir, 'src', 'plugins'), {withFileTypes: true})) {
+				await LoadPluginFolder(path.join(basedir, 'src', 'plugins'), folder);
+			}
+		}
+
+		if (fs.existsSync(path.join(basedir, 'node_modules'))) {
+			for await(const folder of fs.readdirSync(path.join(basedir, 'node_modules'), {withFileTypes: true})) {
 				if (!folder.name.includes('gcommands-plugin-')) continue;
-				await LoadPluginFolder(modulesPath, folder);
+				await LoadPluginFolder(path.join(basedir, 'node_modules'), folder);
 			}
 		}
 	}
