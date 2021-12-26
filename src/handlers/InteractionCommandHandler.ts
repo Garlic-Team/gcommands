@@ -36,7 +36,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	await Promise.resolve(command.run(ctx)).catch(async (error) => {
 		Logger.error(error.code, error.message);
 		if (error.stack) Logger.trace(error.stack);
-		const errorReply = () => ctx.interaction.replied ? ctx.editReply(client.responses.ERROR) : ctx.reply({
+		const errorReply = () => (ctx.interaction.replied || ctx.interaction.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
 			ephemeral: true,
 		});
