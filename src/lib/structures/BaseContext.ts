@@ -1,4 +1,4 @@
-import {Guild, GuildMember, Interaction, Permissions, Snowflake, TextBasedChannels, User} from 'discord.js';
+import {Guild, GuildMember, Interaction, Permissions, Snowflake, TextBasedChannel, User} from 'discord.js';
 import {GClient} from '../GClient';
 
 export interface BaseContextOptions {
@@ -9,7 +9,7 @@ export interface BaseContextOptions {
 	user: User;
 	username: string;
 	userId: Snowflake;
-	channel: TextBasedChannels;
+	channel: TextBasedChannel;
 	channelId: Snowflake;
 	createdAt: Date;
 	createdTimestamp: number;
@@ -24,7 +24,7 @@ export class BaseContext {
 	public readonly user: User;
 	public readonly username: string;
 	public readonly userId: Snowflake;
-	public readonly channel: TextBasedChannels;
+	public readonly channel: TextBasedChannel;
 	public readonly channelId: Snowflake;
 	public readonly createdAt: Date;
 	public readonly createdTimestamp: number;
