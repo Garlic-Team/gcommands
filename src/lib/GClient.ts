@@ -10,6 +10,7 @@ import {registerDirectories} from './util/registerDirectories';
 export enum AutoDeferType {
 	'EPHEMERAL' = 1,
 	'NORMAL' = 2,
+	'UPDATE' = 3,
 }
 
 export interface GClientOptions extends ClientOptions {

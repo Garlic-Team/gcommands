@@ -31,7 +31,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 
 	let autoDeferTimeout;
 	if (component.autoDefer) autoDeferTimeout = setTimeout(() => {
-		ctx.deferReply({ephemeral: component.autoDefer === AutoDeferType.EPHEMERAL});
+		component.autoDefer === AutoDeferType.UPDATE ? ctx.deferUpdate() : ctx.deferReply({ephemeral: component.autoDefer === AutoDeferType.EPHEMERAL});
 	}, 2500 - client.ws.ping);
 
 	await Promise.resolve(component.run(ctx)).catch(async (error) => {

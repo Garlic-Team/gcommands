@@ -1,5 +1,6 @@
 import {
 	InteractionDeferReplyOptions,
+	InteractionDeferUpdateOptions,
 	InteractionReplyOptions,
 	Message,
 	MessageComponentInteraction,
@@ -22,6 +23,7 @@ export interface ComponentContextOptions extends BaseContextOptions {
 	deleteReply: () => Promise<void>;
 	followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
 	deferReply: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
+	deferUpdate: (options?: InteractionDeferUpdateOptions) => Promise<Message | void>;
 }
 
 export class ComponentContext extends BaseContext {
@@ -32,10 +34,11 @@ export class ComponentContext extends BaseContext {
 	public readonly values?: Array<any>;
 	public readonly customId: string;
 	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
-	public editReply?: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
-	public deleteReply?: () => Promise<void>;
+	public editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
+	public deleteReply: () => Promise<void>;
 	public followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
-	public deferReply?: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
+	public deferReply: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
+	public deferUpdate: (options?: InteractionDeferUpdateOptions) => Promise<Message | void>;
 
 	constructor(client: GClient, options: ComponentContextOptions) {
 		super(client, options);
@@ -50,7 +53,6 @@ export class ComponentContext extends BaseContext {
 			arguments: args,
 			values: interaction.isSelectMenu() ? interaction.values : [],
 			customId: interaction.customId,
-			// @ts-expect-error Typings are broken LOL
 			reply: async (options) => {
 				if (!replied) return await interaction.reply(options);
 				else {
@@ -65,6 +67,7 @@ export class ComponentContext extends BaseContext {
 				replied = true;
 				return interaction.deferReply(options);
 			},
+			deferUpdate: interaction.deferUpdate.bind(interaction),
 		});
 	}
 }

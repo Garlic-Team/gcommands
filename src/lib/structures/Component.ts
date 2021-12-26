@@ -23,6 +23,8 @@ export interface ComponentOptions {
 	onError?: (interaction: ComponentContext, error: any) => any;
 }
 
+// TODO filters
+
 export class Component {
 	public client: GClient;
 	public readonly name: string;
