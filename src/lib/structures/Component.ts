@@ -13,6 +13,7 @@ export type ComponentInhibitor = (ctx: ComponentContext) => (boolean | void | Pr
 export type ComponentInhibitors = Array<{ run: ComponentInhibitor } | ComponentInhibitor>;
 
 export interface ComponentOptions {
+	name: string;
 	type: Array<ComponentType | keyof typeof ComponentType>;
 	inhibitors?: ComponentInhibitors;
 	guildId?: string;
@@ -22,8 +23,6 @@ export interface ComponentOptions {
 	run?: (interaction: ComponentContext) => any;
 	onError?: (interaction: ComponentContext, error: any) => any;
 }
-
-// TODO filters
 
 export class Component {
 	public client: GClient;
@@ -39,8 +38,7 @@ export class Component {
 	public owner?: string;
 	public reloading = false;
 
-	public constructor(name: string, options: ComponentOptions) {
-		this.name = name;
+	public constructor(options: ComponentOptions) {
 		Object.assign(this, options);
 
 		if (Array.isArray(this.type)) this.type = this.type.map(type => typeof type === 'string' && Object.keys(ComponentType).includes(type) ? ComponentType[type] : type);

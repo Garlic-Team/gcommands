@@ -34,6 +34,7 @@ export type CommandInhibitors = Array<{ run: CommandInhibitor } | CommandInhibit
 
 
 export interface CommandOptions {
+	name: string;
 	type: Array<CommandType | keyof typeof CommandType>;
 	description?: string;
 	arguments?: Array<CommandArgument | Argument>;
@@ -62,8 +63,7 @@ export class Command {
 	public owner?: string;
 	public reloading = false;
 
-	public constructor(name: string, options: CommandOptions) {
-		this.name = name;
+	public constructor(options: CommandOptions) {
 		Object.assign(this, options);
 
 		if (Array.isArray(this.type)) this.type = this.type.map(type => typeof type === 'string' && Object.keys(CommandType).includes(type) ? CommandType[type] : type);
