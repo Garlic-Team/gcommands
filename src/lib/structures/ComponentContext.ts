@@ -1,4 +1,6 @@
 import {
+	CacheType,
+	GuildCacheMessage,
 	InteractionDeferReplyOptions,
 	InteractionDeferUpdateOptions,
 	InteractionReplyOptions,
@@ -18,7 +20,7 @@ export interface ComponentContextOptions extends BaseContextOptions {
 	arguments?: Array<string>;
 	values?: Array<any>;
 	customId: string;
-	reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
+	reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | GuildCacheMessage<CacheType> | void>;
 	editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
 	deleteReply: () => Promise<void>;
 	followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
@@ -33,7 +35,7 @@ export class ComponentContext extends BaseContext {
 	public readonly arguments?: Array<string>;
 	public readonly values?: Array<any>;
 	public readonly customId: string;
-	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
+	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | GuildCacheMessage<CacheType> | void>;
 	public editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
 	public deleteReply: () => Promise<void>;
 	public followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
