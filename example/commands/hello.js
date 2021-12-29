@@ -1,6 +1,7 @@
 const {Command, CommandType, MessageActionRow, MessageButton, CustomId} = require('../../dist');
 
-new Command('hello', {
+new Command({
+	name: 'hello',
 	description: 'Says hello!',
 	type: [CommandType.SLASH, CommandType.MESSAGE],
 	run: (ctx) => {
@@ -17,7 +18,8 @@ new Command('hello', {
 
 new class extends Command {
 	constructor() {
-		super('hello', {
+		super({
+			name: 'hello',
 			description: 'Says hello!',
 			type: [CommandType.SLASH, CommandType.MESSAGE],
 		});

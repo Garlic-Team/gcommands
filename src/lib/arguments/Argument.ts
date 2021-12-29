@@ -56,11 +56,11 @@ export class Argument {
 	}
 
 	public static toAPIArgument(argument: Argument | CommandArgument): Record<string, any> {
-		if (argument.type === (ArgumentType.SUB_COMMAND || ArgumentType.SUB_COMMAND_GROUP)) {
-			return argument.options ? {
+		if (argument.type === ArgumentType.SUB_COMMAND || argument.type === ArgumentType.SUB_COMMAND_GROUP) {
+			return {
 				...argument,
-				options: argument.options.map(a => Argument.toAPIArgument(a)),
-			} : argument;
+				options: argument.options?.map(a => Argument.toAPIArgument(a)),
+			};
 		}
 
 		return {

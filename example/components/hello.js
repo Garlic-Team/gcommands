@@ -1,6 +1,7 @@
 const {Component, ComponentType} = require('../../dist');
 
-new Component('hello', {
+new Component({
+	name: 'hello',
 	type: [ComponentType.BUTTON],
 	run: (ctx) => {
 		return ctx.reply(`Hello again ${ctx.username}!`);
@@ -9,7 +10,8 @@ new Component('hello', {
 
 new class extends Component {
 	constructor() {
-		super('hello', {
+		super({
+			name: 'hello',
 			type: [ComponentType.BUTTON],
 		});
 	}
