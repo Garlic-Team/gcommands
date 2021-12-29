@@ -2,6 +2,7 @@ import {Command, CommandArgument, CommandArgumentChoice} from '../structures/Com
 import {AutocompleteContext} from '../structures/AutocompleteContext';
 import Logger from 'js-logger';
 import {ResolveValidationErrorLocate} from '../util/ResolveValidationErrorLocate';
+import {ResolveArgumentOptions} from '../util/ResolveArgumentOptions';
 
 export enum ArgumentType {
 	'SUB_COMMAND' = 1,
@@ -54,6 +55,20 @@ export class Argument {
 		if (typeof this.type === 'string' && Object.keys(ArgumentType).includes(this.type)) this.type = ArgumentType[this.type];
 	}
 
+	public static toAPIArgument(argument: Argument | CommandArgument): Record<string, any> {
+		if (argument.type === (ArgumentType.SUB_COMMAND || ArgumentType.SUB_COMMAND_GROUP)) {
+			return argument.options ? {
+				...argument,
+				options: argument.options.map(a => Argument.toAPIArgument(a)),
+			} : argument;
+		}
+
+		return {
+			...ResolveArgumentOptions(argument),
+			autocomplete: typeof argument.run === 'function',
+		};
+	}
+
 	public static validate(argument: Argument | CommandArgument, command: Command): boolean | void {
 		const locate = ResolveValidationErrorLocate([
 			argument.name,
@@ -69,6 +84,7 @@ export class Argument {
 		else if (argument.choices && !argument.choices.every(choice => typeof choice.name === 'string' && typeof choice.value === 'string')) return Logger.warn('Argument choices must be a array of CommandArgumentChoice or undefined', locate);
 		else if (argument.options && !argument.options.every(option => Argument.validate(option, command))) return;
 		else if (argument.channelTypes && argument.type !== ArgumentType.CHANNEL) return Logger.warn('Argument options cannot have the channelTypes property if argument type is not a channel', locate);
+		else if (argument.channelTypes && !argument.channelTypes.every(channelType => Object.values(ChannelType).includes(channelType))) return Logger.warn('Argument channelTypes must be a array of ChannelType or undefined', locate);
 		else return true;
 	}
 }

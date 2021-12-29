@@ -114,6 +114,20 @@ export class Command {
 		return Commands.get(this.name);
 	}
 
+	public toAPICommand(): Array<Record<string, any>> {
+		return this.type.filter(type => type !== CommandType.MESSAGE).map(type => {
+			if (type === CommandType.SLASH) return {
+				name: this.name,
+				description: this.description,
+				options: this.arguments?.map(argument => Argument.toAPIArgument(argument)),
+				type: type,
+			}; else return {
+				name: this.name,
+				type: type,
+			};
+		});
+	}
+
 	public static validate(command: Command): boolean | void {
 		const locate = ResolveValidationErrorLocate([
 			command.name,
