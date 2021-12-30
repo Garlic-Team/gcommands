@@ -2,7 +2,7 @@ import {AutoDeferType, GClient} from '../GClient';
 import {ComponentContext} from './ComponentContext';
 import {Components} from '../managers/ComponentManager';
 import Logger from 'js-logger';
-import {ResolveValidationErrorLocate} from '../util/ResolveValidationErrorLocate';
+import {Util} from '../util/Util';
 
 export enum ComponentType {
 	'BUTTON' = 1,
@@ -90,21 +90,21 @@ export class Component {
 	}
 
 	public static validate(component: Component): boolean | void {
-		const locate = ResolveValidationErrorLocate([
+		const trace = Util.resolveValidationErrorTrace([
 			component.name,
 			component.fileName,
 		]);
 
-		if (!component.name) return Logger.warn('Component must have a name');
-		else if (typeof component.name !== 'string') return Logger.warn('Component name must be a string');
-		else if (!Array.isArray(component.type) || !component.type.every(type => Object.values(ComponentType).includes(type))) return Logger.warn('Component type must be a array of ComponentType', locate);
-		else if (!component.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Component inhibitors must be a array of functions/object with run function or undefined', locate);
-		else if (component.guildId && typeof component.guildId !== 'string') return Logger.warn('Component guildId must be a string or undefined', locate);
-		else if (component.cooldown && typeof component.cooldown !== 'string') return Logger.warn('Component cooldown must be a string or undefined', locate);
-		else if (component.autoDefer && !Object.values(AutoDeferType).includes(component.autoDefer)) return Logger.warn('Component autoDefer must be one of AutoDeferType or undefined', locate);
-		else if (component.fileName && typeof component.fileName !== 'string') return Logger.warn('Component filePath must be a string or undefined', locate);
-		else if (typeof component.run !== 'function') return Logger.warn('Component must have a run function', locate);
-		else if (component.onError && typeof component.onError !== 'function') return Logger.warn('Component onError must be a function or undefined', locate);
+		if (!component.name) return Logger.warn('Component must have a name', trace);
+		else if (typeof component.name !== 'string') return Logger.warn('Component name must be a string', trace);
+		else if (!Array.isArray(component.type) || !component.type.every(type => Object.values(ComponentType).includes(type))) return Logger.warn('Component type must be a array of ComponentType', trace);
+		else if (!component.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Component inhibitors must be a array of functions/object with run function or undefined', trace);
+		else if (component.guildId && typeof component.guildId !== 'string') return Logger.warn('Component guildId must be a string or undefined', trace);
+		else if (component.cooldown && typeof component.cooldown !== 'string') return Logger.warn('Component cooldown must be a string or undefined', trace);
+		else if (component.autoDefer && !Object.values(AutoDeferType).includes(component.autoDefer)) return Logger.warn('Component autoDefer must be one of AutoDeferType or undefined', trace);
+		else if (component.fileName && typeof component.fileName !== 'string') return Logger.warn('Component filePath must be a string or undefined', trace);
+		else if (typeof component.run !== 'function') return Logger.warn('Component must have a run function', trace);
+		else if (component.onError && typeof component.onError !== 'function') return Logger.warn('Component onError must be a function or undefined', trace);
 		else return true;
 	}
 }

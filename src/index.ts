@@ -20,6 +20,7 @@ export * from './lib/structures/CommandContext';
 export * from './lib/structures/ComponentContext';
 export * from './lib/structures/AutocompleteContext';
 export * from './lib/structures/ArgumentResolver';
+export * from './lib/structures/Argument';
 
 // Managers
 export {Plugins, PluginManager} from './lib/managers/PluginManager';
@@ -45,9 +46,6 @@ Logger.useDefaults({
 	}
 });
 export {Logger};
-
-// Arguments
-export * from './lib/arguments/Argument';
 
 // Inhibitors
 export * from './inhibitors/NsfwInhibitor';

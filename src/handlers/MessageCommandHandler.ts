@@ -2,7 +2,7 @@ import {Collection, Message} from 'discord.js';
 import {GClient} from '../lib/GClient';
 import {CommandContext} from '../lib/structures/CommandContext';
 import {CommandType} from '../lib/structures/Command';
-import {ArgumentType} from '../lib/arguments/Argument';
+import {ArgumentType} from '../lib/structures/Argument';
 import {Commands} from '../lib/managers/CommandManager';
 import {Handlers} from '../lib/managers/HandlerManager';
 import Logger from 'js-logger';

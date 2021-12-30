@@ -22,7 +22,7 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 	});
 }
 
-export async function Sync(client: GClient) {
+export async function sync(client: GClient) {
 	if (Commands.size === 0) return;
 
 	const [guild, global] = Commands.partition(command => typeof command.guildId === 'string');

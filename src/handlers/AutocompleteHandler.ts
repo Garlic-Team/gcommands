@@ -1,7 +1,7 @@
 import {AutocompleteInteraction} from 'discord.js';
 import {CommandArgument} from '../lib/structures/Command';
 import {AutocompleteContext} from '../lib/structures/AutocompleteContext';
-import {Argument} from '../lib/arguments/Argument';
+import {Argument} from '../lib/structures/Argument';
 import {Commands} from '../lib/managers/CommandManager';
 import Logger from 'js-logger';
 

@@ -1,7 +1,5 @@
 import {Channel, GuildMember, Role, User} from 'discord.js';
-import {ArgumentsToObject} from '../util/ArgumentsToObject';
-import {ArgumentsToArray} from '../util/ArgumentsToArray';
-import {StringToBoolean} from '../util/StringToBoolean';
+import {Util} from '../util/Util';
 
 export class ArgumentResolver {
 	public options: Array<any>;
@@ -13,8 +11,8 @@ export class ArgumentResolver {
 	public constructor(options) {
 		this.options = options;
 
-		this.object = ArgumentsToObject(options);
-		this.array = ArgumentsToArray(options);
+		this.object = Util.argumentsToObject(options);
+		this.array = Util.argumentsToArray(options);
 
 		if (options[0]?.type === 'SUB_COMMAND_GROUP') {
 			this.subcommandgroup = options[0].name;
@@ -46,7 +44,7 @@ export class ArgumentResolver {
 	public getBoolean(name: string): boolean {
 		const argument = this.get(name, 'value');
 
-		return argument ? StringToBoolean(argument) : undefined;
+		return argument ? Util.stringToBoolean(argument) : undefined;
 	}
 
 	public getUser(name: string): User {

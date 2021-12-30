@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {ResolveFile} from '../util/ResolveFile';
+import {Util} from '../util/Util';
 
 export async function DirectoryLoader(dir: string): Promise<Array<any>> {
 	let files = [];
@@ -17,7 +17,7 @@ export async function DirectoryLoader(dir: string): Promise<Array<any>> {
 			}
 
 			const file = await import(path.join(dir, rawFileName));
-			if (file) files.push(ResolveFile(file, fileType));
+			if (file) files.push(Util.resolveFile(file, fileType));
 		}
 
 		return files;

@@ -2,7 +2,7 @@ import {BaseContext, BaseContextOptions} from './BaseContext';
 import {GClient} from '../GClient';
 import {CommandArgument, CommandArgumentChoice} from './Command';
 import {AutocompleteInteraction} from 'discord.js';
-import {Argument} from '../arguments/Argument';
+import {Argument} from './Argument';
 
 export interface AutocompleteContextOptions extends BaseContextOptions {
 	interaction: AutocompleteInteraction;

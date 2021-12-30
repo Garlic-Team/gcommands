@@ -1,10 +1,10 @@
 import {AutoDeferType, GClient} from '../GClient';
-import {Argument, ArgumentType, ChannelType} from '../arguments/Argument';
+import {Argument, ArgumentType, ChannelType} from './Argument';
 import {CommandContext} from './CommandContext';
 import {AutocompleteContext} from './AutocompleteContext';
 import {Commands} from '../managers/CommandManager';
 import Logger from 'js-logger';
-import {ResolveValidationErrorLocate} from '../util/ResolveValidationErrorLocate';
+import {Util} from '../util/Util';
 
 export enum CommandType {
 	'MESSAGE' = 0,
@@ -129,23 +129,23 @@ export class Command {
 	}
 
 	public static validate(command: Command): boolean | void {
-		const locate = ResolveValidationErrorLocate([
+		const trace = Util.resolveValidationErrorTrace([
 			command.name,
 			command.fileName,
 		]);
 
-		if (!command.name) return Logger.warn('Command must have a name', locate);
-		else if (typeof command.name !== 'string') return Logger.warn('Command name must be a string', locate);
-		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command description must be a string', locate);
-		else if (!Array.isArray(command.type) || !command.type.every(type => Object.values(CommandType).includes(type))) return Logger.warn('Command type must be a array of CommandType', locate);
+		if (!command.name) return Logger.warn('Command must have a name', trace);
+		else if (typeof command.name !== 'string') return Logger.warn('Command name must be a string', trace);
+		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command description must be a string', trace);
+		else if (!Array.isArray(command.type) || !command.type.every(type => Object.values(CommandType).includes(type))) return Logger.warn('Command type must be a array of CommandType', trace);
 		else if (command.arguments && !command.arguments.every(argument => Argument.validate(argument, command))) return;
-		else if (command.inhibitors.length >= 1 && command.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Command inhibitors must be a array of functions/object with run function or undefined', locate);
-		else if (command.guildId && typeof command.guildId !== 'string') return Logger.warn('Command guildId must be a string or undefined', locate);
-		else if (command.cooldown && typeof command.cooldown !== 'string') return Logger.warn('Command cooldown must be a string or undefined', locate);
-		else if (command.autoDefer && !Object.values(AutoDeferType).includes(command.autoDefer)) return Logger.warn('Command autoDefer must be one of AutoDeferType or undefined', locate);
-		else if (command.fileName && typeof command.fileName !== 'string') return Logger.warn('Command filePath must be a string or undefined', locate);
-		else if (typeof command.run !== 'function') return Logger.warn('Command must have a run function', locate);
-		else if (command.onError && typeof command.onError !== 'function') return Logger.warn('Command onError must be a function or undefined', locate);
+		else if (command.inhibitors.length >= 1 && command.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Command inhibitors must be a array of functions/object with run function or undefined', trace);
+		else if (command.guildId && typeof command.guildId !== 'string') return Logger.warn('Command guildId must be a string or undefined', trace);
+		else if (command.cooldown && typeof command.cooldown !== 'string') return Logger.warn('Command cooldown must be a string or undefined', trace);
+		else if (command.autoDefer && !Object.values(AutoDeferType).includes(command.autoDefer)) return Logger.warn('Command autoDefer must be one of AutoDeferType or undefined', trace);
+		else if (command.fileName && typeof command.fileName !== 'string') return Logger.warn('Command filePath must be a string or undefined', trace);
+		else if (typeof command.run !== 'function') return Logger.warn('Command must have a run function', trace);
+		else if (command.onError && typeof command.onError !== 'function') return Logger.warn('Command onError must be a function or undefined', trace);
 		else return true;
 	}
 }

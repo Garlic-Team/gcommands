@@ -1,7 +1,7 @@
 import {GClient} from '../GClient';
 import {Plugins} from '../managers/PluginManager';
 import Logger from 'js-logger';
-import {ResolveValidationErrorLocate} from '../util/ResolveValidationErrorLocate';
+import {Util} from '../util/Util';
 
 export class Plugin {
 	public readonly name: string;
@@ -15,13 +15,13 @@ export class Plugin {
 	}
 
 	public static validate(plugin: Plugin): boolean | void {
-		const locate = ResolveValidationErrorLocate([
+		const trace = Util.resolveValidationErrorTrace([
 			plugin.name,
 		]);
 
-		if (!plugin.name) return Logger.warn('Plugin must have a name', locate);
-		else if (typeof plugin.name !== 'string') return Logger.warn('Plugin name must be a string', locate);
-		else if (typeof plugin.run !== 'function') return Logger.warn('Plugin must have run a function', locate);
+		if (!plugin.name) return Logger.warn('Plugin must have a name', trace);
+		else if (typeof plugin.name !== 'string') return Logger.warn('Plugin name must be a string', trace);
+		else if (typeof plugin.run !== 'function') return Logger.warn('Plugin must have run a function', trace);
 		else return true;
 	}
 }
