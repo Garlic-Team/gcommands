@@ -10,7 +10,6 @@ export class ComponentManager extends Collection<string, Component> {
 	public register(component: Component): ComponentManager {
 		if (component instanceof Component) {
 			if (this.has(component.name) && !this.get(component.name)?.reloading) Logger.warn('Overwriting component', component.name);
-			if (!Component.validate(component)) return;
 			if (this.client) component.initialize(this.client);
 			if (Plugins.currentlyLoading) component.owner = Plugins.currentlyLoading;
 			this.set(component.name, component);

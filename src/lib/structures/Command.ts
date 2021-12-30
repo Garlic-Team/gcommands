@@ -55,29 +55,29 @@ export class Command {
 	public readonly arguments?: Array<CommandArgument | Argument>;
 	public readonly inhibitors: CommandInhibitors = [];
 	public guildId?: string;
-	public cooldown?: string;
-	public autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
+	private static defaults?: Partial<CommandOptions>;
+	public readonly cooldown?: string;
 	public readonly fileName?: string;
 	public readonly run: (ctx: CommandContext) => any;
 	public readonly onError?: (ctx: CommandContext, error: any) => any;
 	public owner?: string;
 	public reloading = false;
+	public readonly autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
 
 	public constructor(options: CommandOptions) {
+		Object.assign(this, Command.defaults);
 		Object.assign(this, options);
 
 		if (Array.isArray(this.type)) this.type = this.type.map(type => typeof type === 'string' && Object.keys(CommandType).includes(type) ? CommandType[type] : type);
 		if (typeof this.autoDefer === 'string' && Object.keys(AutoDeferType).includes(this.autoDefer)) this.autoDefer = AutoDeferType[this.autoDefer];
 
-		Commands.register(this);
+		if (this.validate()) Commands.register(this);
 	}
 
 	public initialize(client: GClient): void {
 		this.client = client;
 
 		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
-		if (!this.cooldown && client.options?.cooldown) this.cooldown = client.options.cooldown;
-		if (!this.autoDefer && client.options?.autoDefer) this.autoDefer = client.options.autoDefer;
 	}
 
 	public unregister(): Command {
@@ -128,24 +128,28 @@ export class Command {
 		});
 	}
 
-	public static validate(command: Command): boolean | void {
+	public static setDefaults(defaults: Partial<CommandOptions>): void {
+		Command.defaults = defaults;
+	}
+
+	private validate(): boolean | void {
 		const trace = Util.resolveValidationErrorTrace([
-			command.name,
-			command.fileName,
+			this.name,
+			this.fileName,
 		]);
 
-		if (!command.name) return Logger.warn('Command must have a name', trace);
-		else if (typeof command.name !== 'string') return Logger.warn('Command name must be a string', trace);
-		else if (command.description && typeof command.description !== 'string') return Logger.warn('Command description must be a string', trace);
-		else if (!Array.isArray(command.type) || !command.type.every(type => Object.values(CommandType).includes(type))) return Logger.warn('Command type must be a array of CommandType', trace);
-		else if (command.arguments && !command.arguments.every(argument => Argument.validate(argument, command))) return;
-		else if (command.inhibitors.length >= 1 && command.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Command inhibitors must be a array of functions/object with run function or undefined', trace);
-		else if (command.guildId && typeof command.guildId !== 'string') return Logger.warn('Command guildId must be a string or undefined', trace);
-		else if (command.cooldown && typeof command.cooldown !== 'string') return Logger.warn('Command cooldown must be a string or undefined', trace);
-		else if (command.autoDefer && !Object.values(AutoDeferType).includes(command.autoDefer)) return Logger.warn('Command autoDefer must be one of AutoDeferType or undefined', trace);
-		else if (command.fileName && typeof command.fileName !== 'string') return Logger.warn('Command filePath must be a string or undefined', trace);
-		else if (typeof command.run !== 'function') return Logger.warn('Command must have a run function', trace);
-		else if (command.onError && typeof command.onError !== 'function') return Logger.warn('Command onError must be a function or undefined', trace);
+		if (!this.name) return Logger.warn('Command must have a name', trace);
+		else if (typeof this.name !== 'string') return Logger.warn('Command name must be a string', trace);
+		else if (this.description && typeof this.description !== 'string') return Logger.warn('Command description must be a string', trace);
+		else if (!Array.isArray(this.type) || !this.type.every(type => Object.values(CommandType).includes(type))) return Logger.warn('Command type must be a array of CommandType', trace);
+		else if (this.arguments && !this.arguments.every(argument => Argument.validate(argument, this))) return;
+		else if (this.inhibitors.length >= 1 && this.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')) return Logger.warn('Command inhibitors must be a array of functions/object with run function or undefined', trace);
+		else if (this.guildId && typeof this.guildId !== 'string') return Logger.warn('Command guildId must be a string or undefined', trace);
+		else if (this.cooldown && typeof this.cooldown !== 'string') return Logger.warn('Command cooldown must be a string or undefined', trace);
+		else if (this.autoDefer && !Object.values(AutoDeferType).includes(this.autoDefer)) return Logger.warn('Command autoDefer must be one of AutoDeferType or undefined', trace);
+		else if (this.fileName && typeof this.fileName !== 'string') return Logger.warn('Command filePath must be a string or undefined', trace);
+		else if (typeof this.run !== 'function') return Logger.warn('Command must have a run function', trace);
+		else if (this.onError && typeof this.onError !== 'function') return Logger.warn('Command onError must be a function or undefined', trace);
 		else return true;
 	}
 }

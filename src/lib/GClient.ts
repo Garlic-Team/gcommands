@@ -18,8 +18,6 @@ export interface GClientOptions extends ClientOptions {
 	dir?: string;
 	dirs?: Array<string>;
 	devGuildId?: string;
-	cooldown?: string;
-	autoDefer?: AutoDeferType;
 }
 
 // TODO Add interface for database
