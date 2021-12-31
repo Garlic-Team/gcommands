@@ -4,6 +4,7 @@ import {
 	CommandInteraction,
 	ContextMenuInteraction,
 	GuildCacheMessage,
+	Interaction,
 	InteractionDeferReplyOptions,
 	InteractionReplyOptions,
 	Message,
@@ -35,13 +36,21 @@ export class CommandContext extends BaseContext {
 	public readonly commandName: string;
 	public readonly arguments: ArgumentResolver;
 	public reply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | GuildCacheMessage<CacheType> | void>;
-	public editReply?: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
-	public deleteReply?: () => Promise<void>;
+	public editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<Message | APIMessage>;
+	public deleteReply: () => Promise<void>;
 	public followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<Message | APIMessage | void>;
-	public deferReply?: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
+	public deferReply: (options?: InteractionDeferReplyOptions) => Promise<Message | APIMessage | void>;
 
 	constructor(client: GClient, options: CommandContextOptions) {
 		super(client, options);
+	}
+
+	public isInteraction(): this is CommandContext & { readonly interaction: CommandInteraction | ContextMenuInteraction, readonly message: null } {
+		return Boolean(this.interaction instanceof Interaction);
+	}
+
+	public isMessage(): this is CommandContext & { readonly message: Message, readonly interaction: null } {
+		return Boolean(this.message instanceof Message);
 	}
 
 	public static createWithInteraction(interaction: CommandInteraction | ContextMenuInteraction, command: Command): CommandContext {

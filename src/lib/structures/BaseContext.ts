@@ -35,7 +35,7 @@ export class BaseContext {
 		Object.assign(this, options);
 	}
 
-	public static createBaseWithInteraction(interaction: Interaction) {
+	static createBaseWithInteraction(interaction: Interaction) {
 		return new this(interaction.client as GClient, {
 			guild: interaction.guild,
 			guildId: interaction.guildId,
@@ -49,5 +49,13 @@ export class BaseContext {
 			createdAt: interaction.createdAt,
 			createdTimestamp: interaction.createdTimestamp,
 		});
+	}
+
+	public inGuild(): this is BaseContext & { readonly guildId: Snowflake, readonly member: GuildMember, readonly memberPermissions: Permissions } {
+		return Boolean(this.guildId && this.member);
+	}
+
+	public inCachedGuild(): this is BaseContext & { readonly guild: Guild, readonly guildId: Snowflake, readonly member: GuildMember, readonly memberPermissions: Permissions } {
+		return Boolean(this.guild && this.member);
 	}
 }
