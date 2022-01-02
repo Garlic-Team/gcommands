@@ -177,7 +177,7 @@
         "indonesian": "Anda tidak punya waktu lagi untuk menjawab. Anda harus menjalankan command ini lagi.",
         "italian": "Non ti resta nessun tempo per rispondere. Devi usare il comando di nuovo.",
         "french": "Le temps de réponse est dépassé. Vous devez relancer la commande.",
-        "nederlands": "Je tijd om deze vraag te beantwoorden is op. Voer het command opnieuw uit."
+        "nederlands": "Je tijd om deze vraag te beantwoorden is op. Voer het commando opnieuw uit."
     },        
     "ARGS_MUST_CONTAIN": {
         "english": "The argument `{argument}` must contain a {type}.",
