@@ -147,7 +147,7 @@
         "indonesian": "Anda hanya bisa menjalankan command ini di sebuah channel NSFW saja.",
         "italian": "Puoi usare questo comando solo in canali da NSFW.",
         "french": "Vous ne pouvez lancer cette commande que dans les salons NSFW.",
-        "nederlands": "Je kan dit command alleen gebruiken in nsfw kanalen."
+        "nederlands": "Je kan dit commando alleen gebruiken in nsfw kanalen."
     },
     "ARGS_PROMPT": {
         "english": "Please define argument {argument}",
