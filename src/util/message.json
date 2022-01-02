@@ -57,7 +57,7 @@
         "indonesian": "Anda tidak memiliki salah satu peran yang diperlukan untuk menggunakan command ini! Anda memerlukan salah satu peran dari yang berikut: {ROLES}",
         "italian": "Non hai uno dei ruoli richiesti per usare questo comando! Hai bisogno di uno dei seguenti: {ROLES}",
         "french": "Vous n'avez pas le rôle requis pour utiliser cette commande ! Vous avez besoin d'un des rôles suivants: {ROLES}",
-        "nederlands": "Je hebt geen van de vereiste roles om dit command te kunnen gebruiken! Je hebt een van de volgende rollen nodig: {ROLES}"
+        "nederlands": "Je hebt geen van de vereiste rollen om dit commando te kunnen gebruiken! Je hebt een van de volgende rollen nodig: {ROLES}"
     },
     "COOLDOWN": {
         "english": "You must wait {COOLDOWN} before using that command again.",
