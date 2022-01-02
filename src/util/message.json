@@ -102,7 +102,7 @@
         "indonesian": "Anda hanya bisa menjalankan command di channel teks saja.",
         "italian": "Puoi usare questo comando solo in canali da testo.",
         "french": "Vous ne pouvez lancer cette commande que dans les salons textuels.",
-        "nederlands": "Je kan dit command alleen gebruiken in text kanalen."
+        "nederlands": "Je kan dit commando alleen gebruiken in text kanalen."
     },
     "CHANNEL_NEWS_ONLY": {
         "english": "You can only run this command in news channels.",
