@@ -72,7 +72,7 @@
         "indonesian": "Anda harus menunggu {COOLDOWN} lagi sebelum menggunakan command itu lagi.",
         "italian": "Devi aspettare ancora {COOLDOWN} prima di usare questo comando di nuovo.",
         "french": "Vous devez patienter {COOLDOWN} avant de réutiliser cette commande.",
-        "nederlands": "Je moet {COOLDOWN} wachten voor je dat command opnieuw kan gebruiken."
+        "nederlands": "Je moet {COOLDOWN} wachten voor je dat commando opnieuw kan gebruiken."
     },
     "UNKNOWN_COMMAND": {
         "english": "Could not find command {COMMAND}!",
