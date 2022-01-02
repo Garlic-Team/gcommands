@@ -27,7 +27,7 @@
         "indonesian": "Anda harus memiliki izin {PERMISSION} untuk menggunakan command ini.",
         "italian": "Devi avere il permesso {PERMISSION} per usare questo comando.",
         "french": "Vous devez disposer de l'autorisation {PERMISSION} pour utiliser cette commande.",
-        "nederlands": "Je moet de {PERMISSION} permissie hebben om dit command te gebruiken."
+        "nederlands": "Je moet de {PERMISSION} permissie hebben om dit commando te gebruiken."
     },
     "MISSING_CLIENT_PERMISSIONS": {
         "english": "The client must have {PERMISSION} permission to use this command.",
