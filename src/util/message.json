@@ -87,7 +87,7 @@
         "indonesian": "Tidak bisa mencari command {COMMAND}!",
         "italian": "Non è stato possibile trovare il comando {COMMAND}!",
         "french": "Impossible de trouver la commande {COMMAND} !",
-        "nederlands": "Het command {COMMAND} is niet gevonden!"
+        "nederlands": "Het commando {COMMAND} is niet gevonden!"
     },
     "CHANNEL_TEXT_ONLY": {
         "english": "You can only run this command in text channels.",
