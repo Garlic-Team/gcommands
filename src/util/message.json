@@ -237,6 +237,6 @@
         "indonesian": "Silakan pilih salah satu dari sub-perintah berikut: {choices}.",
         "italian": "Seleziona uno dei seguenti sottocomandi: {choices}.",
         "french": "Veuillez sélectionner l'une des sous-commandes suivantes: {choices}.",
-        "nederlands": "Kies aub een van de volgende subcommands: {choices}."
+        "nederlands": "Kies aub een van de volgende subcommando's: {choices}."
     }
 }
