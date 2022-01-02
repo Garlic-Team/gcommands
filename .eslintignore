@@ -3,3 +3,4 @@ test/
 *.js
 *.js.map
 dist/
+.github/
