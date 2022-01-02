@@ -117,7 +117,7 @@
         "indonesian": "Anda hanya bisa menjalankan command ini di channel berita saja.",
         "italian": "Puoi usare questo comando solo in canali da notizie.",
         "french": "Vous ne pouvez lancer cette commande que dans les salons d'information.",
-        "nederlands": "Je kan dit command alleen gebruiken in nieuws kanalen."
+        "nederlands": "Je kan dit commando alleen gebruiken in nieuws kanalen."
     },
     "CHANNEL_THREAD_ONLY": {
         "english": "You can only run this command in threads.",
