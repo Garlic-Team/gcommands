@@ -70,6 +70,12 @@ declare module 'discord.js' {
     guildPartnerUpdate: [Guild, Boolean, Boolean];
     guildVerifyUpdate: [Guild, Boolean, Boolean];
 
+    threadStateUpdate: [ThreadChannel, ThreadChannel];
+    threadNameUpdate: [ThreadChannel, string, string];
+    threadLockStateUpdate: [ThreadChannel, ThreadChannel];
+    threadRateLimitPerUserUpdate: [ThreadChannel, Number, Number];
+    threadAutoArchiveDurationUpdate: [ThreadChannel, Number, Number];
+
     voiceChannelJoin: [Channel, VoiceState];
     voiceChannelLeave: [Channel, VoiceState];
     voiceChannelSwitch: [Channel, Channel, VoiceState];
@@ -125,33 +131,6 @@ declare module 'gcommands' {
     }
   }
 
-  export class MessageComponentInteraction extends GInteraction {
-    public id: string;
-    public clicker: InteractionEventClicker;
-    public componentType: number;
-
-    public message: Message;
-  }
-
-  export class ButtonInteraction extends MessageComponentInteraction {
-    constructor(client: Client, data: object)
-  }
-
-  export class SelectMenuInteraction extends MessageComponentInteraction {
-    constructor(client: Client, data: object)
-
-    public values: Array<string>;
-  }
-
-  export class CommandInteraction extends GInteraction {
-    constructor(client: Client, data: object)
-
-    public commandId: Snowflake;
-    public commandName: string;
-    public arrayArguments: Array;
-    public objectArguments: Object;
-  }
-
   export class Color {
     constructor(text: string, options: object)
     public text: string;
@@ -159,34 +138,6 @@ declare module 'gcommands' {
 
     public getText(): string | object;
     public getRGB(): string | object;
-  }
-
-  export class ButtonCollector extends Collector<Snowflake, Message> {
-    constructor(message: Object | Message, filter: Function, options: MessageCollectorOptions)
-    private _handleChannelDeletion(channel: GuildChannel): void;
-    private _handleGuildDeletion(guild: Guild): void;
-
-    public channel: Channel;
-    public options: MessageCollectorOptions;
-    public received: number;
-
-    public collect(message: Message): Snowflake;
-    public dispose(message: Message): Snowflake;
-    public get endReason(): string;
-  }
-
-  export class SelectMenuCollector extends Collector<Snowflake, Message> {
-    constructor(message: Object | Message, filter: Function, options: MessageCollectorOptions)
-    private _handleChannelDeletion(channel: GuildChannel): void;
-    private _handleGuildDeletion(guild: Guild): void;
-
-    public channel: Channel;
-    public options: MessageCollectorOptions;
-    public received: number;
-
-    public collect(message: Message): Snowflake;
-    public dispose(message: Message): Snowflake;
-    public get endReason(): string;
   }
 
   export class CommandOptionsBuilder {
@@ -213,8 +164,7 @@ declare module 'gcommands' {
     public aliases: Array<string>;
     public category: string;
     public usage: string;
-    public slash: GCommandsOptionsCommandsSlash;
-    public context: GCommandsOptionsCommandsContext;
+    public type: CommandType[];
 
     public setName(name: string): CommandOptionsBuilder;
     public setContextMenuName(name: string): CommandOptionsBuilder;
@@ -237,8 +187,7 @@ declare module 'gcommands' {
     public setAliases(aliases: Array<string>): CommandOptionsBuilder;
     public setCategory(category: string): CommandOptionsBuilder;
     public setUsage(usage: string): CommandOptionsBuilder;
-    public setSlash(slash: GCommandsOptionsCommandsSlash): CommandOptionsBuilder;
-    public setContext(context: GCommandsOptionsCommandsContext): CommandOptionsBuilder;
+    public setType(type: CommandType[]): CommandOptionsBuilder;
     public toJSON(): CommandOptionsBuilder;
   }
 
@@ -257,7 +206,7 @@ declare module 'gcommands' {
 
     public setName(name: String): CommandArgsOptionBuilder;
     public setDescription(description: String): CommandArgsOptionBuilder;
-    public setType(type: String): CommandArgsOptionBuilder;
+    public setType(type: CommandType): CommandArgsOptionBuilder;
     public setPrompt(prompt: String): CommandArgsOptionBuilder;
     public setRequired(required: Boolean): CommandArgsOptionBuilder;
     public setChannelTypes(channelTypes: Array<ArgumentChannelTypes>): CommandArgsOptionBuilder;
@@ -293,70 +242,11 @@ declare module 'gcommands' {
     NUMBER
   }
 
-  export class MessageActionRow {
-    constructor(data: MessageActionRow)
-    public type: number;
-    public components: object;
-
-    public addComponent(component: MessageButton | MessageSelectMenu)
-    public addComponents(...components: MessageButton[] | MessageSelectMenu[])
-    public removeComponents(index: number, deleteCount: number, ...options: MessageButton[] | MessageSelectMenu[])
-  }
-
-  type MessageButtonStyle = 'green' | 'red' | 'gray' | 'blurple' | 'url'
-  export class MessageButton {
-    constructor(data: MessageButton)
-    public style: MessageButtonStyle;
-    public label: string;
-    public url: string;
-    public custom_id: string;
-    public emoji: object;
-    public type: number;
-    public disabled: boolean;
-
-    public setStyle(style: MessageButtonStyle): MessageButton;
-    public setLabel(label: string): MessageButton;
-    public setEmoji(emoji: string): MessageButton;
-    public setURL(url: string): MessageButton;
-    public setDisabled(disabled: boolean): MessageButton;
-    public setCustomId(id: string): MessageButton;
-    public toJSON(): MessageButton;
-  }
-
-  export class MessageSelectMenu {
-    constructor(data: MessageSelectMenu)
-    public placeholder: string;
-    public max_values: number;
-    public min_values: number;
-    public custom_id: string;
-    public options: object;
-
-    public setPlaceholder(placeholder: string): MessageSelectMenu;
-    public setMaxValues(max: number): MessageSelectMenu;
-    public setMinValues(min: number): MessageSelectMenu;
-    public setCustomId(id: string): MessageSelectMenu;
-    public setDisabled(disabled: boolean): MessageSelectMenu;
-    public addOption(option: MessageSelectMenuOption)
-    public addOptions(...options: MessageSelectMenuOption[])
-    public removeOptions(index: number, deleteCount: number, ...options: MessageSelectMenuOption[])
-    public toJSON(): MessageSelectMenu;
-  }
-
-  export class MessageSelectMenuOption {
-    constructor(data: MessageSelectMenuOption)
-    public label: string;
-    public value: string;
-    public description: string;
-    public custom_id: string;
-    public emoji: object;
-    public default: boolean;
-
-    public setLabel(label: string): MessageSelectMenuOption;
-    public setValue(value: string): MessageSelectMenuOption;
-    public setDescription(value: string): MessageSelectMenuOption;
-    public setEmoji(emoji: string): MessageSelectMenuOption;
-    public setDefault(disabled: boolean): MessageSelectMenuOption;
-    public toJSON(): MessageSelectMenuOption;
+  export enum CommandType {
+    SLASH,
+    CONTEXT_USER,
+    CONTEXT_MESSAGE,
+    MESSAGE
   }
 
   export class GCommandsDispatcher {
@@ -422,8 +312,7 @@ declare module 'gcommands' {
     public aliases: Array<string>;
     public category: string;
     public usage: string;
-    public slash: GCommandsOptionsCommandsSlash;
-    public context: GCommandsOptionsCommandsContext;
+    public type: CommandType[];
 
     public run(options: CommandRunOptions): void;
   }
@@ -450,19 +339,6 @@ declare module 'gcommands' {
     public setOnce(): EventOptionsBuilder;
     public setWs(): EventOptionsBuilder;
     public toJSON(): EventOptionsBuilder;
-  }
-
-  export class GPayload {
-    constructor(channel: TextChannel | NewsChannel | DMChannel | ThreadChannel, options: String | GPayloadOptions)
-
-    public channel: TextChannel | NewsChannel | DMChannel | ThreadChannel;
-    public options: GPayloadOptions;
-    public data: GPayloadOptions;
-    public files: GPayloadFiles;
-
-    public create(channel: TextChannel | NewsChannel | DMChannel | ThreadChannel, options: String | GPayloadOptions): GPayload;
-    public resolveData(): GPayload;
-    public resolveFiles(): GPayload;
   }
 
   interface GEvents {
@@ -534,34 +410,6 @@ declare module 'gcommands' {
   interface CommandArgsChoice {
     name: string;
     value: string;
-  }
-
-  interface GPayloadOptions {
-    tts?: boolean;
-    nonce?: string;
-    content?: string;
-    ephemeral?: boolean;
-    inlineReply?: boolean | string;
-    allowedMentions?: MessageMentionOptions;
-    files?: MessageAttachment[];
-    embeds?: MessageEmbed[];
-    components?: MessageActionRow[];
-    stickers?: StickerResolvable[];
-    attachments?: MessageAttachment[];
-  }
-
-  interface GPayloadFiles {
-    files?: [MessageAttachment | MessageAttachment[]];
-    attachments?: [MessageAttachment | MessageAttachment[]];
-  }
-
-  interface MessageEditAndUpdateOptions {
-    content: string,
-    embeds?: MessageEmbed,
-    ephemeral?: boolean,
-    components?: MessageActionRow | MessageActionRow[],
-    attachments?: MessageAttachment | MessageAttachment[],
-    allowedMentions?: object
   }
 
   interface CommandOptions {

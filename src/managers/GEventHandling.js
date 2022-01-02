@@ -1,7 +1,8 @@
 const { readdirSync } = require('fs');
 const ArgumentsCollector = require('../structures/ArgumentsCollector');
-const { Events } = require('../util/Constants'), Color = require('../structures/Color');
+const { Events, CommandType } = require('../util/Constants'), Color = require('../structures/Color');
 const { inhibit, unescape, resolveMessageOptions } = require('../util/util');
+const GError = require('../structures/GError');
 
 /**
  * The handler for message and slash commands
@@ -75,13 +76,15 @@ class GEventHandling {
 
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
-                const isMessageEnabled = ['false', 'slash'].includes(String(commandos.slash));
-                const isClientMessageEnabled = !commandos.slash && ['false', 'slash'].includes(String(this.client.slash));
+                const isMessageEnabled = !commandos.type.includes(CommandType.MESSAGE);
+                const isClientMessageEnabled = !commandos.type.includes(CommandType.MESSAGE) && ['false', 'slash'].includes(String(this.client.slash));
 
                 if (!isNotDm && isDmEnabled) return;
                 if (!isNotDm && isClientDmEnabled) return;
                 if (isMessageEnabled) return;
                 if (isClientMessageEnabled) return;
+
+                let botMsg;
 
                 const runOptions = {
                     member: message.member,
@@ -94,7 +97,14 @@ class GEventHandling {
                     language: language,
                     command: commandos,
 
-                    respond: (options = undefined) => message.reply(resolveMessageOptions(options)),
+                    respond: async (options = undefined) => {
+                        botMsg = await message.reply(resolveMessageOptions(options));
+                    },
+                    edit: async (options = undefined) => {
+                        if (!botMsg) throw new GError('[NEED RESPOND]', 'Send a message before editing.');
+                        const editedMsg = await botMsg.edit(resolveMessageOptions(options));
+                        return editedMsg;
+                    },
                     followUp: (options = undefined) => message.reply(resolveMessageOptions(options)),
                 };
 
@@ -198,7 +208,7 @@ class GEventHandling {
         this.client.on('interactionCreate', async interaction => {
             if (!(interaction.isCommand() || interaction.isContextMenu())) return;
 
-            const isNotDm = interaction.channel.type !== 'dm';
+            const isNotDm = interaction.inGuild();
             const language = isNotDm ? await interaction.guild.getLanguage() : this.client.language;
 
             if (interaction.guild && !interaction.guild.available) {
@@ -219,9 +229,9 @@ class GEventHandling {
 
                 const isDmEnabled = ['false'].includes(String(commandos.allowDm));
                 const isClientDmEnabled = !commandos.allowDm && ['false'].includes(String(this.client.allowDm));
-                const isSlashEnabled = ['false', 'message'].includes(String(commandos.slash));
-                const isClientSlashEnabled = !commandos.slash && ['false', 'message'].includes(String(this.client.slash));
-                const isContextEnabled = String(commandos.context) === 'false';
+                const isSlashEnabled = !commandos.type.includes(CommandType.SLASH);
+                const isClientSlashEnabled = !commandos.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash));
+                const isContextEnabled = ![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => commandos.type.includes(type));
                 const isClientContextEnabled = String(this.client.context) === 'false';
 
                 if (!isNotDm && isDmEnabled) return;

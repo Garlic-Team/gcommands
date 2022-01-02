@@ -64,7 +64,7 @@ class Command {
          * Whether always obtain is enabled
          * @type {boolean}
          */
-         this.alwaysObtain = options.alwaysObtain ? Boolean(options.alwaysObtain) : false;
+        this.alwaysObtain = options.alwaysObtain ? Boolean(options.alwaysObtain) : false;
 
         /**
          * The permissions required by a user
@@ -133,16 +133,10 @@ class Command {
         this.nsfw = options.nsfw;
 
         /**
-         * Wheter this command should be a slash command
-         * @type {boolean}
+         * The command type
+         * @type {CommandType}
          */
-        this.slash = options.slash;
-
-        /**
-         * Wheter this command should be a context menu
-         * @type {GCommandsOptionsCommandsContext}
-         */
-        this.context = options.context;
+        this.type = options.type;
 
         /**
          * The aliases
@@ -203,11 +197,11 @@ class Command {
 
         if (newCommand.name !== this.name) throw new GError('[COMMAND]','Command name cannot change.');
 
-        const nglds = newCommand.guildOnly ? Array.isArray(newCommand.guildOnly) ? newCommand.guildOnly : Array(newCommand.guildOnly) : undefined;
+        const nglds = newCommand.guildOnly ? Array.isArray(newCommand.guildOnly) ? newCommand.guildOnly : Array(newCommand.guildOnly) : [];
 
-        const check1 = nglds.every((x, i) => x === this.guildOnly[i]);
-        const check2 = this.guildOnly.every((x, i) => x === nglds[i]);
-        if (!check1 || !check2) throw new GError('[COMMAND]','Command guildOnly cannot change.');
+        const check1 = nglds?.every((x, i) => x === this.guildOnly[i]);
+        const check2 = this?.guildOnly?.every((x, i) => x === nglds[i]) || [];
+        if (this.guildOnly && (!check1 || !check2)) throw new GError('[COMMAND]','Command guildOnly cannot change.');
 
         newCommand._path = cmdPath;
         this.client.gcommands.set(newCommand.name, newCommand);

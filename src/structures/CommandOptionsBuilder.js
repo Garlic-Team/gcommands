@@ -140,16 +140,10 @@ class CommandOptionsBuilder {
     this.nsfw = 'nsfw' in data ? Boolean(data.nsfw) : null;
 
     /**
-      * Wheter this command should be a slash command
-      * @type {boolean}
+     * The command type
+     * @type {CommandType}
      */
-    this.slash = 'slash' in data ? Boolean(data.slash) : null;
-
-    /**
-      * Wheter this command should be a context menu
-      * @type {string | boolean}
-     */
-    this.context = 'context' in data ? data.context : null;
+    this.type = 'type' in data ? data.type : null;
 
     return this.toJSON();
   }
@@ -160,15 +154,6 @@ class CommandOptionsBuilder {
   */
   setName(name) {
     this.name = resolveString(name);
-    return this;
-  }
-
-  /**
-   * Method to set context menu name
-   * @param {string} contextMenuName
-  */
-  setContextMenuName(contextMenuName) {
-    this.contextMenuName = resolveString(contextMenuName);
     return this;
   }
 
@@ -187,6 +172,15 @@ class CommandOptionsBuilder {
   */
   setUsage(usage) {
     this.usage = resolveString(usage);
+    return this;
+  }
+
+  /**
+   * Method to set type
+   * @param {CommandType[]} type
+  */
+  setType(type) {
+    this.type = type;
     return this;
   }
 
@@ -347,15 +341,6 @@ class CommandOptionsBuilder {
   }
 
   /**
-   * Method to set slash
-   * @param {boolean} slash
-  */
-  setSlash(slash) {
-    this.slash = Boolean(slash);
-    return this;
-  }
-
-  /**
    * Method to set context
    * @param {string | boolean} context
   */
@@ -386,8 +371,7 @@ class CommandOptionsBuilder {
       channelNewsOnly: this.channelNewsOnly,
       channelThreadOnly: this.channelThreadOnly,
       nsfw: this.nsfw,
-      slash: this.slash,
-      context: this.context,
+      type: this.type,
     };
   }
 }

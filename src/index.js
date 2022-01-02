@@ -1,9 +1,11 @@
 'use strict';
+const components = require('@gcommands/components');
+const events = require('@gcommands/events');
 
 module.exports = {
     // Root classes
     GCommandsClient: require('./base/GCommandsClient.js'),
-    GEventLoader: require('@gcommands/events').GEvents,
+    GEventLoader: events.GEvents,
     GCommandsDispatcher: require('./base/GCommandsDispatcher'),
 
     // Loaders
@@ -12,28 +14,28 @@ module.exports = {
     GDatabaseLoader: require('./managers/GDatabaseLoader'),
 
     // Components
-    Component: require('@gcommands/components').Component,
-    CustomId: require('@gcommands/components').CustomId,
-    ComponentType: require('@gcommands/components').ComponentType,
-    MessageButton: require('@gcommands/components').MessageButton,
-    MessageSelectMenu: require('@gcommands/components').MessageSelectMenu,
-    MessageActionRow: require('@gcommands/components').MessageActionRow,
+    Component: components.Component,
+    CustomId: components.CustomId,
+    ComponentType: components.ComponentType,
+    MessageButton: components.MessageButton,
+    MessageSelectMenu: components.MessageSelectMenu,
+    MessageActionRow: components.MessageActionRow,
 
     Command: require('./structures/Command'),
-    Event: require('@gcommands/events').Event,
+    Event: events.Event,
     GError: require('./structures/GError'),
 
     // Builders
     CommandOptionsBuilder: require('./structures/CommandOptionsBuilder'),
     CommandArgsOptionBuilder: require('./structures/CommandArgsOptionBuilder'),
     CommandArgsChoiceBuilder: require('./structures/CommandArgsChoiceBuilder'),
-    EventOptionsBuilder: require('@gcommands/events').EventOptionsBuilder,
+    EventOptionsBuilder: events.EventOptionsBuilder,
 
     // Other
     Color: require('./structures/Color'),
     Util: require('./util/util'),
     ArgumentType: require('./util/Constants').ArgumentType,
-    ButtonType: require('./util/Constants').ButtonType,
+    CommandType: require('./util/Constants').CommandType,
 
     version: require('../package.json').version,
 };

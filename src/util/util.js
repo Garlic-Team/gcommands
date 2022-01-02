@@ -1,6 +1,5 @@
-const Color = require('../structures/Color');
 const { Events } = require('./Constants');
-const Discord = require('discord.js');
+const { MessageEmbed, MessageAttachment, MessageActionRow, Sticker } = require('discord.js');
 
 /**
  * The Util class
@@ -13,44 +12,10 @@ class Util {
      * @returns {string}
     */
     static resolveString(data) {
+	    if (typeof data === 'undefined') return undefined;
         if (typeof data === 'string') return data;
         if (Array.isArray(data)) return data.join('\n');
         return String(data);
-    }
-
-    /**
-     * Internal method to convert ms to seconds
-     * @param {number} ms
-     * @returns {number}
-    */
-    static msToSeconds(ms) {
-        const seconds = ms / 1000;
-        return seconds;
-    }
-
-    /**
-     * Internal method to parse a emoji
-     * @param {string} text
-     * @returns {Object}
-    */
-    static parseEmoji(text) {
-        if (text.includes('%')) text = decodeURIComponent(text);
-        if (!text.includes(':')) return { animated: false, name: text, id: null };
-        const match = text.match(/<?(?:(a):)?(\w{2,32}):(\d{17,19})?>?/);
-        return match && { animated: Boolean(match[1]), name: match[2], id: match[3] || null };
-    }
-
-    /**
-     * Internal method to resolve a emoji without a client
-     * @param {EmojiIdentifierResolvable} emoji
-     * @returns {Object|null}
-     */
-     static resolvePartialEmoji(emoji) {
-        if (!emoji) return null;
-        if (typeof emoji === 'string') return /^\d{17,19}$/.test(emoji) ? { id: emoji } : Util.parseEmoji(emoji);
-        const { id, name, animated } = emoji;
-        if (!id && !name) return null;
-        return { id, name, animated };
     }
 
     /**
@@ -69,18 +34,18 @@ class Util {
         if (!Array.isArray(options)) options = [options];
 
         options.forEach(option => {
-        if (option instanceof Discord.MessageEmbed) {
-            return embeds.push(option);
-        } else if (option instanceof Discord.MessageAttachment) {
-            return files.push(option);
-        } else if (option instanceof Discord.MessageActionRow) {
-            return components.push(option);
-        } else if (option instanceof Discord.Sticker) {
-            return stickers.push(option);
-        }
-      });
+            if (option instanceof MessageEmbed) {
+                return embeds.push(option);
+            } else if (option instanceof MessageAttachment) {
+                return files.push(option);
+            } else if (option instanceof MessageActionRow) {
+                return components.push(option);
+            } else if (option instanceof Sticker) {
+                return stickers.push(option);
+            }
+        });
 
-    if (embeds.length === 0 && components.length === 0 && files.length === 0 && stickers.length === 0) return options[0];
+        if (embeds.length === 0 && components.length === 0 && files.length === 0 && stickers.length === 0) return options[0];
 
        return {
          embeds: embeds.length !== 0 ? embeds : undefined,
@@ -184,15 +149,16 @@ class Util {
     */
     static getAllObjects(client, ob) {
 	    if (typeof ob !== 'object') return;
+
         for (const v of Object.values(ob)) {
             if (Array.isArray(v)) {
-                Util.getAllObjects(v[0]);
+                Util.getAllObjects(client, v[0]);
             } else if (typeof v === 'object') {
-                Util.getAllObjects(v);
+                Util.getAllObjects(client, v);
             } else {
-                client.emit(Events.DEBUG, new Color([
-                    `&b${v}`,
-                ]).getText());
+                client.emit(Events.DEBUG, [
+                    `${v}`,
+                ].join('\n'));
             }
         }
     }

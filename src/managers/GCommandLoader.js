@@ -1,8 +1,7 @@
-const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw } = require('../util/Constants');
+const Color = require('../structures/Color'), GError = require('../structures/GError'), { Events, ApplicationCommandTypesRaw, CommandType } = require('../util/Constants');
 const { default: hyttpo } = require('hyttpo');
 const path = require('path');
 const fs = require('fs');
-const ms = require('ms');
 const { isClass, __deleteCmd, __getAllCommands, comparable, getAllObjects } = require('../util/util');
 const Command = require('../structures/Command');
 /**
@@ -101,8 +100,8 @@ class GCommandLoader {
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (['false', 'message'].includes(String(cmd.slash))) continue;
-            if (!cmd.slash && ['false', 'message'].includes(String(this.client.slash))) continue;
+            if (!cmd.type.includes(CommandType.SLASH)) continue;
+            if (!cmd.type.includes(CommandType.SLASH) && ['false', 'message'].includes(String(this.client.slash))) continue;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
 
@@ -138,7 +137,7 @@ class GCommandLoader {
                 hyttpo.request(config)
                     .then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Slash): &e➜   &3${cmd.name}`, { json: false }).getText()))
                     .catch(error => {
-                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error.status} ${error.data.message} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data.retry_after * 1000}` : ''} &c${error.status} ${error.data.message} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error) {
                             if (error.status === 429) {
@@ -149,8 +148,8 @@ class GCommandLoader {
                                 this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
                                     '  &d[GCommands Debug] &3',
-                                    `&aCode: &b${error.data.code}`,
-                                    `&aMessage: &b${error.data.message}`,
+                                    `&aCode: &b${error.data?.code}`,
+                                    `&aMessage: &b${error.data?.message}`,
                                     '',
                                     `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
                                 ]).getText());
@@ -190,8 +189,8 @@ class GCommandLoader {
 
         for (const commandName of keys) {
             const cmd = this.client.gcommands.get(commandName);
-            if (String(cmd.context) === 'false') continue;
-            if (!cmd.context && String(this.client.context) === 'false') continue;
+            if (![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => cmd.type.includes(type))) continue;
+            if (![CommandType.CONTEXT_MESSAGE, CommandType.CONTEXT_USER].some(type => cmd.type.includes(type)) && String(this.client.context) === 'false') continue;
 
             let url = `https://discord.com/api/v9/applications/${this.client.user.id}/commands`;
             const loadContextMenu = async guildOnly => {
@@ -230,25 +229,25 @@ class GCommandLoader {
                     }
                 })
                     .catch(error => {
-                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                        this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data?.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                         if (error) {
                             if (error.status === 429) {
                                 setTimeout(() => {
                                     this.__tryAgain(cmd, config, 'Context Menu');
-                                }, (error.data.retry_after) * 1000);
+                                }, (error.data?.retry_after) * 1000);
                             } else {
                                 this.client.emit(Events.DEBUG, new Color([
                                     '&a----------------------',
                                     '  &d[GCommands Debug] &3',
-                                    `&aCode: &b${error.data.code}`,
-                                    `&aMessage: &b${error.data.message}`,
+                                    `&aCode: &b${error.data?.code}`,
+                                    `&aMessage: &b${error.data?.message}`,
                                     '',
-                                    `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                                    `${error.data?.errors ? '&aErrors:' : '&a----------------------'}`,
                                 ]).getText());
 
-                                if (error.data.errors) {
-                                    getAllObjects(this.client, error.data.errors);
+                                if (error.data?.errors) {
+                                    getAllObjects(this.client, error.data?.errors);
 
                                     this.client.emit(Events.DEBUG, new Color([
                                         `&a----------------------`,
@@ -333,25 +332,25 @@ class GCommandLoader {
 
                         hyttpo.request(config).then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (Permission): &e➜   &3${cmd.name}`, { json: false }).getText()))
                             .catch(error => {
-                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data?.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                                 if (error) {
                                     if (error.status === 429) {
                                         setTimeout(() => {
                                             this.__tryAgain(cmd, config, 'Permission');
-                                        }, (error.data.retry_after) * 1000);
+                                        }, (error.data?.retry_after) * 1000);
                                     } else {
                                         this.client.emit(Events.DEBUG, new Color([
                                             '&a----------------------',
                                             '  &d[GCommands Debug] &3',
-                                            `&aCode: &b${error.data.code}`,
-                                            `&aMessage: &b${error.data.message}`,
+                                            `&aCode: &b${error.data?.code}`,
+                                            `&aMessage: &b${error.data?.message}`,
                                             '',
-                                            `${error.data.errors ? '&aErrors:' : '&a----------------------'}`,
+                                            `${error.data?.errors ? '&aErrors:' : '&a----------------------'}`,
                                         ]).getText());
 
-                                        if (error.data.errors) {
-                                            getAllObjects(this.client, error.data.errors);
+                                        if (error.data?.errors) {
+                                            getAllObjects(this.client, error.data?.errors);
 
                                             this.client.emit(Events.DEBUG, new Color([
                                                 `&a----------------------`,
@@ -397,12 +396,12 @@ class GCommandLoader {
     __tryAgain(cmd, config, type) {
         hyttpo.request(config).then(() => this.client.emit(Events.LOG, new Color(`&d[GCommands] &aLoaded (${type}): &e➜   &3${cmd.name}`, { json: false }).getText()))
             .catch(error => {
-                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${ms(error.data.retry_after * 1000)}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
+                this.client.emit(Events.LOG, new Color(`&d[GCommands] ${error?.status === 429 ? `&aWait &e${error.data?.retry_after * 1000}` : ''} &c${error} &e(${cmd.name})`, { json: false }).getText());
 
                 if (error && error.status === 429) {
                     setTimeout(() => {
                         this.__tryAgain(cmd, config, type);
-                    }, (error.data.retry_after) * 1000);
+                    }, (error.data?.retry_after) * 1000);
                 }
             });
     }
@@ -418,13 +417,15 @@ class GCommandLoader {
             if (!allSlashCommands || allSlashCommands.length < 0) return;
 
             for (const slashCmd of allSlashCommands) {
+                const clientCommand = this.client.gcommands.get(slashCmd.name);
+
                 if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id);
-                else if (this.client.gcommands.get(slashCmd.name) && ['false', 'message'].includes(String(this.client.gcommands.get(slashCmd.name).slash))) __deleteCmd(this.client, slashCmd.id);
-                else if (!this.client.gcommands.get(slashCmd.name).slash && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id);
+                else if (!clientCommand.type.includes(CommandType.SLASH)) __deleteCmd(this.client, slashCmd.id);
                 else continue;
                 this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted: &e➜   &3${slashCmd.name}`, { json: false }).getText());
             }
         };
+
         const deleteAllGuildCommands = async () => {
             const guilds = this.client.guilds.cache.map(guild => guild.id);
             for (const guild of guilds) {
@@ -432,9 +433,10 @@ class GCommandLoader {
                 if (!allGuildSlashCommands || allGuildSlashCommands.length < 0) return;
 
                 for (const slashCmd of allGuildSlashCommands) {
+                    const clientCommand = this.client.gcommands.get(slashCmd.name);
+
                     if (!commandFiles.some(c => slashCmd.name === c)) __deleteCmd(this.client, slashCmd.id, guild);
-                    else if (this.client.gcommands.get(slashCmd.name) && ['false', 'message'].includes(String(this.client.gcommands.get(slashCmd.name).slash))) __deleteCmd(this.client, slashCmd.id, guild);
-                    else if (!this.client.gcommands.get(slashCmd.name).slash && ['false', 'message'].includes(String(this.client.slash))) __deleteCmd(this.client, slashCmd.id, guild);
+                    else if (!clientCommand.type.includes(CommandType.SLASH)) __deleteCmd(this.client, slashCmd.id, guild);
                     else continue;
                     this.client.emit(Events.LOG, new Color(`&d[GCommands] &aDeleted (guild: ${guild}): &e➜   &3${slashCmd.name}`, { json: false }).getText());
                 }
