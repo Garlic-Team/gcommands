@@ -42,7 +42,7 @@
         "indonesian": "Client harus memiliki izin {PERMISSION} untuk menggunakan command ini.",
         "italian": "Il cliente deve avere il permesso {PERMISSION} per usare questo comando.",
         "french": "Le client doit disposer de l'autorisation {PERMISSION} pour utiliser cette commande.",
-        "nederlands": "De client moet de {PERMISSION} permissie hebben om dit command te gebruiken."
+        "nederlands": "De client moet de {PERMISSION} permissie hebben om dit commando uit te voeren."
     },
     "MISSING_ROLES": {
         "english": "You do not have the required roles to use this command! You need one of the following: {ROLES}",
