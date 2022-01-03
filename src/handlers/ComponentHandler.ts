@@ -32,7 +32,6 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
-		// @ts-expect-error Further research into this is required. (Contact discord.js)
 		member: interaction.member,
 		component: component,
 		customId: interaction.customId,

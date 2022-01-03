@@ -1,10 +1,10 @@
-import {Context} from './Context';
+import {Context, ContextOptions} from './Context';
 import {CacheType} from 'discord.js';
 import {Command, CommandArgument, CommandArgumentChoice} from '../Command';
 import {GClient} from '../../GClient';
 import {Argument} from '../Argument';
 
-export interface AutocompleteContextOptions<Cached extends CacheType = CacheType> extends Context<Cached> {
+export interface AutocompleteContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
 	command: Command;
 	argument: CommandArgument | Argument;
 	value: string | number;

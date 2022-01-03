@@ -31,7 +31,6 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
-		// @ts-expect-error Further research into this is required. (Contact discord.js)
 		member: interaction.member,
 		command: command,
 		// @ts-expect-error Further research into this is required.
