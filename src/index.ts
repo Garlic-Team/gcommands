@@ -47,13 +47,7 @@ Logger.useDefaults({
 export {Logger};
 
 // Inhibitors
-export * from './inhibitors/NsfwInhibitor';
-export * from './inhibitors/ChannelOnlyInhibitor';
-export * from './inhibitors/UserOnlyInhibitor';
-export * from './inhibitors/UserRolesInhibitor';
-export * from './inhibitors/UserPermissionsInhibitor';
-export * from './inhibitors/ClientPermissionsInhibitor';
-export * from './inhibitors/OrInhibitor';
+export * as Inhibitor from './inhibitors';
 
 // Util
 export * from './util/CustomId';

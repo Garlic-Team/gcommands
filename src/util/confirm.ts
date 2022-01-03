@@ -1,10 +1,12 @@
 import {CommandContext} from '../lib/structures/contexts/CommandContext';
 import {ButtonInteraction, MessageActionRow, MessageButton} from 'discord.js';
 import {CustomId} from './CustomId';
+import {ComponentContext} from '../lib/structures/contexts/ComponentContext';
 
 export interface ConfirmOptions {
-	message?: string;
+	message?: string | ((ctx: CommandContext | ComponentContext) => string);
 	time?: number;
+	ephemeral?: boolean;
 	button?: {
 		label?: string;
 		style?: 'DANGER' | 'SUCCESS' | 'PRIMARY' | 'SECONDARY';
@@ -12,8 +14,8 @@ export interface ConfirmOptions {
 	};
 }
 
-export async function confirm(ctx: CommandContext, options: ConfirmOptions = {}) {
-	const customId = CustomId('confirm', ctx.commandName, ctx.userId);
+export async function confirm(ctx: CommandContext | ComponentContext, options: ConfirmOptions = {}) {
+	const customId = CustomId('confirm', ctx.userId);
 	const button = new MessageButton()
 		.setCustomId(customId)
 		.setLabel('Confirm')
@@ -26,8 +28,9 @@ export async function confirm(ctx: CommandContext, options: ConfirmOptions = {})
 	const row = new MessageActionRow().addComponents([button]);
 
 	const messageContent = {
-		content: options.message || 'Are you sure?',
+		content: typeof options.message === 'function' ? options.message(ctx) : options.message || 'Are you sure?',
 		components: [row],
+		ephemeral: options.ephemeral,
 	};
 
 	ctx.deferred ? await ctx.editReply(messageContent) : await ctx.reply(messageContent);

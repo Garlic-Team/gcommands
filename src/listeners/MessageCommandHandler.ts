@@ -4,7 +4,8 @@ import {Message} from 'discord.js';
 import {Handlers} from '../lib/managers/HandlerManager';
 import Logger from 'js-logger';
 
-new Listener('messageCreate', {
+new Listener({
+	event: 'messageCreate',
 	name: 'gcommands-messageCommandHandler',
 	run: async (message: Message): Promise<void> => {
 		const client = message.client as GClient;

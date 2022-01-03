@@ -9,7 +9,7 @@ export enum ComponentType {
 	'SELECT_MENU' = 2,
 }
 
-export type ComponentInhibitor = (ctx: ComponentContext) => (boolean | void | Promise<boolean> | Promise<void>);
+export type ComponentInhibitor = (ctx: ComponentContext) => (boolean | any);
 export type ComponentInhibitors = Array<{ run: ComponentInhibitor } | ComponentInhibitor>;
 
 export interface ComponentOptions {

@@ -29,7 +29,7 @@ export interface CommandArgument {
 	run?: (ctx: AutocompleteContext) => any;
 }
 
-export type CommandInhibitor = (ctx: CommandContext) => (boolean | void | Promise<boolean> | Promise<void>);
+export type CommandInhibitor = (ctx: CommandContext) => (boolean | any);
 export type CommandInhibitors = Array<{ run: CommandInhibitor } | CommandInhibitor>;
 
 

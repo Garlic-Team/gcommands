@@ -55,16 +55,4 @@ export class CommandContext<Cached extends CacheType = CacheType> extends Contex
 			return message;
 		};
 	}
-
-	public inGuild(): this is CommandContext<'present'> {
-		return super.inGuild();
-	}
-
-	public inCachedGuild(): this is CommandContext<'cached'> {
-		return super.inCachedGuild();
-	}
-
-	public inRawGuild(): this is CommandContext<'raw'> {
-		return super.inRawGuild();
-	}
 }

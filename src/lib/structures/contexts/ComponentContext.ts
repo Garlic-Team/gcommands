@@ -68,16 +68,4 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 			return message;
 		};
 	}
-
-	public inGuild(): this is ComponentContext<'present'> {
-		return super.inGuild();
-	}
-
-	public inCachedGuild(): this is ComponentContext<'cached'> {
-		return super.inCachedGuild();
-	}
-
-	public inRawGuild(): this is ComponentContext<'raw'> {
-		return super.inRawGuild();
-	}
 }

@@ -5,28 +5,26 @@ import Logger from 'js-logger';
 import {Util} from '../util/Util';
 
 export interface ListenerOptions<Event extends keyof ClientEvents> {
+	event: Event;
 	name: string;
 	once?: boolean;
 	ws?: boolean;
 	fileName?: string;
-	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
+	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<any>) => any;
 }
 
-// TODO event should be in ListenerOptions (switched with name) (help pending in TS discord server)
-
-export class Listener<Event extends keyof ClientEvents> {
+export class Listener<Event extends keyof ClientEvents = keyof ClientEvents> {
 	public client: GClient;
-	public readonly event: Event | WSEventType;
+	public readonly event: string;
 	public readonly name: string;
 	public readonly once?: boolean;
 	public readonly ws?: boolean;
 	public readonly fileName?: string;
-	public readonly run: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
+	public readonly run: (...args: Array<any>) => any;
 	public owner?: string;
 	public reloading = false;
 
-	public constructor(event: Event | WSEventType, options: ListenerOptions<Event>) {
-		this.event = event;
+	public constructor(options: ListenerOptions<Event>) {
 		Object.assign(this, options);
 
 		Listeners.register(this);
@@ -39,15 +37,18 @@ export class Listener<Event extends keyof ClientEvents> {
 		else client[this.once ? 'once' : 'on'](this.event as keyof ClientEvents, this._run.bind(this));
 	}
 
-	public async reload(): Promise<Listener<Event>> {
-		if (!this.fileName) return;
+	public static validate(listener: Listener): boolean | void {
+		const trace = Util.resolveValidationErrorTrace([
+			listener.name,
+			listener.fileName,
+		]);
 
-		this.reloading = true;
-
-		delete require.cache[require.resolve(this.fileName)];
-		await import(this.fileName);
-
-		return Listeners.get(this.name);
+		if (!listener.name) return Logger.warn('Listener must have a name', trace);
+		else if (typeof listener.name !== 'string') return Logger.warn('Listener name must be a string', trace);
+		else if (!listener.event) return Logger.warn('Listener must have a event', trace);
+		else if (typeof listener.event !== 'string') return Logger.warn('Listener event must be a string', trace);
+		else if (typeof listener.run !== 'function') return Logger.warn('Listener must have a run function', trace);
+		else return true;
 	}
 
 	public unregister() {
@@ -61,17 +62,14 @@ export class Listener<Event extends keyof ClientEvents> {
 		});
 	}
 
-	public static validate(listener: Listener<any>): boolean | void {
-		const trace = Util.resolveValidationErrorTrace([
-			listener.name,
-			listener.fileName,
-		]);
+	public async reload(): Promise<Listener> {
+		if (!this.fileName) return;
 
-		if (!listener.name) return Logger.warn('Listener must have a name', trace);
-		else if (typeof listener.name !== 'string') return Logger.warn('Listener name must be a string', trace);
-		else if (!listener.event) return Logger.warn('Listener must have a event', trace);
-		else if (typeof listener.event !== 'string') return Logger.warn('Listener event must be a string', trace);
-		else if (typeof listener.run !== 'function') return Logger.warn('Listener must have a run function', trace);
-		else return true;
+		this.reloading = true;
+
+		delete require.cache[require.resolve(this.fileName)];
+		await import(this.fileName);
+
+		return Listeners.get(this.name);
 	}
 }
