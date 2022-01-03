@@ -35,6 +35,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		// @ts-expect-error Further research into this is required. (Contact discord.js)
 		member: interaction.member,
 		component: component,
+		customId: interaction.customId,
 		arguments: args,
 		values: interaction.isSelectMenu() ? interaction.values : undefined,
 		deferReply: interaction.deferReply.bind(interaction),
