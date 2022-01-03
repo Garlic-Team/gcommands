@@ -1,5 +1,5 @@
 import {PermissionResolvable} from 'discord.js';
-import {BaseContext} from '../lib/structures/BaseContext';
+import {Context} from '../lib/structures/contexts/Context';
 
 export class ClientPermissionsInhibitor {
 	public readonly permissions: Array<PermissionResolvable>;
@@ -8,7 +8,7 @@ export class ClientPermissionsInhibitor {
 		this.permissions = permissions;
 	}
 
-	run(ctx: BaseContext): boolean {
+	run(ctx: Context): boolean {
 		return ctx.guild && ctx.guild.me.permissions.has(this.permissions);
 	}
 }

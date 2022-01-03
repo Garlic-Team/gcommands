@@ -5,6 +5,7 @@ import {
 	Guild,
 	GuildMember,
 	GuildTextBasedChannel,
+	Permissions,
 	Snowflake,
 	TextBasedChannel,
 	User

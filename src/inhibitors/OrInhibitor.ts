@@ -1,8 +1,8 @@
-import {BaseContext} from '../lib/structures/BaseContext';
+import {Context} from '../lib/structures/contexts/Context';
 
 export type BaseInhibitor =
-	((ctx: BaseContext) => (boolean | void | Promise<boolean> | Promise<void>))
-	| { run: (ctx: BaseContext) => (boolean | void | Promise<boolean> | Promise<void>) };
+	((ctx: Context) => (boolean | void | Promise<boolean> | Promise<void>))
+	| { run: (ctx: Context) => (boolean | void | Promise<boolean> | Promise<void>) };
 
 export class OrInhibitor {
 	public readonly inhibitor1: BaseInhibitor;
@@ -13,7 +13,7 @@ export class OrInhibitor {
 		this.inhibitor2 = inhibitor2;
 	}
 
-	async run(ctx: BaseContext): Promise<void | boolean> {
+	async run(ctx: Context): Promise<void | boolean> {
 		let value1: boolean | void;
 		let value2: boolean | void;
 

@@ -1,5 +1,5 @@
-import {BaseContext} from '../lib/structures/BaseContext';
 import {Snowflake} from 'discord.js';
+import {Context} from '../lib/structures/contexts/Context';
 
 export class ChannelOnlyInhibitor {
 	public readonly channelIds: Array<Snowflake>;
@@ -8,7 +8,7 @@ export class ChannelOnlyInhibitor {
 		this.channelIds = channelIds;
 	}
 
-	run(ctx: BaseContext): boolean {
+	run(ctx: Context): boolean {
 		return this.channelIds.includes(ctx.channelId);
 	}
 }

@@ -1,7 +1,7 @@
-import {BaseContext} from '../lib/structures/BaseContext';
+import {Context} from '../lib/structures/contexts/Context';
 
 export class NsfwInhibitor {
-	run(ctx: BaseContext): boolean {
+	run(ctx: Context): boolean {
 		return !!(ctx.channel.type === 'GUILD_TEXT' && ctx.channel.nsfw);
 	}
 }

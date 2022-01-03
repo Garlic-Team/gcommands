@@ -1,5 +1,5 @@
-import {BaseContext} from '../lib/structures/BaseContext';
 import {Snowflake} from 'discord.js';
+import {Context} from '../lib/structures/contexts/Context';
 
 export class UserOnlyInhibitor {
 	public readonly userIds: Array<Snowflake>;
@@ -8,7 +8,7 @@ export class UserOnlyInhibitor {
 		this.userIds = userId;
 	}
 
-	run(ctx: BaseContext): boolean {
+	run(ctx: Context): boolean {
 		return this.userIds.includes(ctx.userId);
 	}
 }

@@ -1,5 +1,5 @@
 import {Snowflake} from 'discord.js';
-import {BaseContext} from '../lib/structures/BaseContext';
+import {Context} from '../lib/structures/contexts/Context';
 
 export class UserRolesInhibitor {
 	public readonly roles: Array<Snowflake>;
@@ -10,7 +10,8 @@ export class UserRolesInhibitor {
 		this.every = every;
 	}
 
-	run(ctx: BaseContext): boolean {
+	run(ctx: Context): boolean {
+		if (!ctx.inCachedGuild()) return;
 		return ctx.guild && this.roles[this.every ? 'every' : 'some'](role => ctx.member.roles.cache.has(role));
 	}
 }
