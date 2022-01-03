@@ -11,7 +11,6 @@ export class UserRolesInhibitor {
 	}
 
 	run(ctx: Context): boolean {
-		if (!ctx.inCachedGuild()) return;
-		return ctx.guild && this.roles[this.every ? 'every' : 'some'](role => ctx.member.roles.cache.has(role));
+		return ctx.inCachedGuild() && this.roles[this.every ? 'every' : 'some'](role => ctx.member.roles.cache.has(role));
 	}
 }
