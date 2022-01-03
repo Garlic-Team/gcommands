@@ -1,5 +1,5 @@
 import {GClient} from '../GClient';
-import {ClientEvents} from 'discord.js';
+import {ClientEvents, WSEventType} from 'discord.js';
 import {Listeners} from '../managers/ListenerManager';
 import Logger from 'js-logger';
 import {Util} from '../util/Util';
@@ -7,6 +7,7 @@ import {Util} from '../util/Util';
 export interface ListenerOptions<Event extends keyof ClientEvents> {
 	name: string;
 	once?: boolean;
+	ws?: boolean;
 	fileName?: string;
 	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 }
@@ -15,15 +16,16 @@ export interface ListenerOptions<Event extends keyof ClientEvents> {
 
 export class Listener<Event extends keyof ClientEvents> {
 	public client: GClient;
-	public readonly event: Event;
+	public readonly event: Event | WSEventType;
 	public readonly name: string;
 	public readonly once?: boolean;
+	public readonly ws?: boolean;
 	public readonly fileName?: string;
 	public readonly run: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 	public owner?: string;
 	public reloading = false;
 
-	public constructor(event: Event, options: ListenerOptions<Event>) {
+	public constructor(event: Event | WSEventType, options: ListenerOptions<Event>) {
 		this.event = event;
 		Object.assign(this, options);
 
@@ -33,7 +35,8 @@ export class Listener<Event extends keyof ClientEvents> {
 	public initialize(client: GClient): void {
 		this.client = client;
 
-		client[this.once ? 'once' : 'on'](this.event, this._run.bind(this));
+		if (this.ws) client.ws[this.once ? 'once' : 'on'](this.event as WSEventType, this._run.bind(this));
+		else client[this.once ? 'once' : 'on'](this.event as keyof ClientEvents, this._run.bind(this));
 	}
 
 	public async reload(): Promise<Listener<Event>> {
