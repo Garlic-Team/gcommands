@@ -1,6 +1,6 @@
 import {AutoDeferType, GClient} from '../GClient';
 import {Argument, ArgumentType, ChannelType} from './Argument';
-import {CommandContext} from './CommandContext';
+import {CommandContext} from './contexts/CommandContext';
 import {AutocompleteContext} from './AutocompleteContext';
 import {Commands} from '../managers/CommandManager';
 import Logger from 'js-logger';

@@ -1,6 +1,6 @@
 import {Collection, CommandInteraction, ContextMenuInteraction} from 'discord.js';
 import {AutoDeferType, GClient} from '../lib/GClient';
-import {CommandContext} from '../lib/structures/CommandContext';
+import {CommandContext} from '../lib/structures/contexts/CommandContext';
 import {Handlers} from '../lib/managers/HandlerManager';
 import {Commands} from '../lib/managers/CommandManager';
 import Logger from 'js-logger';
@@ -24,7 +24,25 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		});
 	}
 
-	const ctx = CommandContext.createWithInteraction(interaction, command);
+	const ctx = new CommandContext(client, {
+		channel: interaction.channel,
+		createdAt: interaction.createdAt,
+		createdTimestamp: interaction.createdTimestamp,
+		guild: interaction.guild,
+		guildId: interaction.guildId,
+		user: interaction.user,
+		// @ts-expect-error Further research into this is required. (Contact discord.js)
+		member: interaction.member,
+		command: command,
+		// @ts-expect-error Further research into this is required.
+		arguments: interaction.options,
+		deferReply: interaction.deferReply.bind(interaction),
+		deleteReply: interaction.deleteReply.bind(interaction),
+		editReply: interaction.editReply.bind(interaction),
+		fetchReply: interaction.fetchReply.bind(interaction),
+		followUp: interaction.followUp.bind(interaction),
+		reply: interaction.reply.bind(interaction),
+	});
 
 	if (!await command.inhibit(ctx)) return;
 
@@ -36,7 +54,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	await Promise.resolve(command.run(ctx)).catch(async (error) => {
 		Logger.error(error.code, error.message);
 		if (error.stack) Logger.trace(error.stack);
-		const errorReply = () => (ctx.interaction.replied || ctx.interaction.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
+		const errorReply = () => (ctx.replied || ctx.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
 			ephemeral: true,
 		});
