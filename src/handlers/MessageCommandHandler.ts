@@ -1,6 +1,6 @@
-import {Collection, Message} from 'discord.js';
+import {Collection, CommandInteractionOptionResolver, Message} from 'discord.js';
 import {GClient} from '../lib/GClient';
-import {CommandContext} from '../lib/structures/CommandContext';
+import {CommandContext} from '../lib/structures/contexts/CommandContext';
 import {CommandType} from '../lib/structures/Command';
 import {ArgumentType} from '../lib/structures/Argument';
 import {Commands} from '../lib/managers/CommandManager';
@@ -41,7 +41,35 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 	// @ts-ignore
 	if (args[0]?.type === ArgumentType.SUB_COMMAND_GROUP && args[0]?.options[0]?.type === ArgumentType.SUB_COMMAND) args[0].options[0].options = args[0].options.splice(1);
 
-	const ctx = CommandContext.createWithMessage(message, command, args);
+	let replied: Message;
+	const ctx = new CommandContext(client, {
+		channel: message.channel,
+		createdAt: message.createdAt,
+		createdTimestamp: message.createdTimestamp,
+		guild: message.guild,
+		guildId: message.guildId,
+		user: message.author,
+		member: message.member,
+		command: command,
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+		arguments: new CommandInteractionOptionResolver(client, args, {}),
+		// @ts-expect-error This will not be fixed (typings for interaction are more important)
+		deferReply: () => {
+			return;
+		},
+		deleteReply: async () => {
+			await replied.delete();
+		},
+		editReply: async (opt) => {
+			return await replied.edit(opt);
+		},
+		fetchReply: async () => {
+			return replied;
+		},
+		followUp: message.reply.bind(message),
+		reply: message.reply.bind(message),
+	});
 
 	if (!await command.inhibit(ctx)) return;
 	await Promise.resolve(command.run(ctx)).catch(async (error) => {
