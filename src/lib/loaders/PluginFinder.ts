@@ -5,12 +5,12 @@ export async function LoadPluginFolder(basedir: string, folder: fs.Dirent) {
 	if (folder.isDirectory()) {
 		if (fs.existsSync(path.join(basedir, folder.name, 'index.js'))) {
 			await import(path.join(basedir, folder.name, 'index.js'));
-		} else if (fs.existsSync(path.join(basedir, folder.name, 'index.ts'))) {
-			await import(path.join(basedir, folder.name, 'index.ts'));
 		} else if (fs.existsSync(path.join(basedir, folder.name, 'register.js'))) {
 			await import(path.join(basedir, folder.name, 'register.js'));
-		} else if (fs.existsSync(path.join(basedir, folder.name, 'register.ts'))) {
-			await import(path.join(basedir, folder.name, 'register.ts'));
+		} else if (fs.existsSync(path.join(basedir, folder.name, 'dist', 'index.js'))) {
+			await import(path.join(basedir, folder.name, 'dist', 'index.js'));
+		} else if (fs.existsSync(path.join(basedir, folder.name, 'dist', 'register.js'))) {
+			await import(path.join(basedir, folder.name, 'dist', 'register.js'));
 		}
 	}
 }
