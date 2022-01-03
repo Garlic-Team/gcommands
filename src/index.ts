@@ -41,7 +41,7 @@ Logger.useDefaults({
 		if (ctx.level === Logger.ERROR) color = '\x1b[91m';
 
 		const date = new Date();
-		messages.unshift(`${color}[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}/${ctx.level.name}]\x1b[0m`);
+		messages[0] = `${color}[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}/${ctx.level.name}]\x1b[0m ${messages[0]}`;
 	}
 });
 export {Logger};
