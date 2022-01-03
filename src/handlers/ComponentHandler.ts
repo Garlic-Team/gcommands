@@ -1,7 +1,7 @@
 import {Collection, MessageComponentInteraction} from 'discord.js';
 import {AutoDeferType, GClient} from '../lib/GClient';
 import {ComponentType} from '../lib/structures/Component';
-import {ComponentContext} from '../lib/structures/ComponentContext';
+import {ComponentContext} from '../lib/structures/contexts/ComponentContext';
 import {Components} from '../lib/managers/ComponentManager';
 import {Handlers} from '../lib/managers/HandlerManager';
 import Logger from 'js-logger';
@@ -25,7 +25,26 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		});
 	}
 
-	const ctx = ComponentContext.createWithInteraction(interaction, component, args);
+	const ctx = new ComponentContext(client, {
+		channel: interaction.channel,
+		createdAt: interaction.createdAt,
+		createdTimestamp: interaction.createdTimestamp,
+		guild: interaction.guild,
+		guildId: interaction.guildId,
+		user: interaction.user,
+		// @ts-expect-error Further research into this is required. (Contact discord.js)
+		member: interaction.member,
+		component: component,
+		arguments: args,
+		values: interaction.isSelectMenu() ? interaction.values : undefined,
+		deferReply: interaction.deferReply.bind(interaction),
+		deferUpdate: interaction.deferUpdate.bind(interaction),
+		deleteReply: interaction.deleteReply.bind(interaction),
+		editReply: interaction.editReply.bind(interaction),
+		fetchReply: interaction.fetchReply.bind(interaction),
+		followUp: interaction.followUp.bind(interaction),
+		reply: interaction.reply.bind(interaction),
+	});
 
 	if (!await component.inhibit(ctx)) return;
 
@@ -37,7 +56,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 	await Promise.resolve(component.run(ctx)).catch(async (error) => {
 		Logger.error(error.code, error.message);
 		if (error.stack) Logger.trace(error.stack);
-		const errorReply = () => (ctx.interaction.replied || ctx.interaction.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
+		const errorReply = () => (ctx.replied || ctx.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
 			ephemeral: true,
 		});

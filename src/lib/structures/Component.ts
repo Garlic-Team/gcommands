@@ -1,5 +1,5 @@
 import {AutoDeferType, GClient} from '../GClient';
-import {ComponentContext} from './ComponentContext';
+import {ComponentContext} from './contexts/ComponentContext';
 import {Components} from '../managers/ComponentManager';
 import Logger from 'js-logger';
 import {Util} from '../util/Util';
