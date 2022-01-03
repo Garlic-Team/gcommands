@@ -1,8 +1,8 @@
-name: "Build Dev docs"
+name: "Build Dev Documentation"
 
 on:
   push:
-    branches: [dev]
+    branches: [next-dev]
   workflow_dispatch:
 
 jobs:
