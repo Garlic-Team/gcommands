@@ -1,11 +1,14 @@
 import {AutocompleteInteraction} from 'discord.js';
 import {CommandArgument} from '../lib/structures/Command';
-import {AutocompleteContext} from '../lib/structures/AutocompleteContext';
+import {AutocompleteContext} from '../lib/structures/contexts/AutocompleteContext';
 import {Argument} from '../lib/structures/Argument';
 import {Commands} from '../lib/managers/CommandManager';
 import Logger from 'js-logger';
+import {GClient} from '../lib/GClient';
 
 export async function AutocompleteHandler(interaction: AutocompleteInteraction) {
+	const client = interaction.client as GClient;
+
 	const command = Commands.get(interaction.commandName);
 	if (!command) return;
 
@@ -18,7 +21,20 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 	const argument = args.find(argument => argument.name === focused.name);
 	if (!argument) return;
 
-	const ctx = AutocompleteContext.createWithInteraction(interaction, argument, focused.value);
+	const ctx = new AutocompleteContext(client, {
+		channel: interaction.channel,
+		createdAt: interaction.createdAt,
+		createdTimestamp: interaction.createdTimestamp,
+		guild: interaction.guild,
+		guildId: interaction.guildId,
+		user: interaction.user,
+		// @ts-expect-error Further research into this is required. (Contact discord.js)
+		member: interaction.member,
+		command: command,
+		argument: argument,
+		value: focused.value,
+		respond: interaction.respond.bind(interaction),
+	});
 
 	await Promise.resolve(argument.run(ctx)).catch(error => {
 		Logger.error(error.code, error.message);

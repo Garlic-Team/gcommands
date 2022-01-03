@@ -15,11 +15,10 @@ export * from './lib/structures/Plugin';
 export * from './lib/structures/Listener';
 export * from './lib/structures/Command';
 export * from './lib/structures/Component';
-export * from './lib/structures/BaseContext';
+export * from './lib/structures/contexts/Context';
 export * from './lib/structures/contexts/CommandContext';
-export * from './lib/structures/ComponentContext';
-export * from './lib/structures/AutocompleteContext';
-export * from './lib/structures/ArgumentResolver';
+export * from './lib/structures/contexts/ComponentContext';
+export * from './lib/structures/contexts/AutocompleteContext';
 export * from './lib/structures/Argument';
 
 // Managers
