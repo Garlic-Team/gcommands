@@ -4,10 +4,10 @@ import {Collection} from 'discord.js';
 import Logger from 'js-logger';
 import {Plugins} from './PluginManager';
 
-export class ListenerManager extends Collection<string, Listener<any>> {
+export class ListenerManager extends Collection<string, Listener> {
 	private client: GClient;
 
-	public register(listener: Listener<any>): ListenerManager {
+	public register(listener: Listener): ListenerManager {
 		if (listener instanceof Listener) {
 			if (this.has(listener.name)) {
 				this.get(listener.name).unregister();
@@ -23,7 +23,7 @@ export class ListenerManager extends Collection<string, Listener<any>> {
 		return this;
 	}
 
-	public unregister(name: string): Listener<any> | undefined {
+	public unregister(name: string): Listener | undefined {
 		const listener = this.get(name);
 		if (listener) {
 			this.delete(name);
@@ -37,7 +37,7 @@ export class ListenerManager extends Collection<string, Listener<any>> {
 		return listener;
 	}
 
-	private initialize(listener: Listener<any>): Listener<any> {
+	private initialize(listener: Listener): Listener {
 		const maxListeners = this.client.getMaxListeners();
 		if (maxListeners !== 0) this.client.setMaxListeners(maxListeners + 1);
 
