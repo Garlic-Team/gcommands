@@ -9,6 +9,6 @@ export class ClientPermissionsInhibitor {
 	}
 
 	run(ctx: Context): boolean {
-		return ctx.guild && ctx.guild.me.permissions.has(this.permissions);
+		return ctx.inGuild() && ctx.guild.me.permissions.has(this.permissions);
 	}
 }
