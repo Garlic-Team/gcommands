@@ -13,7 +13,7 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 	const client = message.client as GClient;
 
 	const command = Commands.get(commandName);
-	if (!command) return message.reply({
+	if (!command && client.options?.unknownCommandMessage) return message.reply({
 		content: client.responses.NOT_FOUND
 	});
 

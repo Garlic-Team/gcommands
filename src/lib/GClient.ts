@@ -15,6 +15,7 @@ export enum AutoDeferType {
 
 export interface GClientOptions extends ClientOptions {
 	messagePrefix?: string;
+	unknownCommandMessage?: boolean;
 	dir?: string;
 	dirs?: Array<string>;
 	devGuildId?: string;

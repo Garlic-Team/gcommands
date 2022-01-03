@@ -11,7 +11,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	const client = interaction.client as GClient;
 
 	const command = Commands.get(interaction.commandName);
-	if (!command) return interaction.reply({
+	if (!command && client.options?.unknownCommandMessage) return interaction.reply({
 		content: client.responses.NOT_FOUND,
 		ephemeral: true
 	});
