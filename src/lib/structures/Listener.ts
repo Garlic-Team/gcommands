@@ -6,6 +6,7 @@ import {Util} from '../util/Util';
 
 export interface ListenerOptions<Event extends keyof ClientEvents> {
 	name: string;
+	once?: boolean;
 	fileName?: string;
 	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 }
@@ -16,7 +17,7 @@ export class Listener<Event extends keyof ClientEvents> {
 	public client: GClient;
 	public readonly event: Event;
 	public readonly name: string;
-	public readonly once: boolean;
+	public readonly once?: boolean;
 	public readonly fileName?: string;
 	public readonly run: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<unknown>) => any;
 	public owner?: string;
