@@ -13,6 +13,7 @@ import {Component} from '../Component';
 
 export interface ComponentContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
 	component: Component;
+	customId: string;
 	arguments: Array<string>;
 	values?: Array<string>;
 	deferReply: <Fetch extends boolean = boolean>(options?: InteractionDeferReplyOptions & { fetchReply?: Fetch }) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
@@ -27,6 +28,7 @@ export interface ComponentContextOptions<Cached extends CacheType = CacheType> e
 export class ComponentContext<Cached extends CacheType = CacheType> extends Context<Cached> {
 	public readonly component: Component;
 	public readonly componentName: string;
+	public readonly customId: string;
 	public arguments: Array<string>;
 	public values?: Array<string>;
 	public deferred = false;
@@ -43,6 +45,7 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 		super(client, options);
 		this.component = options.component;
 		this.componentName = options.component.name;
+		this.customId = options.customId;
 		this.arguments = options.arguments;
 		this.values = options.values;
 		this.deferReply = async (opt) => {
