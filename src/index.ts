@@ -16,7 +16,7 @@ export * from './lib/structures/Listener';
 export * from './lib/structures/Command';
 export * from './lib/structures/Component';
 export * from './lib/structures/BaseContext';
-export * from './lib/structures/CommandContext';
+export * from './lib/structures/contexts/CommandContext';
 export * from './lib/structures/ComponentContext';
 export * from './lib/structures/AutocompleteContext';
 export * from './lib/structures/ArgumentResolver';
@@ -60,6 +60,7 @@ export * from './inhibitors/OrInhibitor';
 export * from './util/CustomId';
 export * from './lib/util/registerDirectory';
 export * from './lib/util/registerDirectories';
+export * from './util/confirm';
 
 // Re-exports
 export {MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} from 'discord.js';
