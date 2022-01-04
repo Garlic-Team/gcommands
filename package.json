@@ -1,41 +1,47 @@
 {
   "name": "gcommands",
-  "version": "0.1.0-nextdev",
-  "description": "Powerful and flexible framework!",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "bash scripts/build.bash",
-    "lint": "npx eslint .",
-    "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
-    "build:types": "tsc --emitDeclarationOnly",
-    "build:docs": "typedoc --json docs/out-next.json src/index.ts && node scripts/docs.mjs",
-    "build:devdocs": "typedoc --json docs/out-dev.json src/index.ts && node scripts/devdocs.mjs"
-  },
-  "homepage": "https://garlic-team.js.org/#/docs/gcommands/next/general/welcome",
-  "author": "Garlic-Team",
-  "license": "ISC",
+  "version": "9.0.0-dev",
+  "description": "Powerful and flexible command handler that can do everything!",
+  "main": "src/index.js",
+  "types": "./typings/index.d.ts",
   "dependencies": {
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "discord-api-types": "^0.25.2",
-    "discord.js": "^13.5.0",
-    "js-logger": "^1.6.1",
+    "@gcommands/components": "^1.1.0",
+    "@gcommands/events": "^2.1.1",
+    "discord.js": "^13.2.0",
+    "hyttpo": "^0.2.4",
     "ms": "^2.1.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
-    "@babel/preset-typescript": "^7.16.0",
-    "@types/node": "^16.11.12",
-    "@typescript-eslint/eslint-plugin": "^5.5.0",
-    "@typescript-eslint/parser": "^5.5.0",
-    "babel-cli": "^6.26.0",
-    "babel-plugin-add-module-exports": "^1.0.4",
-    "eslint": "^8.3.0",
-    "typescript": "^4.5.4"
+    "@discordjs/docgen": "^0.11.0",
+    "@types/node": "^16.3.3",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-prettier": "^3.4.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/garlic-team/gcommands.git"
+  },
+  "keywords": [
+    "gcommands",
+    "handler",
+    "slash commands",
+    "context menus"
+  ],
+  "author": "Garlic-Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Garlic-Team/GCommands/issues"
+  },
+  "scripts": {
+    "test": "eslint src",
+    "docs:devbuild": "docgen --source src --custom docs/index.yml --output docs/dev.json",
+    "docs:build": "docgen --source src --custom docs/index.yml --output docs/main.json",
+    "docs:test": "docgen --source src"
   },
   "engines": {
-    "node": ">=16.6"
-  }
+    "node": ">=16.6.0"
+  },
+  "homepage": "https://gcommands.js.org"
 }
