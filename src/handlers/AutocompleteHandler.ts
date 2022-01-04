@@ -28,6 +28,8 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		member: interaction.member,
 		command: command,
 		argument: argument,

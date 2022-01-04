@@ -1,6 +1,6 @@
 import {GClient} from '../GClient';
 import {Listener} from '../structures/Listener';
-import {Collection} from 'discord.js';
+import {ClientEvents, Collection, WSEventType} from 'discord.js';
 import Logger from 'js-logger';
 import {Plugins} from './PluginManager';
 
@@ -30,7 +30,7 @@ export class ListenerManager extends Collection<string, Listener> {
 			const maxListeners = this.client.getMaxListeners();
 			if (maxListeners !== 0) this.client.setMaxListeners(maxListeners - 1);
 
-			this.client.off(listener.event, listener.run);
+			listener.ws ? this.client.ws.off(listener.event as WSEventType, listener.run) : this.client.off(listener.event as keyof ClientEvents, listener.run);
 			Logger.debug('Unregistered listener', listener.name, 'listening to', listener.event);
 		}
 

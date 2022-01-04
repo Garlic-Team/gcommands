@@ -54,5 +54,6 @@ export class CommandContext<Cached extends CacheType = CacheType> extends Contex
 			this.replied = true;
 			return message;
 		};
+		this.type = 'COMMAND';
 	}
 }

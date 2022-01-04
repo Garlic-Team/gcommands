@@ -4,7 +4,6 @@ import {Commands} from './managers/CommandManager';
 import {Listeners} from './managers/ListenerManager';
 import {Components} from './managers/ComponentManager';
 import Responses from '../responses.json';
-import {registerDirectory} from './util/registerDirectory';
 import {registerDirectories} from './util/registerDirectories';
 
 export enum AutoDeferType {
@@ -16,7 +15,6 @@ export enum AutoDeferType {
 export interface GClientOptions extends ClientOptions {
 	messagePrefix?: string;
 	unknownCommandMessage?: boolean;
-	dir?: string;
 	dirs?: Array<string>;
 	devGuildId?: string;
 }
@@ -31,7 +29,6 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	constructor(options: GClientOptions) {
 		super(options);
 
-		if (options.dir) registerDirectory(options.dir);
 		if (options.dirs) registerDirectories(options.dirs);
 
 		setImmediate(async (): Promise<void> => {

@@ -3,6 +3,7 @@
 
 # Our
 .idea/
+.vscode
 test/
 dist/
 

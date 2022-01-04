@@ -31,6 +31,8 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		member: interaction.member,
 		command: command,
 		// @ts-expect-error Further research into this is required.
@@ -55,6 +57,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		if (error.stack) Logger.trace(error.stack);
 		const errorReply = () => (ctx.replied || ctx.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
+			components: [],
 			ephemeral: true,
 		});
 

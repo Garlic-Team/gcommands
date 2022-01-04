@@ -4,29 +4,27 @@ import {Listeners} from '../managers/ListenerManager';
 import Logger from 'js-logger';
 import {Util} from '../util/Util';
 
-type Events<WS extends boolean> = WS extends true ? WSEventType : keyof ClientEvents;
-
-export interface ListenerOptions<WS extends boolean = boolean, Event extends Events<WS> = Events<WS>> {
+export interface ListenerOptions<WS extends true | false, Event extends WS extends true ? WSEventType : keyof ClientEvents> {
 	event: Event;
 	name: string;
 	once?: boolean;
-	ws?: boolean;
+	ws?: WS;
 	fileName?: string;
-	run?: (...args: Event extends Events<false> ? ClientEvents[Event] : Array<any>) => any;
+	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<any>) => any;
 }
 
-export class Listener {
+export class Listener<WS extends true | false = true | false, Event extends WS extends true ? WSEventType : keyof ClientEvents = WS extends true ? WSEventType : keyof ClientEvents> {
 	public client: GClient;
-	public readonly event: string;
+	public readonly event: Event;
 	public readonly name: string;
 	public readonly once?: boolean;
-	public readonly ws?: boolean;
+	public readonly ws?: WS;
 	public readonly fileName?: string;
 	public readonly run: (...args: Array<any>) => any;
 	public owner?: string;
 	public reloading = false;
 
-	public constructor(options: ListenerOptions) {
+	public constructor(options: ListenerOptions<WS, Event>) {
 		Object.assign(this, options);
 
 		Listeners.register(this);

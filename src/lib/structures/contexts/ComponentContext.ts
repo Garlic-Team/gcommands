@@ -23,6 +23,7 @@ export interface ComponentContextOptions<Cached extends CacheType = CacheType> e
 	fetchReply: () => Promise<GuildCacheMessage<Cached>>;
 	followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<GuildCacheMessage<Cached>>;
 	reply: <Fetch extends boolean = boolean>(options?: InteractionReplyOptions & { fetchReply?: Fetch } | string | MessagePayload | InteractionReplyOptions) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	type: 'BUTTON' | 'SELECT_MENU';
 }
 
 export class ComponentContext<Cached extends CacheType = CacheType> extends Context<Cached> {
@@ -67,5 +68,6 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 			this.replied = true;
 			return message;
 		};
+		this.type = options.type;
 	}
 }

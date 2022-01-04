@@ -32,6 +32,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		member: interaction.member,
 		component: component,
 		customId: interaction.customId,
@@ -44,6 +46,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		fetchReply: interaction.fetchReply.bind(interaction),
 		followUp: interaction.followUp.bind(interaction),
 		reply: interaction.reply.bind(interaction),
+		type: interaction.isButton() ? 'BUTTON' : 'SELECT_MENU',
 	});
 
 	if (!await component.inhibit(ctx)) return;
@@ -59,6 +62,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		const errorReply = () => (ctx.replied || ctx.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
 			ephemeral: true,
+			components: [],
 		});
 		if (typeof component.onError === 'function') await Promise.resolve(component.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();
