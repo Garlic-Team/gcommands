@@ -28,6 +28,7 @@ export enum ChannelType {
 }
 
 export interface ArgumentOptions {
+	name: string;
 	description: string;
 	type: ArgumentType | keyof typeof ArgumentType;
 	required?: boolean;
@@ -47,8 +48,7 @@ export class Argument {
 	public readonly channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	public run?: (ctx: AutocompleteContext) => any;
 
-	constructor(name: string, options: ArgumentOptions) {
-		this.name = name;
+	constructor(options: ArgumentOptions) {
 		Object.assign(this, options);
 
 		if (typeof this.type === 'string' && Object.keys(ArgumentType).includes(this.type)) this.type = ArgumentType[this.type];
