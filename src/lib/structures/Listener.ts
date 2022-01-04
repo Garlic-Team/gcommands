@@ -4,7 +4,7 @@ import {Listeners} from '../managers/ListenerManager';
 import Logger from 'js-logger';
 import {Util} from '../util/Util';
 
-export interface ListenerOptions<WS extends boolean, Event extends WS extends false | undefined ? keyof ClientEvents : WSEventType> {
+export interface ListenerOptions<WS extends true | false, Event extends WS extends true ? WSEventType : keyof ClientEvents> {
 	event: Event;
 	name: string;
 	once?: boolean;
@@ -13,7 +13,7 @@ export interface ListenerOptions<WS extends boolean, Event extends WS extends fa
 	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<any>) => any;
 }
 
-export class Listener<WS extends boolean = boolean, Event extends WS extends false | undefined ? keyof ClientEvents : WSEventType = WS extends false | undefined ? keyof ClientEvents : WSEventType> {
+export class Listener<WS extends true | false = true | false, Event extends WS extends true ? WSEventType : keyof ClientEvents = WS extends true ? WSEventType : keyof ClientEvents> {
 	public client: GClient;
 	public readonly event: Event;
 	public readonly name: string;
