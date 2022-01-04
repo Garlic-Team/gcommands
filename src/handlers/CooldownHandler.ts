@@ -17,3 +17,4 @@ export function CooldownHandler(userId: string, item: Command | Component, colle
 		users.set(userId, Date.now() + ms(item.cooldown));
 	}
 }
+ 
