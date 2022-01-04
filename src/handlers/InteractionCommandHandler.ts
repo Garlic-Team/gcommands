@@ -31,7 +31,8 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
-		// @ts-expect-error Further research into this is required. (Contact discord.js)
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		member: interaction.member,
 		command: command,
 		// @ts-expect-error Further research into this is required.
