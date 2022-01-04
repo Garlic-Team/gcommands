@@ -11,7 +11,8 @@
         "polish": "Ten serwer jest w tej chwili niedostępny. Spróbuj ponownie później",
         "indonesian": "Server ini tidak tersedia saat ini. Coba lagi nanti",
         "italian": "Questo server non è disponibile al momento. Riprova più tardi",
-        "french": "Ce serveur n'est pas disponible pour le moment. Réessayez plus tard"
+        "french": "Ce serveur n'est pas disponible pour le moment. Réessayez plus tard",
+        "nederlands": "Deze server is op dit moment niet beschikbaar. Probeer het later opnieuw."
     },
     "MISSING_PERMISSIONS": {
         "english": "You must have the {PERMISSION} permission in order to use this command.",
@@ -25,7 +26,8 @@
         "polish": "Musisz posiadać permisję {PERMISSION} aby użyć tej komendy.",
         "indonesian": "Anda harus memiliki izin {PERMISSION} untuk menggunakan command ini.",
         "italian": "Devi avere il permesso {PERMISSION} per usare questo comando.",
-        "french": "Vous devez disposer de l'autorisation {PERMISSION} pour utiliser cette commande."
+        "french": "Vous devez disposer de l'autorisation {PERMISSION} pour utiliser cette commande.",
+        "nederlands": "Je moet de {PERMISSION} permissie hebben om dit commando te gebruiken."
     },
     "MISSING_CLIENT_PERMISSIONS": {
         "english": "The client must have {PERMISSION} permission to use this command.",
@@ -39,7 +41,8 @@
         "polish": "Klient musi posiadać permisje {PERMISSION} aby użyć tej komendy.",
         "indonesian": "Client harus memiliki izin {PERMISSION} untuk menggunakan command ini.",
         "italian": "Il cliente deve avere il permesso {PERMISSION} per usare questo comando.",
-        "french": "Le client doit disposer de l'autorisation {PERMISSION} pour utiliser cette commande."
+        "french": "Le client doit disposer de l'autorisation {PERMISSION} pour utiliser cette commande.",
+        "nederlands": "De client moet de {PERMISSION} permissie hebben om dit commando uit te voeren."
     },
     "MISSING_ROLES": {
         "english": "You do not have the required roles to use this command! You need one of the following: {ROLES}",
@@ -53,7 +56,8 @@
         "polish": "Nie posiadasz wymaganych ról aby użyć tej komendy! Potrzebujesz jednej z podanych: {ROLES}",
         "indonesian": "Anda tidak memiliki salah satu peran yang diperlukan untuk menggunakan command ini! Anda memerlukan salah satu peran dari yang berikut: {ROLES}",
         "italian": "Non hai uno dei ruoli richiesti per usare questo comando! Hai bisogno di uno dei seguenti: {ROLES}",
-        "french": "Vous n'avez pas le rôle requis pour utiliser cette commande ! Vous avez besoin d'un des rôles suivants : {ROLES}"
+        "french": "Vous n'avez pas le rôle requis pour utiliser cette commande ! Vous avez besoin d'un des rôles suivants: {ROLES}",
+        "nederlands": "Je hebt geen van de vereiste rollen om dit commando te kunnen gebruiken! Je hebt een van de volgende rollen nodig: {ROLES}"
     },
     "COOLDOWN": {
         "english": "You must wait {COOLDOWN} before using that command again.",
@@ -67,7 +71,8 @@
         "polish": "Musisz poczekać {COOLDOWN} sekund przed ponownym użyciem komendy.",
         "indonesian": "Anda harus menunggu {COOLDOWN} lagi sebelum menggunakan command itu lagi.",
         "italian": "Devi aspettare ancora {COOLDOWN} prima di usare questo comando di nuovo.",
-        "french": "Vous devez patienter {COOLDOWN} avant de réutiliser cette commande."
+        "french": "Vous devez patienter {COOLDOWN} avant de réutiliser cette commande.",
+        "nederlands": "Je moet {COOLDOWN} wachten voor je dat commando opnieuw kan gebruiken."
     },
     "UNKNOWN_COMMAND": {
         "english": "Could not find command {COMMAND}!",
@@ -81,7 +86,8 @@
         "polish": "Nie mogę znaleźć komendy {COMMAND}!",
         "indonesian": "Tidak bisa mencari command {COMMAND}!",
         "italian": "Non è stato possibile trovare il comando {COMMAND}!",
-        "french": "Impossible de trouver la commande {COMMAND} !"
+        "french": "Impossible de trouver la commande {COMMAND} !",
+        "nederlands": "Het commando {COMMAND} is niet gevonden!"
     },
     "CHANNEL_TEXT_ONLY": {
         "english": "You can only run this command in text channels.",
@@ -95,7 +101,8 @@
         "polish": "Możesz uruchomić to polecenie tylko w kanałach tekstowych.",
         "indonesian": "Anda hanya bisa menjalankan command di channel teks saja.",
         "italian": "Puoi usare questo comando solo in canali da testo.",
-        "french": "Vous ne pouvez lancer cette commande que dans les salons textuels."
+        "french": "Vous ne pouvez lancer cette commande que dans les salons textuels.",
+        "nederlands": "Je kan dit commando alleen gebruiken in text kanalen."
     },
     "CHANNEL_NEWS_ONLY": {
         "english": "You can only run this command in news channels.",
@@ -109,7 +116,8 @@
         "polish": "To polecenie można uruchomić tylko w kanałach informacyjnych.",
         "indonesian": "Anda hanya bisa menjalankan command ini di channel berita saja.",
         "italian": "Puoi usare questo comando solo in canali da notizie.",
-        "french": "Vous ne pouvez lancer cette commande que dans les salons d'information."
+        "french": "Vous ne pouvez lancer cette commande que dans les salons d'information.",
+        "nederlands": "Je kan dit commando alleen gebruiken in nieuws kanalen."
     },
     "CHANNEL_THREAD_ONLY": {
         "english": "You can only run this command in threads.",
@@ -123,7 +131,8 @@
         "polish": "To polecenie można uruchomić tylko w kanałach informacyjnych.",
         "indonesian": "Anda hanya bisa menjalankan command ini di sebuah thread saja.",
         "italian": "Puoi usare questo comando solo in canali da discussione.",
-        "french": "Vous ne pouvez lancer cette commande que dans les fils de discussion."
+        "french": "Vous ne pouvez lancer cette commande que dans les fils de discussion.",
+        "nederlands": "Je kan dit commando alleen gebruiken in threads."
     },
     "NSFW": {
         "english": "You can only use this command in nsfw channels.",
@@ -137,7 +146,8 @@
         "polish": "Tej komendy możesz użyć tylko na kanale NSFW.",
         "indonesian": "Anda hanya bisa menjalankan command ini di sebuah channel NSFW saja.",
         "italian": "Puoi usare questo comando solo in canali da NSFW.",
-        "french": "Vous ne pouvez lancer cette commande que dans les salons NSFW."
+        "french": "Vous ne pouvez lancer cette commande que dans les salons NSFW.",
+        "nederlands": "Je kan dit commando alleen gebruiken in nsfw kanalen."
     },
     "ARGS_PROMPT": {
         "english": "Please define argument {argument}",
@@ -151,7 +161,8 @@
         "polish": "Proszę zdefiniować argument {argument}",
         "indonesian": "Harap tentukan argumen {argument}",
         "italian": "Si prega di definire l'argomento {argomento}",
-        "french": "Veuillez définir l'argument {argument}"
+        "french": "Veuillez définir l'argument {argument}",
+        "nederlands": "Geef een betekenis op van het argument: {argument}"
     },
     "ARGS_TIME_LIMIT": {
         "english": "You have no time left to answer. You must run the command again.",
@@ -165,7 +176,8 @@
         "polish": "Nie masz już czasu na odpowiedź. Musisz ponownie uruchomić polecenie.",
         "indonesian": "Anda tidak punya waktu lagi untuk menjawab. Anda harus menjalankan command ini lagi.",
         "italian": "Non ti resta nessun tempo per rispondere. Devi usare il comando di nuovo.",
-        "french": "Le temps de réponse est dépassé. Vous devez relancer la commande."
+        "french": "Le temps de réponse est dépassé. Vous devez relancer la commande.",
+        "nederlands": "Je tijd om deze vraag te beantwoorden is op. Voer het commando opnieuw uit."
     },        
     "ARGS_MUST_CONTAIN": {
         "english": "The argument `{argument}` must contain a {type}.",
@@ -179,7 +191,8 @@
         "polish": "Argument `{argument}` musi zawierać {type}.",
         "indonesian": "Argumen `{argument}` harus memiliki sebuah {type}.",
         "italian": "L'argomento {argument} deve contenere a {type}.",
-        "french": "L'argument `{argument}` doit contenir un {type}."
+        "french": "L'argument `{argument}` doit contenir un {type}.",
+        "nederlands": "Het argument {argument} moet (een) {type} bevatten"
     },
     "ARGS_CHOICES": {
         "english": "Please enter one of the following options: {choices}.",
@@ -193,7 +206,8 @@
         "polish": "Proszę wprowadzić jedną z poniższych opcji: {choices}.",
         "indonesian": "Silahkan isi salah satu opsi berikut: {choices}",
         "italian": "Per favore introduca una delle seguenti opzioni: {choices}.",
-        "french": "Veuillez entrer l'une des options suivantes : {choices}."
+        "french": "Veuillez entrer l'une des options suivantes : {choices}.",
+        "nederlands": "Kies uit de volgende keuzes: {choices}"
     },
     "ARGS_OPTIONAL": {
         "english": "This argument is optional, so you can use `skip` to skip this argument.",
@@ -207,7 +221,8 @@
         "polish": "Ten argument jest opcjonalny, więc możesz użyć `skip` aby pominąć ten argument.",
         "indonesian": "Argumen ini opsional, jadi Anda bisa menggunakan `skip` untuk melewati argumen ini.",
         "italian": "Questo argomento è opzionale, quindi puoi usare `skip` per saltare questo argomento.",
-        "french": "Cet argument est optionnel, vous pouvez utiliser `skip` pour le passer."
+        "french": "Cet argument est optionnel, vous pouvez utiliser `skip` pour le passer.",
+        "nederlands": "Dit argument is optioneel, typ skip om dit argument over te slaan."
     },
     "ARGS_COMMAND": {
         "english": "Please select one of the following subcommands: {choices}.",
@@ -221,6 +236,7 @@
         "polish": "Proszę wybrać jedno z następujących podpoleceń: {choices}.",
         "indonesian": "Silakan pilih salah satu dari sub-perintah berikut: {choices}.",
         "italian": "Seleziona uno dei seguenti sottocomandi: {choices}.",
-        "french": "Veuillez sélectionner l'une des sous-commandes suivantes: {choices}."
+        "french": "Veuillez sélectionner l'une des sous-commandes suivantes: {choices}.",
+        "nederlands": "Kies aub een van de volgende subcommando's: {choices}."
     }
 }
