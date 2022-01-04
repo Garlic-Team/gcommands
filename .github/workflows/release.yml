@@ -22,6 +22,19 @@ jobs:
       - name: build
         run: npm run build
 
+      - name: Get version & asign
+        id: get_version
+        run: |
+          variable=$(jq --raw-output '.version' package.json)
+          echo ::set-output name=version::$variable
+
+      - name: Publish releases
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.get_version.outputs.version }}
+          name: ${{ steps.get_version.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: publish
         run: npm publish --tag next
         env:
