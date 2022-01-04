@@ -27,6 +27,7 @@ export class AutocompleteContext<Cached extends CacheType = CacheType> extends C
 		this.argumentName = options.argument.name;
 		this.value = options.value;
 		this.respond = options.respond;
+		this.type = 'AUTOCOMPLETE';
 	}
 
 	public inGuild(): this is AutocompleteContext<'present'> {

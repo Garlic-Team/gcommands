@@ -46,6 +46,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		fetchReply: interaction.fetchReply.bind(interaction),
 		followUp: interaction.followUp.bind(interaction),
 		reply: interaction.reply.bind(interaction),
+		type: interaction.isButton() ? 'BUTTON' : 'SELECT_MENU',
 	});
 
 	if (!await component.inhibit(ctx)) return;

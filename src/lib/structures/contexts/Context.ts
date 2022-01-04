@@ -11,6 +11,9 @@ import {
 	User
 } from 'discord.js';
 import {APIInteractionGuildMember} from 'discord-api-types/v9';
+import { CommandContext } from './CommandContext';
+import { AutocompleteContext } from './AutocompleteContext';
+import { ComponentContext } from './ComponentContext';
 
 export interface ContextOptions<Cached extends CacheType = CacheType> {
 	channel: CacheTypeReducer<Cached,
@@ -42,6 +45,7 @@ export class Context<Cached extends CacheType = CacheType> {
 	public user: User;
 	public userId: Snowflake;
 	public memberPermissions: CacheTypeReducer<Cached, Readonly<Permissions>>;
+	public type: 'COMMAND' | 'BUTTON' | 'SELECT_MENU' | 'AUTOCOMPLETE';
 
 	constructor(client: GClient, options: ContextOptions<Cached>) {
 		this.client = client;
@@ -68,5 +72,17 @@ export class Context<Cached extends CacheType = CacheType> {
 
 	public inRawGuild(): this is Context<'raw'> {
 		return Boolean(this.guildId && !this.guild && this.member);
+	}
+
+	public isCommand(): this is CommandContext {
+		return Boolean(this.type === 'COMMAND');
+	}
+
+	public isAutocomplete(): this is AutocompleteContext {
+		return Boolean(this.type === 'AUTOCOMPLETE');
+	}
+
+	public isComponent(): this is ComponentContext {
+		return Boolean(this.type === 'BUTTON' || this.type === 'SELECT_MENU');
 	}
 }
