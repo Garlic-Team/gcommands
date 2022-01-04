@@ -47,5 +47,7 @@ export async function confirm(ctx: CommandContext | ComponentContext, options: C
 		return undefined;
 	});
 
+	if (result instanceof ButtonInteraction) result.deferUpdate();
+
 	return result !== undefined;
 }
