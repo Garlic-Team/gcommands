@@ -62,6 +62,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		const errorReply = () => (ctx.replied || ctx.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
 			ephemeral: true,
+			components: [],
 		});
 		if (typeof component.onError === 'function') await Promise.resolve(component.onError(ctx, error)).catch(async () => await errorReply());
 		else await errorReply();

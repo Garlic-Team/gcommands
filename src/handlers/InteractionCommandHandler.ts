@@ -57,6 +57,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		if (error.stack) Logger.trace(error.stack);
 		const errorReply = () => (ctx.replied || ctx.deferred) ? ctx.editReply(client.responses.ERROR) : ctx.reply({
 			content: client.responses.ERROR,
+			components: [],
 			ephemeral: true,
 		});
 
