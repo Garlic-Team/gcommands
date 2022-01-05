@@ -31,8 +31,7 @@ export class MongoDBProvider extends Provider implements ProviderInterface {
 			});
 
 		this.db = this.client.db(this?.dbName);
-		this.db.collection('a').findOne({ a: 'a' }, { sort: { "imdb.rating": -1 } });
-
+		
 		return;
 	}
 

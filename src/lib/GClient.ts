@@ -36,7 +36,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 			this.database = options.database;
 
 			if (typeof this.database.init === 'function') this.database.init();
-		};
+		}
 
 		setImmediate(async (): Promise<void> => {
 			await Promise.all([
