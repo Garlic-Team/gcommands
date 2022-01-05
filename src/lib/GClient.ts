@@ -21,8 +21,6 @@ export interface GClientOptions extends ClientOptions {
 	devGuildId?: string;
 }
 
-// TODO Add interface for database
-
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public responses: Record<string, string> = Responses;
 	public options: GClientOptions;
