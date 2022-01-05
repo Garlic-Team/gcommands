@@ -1,6 +1,6 @@
 {
   "name": "gcommands",
-  "version": "0.1.0-nextdev",
+  "version": "9.0.0-next",
   "description": "Powerful and flexible framework!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,8 +9,8 @@
     "lint": "npx eslint .",
     "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:docs": "typedoc --json docs/out-next.json src/index.ts && node scripts/docs.mjs",
-    "build:devdocs": "typedoc --json docs/out-dev.json src/index.ts && node scripts/devdocs.mjs"
+    "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
+    "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/devdocs.mjs"
   },
   "homepage": "https://garlic-team.js.org/#/docs/gcommands/next/general/welcome",
   "author": "Garlic-Team",

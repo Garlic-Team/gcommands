@@ -1,9 +1,6 @@
-name: "Build Documentation"
+name: "Build Latest Documentation"
 
-on:
-  push:
-    branches: [next]
-  workflow_dispatch:
+on: [ workflow_dispatch ]
 
 jobs:
   deploy:

@@ -1,8 +1,8 @@
-name: "Build Dev Documentation"
+name: "Build Next Documentation"
 
 on:
   push:
-    branches: [next-dev]
+    branches: [next]
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
       run: npm i @discordjs/ts-docgen
 
     - name: Build
-      run: npm run build:devdocs
+      run: npm run build:nextdocs
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
