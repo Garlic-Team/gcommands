@@ -36,6 +36,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: publish
-        run: npm publish --tag next
+        run: npm publish --tag latest
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
