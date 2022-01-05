@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 import { Provider, ProviderInterface } from '../lib/structures/Provider';
 
 export class PrismaIOProvider extends Provider implements ProviderInterface, PrismaClient {
@@ -10,7 +10,7 @@ export class PrismaIOProvider extends Provider implements ProviderInterface, Pri
         
 		this.client = new PrismaClient(options);
 
-        Object.defineProperties(this, this.client);
+		Object.defineProperties(this, this.client);
 	}
 
 	async init(): Promise<void> {
