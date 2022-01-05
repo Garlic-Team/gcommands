@@ -16,8 +16,9 @@ export interface ProviderInterface {
 	): boolean;
 
     init(): Promise<void> | void;
+	insert(...args): Promise<any> | any;
     get(...args): Promise<any> | any;
-    set(...args): Promise<any> | any;
+    update(...args): Promise<any> | any;
     delete(...args): Promise<any> | any;
 }
 
@@ -36,20 +37,26 @@ export class Provider extends EventEmitter {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	get(...args) {
-		throwError('Init method is not implemented!', this.constructor.name);
+	insert(...args) {
+		throwError('Insert method is not implemented!', this.constructor.name);
 		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	set(...args) {
-		throwError('Init method is not implemented!', this.constructor.name);
+	get(...args) {
+		throwError('Get method is not implemented!', this.constructor.name);
+		return;
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	update(...args) {
+		throwError('Update method is not implemented!', this.constructor.name);
 		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	delete(...args) {
-		throwError('Init method is not implemented!', this.constructor.name);
+		throwError('Delete method is not implemented!', this.constructor.name);
 		return;
 	}
 }
