@@ -35,25 +35,29 @@ export class MongoDBProvider extends Provider implements ProviderInterface {
 		return;
 	}
 
-	async insert(collection: Collection<Document>, document: Document) {
+	async insert(collectionName: string, document: Document) {
+		const collection = this.db.collection(collectionName);
 		const data = await collection.insertOne(document);
 
 		return data;
 	}
 
-	async get(collection: Collection<Document>, filter: Filter<Document>, options?: FindOptions<Document>) {
+	async get(collectionName: string, filter: Filter<Document>, options?: FindOptions<Document>) {
+		const collection = this.db.collection(collectionName);
 		const data = options ? await collection.findOne(filter, options) : await collection.findOne(filter);
 
 		return data;
 	}
 
-	async update(collection: Collection<Document>, filter: Filter<Document>, set: UpdateFilter<Document>,  options?: UpdateOptions) {
+	async update(collectionName: string, filter: Filter<Document>, set: UpdateFilter<Document>,  options?: UpdateOptions) {
+		const collection = this.db.collection(collectionName);
 		const data = options ? await collection.updateOne(filter, set, options) : await collection.updateOne(filter, set);
 
 		return data;
 	}
 
-	async delete(collection: Collection<Document>, filter: Filter<Document>) {
+	async delete(collectionName: string, filter: Filter<Document>) {
+		const collection = this.db.collection(collectionName);
 		const data = await collection.deleteOne(filter);
 		
 		return data;

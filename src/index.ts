@@ -49,8 +49,9 @@ export {Logger};
 // Inhibitors
 export * as Inhibitor from './inhibitors';
 
-// Providers
-export * from './providers/MongoDBProvider';
+/* Providers
+ * Providers will not be exported due to additional modules. To import, just use the path gcommands/dist/providers/{name}
+*/
 
 // Util
 export * from './util/customId';
