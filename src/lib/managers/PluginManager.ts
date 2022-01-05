@@ -1,7 +1,7 @@
 import {Collection} from 'discord.js';
 import {Plugin} from '../structures/Plugin';
 import {GClient} from '../GClient';
-import {PluginFinder} from '../loaders/PluginFinder';
+import {pluginFinder} from '../loaders/pluginFinder';
 import Logger from 'js-logger';
 
 export class PluginManager extends Collection<string, Plugin> {
@@ -20,7 +20,7 @@ export class PluginManager extends Collection<string, Plugin> {
 	}
 
 	public async search(basedir: string): Promise<void> {
-		await PluginFinder(basedir);
+		await pluginFinder(basedir);
 	}
 
 	public async initiate(client: GClient): Promise<void> {
