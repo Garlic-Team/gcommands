@@ -18,21 +18,13 @@
 ## 📂 | Installation
 
 ```sh
-# Next (recommended)
-npm install gcommands@next
-yarn add gcommands@next
-
-# Next Dev (until the stable next version is released)
-npm install gcommands@next-dev
-yarn add gcommands@next-dev
-
-# Latest
+# Latest (recommended)
 npm install gcommands@latest
 yarn add gcommands@latest
 
-# Dev Build
-npm install gcommands@dev
-yarn add gcommands@dev
+# Next Version (unstable, under development)
+npm install gcommands@next
+yarn add gcommands@next
 ```
 
 ## 🐢 | Guide & Documentation
