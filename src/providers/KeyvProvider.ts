@@ -14,7 +14,7 @@ export class KeyvProvider extends Provider implements ProviderInterface {
 	}
 
 	async init(): Promise<void> {
-        this.client = new Keyv(this.uri);
+		this.client = new Keyv(this.uri);
 
 		return;
 	}
@@ -43,7 +43,7 @@ export class KeyvProvider extends Provider implements ProviderInterface {
 		return data;
 	}
 
-    clear() {
-        return this.client.clear();
-    }
+	clear() {
+		return this.client.clear();
+	}
 }

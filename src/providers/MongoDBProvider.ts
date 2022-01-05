@@ -1,5 +1,5 @@
 import Logger from 'js-logger';
-import { Collection, Db, Document, Filter, FindOptions, MongoClient, UpdateFilter, UpdateOptions } from 'mongodb';
+import { Db, Document, Filter, FindOptions, MongoClient, UpdateFilter, UpdateOptions } from 'mongodb';
 import { Provider, ProviderInterface } from '../lib/structures/Provider';
 
 export class MongoDBProvider extends Provider implements ProviderInterface {

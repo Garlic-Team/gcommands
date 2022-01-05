@@ -13,9 +13,9 @@ export class LruCacheProvider extends Provider implements ProviderInterface {
 	}
 
 	async init(): Promise<void> {
-        Logger.debug('LruCache initializated!');
+		Logger.debug('LruCache initializated!');
 
-        this.emit('connect', this.client);
+		this.emit('connect', this.client);
 
 		return;
 	}
@@ -44,7 +44,7 @@ export class LruCacheProvider extends Provider implements ProviderInterface {
 		return data;
 	}
 
-    clear() {
-        return this.client.reset();
-    }
+	clear() {
+		return this.client.reset();
+	}
 }

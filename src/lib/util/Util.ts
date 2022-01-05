@@ -3,7 +3,7 @@ export class Util {
 	 * @deprecated We don't support arguments in object/array
 	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
 	 */
-	static argumentsToArray(options: Array<any>): Array<String> {
+	static argumentsToArray(options: Array<any>): Array<string> {
 		const args = [];
 
 		const check = (option) => {
@@ -33,7 +33,7 @@ export class Util {
 	 * @deprecated We don't support arguments in object/array
 	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
 	 */
-	static argumentsToObject(options: Array<any>): Object {
+	static argumentsToObject(options: Array<any>) {
 		if (!Array.isArray(options)) return {};
 		const args = {};
 
