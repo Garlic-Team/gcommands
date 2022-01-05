@@ -1,6 +1,6 @@
 // const {GClient} = require('gcommands')!
 require('dotenv').config();
-const {GClient, Plugins, Logger} = require('../dist');
+const {GClient, Plugins, Logger, MongoDBProvider} = require('../dist');
 const {Intents} = require('discord.js');
 const path = require('path');
 
@@ -17,9 +17,15 @@ const client = new GClient({
 		path.join(__dirname, 'listeners')
 	],
 	messagePrefix: '!',
+	database: new MongoDBProvider(process.env.mongodburi), // Remove if you don't want database
 	devGuildId: process.env.DEV_SERVER,
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
+
+client.database.on('connect', () => {
+	console.log('test')
+})
+// ^ Remove if you don't want database
 
 // See commands/introduce.js (new syntax)
 // See commands/class.js (old class syntax)

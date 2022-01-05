@@ -1,11 +1,24 @@
 import Logger from 'js-logger';
+import {EventEmitter} from 'events';
 import {Util} from '../util/Util';
 
+export interface ProviderEvents {
+	'connect': (client?: any) => void;
+}
+
 export interface ProviderInterface {
-    init(): void;
-    get(): Promise<any> | any;
-    set(): Promise<any> | any;
-    delete(): Promise<any> | any;
+	on<U extends keyof ProviderEvents>(
+		event: U, listener: ProviderEvents[U]
+	): this;
+	
+	emit<U extends keyof ProviderEvents>(
+		event: U, ...args: Parameters<ProviderEvents[U]>
+	): boolean;
+
+    init(): Promise<void> | void;
+    get(...args): Promise<any> | any;
+    set(...args): Promise<any> | any;
+    delete(...args): Promise<any> | any;
 }
 
 const throwError = (error, name) => {
@@ -16,23 +29,26 @@ const throwError = (error, name) => {
 	Logger.error(error, trace);
 };
 
-export class Provider implements ProviderInterface {
+export class Provider extends EventEmitter {
 	init() {
 		throwError('Init method is not implemented!', this.constructor.name);
 		return;
 	}
 
-	get() {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	get(...args) {
 		throwError('Init method is not implemented!', this.constructor.name);
 		return;
 	}
 
-	set() {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	set(...args) {
 		throwError('Init method is not implemented!', this.constructor.name);
 		return;
 	}
 
-	delete() {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	delete(...args) {
 		throwError('Init method is not implemented!', this.constructor.name);
 		return;
 	}

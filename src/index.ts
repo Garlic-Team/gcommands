@@ -49,6 +49,9 @@ export {Logger};
 // Inhibitors
 export * as Inhibitor from './inhibitors';
 
+// Providers
+export * from './providers/MongoDBProvider';
+
 // Util
 export * from './util/customId';
 export * from './lib/util/registerDirectory';

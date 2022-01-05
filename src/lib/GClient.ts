@@ -17,7 +17,7 @@ export interface GClientOptions extends ClientOptions {
 	messagePrefix?: string;
 	unknownCommandMessage?: boolean;
 	dirs?: Array<string>;
-	database?: ProviderInterface | any;
+	database?: ProviderInterface;
 	devGuildId?: string;
 }
 
@@ -26,13 +26,17 @@ export interface GClientOptions extends ClientOptions {
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public responses: Record<string, string> = Responses;
 	public options: GClientOptions;
-	public database?: ProviderInterface | any;
+	public database?: ProviderInterface;
 
 	constructor(options: GClientOptions) {
 		super(options);
 
 		if (options.dirs) registerDirectories(options.dirs);
-		if (options.database) this.database = options.database;
+		if (options.database) {
+			this.database = options.database;
+
+			if (typeof this.database.init === 'function') this.database.init();
+		};
 
 		setImmediate(async (): Promise<void> => {
 			await Promise.all([
