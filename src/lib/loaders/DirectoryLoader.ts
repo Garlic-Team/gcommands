@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {Util} from '../util/Util';
 
-export async function DirectoryLoader(dir: string): Promise<Array<any>> {
+export async function directoryLoader(dir: string): Promise<Array<any>> {
 	let files = [];
 	if (fs.existsSync(dir)) {
 		for await(const fsDirent of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -10,7 +10,7 @@ export async function DirectoryLoader(dir: string): Promise<Array<any>> {
 			const fileType = path.extname(rawFileName);
 
 			if (fsDirent.isDirectory()) {
-				files = [...files, ...await DirectoryLoader(path.join(dir, rawFileName))];
+				files = [...files, ...await directoryLoader(path.join(dir, rawFileName))];
 				continue;
 			} else if (!['.js', '.ts', '.json'].includes(fileType)) {
 				continue;

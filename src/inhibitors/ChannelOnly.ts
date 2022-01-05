@@ -16,7 +16,10 @@ export class ChannelOnly extends Inhibitor {
 	}
 
 	run(ctx: CommandContext | ComponentContext): boolean | any {
-		if (!this.ids.includes(ctx.channelId)) return ctx.reply(this.resolveMessage(ctx) || 'This command can not be used in this channel');
+		if (!this.ids.includes(ctx.channelId)) return ctx.reply({ 
+			content: this.resolveMessage(ctx) || 'This command can not be used in this channel', 
+			ephemeral: this.ephemeral 
+		});
 		else return true;
 	}
 }

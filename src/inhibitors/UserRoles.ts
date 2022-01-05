@@ -20,7 +20,10 @@ export class UserRoles extends Inhibitor {
 	run(ctx: CommandContext | ComponentContext): boolean | any {
 		if (!ctx.inCachedGuild()) return;
 
-		if (!ctx.member.roles.cache[this.requireAll ? 'hasAll' : 'hasAny'](...this.ids)) return ctx.reply('You do not have the required roles to execute this command');
+		if (!ctx.member.roles.cache[this.requireAll ? 'hasAll' : 'hasAny'](...this.ids)) return ctx.reply({ 
+			content: 'You do not have the required roles to execute this command',
+			ephemeral: this.ephemeral,
+		});
 		else return true;
 	}
 }

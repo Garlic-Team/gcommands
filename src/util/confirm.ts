@@ -1,6 +1,6 @@
 import {CommandContext} from '../lib/structures/contexts/CommandContext';
 import {ButtonInteraction, MessageActionRow, MessageButton} from 'discord.js';
-import {CustomId} from './CustomId';
+import {customId} from './customId';
 import {ComponentContext} from '../lib/structures/contexts/ComponentContext';
 
 export interface ConfirmOptions {
@@ -15,9 +15,9 @@ export interface ConfirmOptions {
 }
 
 export async function confirm(ctx: CommandContext | ComponentContext, options: ConfirmOptions = {}) {
-	const customId = CustomId('confirm', ctx.userId);
+	const id = customId('confirm', ctx.userId);
 	const button = new MessageButton()
-		.setCustomId(customId)
+		.setCustomId(id)
 		.setLabel('Confirm')
 		.setStyle('DANGER');
 
@@ -36,7 +36,7 @@ export async function confirm(ctx: CommandContext | ComponentContext, options: C
 	ctx.deferred ? await ctx.editReply(messageContent) : await ctx.reply(messageContent);
 
 	const filter = (interaction: ButtonInteraction) => {
-		return interaction.customId === customId && interaction.user.id === ctx.userId;
+		return interaction.customId === id && interaction.user.id === ctx.userId;
 	};
 
 	const result = await ctx.channel.awaitMessageComponent({

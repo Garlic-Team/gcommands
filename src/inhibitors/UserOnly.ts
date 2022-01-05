@@ -16,7 +16,10 @@ export class UserOnly extends Inhibitor {
 	}
 
 	run(ctx: CommandContext | ComponentContext): boolean | any {
-		if (!this.ids.includes(ctx.userId)) return ctx.reply(this.resolveMessage(ctx) || 'You can not use this command');
+		if (!this.ids.includes(ctx.userId)) return ctx.reply({ 
+			content: this.resolveMessage(ctx) || 'You can not use this command',
+			ephemeral: this.ephemeral,
+		});
 		else return true;
 	}
 }
