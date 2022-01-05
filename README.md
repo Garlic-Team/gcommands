@@ -28,7 +28,7 @@ yarn add gcommands@next
 ```
 
 ## 🐢 | Guide & Documentation
-To help you learn more about GCommands we have a [guide](https://gcommands.js.org/guide/) and [documentation](https://garlic-team.js.org/#/docs/gcommands/next/general/welcome) for you.  
+To help you learn more about GCommands we have a [guide](https://garlic-team.js.org/guide/) and [documentation](https://garlic-team.js.org/docs/#/docs/gcommands/latest/general/welcome) for you.  
 If you're still in trouble, you can join our [Garlic Team](https://discord.gg/AjKJSBbGm2) discord server.
 
 ## 👀 | Features
