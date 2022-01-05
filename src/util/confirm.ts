@@ -1,6 +1,6 @@
 import {CommandContext} from '../lib/structures/contexts/CommandContext';
 import {ButtonInteraction, MessageActionRow, MessageButton} from 'discord.js';
-import {customId} from './customId';
+import {customId} from './CustomId';
 import {ComponentContext} from '../lib/structures/contexts/ComponentContext';
 
 export interface ConfirmOptions {

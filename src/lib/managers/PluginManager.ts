@@ -1,7 +1,7 @@
 import {Collection} from 'discord.js';
 import {Plugin} from '../structures/Plugin';
 import {GClient} from '../GClient';
-import {PluginFinder} from '../loaders/pluginFinder';
+import {PluginFinder} from '../loaders/PluginFinder';
 import Logger from 'js-logger';
 
 export class PluginManager extends Collection<string, Plugin> {
