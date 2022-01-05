@@ -43,6 +43,7 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 
 	let replied: Message;
 	const ctx = new CommandContext(client, {
+		message: message,
 		channel: message.channel,
 		createdAt: message.createdAt,
 		createdTimestamp: message.createdTimestamp,

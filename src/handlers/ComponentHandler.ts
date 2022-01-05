@@ -26,6 +26,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 	}
 
 	const ctx = new ComponentContext(client, {
+		interaction: interaction,
 		channel: interaction.channel,
 		createdAt: interaction.createdAt,
 		createdTimestamp: interaction.createdTimestamp,

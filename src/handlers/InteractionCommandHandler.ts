@@ -25,6 +25,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	}
 
 	const ctx = new CommandContext(client, {
+		interaction: interaction,
 		channel: interaction.channel,
 		createdAt: interaction.createdAt,
 		createdTimestamp: interaction.createdTimestamp,

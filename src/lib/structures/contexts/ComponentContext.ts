@@ -5,6 +5,7 @@ import {
 	InteractionDeferReplyOptions,
 	InteractionDeferUpdateOptions,
 	InteractionReplyOptions,
+	MessageComponentInteraction,
 	MessagePayload,
 	WebhookEditMessageOptions
 } from 'discord.js';
@@ -12,6 +13,7 @@ import {GClient} from '../../GClient';
 import {Component} from '../Component';
 
 export interface ComponentContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
+	interaction: MessageComponentInteraction;
 	component: Component;
 	customId: string;
 	arguments: Array<string>;
@@ -27,6 +29,7 @@ export interface ComponentContextOptions<Cached extends CacheType = CacheType> e
 }
 
 export class ComponentContext<Cached extends CacheType = CacheType> extends Context<Cached> {
+	public interaction: MessageComponentInteraction;
 	public readonly component: Component;
 	public readonly componentName: string;
 	public readonly customId: string;
@@ -44,6 +47,7 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 
 	constructor(client: GClient, options: ComponentContextOptions<Cached>) {
 		super(client, options);
+		this.interaction = options.interaction;
 		this.component = options.component;
 		this.componentName = options.component.name;
 		this.customId = options.customId;

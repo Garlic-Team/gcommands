@@ -22,6 +22,7 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 	if (!argument) return;
 
 	const ctx = new AutocompleteContext(client, {
+		interaction: interaction,
 		channel: interaction.channel,
 		createdAt: interaction.createdAt,
 		createdTimestamp: interaction.createdTimestamp,

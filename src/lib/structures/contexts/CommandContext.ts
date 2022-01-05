@@ -2,16 +2,21 @@ import {Context, ContextOptions} from './Context';
 import {Command} from '../Command';
 import {
 	CacheType,
+	CommandInteraction,
 	CommandInteractionOptionResolver,
+	ContextMenuInteraction,
 	GuildCacheMessage,
 	InteractionDeferReplyOptions,
 	InteractionReplyOptions,
+	Message,
 	MessagePayload,
 	WebhookEditMessageOptions
 } from 'discord.js';
 import {GClient} from '../../GClient';
 
 export interface CommandContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
+	interaction?: CommandInteraction | ContextMenuInteraction;
+	message?: Message;
 	command: Command;
 	arguments: CommandInteractionOptionResolver<Cached>;
 	deferReply: <Fetch extends boolean = boolean>(options?: InteractionDeferReplyOptions & { fetchReply?: Fetch }) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
@@ -23,6 +28,8 @@ export interface CommandContextOptions<Cached extends CacheType = CacheType> ext
 }
 
 export class CommandContext<Cached extends CacheType = CacheType> extends Context<Cached> {
+	public interaction?: CommandInteraction | ContextMenuInteraction;
+	public message?: Message;
 	public readonly command: Command;
 	public readonly commandName: string;
 	public arguments: CommandInteractionOptionResolver<Cached>;
@@ -37,6 +44,8 @@ export class CommandContext<Cached extends CacheType = CacheType> extends Contex
 
 	constructor(client: GClient, options: CommandContextOptions<Cached>) {
 		super(client, options);
+		this.interaction = options.interaction;
+		this.message = options.message;
 		this.command = options.command;
 		this.commandName = options.command.name;
 		this.arguments = options.arguments;
