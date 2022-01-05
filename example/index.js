@@ -18,7 +18,6 @@ const client = new GClient({
 	],
 	messagePrefix: '!',
 	devGuildId: process.env.DEV_SERVER,
-	cooldown: '30s',
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
 
