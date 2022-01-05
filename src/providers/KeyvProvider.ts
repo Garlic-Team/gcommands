@@ -19,8 +19,8 @@ export class KeyvProvider extends Provider implements ProviderInterface {
 		return;
 	}
 
-	async insert(key: string, options?: any) {
-		const data = await this.update(key, options);
+	async insert(key: string, value: any, ttl?: number) {
+		const data = await this.update(key, value, ttl);
 
 		return data;
 	}
@@ -31,8 +31,8 @@ export class KeyvProvider extends Provider implements ProviderInterface {
 		return data;
 	}
 
-	async update(key: string, options?: any) {
-		const data = await this.client.set(key, options);
+	async update(key: string, value: any, ttl?: number) {
+		const data = await this.client.set(key, value, ttl);
 
 		return data;
 	}
