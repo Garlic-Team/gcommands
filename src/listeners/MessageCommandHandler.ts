@@ -10,6 +10,8 @@ new Listener({
 	run: async (message: Message): Promise<void> => {
 		const client = message.client as GClient;
 
+		if (!client.options.messageSupport) return;
+
 		const mention = message.content.split(' ')[0].match(new RegExp(`^<@!?(${client.user.id})>`));
 
 		const prefix = mention?.[0] || client.options?.messagePrefix;

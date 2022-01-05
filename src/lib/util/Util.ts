@@ -1,5 +1,9 @@
 export class Util {
-	static argumentsToArray(options: any): any {
+	/**
+	 * @deprecated We don't support arguments in object/array
+	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
+	 */
+	static argumentsToArray(options: Array<any>): Array<String> {
 		const args = [];
 
 		const check = (option) => {
@@ -25,7 +29,11 @@ export class Util {
 		return args;
 	}
 
-	static argumentsToObject(options: any): any {
+	/**
+	 * @deprecated We don't support arguments in object/array
+	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
+	 */
+	static argumentsToObject(options: Array<any>): Object {
 		if (!Array.isArray(options)) return {};
 		const args = {};
 
