@@ -4,7 +4,7 @@ const {GClient, Plugins, Logger} = require('../dist');
 const {Intents} = require('discord.js');
 const path = require('path');
 
-// Search for plugins in node_modules (folder names starting with gcommands-plugin-) or plugins folder
+// Search for plugins in node_modules (folder names starting with gcommands-plugin- or @gcommands/plugin-) or plugins folder
 Plugins.search(__dirname);
 
 // Set the log level
