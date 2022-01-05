@@ -85,4 +85,12 @@ export class Context<Cached extends CacheType = CacheType> {
 	public isComponent(): this is ComponentContext {
 		return Boolean(this.type === 'BUTTON' || this.type === 'SELECT_MENU');
 	}
+
+	public isButton(): this is ComponentContext {
+		return Boolean(this.type === 'BUTTON');
+	}
+
+	public isSelectMenu(): this is ComponentContext {
+		return Boolean(this.type === 'SELECT_MENU');
+	}
 }
