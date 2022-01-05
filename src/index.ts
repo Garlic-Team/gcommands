@@ -50,7 +50,7 @@ export {Logger};
 export * as Inhibitor from './inhibitors';
 
 // Util
-export * from './util/CustomId';
+export * from './util/customId';
 export * from './lib/util/registerDirectory';
 export * from './lib/util/registerDirectories';
 export * from './util/confirm';
