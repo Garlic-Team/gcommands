@@ -10,6 +10,11 @@
     "esModuleInterop": true
   },
   "files": [
-    "src/index.ts"
+    "src/index.ts",
+    "src/providers/FirestoreProvider.ts",
+    "src/providers/KeyvProvider.ts",
+    "src/providers/LruCacheProvider.ts",
+    "src/providers/MongoDBProvider.ts",
+    "src/providers/PrismaIOProvider.ts"
   ]
 }
