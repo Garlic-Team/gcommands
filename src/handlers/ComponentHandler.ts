@@ -33,8 +33,6 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		member: interaction.member,
 		component: component,
 		customId: interaction.customId,

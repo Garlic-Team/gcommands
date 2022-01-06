@@ -15,6 +15,7 @@ export interface ProviderInterface {
 		event: U, ...args: Parameters<ProviderEvents[U]>
 	): boolean;
 
+	client: any;
     init(): Promise<void> | void;
 	insert(...args): Promise<any> | any;
     get(...args): Promise<any> | any;

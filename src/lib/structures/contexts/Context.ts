@@ -44,7 +44,7 @@ export class Context<Cached extends CacheType = CacheType> {
 	public member: CacheTypeReducer<Cached, GuildMember, APIInteractionGuildMember>;
 	public user: User;
 	public userId: Snowflake;
-	public memberPermissions: CacheTypeReducer<Cached, Readonly<Permissions>>;
+	public memberPermissions: string | Readonly<Permissions>;
 	public type: 'COMMAND' | 'BUTTON' | 'SELECT_MENU' | 'AUTOCOMPLETE';
 
 	constructor(client: GClient, options: ContextOptions<Cached>) {
@@ -58,8 +58,7 @@ export class Context<Cached extends CacheType = CacheType> {
 		this.member = options.member;
 		this.user = options.user;
 		this.userId = options.user.id;
-		// @ts-expect-error Discord.js messed something up here
-		this.memberPermissions = options.member?.permissions;
+		this.memberPermissions = options.member.permissions;
 	}
 
 	public inGuild(): this is Context<'present'> {

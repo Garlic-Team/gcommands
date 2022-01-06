@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { Provider, ProviderInterface } from '../lib/structures/Provider';
 
-export class PrismaIOProvider extends Provider implements ProviderInterface, PrismaClient {
+export interface PrismaIOProviderInterface extends ProviderInterface {
+	client: PrismaClient;
+}
+
+export class PrismaIOProvider extends Provider implements PrismaIOProviderInterface {
 	uri: string;
 	client: PrismaClient;
 

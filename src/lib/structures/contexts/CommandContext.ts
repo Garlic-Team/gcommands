@@ -14,11 +14,13 @@ import {
 } from 'discord.js';
 import {GClient} from '../../GClient';
 
+type ArgumentsType<Cached extends CacheType = CacheType> = Omit<CommandInteractionOptionResolver<Cached>, | 'getMessage' | 'getFocused' | 'getMentionable' | 'getRole' | 'getNumber' | 'getInteger' | 'getString' | 'getChannel' | 'getBoolean' | 'getSubcommandGroup' | 'getSubcommand'>
+
 export interface CommandContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
 	interaction?: CommandInteraction | ContextMenuInteraction;
 	message?: Message;
 	command: Command;
-	arguments: CommandInteractionOptionResolver<Cached>;
+	arguments: ArgumentsType;
 	deferReply: <Fetch extends boolean = boolean>(options?: InteractionDeferReplyOptions & { fetchReply?: Fetch }) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
 	deleteReply: () => Promise<void>;
 	editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<GuildCacheMessage<Cached>>;
@@ -32,7 +34,7 @@ export class CommandContext<Cached extends CacheType = CacheType> extends Contex
 	public message?: Message;
 	public readonly command: Command;
 	public readonly commandName: string;
-	public arguments: CommandInteractionOptionResolver<Cached>;
+	public arguments: ArgumentsType;
 	public deferred = false;
 	public replied = false;
 	public deferReply: <Fetch extends boolean = boolean>(options?: InteractionDeferReplyOptions & { fetchReply?: Fetch }) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
