@@ -32,11 +32,8 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		member: interaction.member,
 		command: command,
-		// @ts-expect-error Further research into this is required.
 		arguments: interaction.options,
 		deferReply: interaction.deferReply.bind(interaction),
 		deleteReply: interaction.deleteReply.bind(interaction),

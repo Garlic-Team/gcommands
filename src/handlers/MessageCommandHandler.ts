@@ -55,6 +55,7 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
 		arguments: new CommandInteractionOptionResolver(client, args, {}),
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error This will not be fixed (typings for interaction are more important)
 		deferReply: () => {
 			return;
