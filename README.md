@@ -5,6 +5,8 @@
   <br />
   <p>
     <a href="https://www.npmjs.com/package/gcommands"><img src="https://nodei.co/npm/gcommands.png?downloads=true&stars=true" alt="NPM Banner"></a>
+    <br />
+    <img src="https://discord.com/api/guilds/833628077556367411/embed.png?style=banner2"></img>
   </p>
   <p>
     <a href="https://ko-fi.com/H2H05FNRL"><img src="https://img.shields.io/badge/Kofi-Donate-yellow?style=for-the-badge" height="30" /></a>
@@ -15,26 +17,30 @@
 
 ---
 
-## 📂 | Installation
+## Description
+GCommands is a [discord.js](https://discord.js.org) framework that makes an incredible amount of work easier, it's very customizable.
 
+## Features
+- Written in TypeScript
+- Supports slash, legacy and context menus
+- Very customizable
+- Supports custom plugins
+- Built-in command, listener, component handler
+
+
+## Installation
 ```sh
 # Latest (recommended)
 npm install gcommands@latest
 yarn add gcommands@latest
+pnpm add gcommands@latest
 
 # Next Version (unstable, under development)
 npm install gcommands@next
 yarn add gcommands@next
+pnpm add gcommands@next
 ```
 
-## 🐢 | Guide & Documentation
+## Guide & Documentation
 To help you learn more about GCommands we have a [guide](https://garlic-team.js.org/guide/) and [documentation](https://garlic-team.js.org/docs/#/docs/gcommands/latest/general/welcome) for you.  
-If you're still in trouble, you can join our [Garlic Team](https://discord.gg/AjKJSBbGm2) discord server.
-
-## 👀 | Features
-
-- Flexible
-- Supports slash, legacy and context menus
-- Supports many types of arguments
-- Supports custom plugins
-- Built-in command, listener, component handler
+We will be glad if you join to our [discord server](https://discord.gg/AjKJSBbGm2).

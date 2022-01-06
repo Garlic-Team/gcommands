@@ -33,6 +33,12 @@ export class PrismaIOProvider extends Provider {
 		return data;
 	}
 
+	async getMany(model: string, options: any) {
+		const data = await this.client[model].findMany(options);
+
+		return data;
+	}
+
 	async update(model: string, options: any) {
 		const data = await this.client[model].update(options);
 

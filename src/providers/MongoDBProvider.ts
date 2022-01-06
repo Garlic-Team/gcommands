@@ -50,6 +50,13 @@ export class MongoDBProvider extends Provider {
 		return data;
 	}
 
+	async getMany(collectionName: string, filter: Filter<Document>, options?: FindOptions<Document>) {
+		const collection = this.db.collection(collectionName);
+		const data = options ? await collection.find(filter, options) : await collection.find(filter);
+
+		return data;
+	}
+
 	async update(collectionName: string, filter: Filter<Document>, set: UpdateFilter<Document>,  options?: UpdateOptions) {
 		const collection = this.db.collection(collectionName);
 		const data = options ? await collection.updateOne(filter, set, options) : await collection.updateOne(filter, set);
