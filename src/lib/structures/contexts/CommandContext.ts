@@ -64,4 +64,8 @@ export class CommandContext<Cached extends CacheType = CacheType> extends Contex
 		};
 		this.type = 'COMMAND';
 	}
+
+	public safeReply<Fetch extends boolean = boolean>(options?: InteractionReplyOptions & { fetchReply?: Fetch } | string | MessagePayload | InteractionReplyOptions): Promise<Fetch extends true ? GuildCacheMessage<Cached> : void> {
+		return this.deferred || this.replied ? this.editReply(options) : this.reply(options);
+	}
 }

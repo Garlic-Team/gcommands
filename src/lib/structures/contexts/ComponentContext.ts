@@ -74,4 +74,8 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 		};
 		this.type = options.type;
 	}
+
+	public safeReply<Fetch extends boolean = boolean>(options?: InteractionReplyOptions & { fetchReply?: Fetch } | string | MessagePayload | InteractionReplyOptions): Promise<Fetch extends true ? GuildCacheMessage<Cached> : void> {
+		return this.deferred || this.replied ? this.editReply(options) : this.reply(options);
+	}
 }
