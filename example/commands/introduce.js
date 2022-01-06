@@ -1,4 +1,5 @@
 const {Argument, ArgumentType, Command, CommandType, CustomId, MessageActionRow, MessageButton} = require('../../dist');
+const { MongoDBProvider } = require('../../dist/providers/MongoDBProvider');
 
 // You can still use classes, but you will need to put the "new" keyword front of it
 new Command({
@@ -13,8 +14,6 @@ new Command({
 		})
 	],
 	run: (ctx) => {
-		// const name = ctx.arguments.array[0]?.username || ctx.arguments.array[0];
-		// const name = ctx.arguments.object.user?.username || ctx.arguments.object.name;
 		const name = ctx.arguments.getUser('user')?.username || ctx.arguments.getString('name');
 
 		const row = new MessageActionRow().addComponents([
