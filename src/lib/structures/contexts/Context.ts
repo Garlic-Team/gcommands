@@ -62,6 +62,11 @@ export class Context<Cached extends CacheType = CacheType> {
 		this.memberPermissions = options.member?.permissions;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public getDatabase<Database>(_: Database): Database {
+		return this.client.options.database;
+	}
+
 	public inGuild(): this is Context<'present'> {
 		return Boolean(this.guildId && this.member);
 	}

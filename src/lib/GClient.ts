@@ -1,5 +1,4 @@
 import {Client, ClientOptions} from 'discord.js';
-import {ProviderInterface} from './structures/Provider';
 import {Plugins} from './managers/PluginManager';
 import {Commands} from './managers/CommandManager';
 import {Listeners} from './managers/ListenerManager';
@@ -18,23 +17,21 @@ export interface GClientOptions extends ClientOptions {
 	messagePrefix?: string;
 	unknownCommandMessage?: boolean;
 	dirs?: Array<string>;
-	database?: ProviderInterface;
+	database?: any;
 	devGuildId?: string;
 }
 
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public responses: Record<string, string> = Responses;
 	public options: GClientOptions;
-	public database?: ProviderInterface;
+	public database?: any;
 
 	constructor(options: GClientOptions) {
 		super(options);
 
 		if (options.dirs) registerDirectories(options.dirs);
-		if (options.database) {
-			this.database = options.database;
-
-			if (typeof this.database.init === 'function') this.database.init();
+		if (this.options.database) {
+			if (typeof this.options.database.init === 'function') this.options.database.init();
 		}
 
 		setImmediate(async (): Promise<void> => {
