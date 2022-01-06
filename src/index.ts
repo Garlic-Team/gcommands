@@ -52,6 +52,7 @@ export * as Inhibitor from './inhibitors';
 /* Providers
  * Providers will not be exported due to additional modules. To import, just use the path gcommands/dist/providers/{name}
 */
+export * from './lib/structures/Provider';
 
 // Util
 export * from './util/customId';
