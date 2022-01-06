@@ -21,8 +21,6 @@ const client = new GClient({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
 
-// ^ Remove if you don't want database
-
 // See commands/introduce.js (new syntax)
 // See commands/class.js (old class syntax)
 // See components/introduce.js (new syntax)
