@@ -24,15 +24,17 @@ export interface GClientOptions extends ClientOptions {
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public responses: Record<string, string> = Responses;
 	public options: GClientOptions;
-	public database?: any;
+	public database: any;
 
 	constructor(options: GClientOptions) {
 		super(options);
 
 		if (options.dirs) registerDirectories(options.dirs);
+		/*
 		if (this.options.database) {
 			if (typeof this.options.database.init === 'function') this.options.database.init();
 		}
+		*/
 
 		setImmediate(async (): Promise<void> => {
 			await Promise.all([
@@ -42,5 +44,10 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 				Listeners.initiate(this),
 			]);
 		});
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public getDatabase<Database>(_?: Database): Database {
+		return this.database;
 	}
 }
