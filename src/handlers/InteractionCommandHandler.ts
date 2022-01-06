@@ -35,6 +35,8 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		member: interaction.member,
 		memberPermissions: interaction.memberPermissions,
 		command: command,
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
 		arguments: interaction.options,
 		deferReply: interaction.deferReply.bind(interaction),
 		deleteReply: interaction.deleteReply.bind(interaction),
