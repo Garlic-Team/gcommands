@@ -26,6 +26,7 @@ export interface ContextOptions<Cached extends CacheType = CacheType> {
 	guild: CacheTypeReducer<Cached, Guild, null>;
 	guildId: CacheTypeReducer<Cached, Snowflake>;
 	member: CacheTypeReducer<Cached, GuildMember, APIInteractionGuildMember>;
+	memberPermissions: CacheTypeReducer<Cached, Readonly<Permissions>>;
 	user: User;
 }
 
@@ -44,7 +45,7 @@ export class Context<Cached extends CacheType = CacheType> {
 	public member: CacheTypeReducer<Cached, GuildMember, APIInteractionGuildMember>;
 	public user: User;
 	public userId: Snowflake;
-	public memberPermissions: string | Readonly<Permissions>;
+	public memberPermissions: CacheTypeReducer<Cached, Readonly<Permissions>>;
 	public type: 'COMMAND' | 'BUTTON' | 'SELECT_MENU' | 'AUTOCOMPLETE';
 
 	constructor(client: GClient, options: ContextOptions<Cached>) {
@@ -58,7 +59,7 @@ export class Context<Cached extends CacheType = CacheType> {
 		this.member = options.member;
 		this.user = options.user;
 		this.userId = options.user.id;
-		this.memberPermissions = options.member.permissions;
+		this.memberPermissions = options.memberPermissions;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars

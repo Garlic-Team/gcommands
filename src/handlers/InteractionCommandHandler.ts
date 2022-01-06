@@ -33,6 +33,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		guildId: interaction.guildId,
 		user: interaction.user,
 		member: interaction.member,
+		memberPermissions: interaction.memberPermissions,
 		command: command,
 		arguments: interaction.options,
 		deferReply: interaction.deferReply.bind(interaction),

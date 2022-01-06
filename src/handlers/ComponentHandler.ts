@@ -34,6 +34,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		guildId: interaction.guildId,
 		user: interaction.user,
 		member: interaction.member,
+		memberPermissions: interaction.memberPermissions,
 		component: component,
 		customId: interaction.customId,
 		arguments: args,

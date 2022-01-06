@@ -30,6 +30,7 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 		guildId: interaction.guildId,
 		user: interaction.user,
 		member: interaction.member,
+		memberPermissions: interaction.memberPermissions,
 		command: command,
 		argument: argument,
 		value: focused.value,

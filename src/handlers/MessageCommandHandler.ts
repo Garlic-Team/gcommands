@@ -51,6 +51,7 @@ export async function MessageCommandHandler(message: Message, commandName: strin
 		guildId: message.guildId,
 		user: message.author,
 		member: message.member,
+		memberPermissions: message.member.permissions,
 		command: command,
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
