@@ -31,6 +31,8 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 
 		if (options.dirs) registerDirectories(options.dirs);
 		if (this.options.database) {
+			this.database = this.options.database;
+			
 			if (typeof this.options.database.init === 'function') this.options.database.init();
 		}
 
