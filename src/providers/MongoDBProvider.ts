@@ -1,18 +1,20 @@
 import Logger from 'js-logger';
 import { Db, Document, Filter, FindOptions, MongoClient, UpdateFilter, UpdateOptions } from 'mongodb';
-import { Provider, ProviderInterface } from '../lib/structures/Provider';
+import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
-export class MongoDBProvider extends Provider implements ProviderInterface {
+export class MongoDBProvider extends Provider {
 	uri: string;
 	dbName?: string;
 	client: MongoClient;
 	db: Db;
+	type: ProviderTypes;
 
 	constructor(uri?: string, dbName?: string) {
 		super();
 
 		this.uri = uri;
 		this.dbName = dbName;
+		this.type = 'mongodb';
 
 		this.client = new MongoClient(this.uri);
 		this.db = null;
@@ -25,12 +27,11 @@ export class MongoDBProvider extends Provider implements ProviderInterface {
 				if (error.stack) Logger.trace(error.stack);
 			})
 			.then(() => {
-				Logger.debug('Connected to MongoDB!');
+				Logger.debug('MongoDB initializated!');
 
-				this.emit('connect', this.client);
+				this.db = this.client.db(this?.dbName);
+				this.emit('connected', this.client);
 			});
-
-		this.db = this.client.db(this?.dbName);
 
 		return;
 	}

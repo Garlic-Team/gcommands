@@ -2,11 +2,13 @@ import Logger from 'js-logger';
 import {EventEmitter} from 'events';
 import {Util} from '../util/Util';
 
+export type ProviderTypes = 'mongodb' | 'keyv' | 'lrucache' | 'prismaio' | 'firestore';
+
 export interface ProviderEvents {
-	'connect': (client?: any) => void;
+	'connected': (client?: any) => void;
 }
 
-export interface ProviderInterface {
+export declare interface Provider {
 	on<U extends keyof ProviderEvents>(
 		event: U, listener: ProviderEvents[U]
 	): this;

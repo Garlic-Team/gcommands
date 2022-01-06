@@ -1,17 +1,23 @@
 import { Firestore } from '@google-cloud/firestore';
-import { Provider, ProviderInterface } from '../lib/structures/Provider';
+import Logger from 'js-logger';
+import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
-export class FirestoreProvider extends Provider implements ProviderInterface {
+export class FirestoreProvider extends Provider {
 	uri: string;
 	client: Firestore;
+	type: ProviderTypes;
 
 	constructor(options?: FirebaseFirestore.Settings) {
 		super();
 
 		this.client = new Firestore(options);
+		this.type = 'firestore';
 	}
 
 	async init(): Promise<void> {
+		Logger.debug('Firestore initializated!');
+		this.emit('connected', this.client);
+
 		return;
 	}
 

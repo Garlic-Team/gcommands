@@ -1,20 +1,26 @@
+import Logger from 'js-logger';
 import Keyv from 'keyv';
-import { Provider, ProviderInterface } from '../lib/structures/Provider';
+import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
-export class KeyvProvider extends Provider implements ProviderInterface {
+export class KeyvProvider extends Provider {
 	uri: string;
 	client: Keyv;
+	type: ProviderTypes;
 
 	constructor(uri?: string) {
 		super();
 
 		this.uri = uri;
+		this.type = 'keyv';
 
 		this.client = null;
 	}
 
 	async init(): Promise<void> {
 		this.client = new Keyv(this.uri);
+
+		Logger.debug('Keyv initializated!');
+		this.emit('connected', this.client);
 
 		return;
 	}
@@ -25,8 +31,8 @@ export class KeyvProvider extends Provider implements ProviderInterface {
 		return data;
 	}
 
-	async get(key: string, options?: any) {
-		const data = await this.client.get(key, options);
+	async get(key: string) {
+		const data = await this.client.get(key);
 
 		return data;
 	}

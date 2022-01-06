@@ -1,23 +1,23 @@
 import { PrismaClient } from '@prisma/client';
-import { Provider, ProviderInterface } from '../lib/structures/Provider';
+import Logger from 'js-logger';
+import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
-export interface PrismaIOProviderInterface extends ProviderInterface {
-	client: PrismaClient;
-}
-
-export class PrismaIOProvider extends Provider implements PrismaIOProviderInterface {
+export class PrismaIOProvider extends Provider {
 	uri: string;
 	client: PrismaClient;
+	type: ProviderTypes;
 
 	constructor(options?: string) {
 		super();
         
+		this.type = 'prismaio';
 		this.client = new PrismaClient(options);
-
-		Object.defineProperties(this, this.client);
 	}
 
 	async init(): Promise<void> {
+		Logger.debug('PrismaIO initializated!');
+		this.emit('connected', this.client);
+
 		return;
 	}
 
