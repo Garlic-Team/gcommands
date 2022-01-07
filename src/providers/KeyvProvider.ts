@@ -3,21 +3,23 @@ import Keyv from 'keyv';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
 export class KeyvProvider extends Provider {
-	uri: string;
+	uri: string | undefined;
 	client: Keyv;
+	opts: Keyv.Options<any>;
 	type: ProviderTypes;
 
-	constructor(uri?: string) {
+	constructor(uri?: string, opts?: Keyv.Options<any>) {
 		super();
 
 		this.uri = uri;
+		this.opts = opts;
 		this.type = 'keyv';
 
 		this.client = null;
 	}
 
 	async init(): Promise<void> {
-		this.client = new Keyv(this.uri);
+		this.client = new Keyv(this.uri, this.opts);
 
 		Logger.debug('Keyv initializated!');
 		this.emit('connected', this.client);

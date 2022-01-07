@@ -3,7 +3,6 @@ import LruCache from 'lru-cache';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
 export class LruCacheProvider extends Provider {
-	uri: string;
 	client: LruCache<unknown, unknown>;
 	type: ProviderTypes;
 

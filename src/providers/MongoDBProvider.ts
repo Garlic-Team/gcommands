@@ -4,12 +4,12 @@ import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
 export class MongoDBProvider extends Provider {
 	uri: string;
-	dbName?: string;
+	dbName?: string | undefined;
 	client: MongoClient;
 	db: Db;
 	type: ProviderTypes;
 
-	constructor(uri?: string, dbName?: string) {
+	constructor(uri: string, dbName?: string) {
 		super();
 
 		this.uri = uri;

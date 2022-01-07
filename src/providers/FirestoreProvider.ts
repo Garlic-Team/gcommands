@@ -3,7 +3,6 @@ import Logger from 'js-logger';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
 export class FirestoreProvider extends Provider {
-	uri: string;
 	client: Firestore;
 	type: ProviderTypes;
 

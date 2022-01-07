@@ -2,7 +2,7 @@ import Logger from 'js-logger';
 import {EventEmitter} from 'events';
 import {Util} from '../util/Util';
 
-export type ProviderTypes = 'mongodb' | 'keyv' | 'lrucache' | 'prismaio' | 'firestore';
+export type ProviderTypes = 'mongodb' | 'keyv' | 'lrucache' | 'prismaio' | 'firestore' | string;
 
 export interface ProviderEvents {
 	'connected': (client?: any) => void;
