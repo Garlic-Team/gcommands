@@ -1,6 +1,7 @@
 {
   "extends": [
     "eslint:recommended",
+    "prettier",
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -27,17 +28,6 @@
     "semi": [
       "error",
       "always"
-    ],
-    "prettier/prettier": [
-      2,
-      {
-        "printWidth": 120,
-        "singleQuote": true,
-        "quoteProps": "as-needed",
-        "trailingComma": "all",
-        "endOfLine": "lf",
-        "arrowParens": "avoid"
-      }
     ],
     "prefer-const": "error",
     "@typescript-eslint/no-explicit-any": "off"
