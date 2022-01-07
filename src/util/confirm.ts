@@ -1,7 +1,7 @@
-import {CommandContext} from '../lib/structures/contexts/CommandContext';
-import {ButtonInteraction, MessageActionRow, MessageButton} from 'discord.js';
-import {customId} from './customId';
-import {ComponentContext} from '../lib/structures/contexts/ComponentContext';
+import { CommandContext } from '../lib/structures/contexts/CommandContext';
+import { ButtonInteraction, MessageActionRow, MessageButton } from 'discord.js';
+import { customId } from './customId';
+import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
 export interface ConfirmOptions {
 	message?: string | ((ctx: CommandContext | ComponentContext) => string);
@@ -16,10 +16,7 @@ export interface ConfirmOptions {
 
 export async function confirm(ctx: CommandContext | ComponentContext, options: ConfirmOptions = {}) {
 	const id = customId('confirm', ctx.userId);
-	const button = new MessageButton()
-		.setCustomId(id)
-		.setLabel('Confirm')
-		.setStyle('DANGER');
+	const button = new MessageButton().setCustomId(id).setLabel('Confirm').setStyle('DANGER');
 
 	if (typeof options.button?.label === 'string') button.setLabel(options.button.label);
 	if (typeof options.button?.style === 'string') button.setStyle(options.button.style);
@@ -39,13 +36,15 @@ export async function confirm(ctx: CommandContext | ComponentContext, options: C
 		return interaction.customId === id && interaction.user.id === ctx.userId;
 	};
 
-	const result = await ctx.channel.awaitMessageComponent({
-		filter,
-		time: options.time || 10000,
-		componentType: 'BUTTON'
-	}).catch(() => {
-		return undefined;
-	});
+	const result = await ctx.channel
+		.awaitMessageComponent({
+			filter,
+			time: options.time || 10000,
+			componentType: 'BUTTON',
+		})
+		.catch(() => {
+			return undefined;
+		});
 
 	if (result instanceof ButtonInteraction) result.deferUpdate();
 

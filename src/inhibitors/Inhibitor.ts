@@ -1,5 +1,5 @@
-import {CommandContext} from '../lib/structures/contexts/CommandContext';
-import {ComponentContext} from '../lib/structures/contexts/ComponentContext';
+import { CommandContext } from '../lib/structures/contexts/CommandContext';
+import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
 export interface InhibitorOptions {
 	message?: string | ((ctx: CommandContext | ComponentContext) => string);
@@ -8,7 +8,7 @@ export interface InhibitorOptions {
 
 export class Inhibitor {
 	protected readonly message: string | ((ctx: CommandContext | ComponentContext) => string);
-	protected readonly ephemeral: boolean = true; 
+	protected readonly ephemeral: boolean = true;
 
 	constructor(options: InhibitorOptions = {}) {
 		this.message = options.message;

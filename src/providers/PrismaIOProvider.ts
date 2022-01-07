@@ -8,7 +8,7 @@ export class PrismaIOProvider extends Provider {
 
 	constructor(options?: string) {
 		super();
-        
+
 		this.type = 'prismaio';
 		this.client = new PrismaClient(options);
 	}

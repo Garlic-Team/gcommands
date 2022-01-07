@@ -1,7 +1,7 @@
-import {PermissionResolvable} from 'discord.js';
-import {Inhibitor, InhibitorOptions} from './Inhibitor';
-import {CommandContext} from '../lib/structures/contexts/CommandContext';
-import {ComponentContext} from '../lib/structures/contexts/ComponentContext';
+import { PermissionResolvable } from 'discord.js';
+import { Inhibitor, InhibitorOptions } from './Inhibitor';
+import { CommandContext } from '../lib/structures/contexts/CommandContext';
+import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
 export interface UserPermissionsOptions extends InhibitorOptions {
 	permissions: Array<PermissionResolvable>;
@@ -17,10 +17,16 @@ export class UserPermissions extends Inhibitor {
 
 	run(ctx: CommandContext | ComponentContext): boolean | any {
 		if (!ctx.inGuild()) return;
-		if (!ctx.memberPermissions.has(this.permissions)) return ctx.reply({ 
-			content: this.resolveMessage(ctx) || `You need the following permissions to execute this command: ${this.permissions.join(', ').replace(/_/g, ' ').toLowerCase()}`,
-			ephemeral: this.ephemeral,
-		});
+		if (!ctx.memberPermissions.has(this.permissions))
+			return ctx.reply({
+				content:
+					this.resolveMessage(ctx) ||
+					`You need the following permissions to execute this command: ${this.permissions
+						.join(', ')
+						.replace(/_/g, ' ')
+						.toLowerCase()}`,
+				ephemeral: this.ephemeral,
+			});
 		else return true;
 	}
 }

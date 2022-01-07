@@ -1,8 +1,8 @@
-import {GClient} from '../GClient';
-import {Listener} from '../structures/Listener';
-import {ClientEvents, Collection, WSEventType} from 'discord.js';
+import { GClient } from '../GClient';
+import { Listener } from '../structures/Listener';
+import { ClientEvents, Collection, WSEventType } from 'discord.js';
 import Logger from 'js-logger';
-import {Plugins} from './PluginManager';
+import { Plugins } from './PluginManager';
 
 export class ListenerManager extends Collection<string, Listener> {
 	private client: GClient;
@@ -17,7 +17,13 @@ export class ListenerManager extends Collection<string, Listener> {
 			if (this.client) this.initialize(listener);
 			if (Plugins.currentlyLoading) listener.owner = Plugins.currentlyLoading;
 			this.set(listener.name, listener);
-			Logger.debug('Registered listener', listener.name, 'listening to', listener.event, listener.owner ? `(by plugin ${listener.owner})` : '');
+			Logger.debug(
+				'Registered listener',
+				listener.name,
+				'listening to',
+				listener.event,
+				listener.owner ? `(by plugin ${listener.owner})` : '',
+			);
 		} else Logger.warn('Listener must be a instance of Listener');
 
 		return this;
@@ -30,7 +36,9 @@ export class ListenerManager extends Collection<string, Listener> {
 			const maxListeners = this.client.getMaxListeners();
 			if (maxListeners !== 0) this.client.setMaxListeners(maxListeners - 1);
 
-			listener.ws ? this.client.ws.off(listener.event as WSEventType, listener.run) : this.client.off(listener.event as keyof ClientEvents, listener.run);
+			listener.ws
+				? this.client.ws.off(listener.event as WSEventType, listener.run)
+				: this.client.off(listener.event as keyof ClientEvents, listener.run);
 			Logger.debug('Unregistered listener', listener.name, 'listening to', listener.event);
 		}
 

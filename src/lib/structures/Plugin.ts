@@ -1,7 +1,7 @@
-import {GClient} from '../GClient';
-import {Plugins} from '../managers/PluginManager';
+import { GClient } from '../GClient';
+import { Plugins } from '../managers/PluginManager';
 import Logger from 'js-logger';
-import {Util} from '../util/Util';
+import { Util } from '../util/Util';
 
 export class Plugin {
 	public readonly name: string;
@@ -15,9 +15,7 @@ export class Plugin {
 	}
 
 	public static validate(plugin: Plugin): boolean | void {
-		const trace = Util.resolveValidationErrorTrace([
-			plugin.name,
-		]);
+		const trace = Util.resolveValidationErrorTrace([plugin.name]);
 
 		if (!plugin.name) return Logger.warn('Plugin must have a name', trace);
 		else if (typeof plugin.name !== 'string') return Logger.warn('Plugin name must be a string', trace);

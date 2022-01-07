@@ -21,8 +21,9 @@ export class MongoDBProvider extends Provider {
 	}
 
 	async init(): Promise<void> {
-		await this.client.connect()
-			.catch((error) => {
+		await this.client
+			.connect()
+			.catch(error => {
 				Logger.error(error.code, error.message);
 				if (error.stack) Logger.trace(error.stack);
 			})
@@ -57,7 +58,7 @@ export class MongoDBProvider extends Provider {
 		return data;
 	}
 
-	async update(collectionName: string, filter: Filter<Document>, set: UpdateFilter<Document>,  options?: UpdateOptions) {
+	async update(collectionName: string, filter: Filter<Document>, set: UpdateFilter<Document>, options?: UpdateOptions) {
 		const collection = this.db.collection(collectionName);
 		const data = options ? await collection.updateOne(filter, set, options) : await collection.updateOne(filter, set);
 
@@ -67,7 +68,7 @@ export class MongoDBProvider extends Provider {
 	async delete(collectionName: string, filter: Filter<Document>) {
 		const collection = this.db.collection(collectionName);
 		const data = await collection.deleteOne(filter);
-		
+
 		return data;
 	}
 }

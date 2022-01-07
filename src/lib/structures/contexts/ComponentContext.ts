@@ -1,4 +1,4 @@
-import {Context, ContextOptions} from './Context';
+import { Context, ContextOptions } from './Context';
 import {
 	CacheType,
 	GuildCacheMessage,
@@ -7,10 +7,10 @@ import {
 	InteractionReplyOptions,
 	MessageComponentInteraction,
 	MessagePayload,
-	WebhookEditMessageOptions
+	WebhookEditMessageOptions,
 } from 'discord.js';
-import {GClient} from '../../GClient';
-import {Component} from '../Component';
+import { GClient } from '../../GClient';
+import { Component } from '../Component';
 
 export interface ComponentContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
 	interaction: MessageComponentInteraction;
@@ -18,13 +18,19 @@ export interface ComponentContextOptions<Cached extends CacheType = CacheType> e
 	customId: string;
 	arguments: Array<string>;
 	values?: Array<string>;
-	deferReply: <Fetch extends boolean = boolean>(options?: InteractionDeferReplyOptions & { fetchReply?: Fetch }) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
-	deferUpdate: <Fetch extends boolean = boolean>(options?: InteractionDeferUpdateOptions & { fetchReply?: Fetch }) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	deferReply: <Fetch extends boolean = boolean>(
+		options?: InteractionDeferReplyOptions & { fetchReply?: Fetch },
+	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	deferUpdate: <Fetch extends boolean = boolean>(
+		options?: InteractionDeferUpdateOptions & { fetchReply?: Fetch },
+	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
 	deleteReply: () => Promise<void>;
 	editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<GuildCacheMessage<Cached>>;
 	fetchReply: () => Promise<GuildCacheMessage<Cached>>;
 	followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<GuildCacheMessage<Cached>>;
-	reply: <Fetch extends boolean = boolean>(options?: InteractionReplyOptions & { fetchReply?: Fetch } | string | MessagePayload | InteractionReplyOptions) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	reply: <Fetch extends boolean = boolean>(
+		options?: (InteractionReplyOptions & { fetchReply?: Fetch }) | string | MessagePayload | InteractionReplyOptions,
+	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
 	type: 'BUTTON' | 'SELECT_MENU';
 }
 
@@ -37,13 +43,21 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 	public values?: Array<string>;
 	public deferred = false;
 	public replied = false;
-	public deferReply: <Fetch extends boolean = boolean>(options?: InteractionDeferReplyOptions & { fetchReply?: Fetch }) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
-	public deferUpdate: <Fetch extends boolean = boolean>(options?: InteractionDeferUpdateOptions & { fetchReply?: Fetch }) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	public deferReply: <Fetch extends boolean = boolean>(
+		options?: InteractionDeferReplyOptions & { fetchReply?: Fetch },
+	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	public deferUpdate: <Fetch extends boolean = boolean>(
+		options?: InteractionDeferUpdateOptions & { fetchReply?: Fetch },
+	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
 	public deleteReply: () => Promise<void>;
-	public editReply: (options: string | MessagePayload | WebhookEditMessageOptions) => Promise<GuildCacheMessage<Cached>>;
+	public editReply: (
+		options: string | MessagePayload | WebhookEditMessageOptions,
+	) => Promise<GuildCacheMessage<Cached>>;
 	public fetchReply: () => Promise<GuildCacheMessage<Cached>>;
 	public followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<GuildCacheMessage<Cached>>;
-	public reply: <Fetch extends boolean = boolean>(options?: InteractionReplyOptions & { fetchReply?: Fetch } | string | MessagePayload | InteractionReplyOptions) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	public reply: <Fetch extends boolean = boolean>(
+		options?: (InteractionReplyOptions & { fetchReply?: Fetch }) | string | MessagePayload | InteractionReplyOptions,
+	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
 
 	constructor(client: GClient, options: ComponentContextOptions<Cached>) {
 		super(client, options);
@@ -53,12 +67,12 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 		this.customId = options.customId;
 		this.arguments = options.arguments;
 		this.values = options.values;
-		this.deferReply = async (opt) => {
+		this.deferReply = async opt => {
 			const message = await options.deferReply(opt);
 			this.deferred = true;
 			return message;
 		};
-		this.deferUpdate = async (opt) => {
+		this.deferUpdate = async opt => {
 			const message = await options.deferUpdate(opt);
 			this.deferred = true;
 			return message;
@@ -67,7 +81,7 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 		this.editReply = options.editReply;
 		this.fetchReply = options.fetchReply;
 		this.followUp = options.followUp;
-		this.reply = async (opt) => {
+		this.reply = async opt => {
 			const message = await options.reply(opt);
 			this.replied = true;
 			return message;
@@ -75,7 +89,9 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 		this.type = options.type;
 	}
 
-	public safeReply<Fetch extends boolean = boolean>(options?: InteractionReplyOptions & { fetchReply?: Fetch } | string | MessagePayload | InteractionReplyOptions): Promise<Fetch extends true ? GuildCacheMessage<Cached> : void> {
+	public safeReply<Fetch extends boolean = boolean>(
+		options?: (InteractionReplyOptions & { fetchReply?: Fetch }) | string | MessagePayload | InteractionReplyOptions,
+	): Promise<Fetch extends true ? GuildCacheMessage<Cached> : void> {
 		return this.deferred || this.replied ? this.editReply(options) : this.reply(options);
 	}
 }

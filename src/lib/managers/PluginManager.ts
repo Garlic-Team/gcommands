@@ -1,7 +1,7 @@
-import {Collection} from 'discord.js';
-import {Plugin} from '../structures/Plugin';
-import {GClient} from '../GClient';
-import {pluginFinder} from '../loaders/pluginFinder';
+import { Collection } from 'discord.js';
+import { Plugin } from '../structures/Plugin';
+import { GClient } from '../GClient';
+import { pluginFinder } from '../loaders/pluginFinder';
 import Logger from 'js-logger';
 
 export class PluginManager extends Collection<string, Plugin> {
@@ -25,14 +25,16 @@ export class PluginManager extends Collection<string, Plugin> {
 
 	public async initiate(client: GClient): Promise<void> {
 		this.client = client;
-		for await(const plugin of this.values()) {
+		for await (const plugin of this.values()) {
 			this.currentlyLoading = plugin.name;
-			await Promise.resolve(plugin.run(client)).catch(error => {
-				Logger.error(error.code, error.message);
-				if (error.stack) Logger.trace(error.stack);
-			}).then(() => {
-				this.currentlyLoading = null;
-			});
+			await Promise.resolve(plugin.run(client))
+				.catch(error => {
+					Logger.error(error.code, error.message);
+					if (error.stack) Logger.trace(error.stack);
+				})
+				.then(() => {
+					this.currentlyLoading = null;
+				});
 		}
 	}
 }

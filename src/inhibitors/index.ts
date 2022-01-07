@@ -1,4 +1,4 @@
-import {Inhibitor} from './Inhibitor';
+import { Inhibitor } from './Inhibitor';
 
 export default Inhibitor;
 export * from './Inhibitor';

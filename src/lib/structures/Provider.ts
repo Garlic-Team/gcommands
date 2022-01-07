@@ -1,34 +1,28 @@
 import Logger from 'js-logger';
-import {EventEmitter} from 'events';
-import {Util} from '../util/Util';
+import { EventEmitter } from 'events';
+import { Util } from '../util/Util';
 
 export type ProviderTypes = 'mongodb' | 'keyv' | 'lrucache' | 'prismaio' | 'firestore' | string;
 
 export interface ProviderEvents {
-	'connected': (client?: any) => void;
+	connected: (client?: any) => void;
 }
 
 export declare interface Provider {
-	on<U extends keyof ProviderEvents>(
-		event: U, listener: ProviderEvents[U]
-	): this;
-	
-	emit<U extends keyof ProviderEvents>(
-		event: U, ...args: Parameters<ProviderEvents[U]>
-	): boolean;
+	on<U extends keyof ProviderEvents>(event: U, listener: ProviderEvents[U]): this;
+
+	emit<U extends keyof ProviderEvents>(event: U, ...args: Parameters<ProviderEvents[U]>): boolean;
 
 	client: any;
-    init(): Promise<void> | void;
+	init(): Promise<void> | void;
 	insert(...args): Promise<any> | any;
-    get(...args): Promise<any> | any;
-    update(...args): Promise<any> | any;
-    delete(...args): Promise<any> | any;
+	get(...args): Promise<any> | any;
+	update(...args): Promise<any> | any;
+	delete(...args): Promise<any> | any;
 }
 
 const throwError = (error, name) => {
-	const trace = Util.resolveValidationErrorTrace([
-		name
-	]);
+	const trace = Util.resolveValidationErrorTrace([name]);
 
 	Logger.error(error, trace);
 };

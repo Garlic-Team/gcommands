@@ -6,7 +6,7 @@ export class Util {
 	static argumentsToArray(options: Array<any>): Array<string> {
 		const args = [];
 
-		const check = (option) => {
+		const check = option => {
 			if (!option) return;
 
 			args.push(option.value);
@@ -49,14 +49,16 @@ export class Util {
 	}
 
 	static isClass(input: any): boolean {
-		return typeof input === 'function' &&
-			typeof input.prototype === 'object' &&
-			input.toString().substring(0, 5) === 'class';
+		return (
+			typeof input === 'function' && typeof input.prototype === 'object' && input.toString().substring(0, 5) === 'class'
+		);
 	}
 
 	static resolveArgumentOptions(options: any): any {
 		for (const [key, value] of Object.entries(options)) {
-			const option = key.match(/[A-Z]/g)?.[0] ? key.replace(key.match(/[A-Z]/g)[0], `_${key.match(/[A-Z]/g)[0].toLowerCase()}`) : key;
+			const option = key.match(/[A-Z]/g)?.[0]
+				? key.replace(key.match(/[A-Z]/g)[0], `_${key.match(/[A-Z]/g)[0].toLowerCase()}`)
+				: key;
 
 			if (option !== key) {
 				delete options[key];
