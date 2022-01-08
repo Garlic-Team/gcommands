@@ -7,7 +7,7 @@
   "scripts": {
     "build": "bash scripts/build.bash",
     "lint": "npx eslint .",
-    "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
+    "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files --no-comments",
     "build:types": "tsc --emitDeclarationOnly",
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
     "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs"
