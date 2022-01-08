@@ -33,6 +33,7 @@ export interface ContextOptions<Cached extends CacheType = CacheType> {
 }
 
 export class Context<Cached extends CacheType = CacheType> {
+	private readonly _cacheType: Cached;
 	public readonly client: GClient;
 	public readonly channel: CacheTypeReducer<
 		Cached,

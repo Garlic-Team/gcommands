@@ -58,6 +58,9 @@ export class ComponentContext<Cached extends CacheType = CacheType> extends Cont
 	public reply: <Fetch extends boolean = boolean>(
 		options?: (InteractionReplyOptions & { fetchReply?: Fetch }) | string | MessagePayload | InteractionReplyOptions,
 	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	public inGuild: () => this is ComponentContext<'present'>;
+	public inCachedGuild: () => this is ComponentContext<'cached'>;
+	public inRawGuild: () => this is ComponentContext<'raw'>;
 
 	constructor(client: GClient, options: ComponentContextOptions<Cached>) {
 		super(client, options);
