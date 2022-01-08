@@ -41,7 +41,7 @@ export async function pluginFinder(basedir: string) {
 				withFileTypes: true,
 			})) {
 				if (!folder.name.includes('plugin-')) continue;
-				await loadPluginFolder(path.join(basedir, 'node_modules'), folder);
+				await loadPluginFolder(path.join(basedir, 'node_modules', '@gcommands'), folder);
 			}
 		}
 	}
