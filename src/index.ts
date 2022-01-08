@@ -8,7 +8,7 @@ import './listeners/AutocompleteHandler';
 
 // Client
 export * from './lib/GClient';
-export {ClientEvents} from 'discord.js';
+export { ClientEvents } from 'discord.js';
 
 // Structures
 export * from './lib/structures/Plugin';
@@ -22,11 +22,11 @@ export * from './lib/structures/contexts/AutocompleteContext';
 export * from './lib/structures/Argument';
 
 // Managers
-export {Plugins, PluginManager} from './lib/managers/PluginManager';
-export {Commands, CommandManager} from './lib/managers/CommandManager';
-export {Components, ComponentManager} from './lib/managers/ComponentManager';
-export {Listeners, ListenerManager} from './lib/managers/ListenerManager';
-export {Handlers, HandlerManager} from './lib/managers/HandlerManager';
+export { Plugins, PluginManager } from './lib/managers/PluginManager';
+export { Commands, CommandManager } from './lib/managers/CommandManager';
+export { Components, ComponentManager } from './lib/managers/ComponentManager';
+export { Listeners, ListenerManager } from './lib/managers/ListenerManager';
+export { Handlers, HandlerManager } from './lib/managers/HandlerManager';
 
 // Logger
 Logger.useDefaults({
@@ -41,17 +41,20 @@ Logger.useDefaults({
 		if (ctx.level === Logger.ERROR) color = '\x1b[91m';
 
 		const date = new Date();
-		messages[0] = `${color}[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}/${ctx.level.name}]\x1b[0m ${messages[0]}`;
-	}
+		messages[0] = `${color}[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}/${ctx.level.name}]\x1b[0m ${
+			messages[0]
+		}`;
+	},
 });
-export {Logger};
+export { Logger };
 
 // Inhibitors
 export * as Inhibitor from './inhibitors';
 
 /* Providers
  * Providers will not be exported due to additional modules. To import, just use the path gcommands/dist/providers/{name}
-*/
+ */
+export * from './lib/structures/Provider';
 
 // Util
 export * from './util/customId';
@@ -60,4 +63,4 @@ export * from './lib/util/registerDirectories';
 export * from './util/confirm';
 
 // Re-exports
-export {MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu} from 'discord.js';
+export { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';

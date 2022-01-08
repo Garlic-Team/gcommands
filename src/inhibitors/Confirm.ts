@@ -1,7 +1,7 @@
-import {Inhibitor} from './Inhibitor';
-import {CommandContext} from '../lib/structures/contexts/CommandContext';
-import {ComponentContext} from '../lib/structures/contexts/ComponentContext';
-import {confirm, ConfirmOptions} from '../util/confirm';
+import { Inhibitor } from './Inhibitor';
+import { CommandContext } from '../lib/structures/contexts/CommandContext';
+import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
+import { confirm, ConfirmOptions } from '../util/confirm';
 
 export class Confirm extends Inhibitor {
 	public options?: ConfirmOptions;

@@ -1,10 +1,10 @@
-import {Client, ClientOptions} from 'discord.js';
-import {Plugins} from './managers/PluginManager';
-import {Commands} from './managers/CommandManager';
-import {Listeners} from './managers/ListenerManager';
-import {Components} from './managers/ComponentManager';
+import { Client, ClientOptions } from 'discord.js';
+import { Plugins } from './managers/PluginManager';
+import { Commands } from './managers/CommandManager';
+import { Listeners } from './managers/ListenerManager';
+import { Components } from './managers/ComponentManager';
 import Responses from '../responses.json';
-import {registerDirectories} from './util/registerDirectories';
+import { registerDirectories } from './util/registerDirectories';
 
 export enum AutoDeferType {
 	'EPHEMERAL' = 1,

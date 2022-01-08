@@ -1,10 +1,13 @@
-import {GClient} from '../GClient';
-import {ClientEvents, WSEventType} from 'discord.js';
-import {Listeners} from '../managers/ListenerManager';
+import { GClient } from '../GClient';
+import { ClientEvents, WSEventType } from 'discord.js';
+import { Listeners } from '../managers/ListenerManager';
 import Logger from 'js-logger';
-import {Util} from '../util/Util';
+import { Util } from '../util/Util';
 
-export interface ListenerOptions<WS extends true | false, Event extends WS extends true ? WSEventType : keyof ClientEvents> {
+export interface ListenerOptions<
+	WS extends true | false,
+	Event extends WS extends true ? WSEventType : keyof ClientEvents,
+> {
 	event: Event;
 	name: string;
 	once?: boolean;
@@ -13,7 +16,10 @@ export interface ListenerOptions<WS extends true | false, Event extends WS exten
 	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<any>) => any;
 }
 
-export class Listener<WS extends true | false = true | false, Event extends WS extends true ? WSEventType : keyof ClientEvents = WS extends true ? WSEventType : keyof ClientEvents> {
+export class Listener<
+	WS extends true | false = true | false,
+	Event extends WS extends true ? WSEventType : keyof ClientEvents = WS extends true ? WSEventType : keyof ClientEvents,
+> {
 	public client: GClient;
 	public readonly event: Event;
 	public readonly name: string;
@@ -38,10 +44,7 @@ export class Listener<WS extends true | false = true | false, Event extends WS e
 	}
 
 	public static validate(listener: Listener): boolean | void {
-		const trace = Util.resolveValidationErrorTrace([
-			listener.name,
-			listener.fileName,
-		]);
+		const trace = Util.resolveValidationErrorTrace([listener.name, listener.fileName]);
 
 		if (!listener.name) return Logger.warn('Listener must have a name', trace);
 		else if (typeof listener.name !== 'string') return Logger.warn('Listener name must be a string', trace);
@@ -56,7 +59,7 @@ export class Listener<WS extends true | false = true | false, Event extends WS e
 	}
 
 	private async _run(...args: Array<any>): Promise<void> {
-		await Promise.resolve(this.run.call(this, ...args)).catch((error) => {
+		await Promise.resolve(this.run.call(this, ...args)).catch(error => {
 			Logger.error(error.code, error.message);
 			if (error.stack) Logger.trace(error.stack);
 		});

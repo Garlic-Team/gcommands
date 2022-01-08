@@ -1,21 +1,21 @@
 import Logger from 'js-logger';
 import LruCache from 'lru-cache';
-import { Provider, ProviderInterface } from '../lib/structures/Provider';
+import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
-export class LruCacheProvider extends Provider implements ProviderInterface {
-	uri: string;
+export class LruCacheProvider extends Provider {
 	client: LruCache<unknown, unknown>;
+	type: ProviderTypes;
 
 	constructor(options: LruCache.Options<unknown, unknown>) {
 		super();
 
+		this.type = 'lrucache';
 		this.client = new LruCache(options);
 	}
 
 	async init(): Promise<void> {
 		Logger.debug('LruCache initializated!');
-
-		this.emit('connect', this.client);
+		this.emit('connected', this.client);
 
 		return;
 	}

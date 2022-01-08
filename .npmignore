@@ -6,6 +6,7 @@ docs/
 package-lock.json
 .eslintignore
 .eslintrc.json
+.prettierrc.json
 docs.yml
 tsconfig.json
 renovate.json

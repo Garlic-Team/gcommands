@@ -1,8 +1,8 @@
-import {Collection} from 'discord.js';
-import {Command} from '../structures/Command';
-import {GClient} from '../GClient';
+import { Collection } from 'discord.js';
+import { Command } from '../structures/Command';
+import { GClient } from '../GClient';
 import Logger from 'js-logger';
-import {Plugins} from './PluginManager';
+import { Plugins } from './PluginManager';
 
 export class CommandManager extends Collection<string, Command> {
 	private client: GClient;

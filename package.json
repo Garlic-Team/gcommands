@@ -10,7 +10,14 @@
     "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files",
     "build:types": "tsc --emitDeclarationOnly",
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
-    "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/devdocs.mjs"
+    "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Garlic-Team/GCommands.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Garlic-Team/GCommands/issues"
   },
   "homepage": "https://garlic-team.js.org/#/docs/gcommands/next/general/welcome",
   "author": "Garlic-Team",
@@ -27,19 +34,20 @@
     "@babel/core": "7.16.7",
     "@babel/preset-env": "7.16.7",
     "@babel/preset-typescript": "7.16.7",
-    "@google-cloud/firestore": "^5.0.1",
-    "@prisma/client": "^3.7.0",
-    "@types/keyv": "^3.1.3",
-    "@types/lru-cache": "^5.1.1",
+    "@google-cloud/firestore": "5.0.2",
+    "@prisma/client": "3.7.0",
+    "@types/keyv": "3.1.3",
+    "@types/lru-cache": "5.1.1",
     "@types/node": "16.11.19",
     "@typescript-eslint/eslint-plugin": "5.9.0",
     "@typescript-eslint/parser": "5.9.0",
-    "babel-cli": "6.26.0",
-    "babel-plugin-add-module-exports": "1.0.4",
     "eslint": "8.6.0",
-    "keyv": "^4.0.4",
-    "lru-cache": "^6.0.0",
-    "mongodb": "4.2.2",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "keyv": "4.0.4",
+    "lru-cache": "6.0.0",
+    "mongodb": "4.3.0",
+    "prettier": "2.5.1",
     "typescript": "4.5.4"
   },
   "engines": {

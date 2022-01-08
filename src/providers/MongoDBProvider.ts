@@ -1,36 +1,38 @@
 import Logger from 'js-logger';
 import { Db, Document, Filter, FindOptions, MongoClient, UpdateFilter, UpdateOptions } from 'mongodb';
-import { Provider, ProviderInterface } from '../lib/structures/Provider';
+import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
-export class MongoDBProvider extends Provider implements ProviderInterface {
+export class MongoDBProvider extends Provider {
 	uri: string;
-	dbName?: string;
+	dbName?: string | undefined;
 	client: MongoClient;
 	db: Db;
+	type: ProviderTypes;
 
-	constructor(uri?: string, dbName?: string) {
+	constructor(uri: string, dbName?: string) {
 		super();
 
 		this.uri = uri;
 		this.dbName = dbName;
+		this.type = 'mongodb';
 
 		this.client = new MongoClient(this.uri);
 		this.db = null;
 	}
 
 	async init(): Promise<void> {
-		await this.client.connect()
-			.catch((error) => {
+		await this.client
+			.connect()
+			.catch(error => {
 				Logger.error(error.code, error.message);
 				if (error.stack) Logger.trace(error.stack);
 			})
 			.then(() => {
-				Logger.debug('Connected to MongoDB!');
+				Logger.debug('MongoDB initializated!');
 
-				this.emit('connect', this.client);
+				this.db = this.client.db(this?.dbName);
+				this.emit('connected', this.client);
 			});
-
-		this.db = this.client.db(this?.dbName);
 
 		return;
 	}
@@ -49,7 +51,14 @@ export class MongoDBProvider extends Provider implements ProviderInterface {
 		return data;
 	}
 
-	async update(collectionName: string, filter: Filter<Document>, set: UpdateFilter<Document>,  options?: UpdateOptions) {
+	async getMany(collectionName: string, filter: Filter<Document>, options?: FindOptions<Document>) {
+		const collection = this.db.collection(collectionName);
+		const data = options ? await collection.find(filter, options) : await collection.find(filter);
+
+		return data;
+	}
+
+	async update(collectionName: string, filter: Filter<Document>, set: UpdateFilter<Document>, options?: UpdateOptions) {
 		const collection = this.db.collection(collectionName);
 		const data = options ? await collection.updateOne(filter, set, options) : await collection.updateOne(filter, set);
 
@@ -59,7 +68,7 @@ export class MongoDBProvider extends Provider implements ProviderInterface {
 	async delete(collectionName: string, filter: Filter<Document>) {
 		const collection = this.db.collection(collectionName);
 		const data = await collection.deleteOne(filter);
-		
+
 		return data;
 	}
 }

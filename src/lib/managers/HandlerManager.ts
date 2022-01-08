@@ -4,22 +4,26 @@ import {
 	CommandInteraction,
 	ContextMenuInteraction,
 	Message,
-	MessageComponentInteraction
+	MessageComponentInteraction,
 } from 'discord.js';
-import {InteractionCommandHandler} from '../../handlers/InteractionCommandHandler';
-import {MessageCommandHandler} from '../../handlers/MessageCommandHandler';
-import {ComponentHandler} from '../../handlers/ComponentHandler';
-import {CooldownHandler} from '../../handlers/CooldownHandler';
-import {Command} from '../structures/Command';
-import {Component} from '../structures/Component';
-import {AutocompleteHandler} from '../../handlers/AutocompleteHandler';
+import { InteractionCommandHandler } from '../../handlers/InteractionCommandHandler';
+import { MessageCommandHandler } from '../../handlers/MessageCommandHandler';
+import { ComponentHandler } from '../../handlers/ComponentHandler';
+import { CooldownHandler } from '../../handlers/CooldownHandler';
+import { Command } from '../structures/Command';
+import { Component } from '../structures/Component';
+import { AutocompleteHandler } from '../../handlers/AutocompleteHandler';
 
 export class HandlerManager {
 	public interactionCommandHandler: (interaction: CommandInteraction | ContextMenuInteraction) => any;
 	public messageCommandHandler: (message: Message, commandName: string, args: Array<string> | Array<object>) => any;
 	public componentHandler: (interaction: MessageComponentInteraction) => any;
 	public autocompleteHandler: (interaction: AutocompleteInteraction) => any;
-	public cooldownHandler: (userId: string, item: Command | Component, collection: Collection<string, Collection<string, number>>) => void | number;
+	public cooldownHandler: (
+		userId: string,
+		item: Command | Component,
+		collection: Collection<string, Collection<string, number>>,
+	) => void | number;
 
 	constructor() {
 		this.interactionCommandHandler = InteractionCommandHandler;
@@ -29,13 +33,17 @@ export class HandlerManager {
 		this.cooldownHandler = CooldownHandler;
 	}
 
-	public setInteractionCommandHandler(handler: (interaction: CommandInteraction | ContextMenuInteraction) => any): HandlerManager {
+	public setInteractionCommandHandler(
+		handler: (interaction: CommandInteraction | ContextMenuInteraction) => any,
+	): HandlerManager {
 		this.interactionCommandHandler = handler;
 
 		return this;
 	}
 
-	public setMessageCommandHandler(handler: (message: Message, commandName: string, args: Array<string> | Array<object>) => any): HandlerManager {
+	public setMessageCommandHandler(
+		handler: (message: Message, commandName: string, args: Array<string> | Array<object>) => any,
+	): HandlerManager {
 		this.messageCommandHandler = handler;
 
 		return this;
@@ -53,7 +61,13 @@ export class HandlerManager {
 		return this;
 	}
 
-	public setCooldownHandler(handler: (userId: string, item: Command | Component, collection: Collection<string, Collection<string, number>>) => void | number): HandlerManager {
+	public setCooldownHandler(
+		handler: (
+			userId: string,
+			item: Command | Component,
+			collection: Collection<string, Collection<string, number>>,
+		) => void | number,
+	): HandlerManager {
 		this.cooldownHandler = handler;
 
 		return this;

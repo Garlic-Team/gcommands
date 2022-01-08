@@ -1,8 +1,8 @@
-import {Context, ContextOptions} from './Context';
-import {AutocompleteInteraction, CacheType} from 'discord.js';
-import {Command, CommandArgument, CommandArgumentChoice} from '../Command';
-import {GClient} from '../../GClient';
-import {Argument} from '../Argument';
+import { Context, ContextOptions } from './Context';
+import { AutocompleteInteraction, CacheType } from 'discord.js';
+import { Command, CommandArgument, CommandArgumentChoice } from '../Command';
+import { GClient } from '../../GClient';
+import { Argument } from '../Argument';
 
 export interface AutocompleteContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
 	interaction: AutocompleteInteraction;

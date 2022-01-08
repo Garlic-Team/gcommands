@@ -1,7 +1,7 @@
-import {Command, CommandArgument, CommandArgumentChoice} from './Command';
-import {AutocompleteContext} from './contexts/AutocompleteContext';
+import { Command, CommandArgument, CommandArgumentChoice } from './Command';
+import { AutocompleteContext } from './contexts/AutocompleteContext';
 import Logger from 'js-logger';
-import {Util} from '../util/Util';
+import { Util } from '../util/Util';
 
 export enum ArgumentType {
 	'SUB_COMMAND' = 1,
@@ -51,7 +51,8 @@ export class Argument {
 	constructor(options: ArgumentOptions) {
 		Object.assign(this, options);
 
-		if (typeof this.type === 'string' && Object.keys(ArgumentType).includes(this.type)) this.type = ArgumentType[this.type];
+		if (typeof this.type === 'string' && Object.keys(ArgumentType).includes(this.type))
+			this.type = ArgumentType[this.type];
 	}
 
 	public static toAPIArgument(argument: Argument | CommandArgument): Record<string, any> {
@@ -69,21 +70,32 @@ export class Argument {
 	}
 
 	public static validate(argument: Argument | CommandArgument, command: Command): boolean | void {
-		const trace = Util.resolveValidationErrorTrace([
-			argument.name,
-			command.name,
-			command.fileName,
-		]);
+		const trace = Util.resolveValidationErrorTrace([argument.name, command.name, command.fileName]);
 
 		if (!argument.name) return Logger.warn('Argument must have a name');
 		else if (typeof argument.name !== 'string') return Logger.warn('Argument name must be a string');
-		else if (typeof argument.description !== 'string') return Logger.warn('Argument description must be a string', trace);
-		else if (!Object.values(ArgumentType).includes(argument.type)) return Logger.warn('Argument type must be one of ArgumentType', trace);
-		else if (argument.required && typeof argument.required !== 'boolean') return Logger.warn('Argument required must be a boolean or undefined', trace);
-		else if (argument.choices && !argument.choices.every(choice => typeof choice.name === 'string' && typeof choice.value === 'string')) return Logger.warn('Argument choices must be a array of CommandArgumentChoice or undefined', trace);
+		else if (typeof argument.description !== 'string')
+			return Logger.warn('Argument description must be a string', trace);
+		else if (!Object.values(ArgumentType).includes(argument.type))
+			return Logger.warn('Argument type must be one of ArgumentType', trace);
+		else if (argument.required && typeof argument.required !== 'boolean')
+			return Logger.warn('Argument required must be a boolean or undefined', trace);
+		else if (
+			argument.choices &&
+			!argument.choices.every(choice => typeof choice.name === 'string' && typeof choice.value === 'string')
+		)
+			return Logger.warn('Argument choices must be a array of CommandArgumentChoice or undefined', trace);
 		else if (argument.options && !argument.options.every(option => Argument.validate(option, command))) return;
-		else if (argument.channelTypes && argument.type !== ArgumentType.CHANNEL) return Logger.warn('Argument options cannot have the channelTypes property if argument type is not a channel', trace);
-		else if (argument.channelTypes && !argument.channelTypes.every(channelType => Object.values(ChannelType).includes(channelType))) return Logger.warn('Argument channelTypes must be a array of ChannelType or undefined', trace);
+		else if (argument.channelTypes && argument.type !== ArgumentType.CHANNEL)
+			return Logger.warn(
+				'Argument options cannot have the channelTypes property if argument type is not a channel',
+				trace,
+			);
+		else if (
+			argument.channelTypes &&
+			!argument.channelTypes.every(channelType => Object.values(ChannelType).includes(channelType))
+		)
+			return Logger.warn('Argument channelTypes must be a array of ChannelType or undefined', trace);
 		else return true;
 	}
 }

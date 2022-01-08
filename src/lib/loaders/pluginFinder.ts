@@ -37,9 +37,11 @@ export async function pluginFinder(basedir: string) {
 		}
 
 		if (fs.existsSync(path.join(basedir, 'node_modules', '@gcommands'))) {
-			for await (const folder of fs.readdirSync(path.join(basedir, 'node_modules', '@gcommands'), { withFileTypes: true })) {
+			for await (const folder of fs.readdirSync(path.join(basedir, 'node_modules', '@gcommands'), {
+				withFileTypes: true,
+			})) {
 				if (!folder.name.includes('plugin-')) continue;
-				await loadPluginFolder(path.join(basedir, 'node_modules'), folder);
+				await loadPluginFolder(path.join(basedir, 'node_modules', '@gcommands'), folder);
 			}
 		}
 	}
