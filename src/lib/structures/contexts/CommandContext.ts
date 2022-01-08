@@ -40,6 +40,9 @@ export class CommandContext<Cached extends CacheType = CacheType> extends Contex
 	public fetchReply: () => Promise<GuildCacheMessage<Cached>>;
 	public followUp: (options: string | MessagePayload | InteractionReplyOptions) => Promise<GuildCacheMessage<Cached>>;
 	public reply: <Fetch extends boolean = boolean>(options?: InteractionReplyOptions & { fetchReply?: Fetch } | string | MessagePayload | InteractionReplyOptions) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
+	public inGuild: () => this is CommandContext<'present'>;
+	public inCachedGuild: () => this is CommandContext<'cached'>;
+	public inRawGuild: () => this is CommandContext<'raw'>;
 
 	constructor(client: GClient, options: CommandContextOptions<Cached>) {
 		super(client, options);

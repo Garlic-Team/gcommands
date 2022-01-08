@@ -20,6 +20,9 @@ export class AutocompleteContext<Cached extends CacheType = CacheType> extends C
 	public readonly argumentName: string;
 	public readonly value: string | number;
 	public respond: (choices: Array<CommandArgumentChoice>) => Promise<void>;
+	public inGuild: () => this is AutocompleteContext<'present'>;
+	public inCachedGuild: () => this is AutocompleteContext<'cached'>;
+	public inRawGuild: () => this is AutocompleteContext<'raw'>;
 
 	constructor(client: GClient, options: AutocompleteContextOptions<Cached>) {
 		super(client, options);
@@ -31,17 +34,5 @@ export class AutocompleteContext<Cached extends CacheType = CacheType> extends C
 		this.value = options.value;
 		this.respond = options.respond;
 		this.type = 'AUTOCOMPLETE';
-	}
-
-	public inGuild(): this is AutocompleteContext<'present'> {
-		return super.inGuild();
-	}
-
-	public inCachedGuild(): this is AutocompleteContext<'cached'> {
-		return super.inCachedGuild();
-	}
-
-	public inRawGuild(): this is AutocompleteContext<'raw'> {
-		return super.inRawGuild();
 	}
 }

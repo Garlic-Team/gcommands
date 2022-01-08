@@ -15,7 +15,7 @@ import { CommandContext } from './CommandContext';
 import { AutocompleteContext } from './AutocompleteContext';
 import { ComponentContext } from './ComponentContext';
 
-export interface ContextOptions<Cached extends CacheType = CacheType> {
+export interface ContextOptions<Cached extends CacheType> {
 	channel: CacheTypeReducer<Cached,
 		GuildTextBasedChannel | null,
 		GuildTextBasedChannel | null,
@@ -31,6 +31,7 @@ export interface ContextOptions<Cached extends CacheType = CacheType> {
 }
 
 export class Context<Cached extends CacheType = CacheType> {
+	private readonly _cacheType: Cached;
 	public readonly client: GClient;
 	public readonly channel: CacheTypeReducer<Cached,
 		GuildTextBasedChannel | null,
