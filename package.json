@@ -12,6 +12,13 @@
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
     "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Garlic-Team/GCommands.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Garlic-Team/GCommands/issues"
+  },
   "homepage": "https://garlic-team.js.org/#/docs/gcommands/next/general/welcome",
   "author": "Garlic-Team",
   "license": "ISC",
