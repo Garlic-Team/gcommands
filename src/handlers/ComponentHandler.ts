@@ -69,16 +69,16 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		}, 2500 - client.ws.ping);
 
 	await Promise.resolve(component.run(ctx))
-		.catch(async error => {
-			Logger.error(error.code, error.message);
+		.catch(async (error) => {
+			Logger.error(error.code || '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
 				ctx.replied || ctx.deferred
 					? ctx.editReply(client.responses.ERROR)
 					: ctx.reply({
-						content: client.responses.ERROR,
-						ephemeral: true,
-						components: [],
+							content: client.responses.ERROR,
+							ephemeral: true,
+							components: [],
 					  });
 			if (typeof component.onError === 'function')
 				await Promise.resolve(component.onError(ctx, error)).catch(async () => await errorReply());

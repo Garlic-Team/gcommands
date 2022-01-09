@@ -8,8 +8,8 @@ new Listener({
 	name: 'gcommands-autocompleteHandler',
 	run: async (interaction: Interaction): Promise<void> => {
 		if (interaction.isAutocomplete())
-			await Promise.resolve(Handlers.autocompleteHandler(interaction)).catch(error => {
-				Logger.error(error.code, error.message);
+			await Promise.resolve(Handlers.autocompleteHandler(interaction)).catch((error) => {
+				Logger.error(error.code || '', error.message);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	},

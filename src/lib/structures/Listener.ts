@@ -59,8 +59,8 @@ export class Listener<
 	}
 
 	private async _run(...args: Array<any>): Promise<void> {
-		await Promise.resolve(this.run.call(this, ...args)).catch(error => {
-			Logger.error(error.code, error.message);
+		await Promise.resolve(this.run.call(this, ...args)).catch((error) => {
+			Logger.error(error.code || '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 		});
 	}
