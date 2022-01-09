@@ -22,3 +22,5 @@
   color: 'ffffff'
 - name: 'typings'
   color: '80c042'
+- name: 'dependencies'
+  color: '276bd1'
