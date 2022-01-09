@@ -95,7 +95,7 @@ export async function MessageCommandHandler(
 			Logger.error(error.code || '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
-				ctx.reply({
+				ctx.safeReply({
 					content: client.responses.ERROR,
 					components: [],
 				});
