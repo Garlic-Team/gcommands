@@ -2,9 +2,5 @@
   "extends": [
     "config:base"
   ],
-  "labels": ["dependencies"],
-  "patch": {
-    "appendLabels": ["automerge"],
-    "automerge": true
-  }
+  "labels": ["dependencies"]
 }
