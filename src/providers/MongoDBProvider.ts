@@ -45,29 +45,29 @@ export class MongoDBProvider extends Provider {
 	}
 
 	async get(collectionName: string, filter: Filter<Document>, options?: FindOptions<Document>) {
-		const collection = this.db.collection(collectionName);
-		const data = options ? await collection.findOne(filter, options) : await collection.findOne(filter);
+		const collection = this.db?.collection(collectionName);
+		const data = options ? await collection?.findOne(filter, options) : await collection?.findOne(filter);
 
 		return data;
 	}
 
 	async getMany(collectionName: string, filter: Filter<Document>, options?: FindOptions<Document>) {
-		const collection = this.db.collection(collectionName);
-		const data = options ? await collection.find(filter, options) : await collection.find(filter);
+		const collection = this.db?.collection(collectionName);
+		const data = options ? await collection?.find(filter, options) : await collection?.find(filter);
 
 		return data;
 	}
 
 	async update(collectionName: string, filter: Filter<Document>, set: UpdateFilter<Document>, options?: UpdateOptions) {
-		const collection = this.db.collection(collectionName);
-		const data = options ? await collection.updateOne(filter, set, options) : await collection.updateOne(filter, set);
+		const collection = this.db?.collection(collectionName);
+		const data = options ? await collection?.updateOne(filter, set, options) : await collection?.updateOne(filter, set);
 
 		return data;
 	}
 
 	async delete(collectionName: string, filter: Filter<Document>) {
-		const collection = this.db.collection(collectionName);
-		const data = await collection.deleteOne(filter);
+		const collection = this.db?.collection(collectionName);
+		const data = await collection?.deleteOne(filter);
 
 		return data;
 	}
