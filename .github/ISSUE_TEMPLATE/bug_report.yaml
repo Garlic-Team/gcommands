@@ -28,7 +28,7 @@ body:
     id: gc-version
     attributes:
       label: GCommands version
-      description: Which version of are you using? Run `npm list gcommands` in your project directory and paste the output.
+      description: Which version of GCommands are you using? Run `npm list gcommands` in your project directory and paste the output.
       placeholder: We no longer support version 8 of GCommands
     validations:
       required: true
