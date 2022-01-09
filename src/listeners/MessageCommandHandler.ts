@@ -21,8 +21,8 @@ new Listener({
 		const [commandName, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
 		if (commandName.length === 0) return;
 
-		await Promise.resolve(Handlers.messageCommandHandler(message, commandName, args)).catch(error => {
-			Logger.error(error.code, error.message);
+		await Promise.resolve(Handlers.messageCommandHandler(message, commandName, args)).catch((error) => {
+			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 		});
 	},

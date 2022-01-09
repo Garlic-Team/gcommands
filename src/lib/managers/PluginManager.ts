@@ -28,8 +28,8 @@ export class PluginManager extends Collection<string, Plugin> {
 		for await (const plugin of this.values()) {
 			this.currentlyLoading = plugin.name;
 			await Promise.resolve(plugin.run(client))
-				.catch(error => {
-					Logger.error(error.code, error.message);
+				.catch((error) => {
+					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 					if (error.stack) Logger.trace(error.stack);
 				})
 				.then(() => {

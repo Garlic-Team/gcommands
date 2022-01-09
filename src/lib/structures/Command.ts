@@ -68,7 +68,7 @@ export class Command {
 		Object.assign(this, options);
 
 		if (Array.isArray(this.type))
-			this.type = this.type.map(type =>
+			this.type = this.type.map((type) =>
 				typeof type === 'string' && Object.keys(CommandType).includes(type) ? CommandType[type] : type,
 			);
 		if (typeof this.autoDefer === 'string' && Object.keys(AutoDeferType).includes(this.autoDefer))
@@ -91,13 +91,13 @@ export class Command {
 		for await (const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
-					Logger.error(error.code, error.message);
+				result = await Promise.resolve(inhibitor(ctx)).catch((error) => {
+					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
-					Logger.error(error.code, error.message);
+				result = await Promise.resolve(inhibitor.run(ctx)).catch((error) => {
+					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			}
@@ -119,13 +119,13 @@ export class Command {
 
 	public toAPICommand(): Array<Record<string, any>> {
 		return this.type
-			.filter(type => type !== CommandType.MESSAGE)
-			.map(type => {
+			.filter((type) => type !== CommandType.MESSAGE)
+			.map((type) => {
 				if (type === CommandType.SLASH)
 					return {
 						name: this.name,
 						description: this.description,
-						options: this.arguments?.map(argument => Argument.toAPIArgument(argument)),
+						options: this.arguments?.map((argument) => Argument.toAPIArgument(argument)),
 						type: type,
 					};
 				else
@@ -147,12 +147,12 @@ export class Command {
 		else if (typeof this.name !== 'string') return Logger.warn('Command name must be a string', trace);
 		else if (this.description && typeof this.description !== 'string')
 			return Logger.warn('Command description must be a string', trace);
-		else if (!Array.isArray(this.type) || !this.type.every(type => Object.values(CommandType).includes(type)))
+		else if (!Array.isArray(this.type) || !this.type.every((type) => Object.values(CommandType).includes(type)))
 			return Logger.warn('Command type must be a array of CommandType', trace);
-		else if (this.arguments && !this.arguments.every(argument => Argument.validate(argument, this))) return;
+		else if (this.arguments && !this.arguments.every((argument) => Argument.validate(argument, this))) return;
 		else if (
 			this.inhibitors.length >= 1 &&
-			this.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')
+			this.inhibitors.every((inhibitor) => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')
 		)
 			return Logger.warn(
 				'Command inhibitors must be a array of functions/object with run function or undefined',

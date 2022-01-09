@@ -60,17 +60,15 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		}, 2500 - client.ws.ping);
 
 	await Promise.resolve(command.run(ctx))
-		.catch(async error => {
-			Logger.error(error.code, error.message);
+		.catch(async (error) => {
+			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
-				ctx.replied || ctx.deferred
-					? ctx.editReply(client.responses.ERROR)
-					: ctx.reply({
-						content: client.responses.ERROR,
-						components: [],
-						ephemeral: true,
-					  });
+				ctx.safeReply({
+					content: client.responses.ERROR,
+					components: [],
+					ephemeral: true,
+				});
 
 			if (typeof command.onError === 'function')
 				await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());

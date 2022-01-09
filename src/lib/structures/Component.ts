@@ -44,7 +44,7 @@ export class Component {
 		Object.assign(this, options);
 
 		if (Array.isArray(this.type))
-			this.type = this.type.map(type =>
+			this.type = this.type.map((type) =>
 				typeof type === 'string' && Object.keys(ComponentType).includes(type) ? ComponentType[type] : type,
 			);
 		if (typeof this.autoDefer === 'string' && Object.keys(AutoDeferType).includes(this.autoDefer))
@@ -67,13 +67,13 @@ export class Component {
 		for await (const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
-					Logger.error(error.code, error.message);
+				result = await Promise.resolve(inhibitor(ctx)).catch((error) => {
+					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
-					Logger.error(error.code, error.message);
+				result = await Promise.resolve(inhibitor.run(ctx)).catch((error) => {
+					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			}
@@ -102,10 +102,10 @@ export class Component {
 
 		if (!this.name) return Logger.warn('Component must have a name', trace);
 		else if (typeof this.name !== 'string') return Logger.warn('Component name must be a string', trace);
-		else if (!Array.isArray(this.type) || !this.type.every(type => Object.values(ComponentType).includes(type)))
+		else if (!Array.isArray(this.type) || !this.type.every((type) => Object.values(ComponentType).includes(type)))
 			return Logger.warn('Component type must be a array of ComponentType', trace);
 		else if (
-			!this.inhibitors.every(inhibitor => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')
+			!this.inhibitors.every((inhibitor) => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')
 		)
 			return Logger.warn(
 				'Component inhibitors must be a array of functions/object with run function or undefined',

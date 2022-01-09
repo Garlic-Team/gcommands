@@ -15,12 +15,12 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 	let args: Array<CommandArgument | Argument> = command.arguments;
 
 	if (interaction.options.getSubcommandGroup(false))
-		args = args.find(argument => argument.name === interaction.options.getSubcommandGroup())?.options;
+		args = args.find((argument) => argument.name === interaction.options.getSubcommandGroup())?.options;
 	if (interaction.options.getSubcommand(false))
-		args = args.find(argument => argument.name === interaction.options.getSubcommand())?.options;
+		args = args.find((argument) => argument.name === interaction.options.getSubcommand())?.options;
 
 	const focused = interaction.options.getFocused(true);
-	const argument = args.find(argument => argument.name === focused.name);
+	const argument = args.find((argument) => argument.name === focused.name);
 	if (!argument) return;
 
 	const ctx = new AutocompleteContext(client, {
@@ -40,8 +40,8 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 	});
 
 	await Promise.resolve(argument.run(ctx))
-		.catch(error => {
-			Logger.error(error.code, error.message);
+		.catch((error) => {
+			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 		})
 		.then(() => {

@@ -12,13 +12,13 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 		.put(
 			guildId ? Routes.applicationGuildCommands(client.user.id, guildId) : Routes.applicationCommands(client.user.id),
 			{
-				body: commands.flatMap(command => command.toAPICommand()),
+				body: commands.flatMap((command) => command.toAPICommand()),
 			},
 		)
-		.catch(error => {
+		.catch((error) => {
 			if (error.status === 429) setTimeout(() => _sync(client, commands, guildId), error.data.retry_after * 1000);
 			else {
-				Logger.error(error.code, error.message);
+				Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 				if (error.stack) Logger.trace(error.stack);
 			}
 		});
@@ -27,11 +27,11 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 export async function sync(client: GClient) {
 	if (Commands.size === 0) return;
 
-	const [guild, global] = Commands.partition(command => typeof command.guildId === 'string');
+	const [guild, global] = Commands.partition((command) => typeof command.guildId === 'string');
 
-	const guildIds = new Set(guild.map(c => c.guildId));
+	const guildIds = new Set(guild.map((c) => c.guildId));
 	for await (const guildId of guildIds) {
-		const commands = guild.filter(item => item.guildId === guildId);
+		const commands = guild.filter((item) => item.guildId === guildId);
 		await _sync(client, [...commands.values()], guildId);
 	}
 	await _sync(client, [...global.values()]);

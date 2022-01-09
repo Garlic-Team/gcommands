@@ -8,8 +8,8 @@ new Listener({
 	name: 'gcommands-componentHandler',
 	run: async (interaction: Interaction): Promise<void> => {
 		if (interaction.isMessageComponent())
-			await Handlers.componentHandler(interaction).catch(error => {
-				Logger.error(error.code, error.message);
+			await Handlers.componentHandler(interaction).catch((error) => {
+				Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	},

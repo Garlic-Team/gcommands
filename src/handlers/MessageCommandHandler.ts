@@ -79,7 +79,7 @@ export async function MessageCommandHandler(
 		deleteReply: async () => {
 			await replied.delete();
 		},
-		editReply: async opt => {
+		editReply: async (opt) => {
 			return await replied.edit(opt);
 		},
 		fetchReply: async () => {
@@ -91,11 +91,11 @@ export async function MessageCommandHandler(
 
 	if (!(await command.inhibit(ctx))) return;
 	await Promise.resolve(command.run(ctx))
-		.catch(async error => {
-			Logger.error(error.code, error.message);
+		.catch(async (error) => {
+			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
-				ctx.reply({
+				ctx.safeReply({
 					content: client.responses.ERROR,
 					components: [],
 				});
