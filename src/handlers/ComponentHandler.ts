@@ -70,7 +70,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 
 	await Promise.resolve(component.run(ctx))
 		.catch(async (error) => {
-			Logger.error(error.code || '', error.message);
+			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
 				ctx.safeReply({

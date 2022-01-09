@@ -61,7 +61,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 
 	await Promise.resolve(command.run(ctx))
 		.catch(async (error) => {
-			Logger.error(error.code || '', error.message);
+			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
 				ctx.safeReply({

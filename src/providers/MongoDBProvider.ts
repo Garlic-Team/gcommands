@@ -24,7 +24,7 @@ export class MongoDBProvider extends Provider {
 		await this.client
 			.connect()
 			.catch((error) => {
-				Logger.error(error.code || '', error.message);
+				Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 				if (error.stack) Logger.trace(error.stack);
 			})
 			.then(() => {

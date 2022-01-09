@@ -92,12 +92,12 @@ export class Command {
 			let result;
 			if (typeof inhibitor === 'function') {
 				result = await Promise.resolve(inhibitor(ctx)).catch((error) => {
-					Logger.error(error.code || '', error.message);
+					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			} else if (typeof inhibitor.run === 'function') {
 				result = await Promise.resolve(inhibitor.run(ctx)).catch((error) => {
-					Logger.error(error.code || '', error.message);
+					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			}

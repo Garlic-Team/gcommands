@@ -9,7 +9,7 @@ new Listener({
 	run: async (interaction: Interaction): Promise<void> => {
 		if (interaction.isAutocomplete())
 			await Promise.resolve(Handlers.autocompleteHandler(interaction)).catch((error) => {
-				Logger.error(error.code || '', error.message);
+				Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	},

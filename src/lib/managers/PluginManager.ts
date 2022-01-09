@@ -29,7 +29,7 @@ export class PluginManager extends Collection<string, Plugin> {
 			this.currentlyLoading = plugin.name;
 			await Promise.resolve(plugin.run(client))
 				.catch((error) => {
-					Logger.error(error.code || '', error.message);
+					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 					if (error.stack) Logger.trace(error.stack);
 				})
 				.then(() => {
