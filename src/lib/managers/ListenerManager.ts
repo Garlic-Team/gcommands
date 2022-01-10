@@ -33,12 +33,16 @@ export class ListenerManager extends Collection<string, Listener> {
 		const listener = this.get(name);
 		if (listener) {
 			this.delete(name);
-			const maxListeners = this.client.getMaxListeners();
-			if (maxListeners !== 0) this.client.setMaxListeners(maxListeners - 1);
 
-			listener.ws
-				? this.client.ws.off(listener.event as WSEventType, listener.run)
-				: this.client.off(listener.event as keyof ClientEvents, listener.run);
+			if (this.client) {
+				const maxListeners = this.client.getMaxListeners();
+				if (maxListeners !== 0) this.client.setMaxListeners(maxListeners - 1);
+
+				listener.ws
+					? this.client.ws.off(listener.event as WSEventType, listener._run)
+					: this.client.off(listener.event as keyof ClientEvents, listener._run);
+			}
+
 			Logger.debug('Unregistered listener', listener.name, 'listening to', listener.event);
 		}
 
@@ -56,7 +60,7 @@ export class ListenerManager extends Collection<string, Listener> {
 
 	public async initiate(client: GClient): Promise<void> {
 		this.client = client;
-		this.forEach(listener => listener.initialize(client));
+		this.forEach((listener) => listener.initialize(client));
 	}
 }
 

@@ -54,11 +54,11 @@ export class Listener<
 		else return true;
 	}
 
-	public unregister() {
-		return Listeners.unregister(this.name);
+	public unregister(): void {
+		Listeners.unregister(this.name);
 	}
 
-	private async _run(...args: Array<any>): Promise<void> {
+	public async _run(...args: Array<any>): Promise<void> {
 		await Promise.resolve(this.run.call(this, ...args)).catch((error) => {
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
