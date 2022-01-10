@@ -1,0 +1,9 @@
+{
+    "name": "inhibitors",
+    "files": [
+        {
+            "name": "inhibitors",
+            "path": "src/inhibitors/index.ts"
+        }
+    ]
+}
