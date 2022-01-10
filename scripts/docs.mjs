@@ -1,8 +1,7 @@
-import { runGenerator } from '@discordjs/ts-docgen';
+import {runGenerator} from '@discordjs/ts-docgen';
 
 runGenerator({
 	existingOutput: 'docs/out-latest.json',
 	output: 'docs/latest.json',
-	custom: 'docs.yml',
-	config: 'scripts/config.json',
+    custom: 'docs.yml'
 });
