@@ -3,6 +3,7 @@ import { Command } from '../structures/Command';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import Logger from 'js-logger';
+import { setTimeout } from 'node:timers';
 import { Commands } from '../managers/CommandManager';
 
 async function _sync(client: GClient, commands: Array<Command>, guildId?: string) {
