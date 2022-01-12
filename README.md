@@ -31,14 +31,14 @@ GCommands is a [discord.js](https://discord.js.org) framework that makes an incr
 ## Installation
 ```sh
 # Latest (recommended)
-npm install gcommands@latest
-yarn add gcommands@latest
-pnpm add gcommands@latest
+npm install gcommands@latest discord.js
+yarn add gcommands@latest discord.js
+pnpm add gcommands@latest discord.js
 
 # Next Version (unstable, under development)
-npm install gcommands@next
-yarn add gcommands@next
-pnpm add gcommands@next
+npm install gcommands@next discord.js
+yarn add gcommands@next discord.js
+pnpm add gcommands@next discord.js
 ```
 
 ## Guide & Documentation
