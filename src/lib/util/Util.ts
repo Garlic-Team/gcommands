@@ -45,7 +45,7 @@ export class Util {
 	 * @deprecated We don't support arguments in object/array
 	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
 	*/
-	private static checkIfSubOrGroup(type) {
+	static checkIfSubOrGroup(type) {
 		// Why? Because discord.js v14 (:
 		return !!['SUB_COMMAND', 'SUB_COMMAND_GROUP', 'Subcommand', 'SubcommandGroup'].includes(type);
 	}
