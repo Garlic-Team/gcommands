@@ -8,7 +8,7 @@ export class Util {
 
 		const check = options => {
 			for (const option of options) {
-				if ([1, 2].includes(option.type)) args.push(option.name);
+				if (Util.checkIfSubOrGroup(option.type)) args.push(option.name);
 				else args.push(option.value);
 
 				if (option.options) check(option.options);
@@ -29,7 +29,7 @@ export class Util {
 
 		const check = (options, object) => {
 			for (const option of options) {
-				if ([1, 2].includes(option.type)) object[option.name] = {};
+				if (Util.checkIfSubOrGroup(option.type)) object[option.name] = {};
 				else object[option.name] = option.value;
 
 				if (option.options) check(option.options, object[option.name]);
@@ -39,6 +39,15 @@ export class Util {
 		check(options, args);
 
 		return args;
+	}
+	
+	/**
+	 * @deprecated We don't support arguments in object/array
+	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
+	*/
+	private static checkIfSubOrGroup(type) {
+		// Why? Because discord.js v14 (:
+		return !!['SUB_COMMAND', 'SUB_COMMAND_GROUP', 'Subcommand', 'SubcommandGroup'].includes(type);
 	}
 
 	static isClass(input: any): boolean {
