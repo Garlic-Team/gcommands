@@ -13,7 +13,7 @@ export class Util {
 
 				if (option.options) check(option.options);
 			}
-		}
+		};
 
 		check(options);
 
@@ -34,7 +34,7 @@ export class Util {
 
 				if (option.options) check(option.options, object[option.name]);
 			}
-		}
+		};
 
 		check(options, args);
 
