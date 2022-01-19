@@ -4,6 +4,7 @@ export default Inhibitor;
 export * from './Inhibitor';
 export * from './ChannelOnly';
 export * from './ClientPermissions';
+export * from './ClientRoles';
 export * from './Nsfw';
 export * from './Or';
 export * from './UserOnly';
