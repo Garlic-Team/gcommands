@@ -8,6 +8,19 @@ export * from './ClientRoles';
 export * from './Nsfw';
 export * from './Or';
 export * from './UserOnly';
-export * from './UserPermissions';
-export * from './UserRoles';
 export * from './Confirm';
+
+export * from './MemberPermissions';
+export * from './MemberRoles';
+
+/**
+ * @description Use MemberPermissions instead of UserPermissions
+ * @deprecated
+ */
+export * as UserPermissions from './MemberPermissions';
+
+/**
+ * @description Use MemberRoles instead of UserRoles
+ * @deprecated
+ */
+export * as UserRoles from './MemberRoles';
