@@ -1,4 +1,6 @@
 import { Inhibitor } from './Inhibitor';
+import { MemberPermissions } from './MemberPermissions';
+import { MemberRoles } from './MemberRoles';
 
 export default Inhibitor;
 export * from './Inhibitor';
@@ -17,10 +19,11 @@ export * from './MemberRoles';
  * @description Use MemberPermissions instead of UserPermissions
  * @deprecated
  */
-export * as UserPermissions from './MemberPermissions';
+export const UserPermissions = MemberPermissions;
+//export * as UserPermissions from './MemberPermissions';
 
 /**
  * @description Use MemberRoles instead of UserRoles
  * @deprecated
  */
-export * as UserRoles from './MemberRoles';
+export const UserRoles = MemberRoles;
