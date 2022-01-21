@@ -9,7 +9,7 @@ export interface ChannelOnlyOptions extends InhibitorOptions {
 }
 
 export class ChannelOnly extends Inhibitor {
-	public ids: Array<Snowflake>;
+	public ids?: Array<Snowflake>;
 	public getChannels?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
 
 	constructor(options: ChannelOnlyOptions) {
