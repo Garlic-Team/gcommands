@@ -31,7 +31,7 @@
   "devDependencies": {
     "@babel/cli": "7.16.8",
     "@babel/core": "7.16.10",
-    "@babel/preset-env": "7.16.10",
+    "@babel/preset-env": "7.16.11",
     "@babel/preset-typescript": "7.16.7",
     "@google-cloud/firestore": "5.0.2",
     "@prisma/client": "3.8.1",
@@ -48,7 +48,7 @@
     "lru-cache": "6.0.0",
     "mongodb": "4.3.1",
     "prettier": "2.5.1",
-    "typescript": "4.5.4"
+    "typescript": "4.5.5"
   },
   "engines": {
     "node": ">=16.6"
