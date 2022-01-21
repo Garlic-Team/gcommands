@@ -20,7 +20,6 @@ export * from './MemberRoles';
  * @deprecated
  */
 export const UserPermissions = MemberPermissions;
-//export * as UserPermissions from './MemberPermissions';
 
 /**
  * @description Use MemberRoles instead of UserRoles
