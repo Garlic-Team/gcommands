@@ -3,12 +3,17 @@
   "version": "9.0.2-next",
   "description": "Powerful and flexible framework!",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+	"exports": {
+		"import": "./dist/index.mjs",
+		"require": "./dist/index.js"
+	},
   "scripts": {
     "build": "bash scripts/build.bash",
     "lint": "npx eslint .",
-    "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files --no-comments",
-    "build:types": "tsc --emitDeclarationOnly",
+    "build:babel": "npx babel --extensions .ts ./src -d ./dist/ --minified --copy-files --no-comments --config-file ./scripts/babel.config-cjs.js && npx babel --extensions .ts ./src -d ./dist/ --minified --copy-files --no-comments --config-file ./scripts/babel.config-esm.js --out-file-extension .mjs",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
     "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs"
   },
@@ -38,9 +43,9 @@
     "@types/keyv": "3.1.3",
     "@types/lru-cache": "5.1.1",
     "@types/node": "16.11.21",
-    "discord.js": "13.6.0",
     "@typescript-eslint/eslint-plugin": "5.10.0",
     "@typescript-eslint/parser": "5.10.0",
+    "discord.js": "13.6.0",
     "eslint": "8.7.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
