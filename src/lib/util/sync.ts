@@ -12,7 +12,7 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 		.put(
 			guildId ? Routes.applicationGuildCommands(client.user.id, guildId) : Routes.applicationCommands(client.user.id),
 			{
-				body: commands.flatMap((command) => command.toAPICommand()),
+				body: commands.flatMap((command) => command.toJSON()),
 			},
 		)
 		.catch((error) => {
