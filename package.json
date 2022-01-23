@@ -12,6 +12,7 @@
   "scripts": {
     "build": "bash scripts/build.bash",
     "lint": "npx eslint .",
+    "build:tsup": "npx tsup-node src/ --format cjs,esm --dts --clean",
     "build:babel": "npx babel --extensions .ts ./src -d ./dist/ --minified --copy-files --no-comments --config-file ./scripts/babel.config-cjs.js && npx babel --extensions .ts ./src -d ./dist/ --minified --copy-files --no-comments --config-file ./scripts/babel.config-esm.js --out-file-extension .mjs",
     "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
@@ -54,6 +55,7 @@
     "lru-cache": "6.0.0",
     "mongodb": "4.3.1",
     "prettier": "2.5.1",
+    "tsup": "^5.11.11",
     "typescript": "4.5.5"
   },
   "engines": {
