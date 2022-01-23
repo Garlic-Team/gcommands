@@ -1,1 +1,2 @@
-npm run build:tsup
+npm run build:babel
+npm run build:types
