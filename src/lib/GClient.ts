@@ -24,7 +24,7 @@ export interface GClientOptions extends ClientOptions {
 
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public responses: Record<string, string> = Responses;
-	public declare options: GClientOptions;
+	public options: GClientOptions;
 
 	constructor(options: GClientOptions) {
 		super(options);
