@@ -74,7 +74,7 @@ export class Argument {
 	public name: string;
 	public description: string;
 	public type: ArgumentType | keyof typeof ArgumentType;
-	public required: boolean = false;
+	public required = false;
 	public choices?: Array<ArgumentChoice>;
 	public arguments?: Array<Argument>;
 	public channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
