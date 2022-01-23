@@ -3,12 +3,7 @@
   "version": "9.0.2-next",
   "description": "Powerful and flexible framework!",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "exports": {
-    "import": "./dist/index.mjs",
-    "require": "./dist/index.js"
-  },
   "scripts": {
     "build": "bash scripts/build.bash",
     "lint": "npx eslint .",
