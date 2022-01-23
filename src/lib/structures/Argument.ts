@@ -51,7 +51,9 @@ const validationSchema = z
 		description: z.string().max(100),
 		type: z
 			.union([z.string(), z.nativeEnum(ArgumentType)])
-			.transform((arg) => (Object.keys(ArgumentType).includes(String(arg)) ? ArgumentType[arg] : arg)),
+			.transform((arg) =>
+				typeof arg === 'string' && Object.keys(ArgumentType).includes(arg) ? ArgumentType[arg] : arg,
+			),
 		required: z.boolean().optional(),
 		choices: z
 			.object({
