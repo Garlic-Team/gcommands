@@ -4,6 +4,7 @@ import { Commands } from './managers/CommandManager';
 import { Listeners } from './managers/ListenerManager';
 import { Components } from './managers/ComponentManager';
 import Responses from '../responses.json';
+import { setImmediate } from 'timers';
 import { registerDirectories } from './util/registerDirectories';
 
 export enum AutoDeferType {
