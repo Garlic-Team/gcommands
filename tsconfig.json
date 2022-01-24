@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "rootDir": "./src/",
+    "rootDir": "src",
     "outDir": "dist",
 		"allowSyntheticDefaultImports": true,
 		"alwaysStrict": true,

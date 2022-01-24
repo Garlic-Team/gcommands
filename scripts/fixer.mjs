@@ -1,4 +1,4 @@
-import { writeFileSync, readFileSync } from 'fs';
+import { writeFileSync, readFileSync, rmSync } from 'fs';
 
 const path = './dist/lib/loaders/directoryLoader.js';
 
@@ -11,3 +11,5 @@ content = content
     )
 
 writeFileSync('./dist/lib/loaders/directoryLoader.js', content);
+
+rmSync('./tsconfig.tsbuildinfo');
