@@ -1,5 +1,5 @@
-import { Command, CommandArgument, CommandArgumentChoice } from './Command';
-import { AutocompleteContext } from './contexts/AutocompleteContext';
+import type { Command, CommandArgument, CommandArgumentChoice } from './Command';
+import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import Logger from 'js-logger';
 import { Util } from '../util/Util';
 

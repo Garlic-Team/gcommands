@@ -4,8 +4,8 @@ import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
 export class KeyvProvider extends Provider {
 	uri: string | undefined;
-	client: Keyv;
-	opts: Keyv.Options<any>;
+	client: Keyv | null;
+	opts: Keyv.Options<any> | undefined;
 	type: ProviderTypes;
 
 	constructor(uri?: string, opts?: Keyv.Options<any>) {
@@ -34,24 +34,24 @@ export class KeyvProvider extends Provider {
 	}
 
 	async get(key: string) {
-		const data = await this.client.get(key);
+		const data = await this.client?.get(key);
 
 		return data;
 	}
 
 	async update(key: string, value: any, ttl?: number) {
-		const data = await this.client.set(key, value, ttl);
+		const data = await this.client?.set(key, value, ttl);
 
 		return data;
 	}
 
 	async delete(key: string) {
-		const data = await this.client.delete(key);
+		const data = await this.client?.delete(key);
 
 		return data;
 	}
 
 	clear() {
-		return this.client.clear();
+		return this.client?.clear();
 	}
 }

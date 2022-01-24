@@ -1,6 +1,6 @@
 import { Collection } from 'discord.js';
 import { Command } from '../structures/Command';
-import { GClient } from '../GClient';
+import type { GClient } from '../GClient';
 import Logger from 'js-logger';
 import { Plugins } from './PluginManager';
 

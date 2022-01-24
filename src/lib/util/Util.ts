@@ -45,7 +45,7 @@ export class Util {
 	 * @deprecated We don't support arguments in object/array
 	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
 	*/
-	static checkIfSubOrGroup(type) {
+	static checkIfSubOrGroup(type: string) {
 		// Why? Because discord.js v14 (:
 		return !!['SUB_COMMAND', 'SUB_COMMAND_GROUP', 'Subcommand', 'SubcommandGroup'].includes(type);
 	}
@@ -59,7 +59,7 @@ export class Util {
 	static resolveArgumentOptions(options: any): any {
 		for (const [key, value] of Object.entries(options)) {
 			const option = key.match(/[A-Z]/g)?.[0]
-				? key.replace(key.match(/[A-Z]/g)[0], `_${key.match(/[A-Z]/g)[0].toLowerCase()}`)
+				? key.replace(key?.match(/[A-Z]/g)?.[0], `_${key?.match(/[A-Z]/g)?.[0]?.toLowerCase()}`)
 				: key;
 
 			if (option !== key) {

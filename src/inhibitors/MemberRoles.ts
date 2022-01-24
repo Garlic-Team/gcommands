@@ -1,7 +1,7 @@
 import { Inhibitor, InhibitorOptions } from './Inhibitor';
-import { CommandContext } from '../lib/structures/contexts/CommandContext';
-import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
-import { Snowflake } from 'discord.js';
+import type { CommandContext } from '../lib/structures/contexts/CommandContext';
+import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
+import type { Snowflake } from 'discord.js';
 
 export interface MemberRolesOptions extends InhibitorOptions {
 	ids?: Array<Snowflake>;

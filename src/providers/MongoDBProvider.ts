@@ -6,7 +6,7 @@ export class MongoDBProvider extends Provider {
 	uri: string;
 	dbName?: string | undefined;
 	client: MongoClient;
-	db: Db;
+	db: Db | null;
 	type: ProviderTypes;
 
 	constructor(uri: string, dbName?: string) {
@@ -38,8 +38,8 @@ export class MongoDBProvider extends Provider {
 	}
 
 	async insert(collectionName: string, document: Document) {
-		const collection = this.db.collection(collectionName);
-		const data = await collection.insertOne(document);
+		const collection = this.db?.collection(collectionName);
+		const data = await collection?.insertOne(document);
 
 		return data;
 	}

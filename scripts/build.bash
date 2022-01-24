@@ -1,2 +1,4 @@
-npm run build:babel
-npm run build:types
+#!/bin/bash
+
+npm run build:tsc
+npm run build:fix

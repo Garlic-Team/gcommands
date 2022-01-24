@@ -1,6 +1,6 @@
 import { Collection } from 'discord.js';
-import { Command } from '../lib/structures/Command';
-import { Component } from '../lib/structures/Component';
+import type { Command } from '../lib/structures/Command';
+import type { Component } from '../lib/structures/Component';
 import ms from 'ms';
 
 // TODO exclude bot owners

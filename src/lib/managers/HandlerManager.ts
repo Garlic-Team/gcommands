@@ -1,4 +1,4 @@
-import {
+import type {
 	AutocompleteInteraction,
 	Collection,
 	CommandInteraction,
@@ -10,8 +10,8 @@ import { InteractionCommandHandler } from '../../handlers/InteractionCommandHand
 import { MessageCommandHandler } from '../../handlers/MessageCommandHandler';
 import { ComponentHandler } from '../../handlers/ComponentHandler';
 import { CooldownHandler } from '../../handlers/CooldownHandler';
-import { Command } from '../structures/Command';
-import { Component } from '../structures/Component';
+import type { Command } from '../structures/Command';
+import type { Component } from '../structures/Component';
 import { AutocompleteHandler } from '../../handlers/AutocompleteHandler';
 
 export class HandlerManager {

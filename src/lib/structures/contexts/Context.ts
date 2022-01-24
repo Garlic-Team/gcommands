@@ -1,5 +1,5 @@
-import { GClient } from '../../GClient';
-import {
+import type { GClient } from '../../GClient';
+import type {
 	CacheType,
 	CacheTypeReducer,
 	Guild,
@@ -10,10 +10,10 @@ import {
 	TextBasedChannel,
 	User,
 } from 'discord.js';
-import { APIInteractionGuildMember } from 'discord-api-types/v9';
-import { CommandContext } from './CommandContext';
-import { AutocompleteContext } from './AutocompleteContext';
-import { ComponentContext } from './ComponentContext';
+import type { APIInteractionGuildMember } from 'discord-api-types/v9';
+import type { CommandContext } from './CommandContext';
+import type { AutocompleteContext } from './AutocompleteContext';
+import type { ComponentContext } from './ComponentContext';
 
 export interface ContextOptions<Cached extends CacheType = CacheType> {
 	channel: CacheTypeReducer<
