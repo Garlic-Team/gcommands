@@ -9,6 +9,30 @@
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./MongoDBProvider": {
+      "import": "./dist/providers/MongoDBProvider.js",
+      "require": "./dist/providers/MongoDBProvider.js"
+    },
+    "./FirestoreProvider": {
+      "import": "./dist/providers/FirestoreProvider.js",
+      "require": "./dist/providers/FirestoreProvider.js"
+    },
+    "./KeyvProvider": {
+      "import": "./dist/providers/KeyvProvider.js",
+      "require": "./dist/providers/KeyvProvider.js"
+    },
+    "./LruCacheProvider": {
+      "import": "./dist/providers/LruCacheProvider.js",
+      "require": "./dist/providers/LruCacheProvider.js"
+    },
+    "./PrismaIOProvider": {
+      "import": "./dist/providers/PrismaIOProvider.js",
+      "require": "./dist/providers/PrismaIOProvider.js"
+    },
+    "./dist/providers/*": {
+      "import": "./dist/providers/*.js",
+      "require": "./dist/providers/*.js"
     }
   },
   "scripts": {
