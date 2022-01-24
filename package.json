@@ -16,8 +16,6 @@
     "lint": "npx eslint .",
     "build:tsc": "npx tsc -p . && gen-esm-wrapper dist/index.js dist/index.mjs",
     "build:fix": "node scripts/fixer.mjs",
-    "build:babel": "npx babel --extensions .ts ./src -d ./dist/ --minified --copy-files --no-comments --config-file ./scripts/babel.config.js",
-    "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
     "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs"
   },
