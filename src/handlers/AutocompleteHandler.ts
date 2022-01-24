@@ -1,10 +1,10 @@
-import { AutocompleteInteraction } from 'discord.js';
-import { CommandArgument } from '../lib/structures/Command';
+import type { AutocompleteInteraction } from 'discord.js';
+import type { CommandArgument } from '../lib/structures/Command';
 import { AutocompleteContext } from '../lib/structures/contexts/AutocompleteContext';
-import { Argument } from '../lib/structures/Argument';
+import type { Argument } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
 import Logger from 'js-logger';
-import { GClient } from '../lib/GClient';
+import type { GClient } from '../lib/GClient';
 
 export async function AutocompleteHandler(interaction: AutocompleteInteraction) {
 	const client = interaction.client as GClient;

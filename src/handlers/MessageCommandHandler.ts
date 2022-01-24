@@ -1,5 +1,5 @@
 import { Collection, CommandInteractionOptionResolver, Message } from 'discord.js';
-import { GClient } from '../lib/GClient';
+import type { GClient } from '../lib/GClient';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';
 import { ArgumentType } from '../lib/structures/Argument';

@@ -1,5 +1,5 @@
 import { Listener } from '../lib/structures/Listener';
-import { Interaction } from 'discord.js';
+import type { Interaction } from 'discord.js';
 import { Handlers } from '../lib/managers/HandlerManager';
 import Logger from 'js-logger';
 

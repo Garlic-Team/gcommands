@@ -3,10 +3,19 @@
   "version": "9.0.2-next",
   "description": "Powerful and flexible framework!",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "bash scripts/build.bash",
     "lint": "npx eslint .",
+    "build:tsc": "npx tsc -p . && gen-esm-wrapper dist/index.js dist/index.mjs",
+    "build:fix": "node scripts/fixer.mjs",
     "build:babel": "npx babel --extensions .ts ./src -d ./dist/ --minified --copy-files --no-comments --config-file ./scripts/babel.config.js",
     "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
@@ -26,7 +35,8 @@
     "@discordjs/rest": "^0.1.0-canary.0",
     "discord-api-types": "^0.26.1",
     "js-logger": "^1.6.1",
-    "ms": "^2.1.3"
+    "ms": "^2.1.3",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@babel/cli": "7.16.8",
@@ -45,10 +55,12 @@
     "eslint": "8.7.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
+    "gen-esm-wrapper": "^1.1.3",
     "keyv": "4.0.5",
     "lru-cache": "6.0.0",
     "mongodb": "4.3.1",
     "prettier": "2.5.1",
+    "tsup": "^5.11.11",
     "typescript": "4.5.5"
   },
   "engines": {

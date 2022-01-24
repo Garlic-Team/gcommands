@@ -1,4 +1,4 @@
-import { GClient } from '../GClient';
+import type { GClient } from '../GClient';
 import { Listener } from '../structures/Listener';
 import { ClientEvents, Collection, WSEventType } from 'discord.js';
 import Logger from 'js-logger';

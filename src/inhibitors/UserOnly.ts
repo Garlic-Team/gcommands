@@ -1,6 +1,6 @@
-import { Snowflake } from 'discord.js';
-import { CommandContext } from '../lib/structures/contexts/CommandContext';
-import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
+import type { Snowflake } from 'discord.js';
+import type { CommandContext } from '../lib/structures/contexts/CommandContext';
+import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 import { Inhibitor, InhibitorOptions } from './Inhibitor';
 
 export interface UserOnlyOptions extends InhibitorOptions {

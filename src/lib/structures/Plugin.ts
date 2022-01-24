@@ -1,4 +1,4 @@
-import { GClient } from '../GClient';
+import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
 import Logger from 'js-logger';
 import { Util } from '../util/Util';

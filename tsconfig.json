@@ -1,14 +1,38 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
+    "rootDir": "./src/",
     "outDir": "dist",
-    "target": "ES2021",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "declaration": true,
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true
+		"allowSyntheticDefaultImports": true,
+		"alwaysStrict": true,
+		"declaration": true,
+		"declarationMap": true,
+		"emitDecoratorMetadata": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"importHelpers": true,
+		"importsNotUsedAsValues": "error",
+		"incremental": true,
+		"lib": ["esnext"],
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"newLine": "lf",
+		"noEmitHelpers": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": false,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"preserveConstEnums": true,
+		"pretty": true,
+		"removeComments": false,
+		"resolveJsonModule": true,
+		"target": "ES2020",
+    "skipLibCheck": true,
+		"composite": true,
+    "sourceMap": false
   },
+  "include": [".","./src/responses.json"],
   "files": [
     "src/index.ts",
     "src/providers/FirestoreProvider.ts",
@@ -16,5 +40,5 @@
     "src/providers/LruCacheProvider.ts",
     "src/providers/MongoDBProvider.ts",
     "src/providers/PrismaIOProvider.ts"
-  ]
+  ],
 }
