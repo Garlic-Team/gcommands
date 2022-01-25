@@ -54,7 +54,7 @@
   "author": "Garlic-Team",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^0.1.0-canary.0",
+    "@discordjs/rest": "^0.3.0",
     "discord-api-types": "^0.26.1",
     "js-logger": "^1.6.1",
     "ms": "^2.1.3",
