@@ -91,12 +91,10 @@ export class Command {
 				this.name = options.name || Command.defaults?.name;
 				this.description = options.description || Command.defaults?.description;
 				this.type = options.type || Command.defaults?.type;
-				this.arguments = Array.isArray(options.arguments)
-					? options.arguments.map((argument) => {
-							if (argument instanceof Argument) return argument;
-							else return new Argument(argument);
-					  })
-					: undefined;
+				this.arguments = options.arguments.map((argument) => {
+					if (argument instanceof Argument) return argument;
+					else return new Argument(argument);
+				});
 				//@ts-expect-error This is really weird lol
 				this.inhibitors = options.inhibitors || Command.defaults?.inhibitors;
 				this.guildId = options.guildId || Command.defaults?.guildId;

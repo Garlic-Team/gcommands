@@ -38,6 +38,11 @@ export interface ArgumentOptions {
 	required?: boolean;
 	choices?: Array<ArgumentChoice>;
 	arguments?: Array<Argument | ArgumentOptions>;
+	/**
+	 * @deprecated Please use ArgumentOptions#arguments instead
+	 * @link https://garlic-team.js.org/docs/#/docs/gcommands/next/typedef/ArgumentOptions
+	 */
+	options?: Array<Argument | ArgumentOptions>;
 	channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	run?: (ctx: AutocompleteContext) => any;
 }
@@ -83,6 +88,10 @@ export class Argument {
 	public run?: (ctx: AutocompleteContext) => any;
 
 	constructor(options: ArgumentOptions) {
+		if (options.options) {
+			Logger.warn('The use of ArgumentOptions#options is depracted. Please use ArgumentOptions#arguments instead');
+			options.arguments = options.options;
+		}
 		validationSchema
 			.parseAsync(options)
 			.then((options) => {
@@ -92,12 +101,10 @@ export class Argument {
 				this.required = options.required;
 				// @ts-expect-error This is really weird lol
 				this.choices = options.choices;
-				this.arguments = Array.isArray(options.arguments)
-					? options.arguments.map((argument) => {
-							if (argument instanceof Argument) return argument;
-							else return new Argument(argument);
-					  })
-					: undefined;
+				this.arguments = options.arguments?.map((argument) => {
+					if (argument instanceof Argument) return argument;
+					else return new Argument(argument);
+				});
 				this.channelTypes = options.channelTypes;
 				this.run = options.run;
 			})
