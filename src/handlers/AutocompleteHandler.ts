@@ -1,5 +1,4 @@
 import type { AutocompleteInteraction } from 'discord.js';
-import type { CommandArgument } from '../lib/structures/Command';
 import { AutocompleteContext } from '../lib/structures/contexts/AutocompleteContext';
 import type { Argument } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
@@ -12,7 +11,7 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 	const command = Commands.get(interaction.commandName);
 	if (!command) return;
 
-	let args: Array<CommandArgument | Argument> = command.arguments;
+	let args: Array<Argument> = command.arguments;
 
 	if (interaction.options.getSubcommandGroup(false))
 		args = args.find((argument) => argument.name === interaction.options.getSubcommandGroup())?.options;
