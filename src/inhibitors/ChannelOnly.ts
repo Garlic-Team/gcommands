@@ -5,22 +5,22 @@ import { Inhibitor, InhibitorOptions } from './Inhibitor';
 
 export interface ChannelOnlyOptions extends InhibitorOptions {
 	ids?: Array<Snowflake>;
-	getChannels?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
+	getIds?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
 }
 
 export class ChannelOnly extends Inhibitor {
 	public ids?: Array<Snowflake>;
-	public getChannels?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
+	public getIds?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
 
 	constructor(options: ChannelOnlyOptions) {
 		super(options);
 
 		this.ids = options.ids;
-		this.getChannels = options.getChannels;
+		this.getIds = options.getIds;
 	}
 
 	run(ctx: CommandContext | ComponentContext): boolean | any {
-		const dynamicChannels = this.getChannels?.(ctx);
+		const dynamicChannels = this.getIds?.(ctx);
 		if (dynamicChannels) this.ids = dynamicChannels;
 
 		if (!this.ids.includes(ctx.channelId))

@@ -1,7 +1,6 @@
 import { AutoDeferType, GClient } from '../GClient';
-import { Argument, ArgumentType, ChannelType } from './Argument';
+import { Argument } from './Argument';
 import type { CommandContext } from './contexts/CommandContext';
-import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import { Commands } from '../managers/CommandManager';
 import Logger from 'js-logger';
 import { Util } from '../util/Util';
@@ -13,22 +12,6 @@ export enum CommandType {
 	'CONTEXT_MESSAGE' = 3,
 }
 
-export interface CommandArgumentChoice {
-	name: string;
-	value: string;
-}
-
-export interface CommandArgument {
-	name: string;
-	description: string;
-	type: ArgumentType;
-	required?: boolean;
-	choices?: Array<CommandArgumentChoice>;
-	options?: Array<CommandArgument | Argument>;
-	channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
-	run?: (ctx: AutocompleteContext) => any;
-}
-
 export type CommandInhibitor = (ctx: CommandContext) => boolean | any;
 export type CommandInhibitors = Array<{ run: CommandInhibitor } | CommandInhibitor>;
 
@@ -36,7 +19,7 @@ export interface CommandOptions {
 	name: string;
 	type: Array<CommandType | keyof typeof CommandType>;
 	description?: string;
-	arguments?: Array<CommandArgument | Argument>;
+	arguments?: Array<Argument>;
 	inhibitors?: CommandInhibitors;
 	guildId?: string;
 	cooldown?: string;
@@ -51,7 +34,7 @@ export class Command {
 	public readonly name: string;
 	public readonly description?: string;
 	public readonly type: Array<CommandType | keyof typeof CommandType>;
-	public readonly arguments?: Array<CommandArgument | Argument>;
+	public readonly arguments?: Array<Argument>;
 	public readonly inhibitors: CommandInhibitors = [];
 	public guildId?: string;
 	private static defaults?: Partial<CommandOptions>;

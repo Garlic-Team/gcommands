@@ -1,9 +1,10 @@
-import type { Command, CommandArgument, CommandArgumentChoice } from './Command';
+import type { Command } from './Command';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import Logger from 'js-logger';
 import { Util } from '../util/Util';
+import type { ApplicationCommandOptionType } from 'discord-api-types';
 
-export enum ArgumentType {
+export enum ArgumentType  {
 	'SUB_COMMAND' = 1,
 	'SUB_COMMAND_GROUP' = 2,
 	'STRING' = 3,
@@ -28,13 +29,18 @@ export enum ChannelType {
 	'GUILD_STAGE_VOICE' = 13,
 }
 
+export interface ArgumentChoice {
+	name: string;
+	value: string;
+}
+
 export interface ArgumentOptions {
 	name: string;
 	description: string;
-	type: ArgumentType | keyof typeof ArgumentType;
+	type: ArgumentType | keyof typeof ArgumentType | ApplicationCommandOptionType | keyof typeof ApplicationCommandOptionType;
 	required?: boolean;
-	choices?: Array<CommandArgumentChoice>;
-	options?: Array<CommandArgument | Argument>;
+	choices?: Array<ArgumentChoice>;
+	options?: Array<Argument>;
 	channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	run?: (ctx: AutocompleteContext) => any;
 }
@@ -42,10 +48,10 @@ export interface ArgumentOptions {
 export class Argument {
 	public readonly name: string;
 	public readonly description: string;
-	public readonly type: ArgumentType | keyof typeof ArgumentType;
+	public readonly type: ArgumentType | keyof typeof ArgumentType | ApplicationCommandOptionType | keyof typeof ApplicationCommandOptionType;
 	public readonly required: boolean = false;
-	public readonly choices?: Array<CommandArgumentChoice>;
-	public readonly options?: Array<CommandArgument | Argument>;
+	public readonly choices?: Array<ArgumentChoice>;
+	public readonly options?: Array<Argument>;
 	public readonly channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	public run?: (ctx: AutocompleteContext) => any;
 
@@ -56,7 +62,7 @@ export class Argument {
 			this.type = ArgumentType[this.type];
 	}
 
-	public static toAPIArgument(argument: Argument | CommandArgument): Record<string, any> {
+	public static toAPIArgument(argument: Argument): Record<string, any> {
 		if (argument.type === ArgumentType.SUB_COMMAND || argument.type === ArgumentType.SUB_COMMAND_GROUP) {
 			return {
 				...argument,
@@ -70,14 +76,14 @@ export class Argument {
 		};
 	}
 
-	public static validate(argument: Argument | CommandArgument, command: Command): boolean | void {
+	public static validate(argument: Argument, command: Command): boolean | void {
 		const trace = Util.resolveValidationErrorTrace([argument.name, command.name, command.fileName]);
 
 		if (!argument.name) return Logger.warn('Argument must have a name');
 		else if (typeof argument.name !== 'string') return Logger.warn('Argument name must be a string');
 		else if (typeof argument.description !== 'string')
 			return Logger.warn('Argument description must be a string', trace);
-		else if (!Object.values(ArgumentType).includes(argument.type))
+		else if (!Object.values(ArgumentType).includes(argument.type as string))
 			return Logger.warn('Argument type must be one of ArgumentType', trace);
 		else if (argument.required && typeof argument.required !== 'boolean')
 			return Logger.warn('Argument required must be a boolean or undefined', trace);
