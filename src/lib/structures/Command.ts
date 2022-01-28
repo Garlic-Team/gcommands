@@ -73,7 +73,7 @@ export class Command {
 	public description?: string;
 	public type: Array<CommandType | keyof typeof CommandType>;
 	public arguments?: Array<Argument>;
-	public inhibitors: CommandInhibitors = [];
+	public inhibitors: CommandInhibitors;
 	public guildId?: string;
 	private static defaults?: Partial<CommandOptions>;
 	public cooldown?: string;
@@ -123,6 +123,8 @@ export class Command {
 	}
 
 	public async inhibit(ctx: CommandContext): Promise<boolean> {
+		if (!this.inhibitors) return true;
+
 		for await (const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
