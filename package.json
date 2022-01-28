@@ -1,14 +1,45 @@
 {
   "name": "gcommands",
-  "version": "9.0.0-next",
+  "version": "9.0.2-next",
   "description": "Powerful and flexible framework!",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./MongoDBProvider": {
+      "import": "./dist/providers/MongoDBProvider.js",
+      "require": "./dist/providers/MongoDBProvider.js"
+    },
+    "./FirestoreProvider": {
+      "import": "./dist/providers/FirestoreProvider.js",
+      "require": "./dist/providers/FirestoreProvider.js"
+    },
+    "./KeyvProvider": {
+      "import": "./dist/providers/KeyvProvider.js",
+      "require": "./dist/providers/KeyvProvider.js"
+    },
+    "./LruCacheProvider": {
+      "import": "./dist/providers/LruCacheProvider.js",
+      "require": "./dist/providers/LruCacheProvider.js"
+    },
+    "./PrismaIOProvider": {
+      "import": "./dist/providers/PrismaIOProvider.js",
+      "require": "./dist/providers/PrismaIOProvider.js"
+    },
+    "./dist/providers/*": {
+      "import": "./dist/providers/*.js",
+      "require": "./dist/providers/*.js"
+    }
+  },
   "scripts": {
     "build": "bash scripts/build.bash",
     "lint": "npx eslint .",
-    "build:babel": "npx babel --extensions .ts ./src -d ./dist --minified --copy-files --no-comments",
-    "build:types": "tsc --emitDeclarationOnly",
+    "build:tsc": "npx tsc -p . && gen-esm-wrapper dist/index.js dist/index.mjs",
+    "build:fix": "node scripts/fixer.mjs",
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
     "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs"
   },
@@ -23,33 +54,31 @@
   "author": "Garlic-Team",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^0.1.0-canary.0",
+    "@discordjs/rest": "^0.3.0",
     "discord-api-types": "^0.26.1",
-    "discord.js": "^13.5.1",
     "js-logger": "^1.6.1",
     "ms": "^2.1.3",
     "zod": "^3.11.6"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.16.7",
-    "@babel/core": "7.16.7",
-    "@babel/preset-env": "7.16.7",
-    "@babel/preset-typescript": "7.16.7",
     "@google-cloud/firestore": "5.0.2",
-    "@prisma/client": "3.7.0",
+    "@prisma/client": "3.8.1",
     "@types/keyv": "3.1.3",
     "@types/lru-cache": "5.1.1",
-    "@types/node": "16.11.19",
-    "@typescript-eslint/eslint-plugin": "5.9.0",
-    "@typescript-eslint/parser": "5.9.0",
-    "eslint": "8.6.0",
+    "@types/node": "16.11.21",
+    "@typescript-eslint/eslint-plugin": "5.10.1",
+    "@typescript-eslint/parser": "5.10.1",
+    "discord.js": "13.6.0",
+    "eslint": "8.7.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
+    "gen-esm-wrapper": "1.1.3",
     "keyv": "4.0.5",
     "lru-cache": "6.0.0",
-    "mongodb": "4.3.0",
+    "mongodb": "4.3.1",
     "prettier": "2.5.1",
-    "typescript": "4.5.4"
+    "typescript": "4.5.5"
   },
   "engines": {
     "node": ">=16.6"

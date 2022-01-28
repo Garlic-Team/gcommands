@@ -6,25 +6,16 @@ export class Util {
 	static argumentsToArray(options: Array<any>): Array<string> {
 		const args = [];
 
-		const check = option => {
-			if (!option) return;
+		const check = options => {
+			for (const option of options) {
+				if (Util.checkIfSubOrGroup(option.type)) args.push(option.name);
+				else args.push(option.value);
 
-			args.push(option.value);
-
-			if (option.options) {
-				for (let o = 0; o < option.options.length; o++) {
-					check(option.options[o]);
-				}
+				if (option.options) check(option.options);
 			}
 		};
 
-		if (Array.isArray(options)) {
-			for (let o = 0; o < options.length; o++) {
-				check(options[o]);
-			}
-		} else {
-			check(options);
-		}
+		check(options);
 
 		return args;
 	}
@@ -34,18 +25,29 @@ export class Util {
 	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
 	 */
 	static argumentsToObject(options: Array<any>) {
-		if (!Array.isArray(options)) return {};
 		const args = {};
 
-		for (const o of options) {
-			if (['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(o.type)) {
-				args[o.name] = this.argumentsToObject(o.options);
-			} else {
-				args[o.name] = o.value;
+		const check = (options, object) => {
+			for (const option of options) {
+				if (Util.checkIfSubOrGroup(option.type)) object[option.name] = {};
+				else object[option.name] = option.value;
+
+				if (option.options) check(option.options, object[option.name]);
 			}
-		}
+		};
+
+		check(options, args);
 
 		return args;
+	}
+	
+	/**
+	 * @deprecated We don't support arguments in object/array
+	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
+	*/
+	static checkIfSubOrGroup(type: string) {
+		// Why? Because discord.js v14 (:
+		return !!['SUB_COMMAND', 'SUB_COMMAND_GROUP', 'Subcommand', 'SubcommandGroup'].includes(type);
 	}
 
 	static isClass(input: any): boolean {
@@ -57,7 +59,7 @@ export class Util {
 	static resolveArgumentOptions(options: any): any {
 		for (const [key, value] of Object.entries(options)) {
 			const option = key.match(/[A-Z]/g)?.[0]
-				? key.replace(key.match(/[A-Z]/g)[0], `_${key.match(/[A-Z]/g)[0].toLowerCase()}`)
+				? key.replace(key?.match(/[A-Z]/g)?.[0], `_${key?.match(/[A-Z]/g)?.[0]?.toLowerCase()}`)
 				: key;
 
 			if (option !== key) {

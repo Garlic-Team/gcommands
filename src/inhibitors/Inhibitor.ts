@@ -1,5 +1,5 @@
-import { CommandContext } from '../lib/structures/contexts/CommandContext';
-import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
+import type { CommandContext } from '../lib/structures/contexts/CommandContext';
+import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
 export interface InhibitorOptions {
 	message?: string | ((ctx: CommandContext | ComponentContext) => string);

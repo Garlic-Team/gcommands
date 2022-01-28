@@ -1,7 +1,7 @@
-import { CommandContext } from '../lib/structures/contexts/CommandContext';
+import type { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { ButtonInteraction, MessageActionRow, MessageButton } from 'discord.js';
 import { customId } from './customId';
-import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
+import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
 export interface ConfirmOptions {
 	message?: string | ((ctx: CommandContext | ComponentContext) => string);
@@ -37,12 +37,12 @@ export async function confirm(ctx: CommandContext | ComponentContext, options: C
 	};
 
 	const result = await ctx.channel
-		.awaitMessageComponent({
+		?.awaitMessageComponent({
 			filter,
 			time: options.time || 10000,
 			componentType: 'BUTTON',
 		})
-		.catch(() => {
+		?.catch(() => {
 			return undefined;
 		});
 

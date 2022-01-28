@@ -1,6 +1,6 @@
 import { Context, ContextOptions } from './Context';
-import { Command } from '../Command';
-import {
+import type { Command } from '../Command';
+import type {
 	CacheType,
 	CommandInteraction,
 	CommandInteractionOptionResolver,
@@ -12,7 +12,8 @@ import {
 	MessagePayload,
 	WebhookEditMessageOptions,
 } from 'discord.js';
-import { GClient } from '../../GClient';
+import type { GClient } from '../../GClient';
+
 export interface CommandContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
 	interaction?: CommandInteraction | ContextMenuInteraction;
 	message?: Message;

@@ -1,16 +1,16 @@
-import { PermissionResolvable } from 'discord.js';
+import type { PermissionResolvable } from 'discord.js';
 import { Inhibitor, InhibitorOptions } from './Inhibitor';
-import { CommandContext } from '../lib/structures/contexts/CommandContext';
-import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
+import type { CommandContext } from '../lib/structures/contexts/CommandContext';
+import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
-export interface UserPermissionsOptions extends InhibitorOptions {
+export interface MemberPermissionsOptions extends InhibitorOptions {
 	permissions: Array<PermissionResolvable>;
 }
 
-export class UserPermissions extends Inhibitor {
+export class MemberPermissions extends Inhibitor {
 	public readonly permissions: Array<PermissionResolvable>;
 
-	constructor(options: UserPermissionsOptions) {
+	constructor(options: MemberPermissionsOptions) {
 		super(options);
 		this.permissions = options.permissions;
 	}

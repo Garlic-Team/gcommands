@@ -1,8 +1,8 @@
-import { AutocompleteContext } from './contexts/AutocompleteContext';
+import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import Logger from 'js-logger';
 import { z } from 'zod';
 
-export enum ArgumentType {
+export enum ArgumentType  {
 	'SUB_COMMAND' = 1,
 	'SUB_COMMAND_GROUP' = 2,
 	'STRING' = 3,
@@ -34,7 +34,7 @@ export interface ArgumentChoice {
 export interface ArgumentOptions {
 	name: string;
 	description: string;
-	type: ArgumentType | keyof typeof ArgumentType;
+	type: ArgumentType | keyof typeof ArgumentType | ApplicationCommandOptionType | keyof typeof ApplicationCommandOptionType;
 	required?: boolean;
 	choices?: Array<ArgumentChoice>;
 	arguments?: Array<Argument | ArgumentOptions>;
