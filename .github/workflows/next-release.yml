@@ -40,7 +40,7 @@ jobs:
 
       - name: Publish
         run: |
-          TAG=$([[ ${{ github.event.inputs.prNumber }} == '' ]] && echo '-next' || echo '-pr-${{ github.event.inputs.prNumber }}')
+          TAG=$([[ '${{ github.event.inputs.prNumber }}' == '' ]] && echo '-next' || echo '-pr-${{ github.event.inputs.prNumber }}')
 
           npm version --git-tag-version=false $(jq --raw-output '.version' package.json)${TAG}.$(date +%s)
           npm publish --tag next || true
