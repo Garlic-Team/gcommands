@@ -4,7 +4,7 @@ import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { Commands } from '../lib/managers/CommandManager';
 import { setTimeout } from 'node:timers';
-import Logger from 'js-logger';
+import { Logger } from '../lib/structures/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 

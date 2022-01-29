@@ -5,7 +5,7 @@ import { CommandType } from '../lib/structures/Command';
 import { ArgumentType } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
-import Logger from 'js-logger';
+import { Logger } from '../lib/structures/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 

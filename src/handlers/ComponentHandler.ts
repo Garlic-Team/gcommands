@@ -5,7 +5,7 @@ import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 import { Components } from '../lib/managers/ComponentManager';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { setTimeout } from 'node:timers';
-import Logger from 'js-logger';
+import { Logger } from '../lib/structures/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 

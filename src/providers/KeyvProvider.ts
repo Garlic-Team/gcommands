@@ -1,4 +1,4 @@
-import Logger from 'js-logger';
+import { Logger } from '../lib/structures/Logger';
 import Keyv from 'keyv';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 

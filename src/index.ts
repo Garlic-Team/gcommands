@@ -1,4 +1,3 @@
-import Logger from 'js-logger';
 // Listeners
 import './listeners/Ready';
 import './listeners/InteractionCommandHandler';
@@ -29,7 +28,7 @@ export { Listeners, ListenerManager } from './lib/managers/ListenerManager';
 export { Handlers, HandlerManager } from './lib/managers/HandlerManager';
 
 // Logger
-Logger.useDefaults({
+/*Logger.useDefaults({
 	defaultLevel: Logger.TRACE,
 	formatter: function (messages: any, ctx) {
 		let color;
@@ -45,8 +44,8 @@ Logger.useDefaults({
 			messages[0]
 		}`;
 	},
-});
-export { Logger };
+});*/
+export { Logger, LoggerClass } from './lib/structures/Logger';
 
 // Inhibitors
 export * as Inhibitor from './inhibitors';

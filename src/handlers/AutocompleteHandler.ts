@@ -2,7 +2,7 @@ import type { AutocompleteInteraction } from 'discord.js';
 import { AutocompleteContext } from '../lib/structures/contexts/AutocompleteContext';
 import type { Argument } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
-import Logger from 'js-logger';
+import { Logger } from '../lib/structures/Logger';
 import type { GClient } from '../lib/GClient';
 
 export async function AutocompleteHandler(interaction: AutocompleteInteraction) {
