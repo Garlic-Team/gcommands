@@ -6,15 +6,33 @@ import type { GlobalLogger } from 'js-logger';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import type { CommandContext } from './contexts/CommandContext';
 import type { ComponentContext } from './contexts/ComponentContext';
+import type { Command } from './Command';
+import type { Component } from './Component';
+import type { Listener } from './Listener';
+import type { Plugin } from './Plugin';
 
 export enum LoggerEvents {
 	'HANDLER_RUN' = 'handlerRun',
 	'HANDLER_ERROR' = 'handlerError',
+	'COMMAND_REGISTERED' = 'commandRegistered',
+	'COMMAND_UNREGISTERED' = 'commandUnregistered',
+	'COMPONENT_REGISTERED' = 'componentRegistered',
+	'COMPONENT_UNREGISTERED' = 'componentUnregistered',
+	'LISTENER_REGISTERED' = 'listenerRegistered',
+	'LISTENER_UNREGISTERED' = 'listenerUnregistered',
+	'PLUGIN_REGISTERED' = 'pluginRegistered',
 }
 
 export interface LoggerEventsInterface {
 	'handlerRun': (ctx: AutocompleteContext | CommandContext | ComponentContext) => void;
 	'handlerError': (ctx: AutocompleteContext | CommandContext | ComponentContext, error: any) => void;
+	'commandRegistered': (command: Command) => void;
+	'commandUnregistered': (command: Command) => void;
+	'componentRegistered': (component: Component) => void;
+	'componentUnregistered': (component: Component) => void;
+	'listenerRegistered': (listener: Listener) => void;
+	'listenerUnregistered': (listener: Listener) => void;
+	'pluginRegistered': (plugin: Plugin) => void;
 }
 
 export declare interface LoggerClass {
