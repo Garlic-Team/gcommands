@@ -2,6 +2,7 @@
 
 import EventEmitter from 'events';
 import JSLogger, { ILogger, ILoggerOpts, ILogHandler, ILogLevel } from 'js-logger';
+import { Util } from '../util/Util';
 import type { GlobalLogger } from 'js-logger';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import type { CommandContext } from './contexts/CommandContext';
@@ -69,7 +70,7 @@ export class LoggerClass extends EventEmitter implements GlobalLogger {
 				if (ctx.level === JSLogger.ERROR) color = '\x1b[91m';
         
 				const date = new Date();
-				messages[0] = `${color}[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}/${ctx.level.name}]\x1b[0m ${
+				messages[0] = `${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${ctx.level.name}]\x1b[0m ${
 					messages[0]
 				}`;
 			},
