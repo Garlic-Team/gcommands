@@ -1,6 +1,15 @@
 name: 'Next Release'
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        description: Number of PR
+        required: false
+      ref:
+        description: The branch that is being deployed.
+        required: false
+        default: next
 
 jobs:
   release:
@@ -16,7 +25,7 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
 
-      - name: Install
+      - name: Install Dependencies
         run: npm ci
 
       - name: Build
@@ -24,13 +33,16 @@ jobs:
 
       - name: Deprecate old versions
         run: |
-          npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)" "no longer supported" || true
+          npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)-next" "no longer supported" || true
+          npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)-pr" "no longer supported" || true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Publish
         run: |
-          npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)
+          TAG=$([[ ${{ github.event.inputs.prNumber }} == '' ]] && echo '-next' || echo '-pr-${{ github.event.inputs.prNumber }}')
+
+          npm version --git-tag-version=false $(jq --raw-output '.version' package.json)${TAG}.$(date +%s)
           npm publish --tag next || true
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
