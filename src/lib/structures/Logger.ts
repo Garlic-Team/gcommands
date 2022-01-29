@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
 
 import EventEmitter from 'events';
-import JSLogger, { ILogger, ILoggerOpts, ILogHandler, ILogLevel } from 'js-logger';
+import JSLogger, { ILogger as JSILogger, ILoggerOpts, ILogHandler, ILogLevel } from 'js-logger';
 import { Util } from '../util/Util';
 import type { GlobalLogger } from 'js-logger';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
@@ -36,7 +36,7 @@ export interface LoggerEventsInterface {
 	'pluginRegistered': (plugin: Plugin) => void;
 }
 
-export declare interface LoggerClass {
+export declare interface ILogger {
 	on<U extends keyof LoggerEventsInterface>(
 	  event: U, listener: LoggerEventsInterface[U]
 	): this;
@@ -46,7 +46,7 @@ export declare interface LoggerClass {
 	): boolean;
 }
 
-export class LoggerClass extends EventEmitter implements GlobalLogger {
+export class ILogger extends EventEmitter implements GlobalLogger {
 	TRACE: ILogLevel;
 	DEBUG: ILogLevel;
 	INFO: ILogLevel;
@@ -82,7 +82,7 @@ export class LoggerClass extends EventEmitter implements GlobalLogger {
 	// Only typings, Object.assign goes brooooo    
 	useDefaults(options?: ILoggerOpts): void {}
 	setHandler(logHandler: ILogHandler): void {}
-	get(name: string): ILogger { return JSLogger.get(name); }
+	get(name: string): JSILogger { return JSLogger.get(name); }
 	createDefaultHandler(options?: { formatter?: ILogHandler }): ILogHandler { return JSLogger.createDefaultHandler(options); }
 
 	trace(...x: any[]): void {}
@@ -99,4 +99,4 @@ export class LoggerClass extends EventEmitter implements GlobalLogger {
 	enabledFor(level: ILogLevel): boolean { return JSLogger.enabledFor(level); }
 }
 
-export const Logger = new LoggerClass();
+export const Logger = new ILogger();
