@@ -18,6 +18,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: 'Garlic-Team/GCommands'
+          ref: ${{ github.event.inputs.ref || 'next' }}
 
       - name: Install Node v16
         uses: actions/setup-node@v2
