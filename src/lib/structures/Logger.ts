@@ -37,7 +37,7 @@ export class LoggerClass extends EventEmitter implements GlobalLogger {
 		Object.assign(this, JSLogger);
 	}
 
-    // Only typings, Object.assign goes brooooo    
+	// Only typings, Object.assign goes brooooo    
 	useDefaults(options?: ILoggerOpts): void {}
 	setHandler(logHandler: ILogHandler): void {}
 	get(name: string): ILogger { return JSLogger.get(name); }
