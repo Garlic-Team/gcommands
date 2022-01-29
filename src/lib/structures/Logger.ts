@@ -3,6 +3,29 @@
 import EventEmitter from 'events';
 import JSLogger, { ILogger, ILoggerOpts, ILogHandler, ILogLevel } from 'js-logger';
 import type { GlobalLogger } from 'js-logger';
+import type { AutocompleteContext } from './contexts/AutocompleteContext';
+import type { CommandContext } from './contexts/CommandContext';
+import type { ComponentContext } from './contexts/ComponentContext';
+
+export enum LoggerEvents {
+	'HANDLER_RUN' = 'handlerRun',
+	'HANDLER_ERROR' = 'handlerError',
+}
+
+export interface LoggerEventsInterface {
+	'handlerRun': (ctx: AutocompleteContext | CommandContext | ComponentContext) => void;
+	'handlerError': (ctx: AutocompleteContext | CommandContext | ComponentContext, error: any) => void;
+}
+
+export declare interface LoggerClass {
+	on<U extends keyof LoggerEventsInterface>(
+	  event: U, listener: LoggerEventsInterface[U]
+	): this;
+  
+	emit<U extends keyof LoggerEventsInterface>(
+	  event: U, ...args: Parameters<LoggerEventsInterface[U]>
+	): boolean;
+}
 
 export class LoggerClass extends EventEmitter implements GlobalLogger {
 	TRACE: ILogLevel;
