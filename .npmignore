@@ -7,6 +7,9 @@ package-lock.json
 .eslintignore
 .eslintrc.json
 .prettierrc.json
+.prettierrc
+.github/
+tsconfig.tsbuildinfo
 docs.yml
 tsconfig.json
 renovate.json

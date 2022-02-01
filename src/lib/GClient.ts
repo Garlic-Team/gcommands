@@ -4,6 +4,7 @@ import { Commands } from './managers/CommandManager';
 import { Listeners } from './managers/ListenerManager';
 import { Components } from './managers/ComponentManager';
 import Responses from '../responses.json';
+import { setImmediate } from 'timers';
 import { registerDirectories } from './util/registerDirectories';
 
 export enum AutoDeferType {
@@ -23,7 +24,7 @@ export interface GClientOptions extends ClientOptions {
 
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	public responses: Record<string, string> = Responses;
-	public options: GClientOptions;
+	public declare options: GClientOptions;
 
 	constructor(options: GClientOptions) {
 		super(options);

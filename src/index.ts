@@ -61,6 +61,7 @@ export * from './util/customId';
 export * from './lib/util/registerDirectory';
 export * from './lib/util/registerDirectories';
 export * from './util/confirm';
+export * from './lib/util/Util';
 
 // Re-exports
 export { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';

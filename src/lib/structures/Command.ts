@@ -1,6 +1,6 @@
 import { AutoDeferType, GClient } from '../GClient';
 import { Argument, ArgumentOptions } from './Argument';
-import { CommandContext } from './contexts/CommandContext';
+import type { CommandContext } from './contexts/CommandContext';
 import { Commands } from '../managers/CommandManager';
 import Logger from 'js-logger';
 import { z } from 'zod';

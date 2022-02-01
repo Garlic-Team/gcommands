@@ -1,5 +1,5 @@
 import { Context, ContextOptions } from './Context';
-import {
+import type {
 	CacheType,
 	GuildCacheMessage,
 	InteractionDeferReplyOptions,
@@ -9,8 +9,8 @@ import {
 	MessagePayload,
 	WebhookEditMessageOptions,
 } from 'discord.js';
-import { GClient } from '../../GClient';
-import { Component } from '../Component';
+import type { GClient } from '../../GClient';
+import type { Component } from '../Component';
 
 export interface ComponentContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
 	interaction: MessageComponentInteraction;

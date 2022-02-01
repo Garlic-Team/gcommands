@@ -1,5 +1,5 @@
-import { GClient } from '../GClient';
-import { ClientEvents, WSEventType } from 'discord.js';
+import type { GClient } from '../GClient';
+import type { ClientEvents, WSEventType } from 'discord.js';
 import { Listeners } from '../managers/ListenerManager';
 import Logger from 'js-logger';
 import { z } from 'zod';

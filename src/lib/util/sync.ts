@@ -1,16 +1,17 @@
-import { GClient } from '../GClient';
-import { Command } from '../structures/Command';
+import type { GClient } from '../GClient';
+import type { Command } from '../structures/Command';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import Logger from 'js-logger';
+import { setTimeout } from 'node:timers';
 import { Commands } from '../managers/CommandManager';
 
 async function _sync(client: GClient, commands: Array<Command>, guildId?: string) {
-	const rest = new REST({ version: '9' }).setToken(client.token);
+	const rest = new REST({ version: '9' }).setToken(client.token as string);
 
 	await rest
 		.put(
-			guildId ? Routes.applicationGuildCommands(client.user.id, guildId) : Routes.applicationCommands(client.user.id),
+			guildId ? Routes.applicationGuildCommands(client.user?.id, guildId) : Routes.applicationCommands(client.user?.id),
 			{
 				body: commands.flatMap((command) => command.toJSON()),
 			},

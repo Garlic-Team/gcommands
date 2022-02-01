@@ -1,6 +1,6 @@
-name: "Next Release"
+name: 'Next Release'
 
-on: [ workflow_dispatch ]
+on: [workflow_dispatch]
 
 jobs:
   release:
@@ -19,7 +19,7 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: build
+      - name: Build
         run: npm run build
 
       - name: Deprecate old versions
@@ -28,7 +28,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: publish
+      - name: Publish
         run: |
           npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)
           npm publish --tag next || true
