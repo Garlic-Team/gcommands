@@ -34,13 +34,13 @@ const validationSchema = z
 		name: z
 			.string()
 			.max(32)
-			.regex(/^[a-zA-Z1-9]/),
+			.regex(/^[a-z1-9]/),
 		type: z
 			.union([z.string(), z.nativeEnum(CommandType)])
 			.transform((arg) => (typeof arg === 'string' && Object.keys(CommandType).includes(arg) ? CommandType[arg] : arg))
 			.array()
 			.nonempty(),
-		arguments: z.any(),
+		arguments: z.any().array().optional(),
 		description: z.string().max(100).optional(),
 		inhibitors: z
 			.union([
@@ -63,7 +63,7 @@ const validationSchema = z
 			.optional(),
 		fileName: z.string().optional(),
 		run: z.function(),
-		onError: z.function().args(z.object(CommandContext.prototype)).optional(),
+		onError: z.function().optional(),
 	})
 	.passthrough();
 
