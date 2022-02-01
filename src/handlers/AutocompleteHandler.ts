@@ -1,8 +1,6 @@
-
 import type { AutocompleteInteraction } from 'discord.js';
 import { AutocompleteContext } from '../lib/structures/contexts/AutocompleteContext';
 import type { Argument, ArgumentOptions } from '../lib/structures/Argument';
-
 import { Commands } from '../lib/managers/CommandManager';
 import Logger from 'js-logger';
 import type { GClient } from '../lib/GClient';
