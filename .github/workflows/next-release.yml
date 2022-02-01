@@ -1,6 +1,19 @@
 name: 'Next Release'
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        description: Number of PR
+        required: false
+      ref:
+        description: The branch that is being deployed.
+        required: false
+        default: next
+      repository:
+        description: The {owner}/{repository} that is being deployed.
+        required: false
+        default: Garlic-Team/GCommands
 
 jobs:
   release:
@@ -9,6 +22,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: ${{ github.event.inputs.repository || 'Garlic-Team/GCommands' }}
+          ref: ${{ github.event.inputs.ref || 'next' }}
 
       - name: Install Node v16
         uses: actions/setup-node@v2
@@ -16,7 +33,7 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
 
-      - name: Install
+      - name: Install Dependencies
         run: npm ci
 
       - name: Build
@@ -24,13 +41,20 @@ jobs:
 
       - name: Deprecate old versions
         run: |
-          npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)" "no longer supported" || true
+          if [ '${{ github.event.inputs.prNumber }}' == '' ]; then
+            npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)-next" "no longer supported" || true
+          else
+            npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)-pr-${{ github.event.inputs.prNumber }}" "no longer supported" || true
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Publish
         run: |
-          npm version --git-tag-version=false $(jq --raw-output '.version' package.json).$(date +%s)
-          npm publish --tag next || true
+          TAGINVER=$([[ '${{ github.event.inputs.prNumber }}' == '' ]] && echo '-next' || echo '-pr-${{ github.event.inputs.prNumber }}')
+          TAG=$([[ '${{ github.event.inputs.prNumber }}' == '' ]] && echo 'next' || echo 'pr-${{ github.event.inputs.prNumber }}')
+
+          npm version --git-tag-version=false $(jq --raw-output '.version' package.json)${TAG}.$(date +%s)
+          npm publish --tag ${TAG} || true
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
