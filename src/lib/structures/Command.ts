@@ -2,7 +2,7 @@ import { AutoDeferType, GClient } from '../GClient';
 import { Argument } from './Argument';
 import type { CommandContext } from './contexts/CommandContext';
 import { Commands } from '../managers/CommandManager';
-import { Logger } from './Logger';
+import { Logger } from '../util/logger/Logger';
 import { Util } from '../util/Util';
 
 export enum CommandType {

@@ -2,15 +2,15 @@
 
 import EventEmitter from 'events';
 import JSLogger, { ILogger as JSILogger, ILoggerOpts, ILogHandler, ILogLevel } from 'js-logger';
-import { Util } from '../util/Util';
+import { Util } from '../Util';
 import type { GlobalLogger } from 'js-logger';
-import type { AutocompleteContext } from './contexts/AutocompleteContext';
-import type { CommandContext } from './contexts/CommandContext';
-import type { ComponentContext } from './contexts/ComponentContext';
-import type { Command } from './Command';
-import type { Component } from './Component';
-import type { Listener } from './Listener';
-import type { Plugin } from './Plugin';
+import type { AutocompleteContext } from '../../structures/contexts/AutocompleteContext';
+import type { CommandContext } from '../../structures/contexts/CommandContext';
+import type { ComponentContext } from '../../structures/contexts/ComponentContext';
+import type { Command } from '../../structures/Command';
+import type { Component } from '../../structures/Component';
+import type { Listener } from '../../structures/Listener';
+import type { Plugin } from '../../structures/Plugin';
 
 export enum LoggerEvents {
 	'HANDLER_RUN' = 'handlerRun',

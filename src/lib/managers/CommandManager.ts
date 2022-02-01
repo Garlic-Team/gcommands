@@ -1,7 +1,7 @@
 import { Collection } from 'discord.js';
 import { Command } from '../structures/Command';
 import type { GClient } from '../GClient';
-import { Logger, LoggerEvents } from '../structures/Logger';
+import { Logger, LoggerEvents } from '../util/logger/Logger';
 import { Plugins } from './PluginManager';
 
 export class CommandManager extends Collection<string, Command> {

@@ -1,6 +1,6 @@
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
-import { Logger } from './Logger';
+import { Logger } from '../util/logger/Logger';
 import { Util } from '../util/Util';
 
 export class Plugin {

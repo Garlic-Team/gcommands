@@ -2,7 +2,7 @@ import { Collection } from 'discord.js';
 import { Plugin } from '../structures/Plugin';
 import type { GClient } from '../GClient';
 import { pluginFinder } from '../loaders/pluginFinder';
-import { Logger, LoggerEvents } from '../structures/Logger';
+import { Logger, LoggerEvents } from '../util/logger/Logger';
 
 export class PluginManager extends Collection<string, Plugin> {
 	private client: GClient;

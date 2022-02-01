@@ -1,6 +1,6 @@
 import type { Command } from './Command';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
-import { Logger } from './Logger';
+import { Logger } from '../util/logger/Logger';
 import { Util } from '../util/Util';
 import type { ApplicationCommandOptionType } from 'discord-api-types';
 
