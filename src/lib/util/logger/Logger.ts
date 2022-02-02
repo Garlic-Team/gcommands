@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
 
 import EventEmitter from 'events';
-import JSLogger, { ILogger as JSILogger, ILoggerOpts, ILogHandler, ILogLevel } from 'js-logger';
 import { Util } from '../Util';
-import type { GlobalLogger } from 'js-logger';
 import type { AutocompleteContext } from '../../structures/contexts/AutocompleteContext';
 import type { CommandContext } from '../../structures/contexts/CommandContext';
 import type { ComponentContext } from '../../structures/contexts/ComponentContext';
@@ -48,6 +46,19 @@ export interface LoggerEventsInterface {
 	'pluginRegistered': (plugin: Plugin) => void;
 }
 
+export const enum LogLevel {
+	TRACE = 1,
+	DEBUG = 2,
+	INFO = 3,
+	TIME = 4,
+	WARN = 5,
+	TIME_END = 6,
+	ERROR = 8,
+	OFF = 99,
+}
+
+export type LogMethods = 'trace' | 'debug' | 'info' | 'time' | 'warn' | 'timeEnd' | 'error';
+
 export declare interface ILogger {
 	on<U extends keyof LoggerEventsInterface>(
 	  event: U, listener: LoggerEventsInterface[U]
@@ -58,19 +69,20 @@ export declare interface ILogger {
 	): boolean;
 }
 
-export class ILogger extends EventEmitter implements GlobalLogger {
-	TRACE: ILogLevel;
-	DEBUG: ILogLevel;
-	INFO: ILogLevel;
-	TIME: ILogLevel;
-	WARN: ILogLevel;
-	ERROR: ILogLevel;
-	OFF: ILogLevel;
+export class ILogger extends EventEmitter {
+	TRACE: LogLevel.TRACE;
+	DEBUG: LogLevel.DEBUG;
+	INFO: LogLevel.INFO;
+	TIME: LogLevel.TIME;
+	WARN: LogLevel.WARN;
+	TIME_END: LogLevel.TIME_END;
+	ERROR: LogLevel.ERROR;
+	OFF: LogLevel.OFF;
 
 	constructor() {
 		super();
 
-		JSLogger.useDefaults({
+		/*JSLogger.useDefaults({
 			defaultLevel: JSLogger.TRACE,
 			formatter: function (messages: any, ctx) {
 				let color;
@@ -88,11 +100,66 @@ export class ILogger extends EventEmitter implements GlobalLogger {
 			},
 		});
 
-		Object.assign(this, JSLogger);
+		Object.assign(this, JSLogger);*/
 	}
 
+	public trace(...values: readonly unknown[]): void {
+		this.write(LogLevel.TRACE, ...values);
+	}
+
+	public debug(...values: readonly unknown[]): void {
+		this.write(LogLevel.DEBUG, ...values);
+	}
+
+	public info(...values: readonly unknown[]): void {
+		this.write(LogLevel.INFO, ...values);
+	}
+
+	public time(val: string): void {
+		if (val.length > 0) this.write(LogLevel.TIME, ...val);
+	}
+
+	public timeEnd(val: string): void {
+		if (val.length > 0) this.write(LogLevel.TIME_END, ...val);
+	}
+
+	public warn(...values: readonly unknown[]): void {
+		this.write(LogLevel.WARN, ...values);
+	}
+
+	public error(...values: readonly unknown[]): void {
+		this.write(LogLevel.ERROR, ...values);
+	}
+
+
+	private write(level: LogLevel, ...values: readonly unknown[]): void {
+		let color = "";
+		if (level === LogLevel.TRACE) color = '\x1b[91m';
+		else if (level === LogLevel.DEBUG) color = '\x1b[2m';
+		else if (level === LogLevel.INFO) color = '\x1b[36m';
+		else if ([LogLevel.TIME, LogLevel.TIME_END].includes(level)) color = '\x1b[97m';
+		else if (level === LogLevel.WARN) color = '\x1b[93m';
+		else color = '\x1b[91m';
+
+		const method = this.LevelMethods.get(level);
+		const date = new Date();
+
+		// @ts-expect-error
+		console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
+	}
+
+	private readonly LevelMethods = new Map<LogLevel, LogMethods>([
+		[LogLevel.TRACE, 'trace'],
+		[LogLevel.DEBUG, 'debug'],
+		[LogLevel.INFO, 'info'],
+		[LogLevel.TIME, 'time'],
+		[LogLevel.WARN, 'warn'],
+		[LogLevel.TIME_END, 'timeEnd'],
+		[LogLevel.ERROR, 'error'],
+	])
+
 	// Only typings, Object.assign goes brooooo    
-	useDefaults(options?: ILoggerOpts): void {}
+	/*useDefaults(options?: ILoggerOpts): void {}
 	setHandler(logHandler: ILogHandler): void {}
 	get(name: string): JSILogger { return JSLogger.get(name); }
 	createDefaultHandler(options?: { formatter?: ILogHandler }): ILogHandler { return JSLogger.createDefaultHandler(options); }
@@ -108,7 +175,7 @@ export class ILogger extends EventEmitter implements GlobalLogger {
     
 	setLevel(level: ILogLevel): void {}
 	getLevel(): ILogLevel { return JSLogger.getLevel(); }
-	enabledFor(level: ILogLevel): boolean { return JSLogger.enabledFor(level); }
+	enabledFor(level: ILogLevel): boolean { return JSLogger.enabledFor(level); }*/
 }
 
 export const Logger = new ILogger();
