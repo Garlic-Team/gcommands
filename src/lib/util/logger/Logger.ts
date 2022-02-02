@@ -82,6 +82,15 @@ export class ILogger extends EventEmitter {
 		super();
 
 		this.level = level;
+
+		this.TRACE = LogLevel.TRACE;
+		this.DEBUG = LogLevel.DEBUG;
+		this.INFO = LogLevel.INFO;
+		this.TIME = LogLevel.TIME;
+		this.WARN = LogLevel.WARN;
+		this.TIME_END = LogLevel.TIME_END;
+		this.ERROR = LogLevel.ERROR;
+		this.OFF = LogLevel.OFF;
 		/*JSLogger.useDefaults({
 			defaultLevel: JSLogger.TRACE,
 			formatter: function (messages: any, ctx) {
@@ -116,11 +125,11 @@ export class ILogger extends EventEmitter {
 	}
 
 	public time(val: string): void {
-		if (val.length > 0) this.invoke(LogLevel.TIME, ...val);
+		if (val.length > 0) this.invoke(LogLevel.TIME, val);
 	}
 
 	public timeEnd(val: string): void {
-		if (val.length > 0) this.invoke(LogLevel.TIME_END, ...val);
+		if (val.length > 0) this.invoke(LogLevel.TIME_END, val);
 	}
 
 	public warn(...values: readonly unknown[]): void {
@@ -143,8 +152,12 @@ export class ILogger extends EventEmitter {
 		const method = this.LevelMethods.get(level);
 		const date = new Date();
 
-		// @ts-expect-error Research required ):
-		console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
+		if ([LogLevel.TIME, LogLevel.TIME_END].includes(level)) {
+			console[method](values as unknown as string);
+		} else {
+			// @ts-expect-error Research required ):
+			console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
+		}
 	}
 
 	protected readonly LevelMethods = new Map<LogLevel, LogMethods>([
