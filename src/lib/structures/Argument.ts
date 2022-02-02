@@ -95,6 +95,7 @@ export class Argument {
 	constructor(options: ArgumentOptions) {
 		if (options.options) {
 			Logger.warn('The use of ArgumentOptions#options is depracted. Please use ArgumentOptions#arguments instead');
+			options.arguments = options.options;
 		}
 		validationSchema
 			.parseAsync(options)
