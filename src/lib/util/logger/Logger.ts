@@ -15,6 +15,12 @@ import type { Plugin } from '../../structures/Plugin';
 export enum LoggerEvents {
 	'HANDLER_RUN' = 'handlerRun',
 	'HANDLER_ERROR' = 'handlerError',
+	'COMMAND_HANDLER_RUN' = 'commandHandlerRun',
+	'COMMAND_HANDLER_ERROR' = 'commandHandlerError',
+	'AUTOCOMPLETE_HANDLER_RUN' = 'autoCompleteHandlerRun',
+	'AUTOCOMPLETE_HANDLER_ERROR' = 'autoCompleteHandlerError',
+	'COMPONENT_HANDLER_RUN' = 'componentHandlerRun',
+	'COMPONENT_HANDLER_ERROR' = 'componentHandlerError',
 	'COMMAND_REGISTERED' = 'commandRegistered',
 	'COMMAND_UNREGISTERED' = 'commandUnregistered',
 	'COMPONENT_REGISTERED' = 'componentRegistered',
@@ -27,6 +33,12 @@ export enum LoggerEvents {
 export interface LoggerEventsInterface {
 	'handlerRun': (ctx: AutocompleteContext | CommandContext | ComponentContext) => void;
 	'handlerError': (ctx: AutocompleteContext | CommandContext | ComponentContext, error: any) => void;
+	'commandHandlerRun': (ctx: CommandContext) => void;
+	'commandHandlerError': (ctx: CommandContext, error: any) => void;
+	'autoCompleteHandlerRun': (ctx: AutocompleteContext) => void;
+	'autoCompleteHandlerError': (ctx: AutocompleteContext, error: any) => void;
+	'componentHandlerRun': (ctx: ComponentContext) => void;
+	'componentHandlerError': (ctx: ComponentContext, error: any) => void;
 	'commandRegistered': (command: Command) => void;
 	'commandUnregistered': (command: Command) => void;
 	'componentRegistered': (component: Component) => void;

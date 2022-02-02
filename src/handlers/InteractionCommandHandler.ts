@@ -63,6 +63,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	await Promise.resolve(command.run(ctx))
 		.catch(async (error) => {
 			Logger.emit(LoggerEvents.HANDLER_ERROR, ctx, error);
+			Logger.emit(LoggerEvents.COMMAND_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
@@ -78,6 +79,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		})
 		.then(() => {
 			Logger.emit(LoggerEvents.HANDLER_RUN, ctx);
+			Logger.emit(LoggerEvents.COMMAND_HANDLER_RUN, ctx);
 			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
 			Logger.debug(`Successfully ran command (${command.name}) for ${interaction.user.username}`);
 		});
