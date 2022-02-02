@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-
 import EventEmitter from 'events';
 import { Util } from '../Util';
 import type { AutocompleteContext } from '../../structures/contexts/AutocompleteContext';
@@ -78,10 +76,12 @@ export class ILogger extends EventEmitter {
 	TIME_END: LogLevel.TIME_END;
 	ERROR: LogLevel.ERROR;
 	OFF: LogLevel.OFF;
+	level: LogLevel;
 
-	constructor() {
+	constructor(level: LogLevel) {
 		super();
 
+		this.level = level;
 		/*JSLogger.useDefaults({
 			defaultLevel: JSLogger.TRACE,
 			formatter: function (messages: any, ctx) {
@@ -104,36 +104,35 @@ export class ILogger extends EventEmitter {
 	}
 
 	public trace(...values: readonly unknown[]): void {
-		this.write(LogLevel.TRACE, ...values);
+		this.invoke(LogLevel.TRACE, ...values);
 	}
 
 	public debug(...values: readonly unknown[]): void {
-		this.write(LogLevel.DEBUG, ...values);
+		this.invoke(LogLevel.DEBUG, ...values);
 	}
 
 	public info(...values: readonly unknown[]): void {
-		this.write(LogLevel.INFO, ...values);
+		this.invoke(LogLevel.INFO, ...values);
 	}
 
 	public time(val: string): void {
-		if (val.length > 0) this.write(LogLevel.TIME, ...val);
+		if (val.length > 0) this.invoke(LogLevel.TIME, ...val);
 	}
 
 	public timeEnd(val: string): void {
-		if (val.length > 0) this.write(LogLevel.TIME_END, ...val);
+		if (val.length > 0) this.invoke(LogLevel.TIME_END, ...val);
 	}
 
 	public warn(...values: readonly unknown[]): void {
-		this.write(LogLevel.WARN, ...values);
+		this.invoke(LogLevel.WARN, ...values);
 	}
 
 	public error(...values: readonly unknown[]): void {
-		this.write(LogLevel.ERROR, ...values);
+		this.invoke(LogLevel.ERROR, ...values);
 	}
 
-
-	private write(level: LogLevel, ...values: readonly unknown[]): void {
-		let color = "";
+	public invoke(level: LogLevel, ...values: readonly unknown[]): void {
+		let color = '';
 		if (level === LogLevel.TRACE) color = '\x1b[91m';
 		else if (level === LogLevel.DEBUG) color = '\x1b[2m';
 		else if (level === LogLevel.INFO) color = '\x1b[36m';
@@ -144,11 +143,11 @@ export class ILogger extends EventEmitter {
 		const method = this.LevelMethods.get(level);
 		const date = new Date();
 
-		// @ts-expect-error
+		// @ts-expect-error Research required ):
 		console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
 	}
 
-	private readonly LevelMethods = new Map<LogLevel, LogMethods>([
+	protected readonly LevelMethods = new Map<LogLevel, LogMethods>([
 		[LogLevel.TRACE, 'trace'],
 		[LogLevel.DEBUG, 'debug'],
 		[LogLevel.INFO, 'info'],
@@ -156,26 +155,47 @@ export class ILogger extends EventEmitter {
 		[LogLevel.WARN, 'warn'],
 		[LogLevel.TIME_END, 'timeEnd'],
 		[LogLevel.ERROR, 'error'],
-	])
+	]);
 
-	// Only typings, Object.assign goes brooooo    
-	/*useDefaults(options?: ILoggerOpts): void {}
-	setHandler(logHandler: ILogHandler): void {}
-	get(name: string): JSILogger { return JSLogger.get(name); }
-	createDefaultHandler(options?: { formatter?: ILogHandler }): ILogHandler { return JSLogger.createDefaultHandler(options); }
+	public setLevel(level: LogLevel): void {
+		this.level = level;
+	}
 
-	trace(...x: any[]): void {}
-	debug(...x: any[]): void {}
-	info(...x: any[]): void {}
-	log(...x: any[]): void {}
-	warn(...x: any[]): void {}
-	error(...x: any[]): void {}
-	time(label: string): void {}
-	timeEnd(label: string): void {}
-    
-	setLevel(level: ILogLevel): void {}
-	getLevel(): ILogLevel { return JSLogger.getLevel(); }
-	enabledFor(level: ILogLevel): boolean { return JSLogger.enabledFor(level); }*/
+	public getLevel(): LogLevel {
+		return this.level;
+	}
+
+	public enabledFor(level: LogLevel): boolean {
+		return level >= this.level;
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public useDefaults(): void {
+		Logger.warn('This feature is not supported.');
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public setHandler(): void {
+		Logger.warn('This feature is not supported.');
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public get(): void {
+		Logger.warn('This feature is not supported.');
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public createDefaultHandler(): void {
+		Logger.warn('This feature is not supported.');
+	}
 }
 
-export const Logger = new ILogger();
+export const Logger = new ILogger(LogLevel.TRACE);
