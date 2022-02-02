@@ -74,12 +74,10 @@ export class ILogger extends EventEmitter {
 	WARN: LogLevel.WARN;
 	ERROR: LogLevel.ERROR;
 	OFF: LogLevel.OFF;
-	level: LogLevel;
+	level: LogLevel = LogLevel.TRACE;
 
-	constructor(level: LogLevel) {
+	constructor() {
 		super();
-
-		this.level = level;
 
 		this.TRACE = LogLevel.TRACE;
 		this.DEBUG = LogLevel.DEBUG;
@@ -192,4 +190,4 @@ export class ILogger extends EventEmitter {
 	}
 }
 
-export const Logger = new ILogger(LogLevel.TRACE);
+export const Logger = new ILogger();
