@@ -95,8 +95,7 @@ export class Command {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
 				});
-				//@ts-expect-error This is really weird lol
-				this.inhibitors = options.inhibitors || Command.defaults?.inhibitors;
+				this.inhibitors = (options.inhibitors as CommandInhibitors) || Command.defaults?.inhibitors;
 				this.guildId = options.guildId || Command.defaults?.guildId;
 				this.cooldown = options.cooldown || Command.defaults?.cooldown;
 				this.fileName = options.fileName || Command.defaults?.fileName;

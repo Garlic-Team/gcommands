@@ -3,7 +3,7 @@ import Logger from 'js-logger';
 import { z } from 'zod';
 import type { ApplicationCommandOptionType } from 'discord-api-types/v9';
 
-export enum ArgumentType  {
+export enum ArgumentType {
 	'SUB_COMMAND' = 1,
 	'SUB_COMMAND_GROUP' = 2,
 	'STRING' = 3,
@@ -35,7 +35,11 @@ export interface ArgumentChoice {
 export interface ArgumentOptions {
 	name: string;
 	description: string;
-	type: ArgumentType | keyof typeof ArgumentType | ApplicationCommandOptionType | keyof typeof ApplicationCommandOptionType;
+	type:
+		| ArgumentType
+		| keyof typeof ArgumentType
+		| ApplicationCommandOptionType
+		| keyof typeof ApplicationCommandOptionType;
 	required?: boolean;
 	choices?: Array<ArgumentChoice>;
 	arguments?: Array<Argument | ArgumentOptions>;
@@ -99,8 +103,7 @@ export class Argument {
 				this.description = options.description;
 				this.type = options.type;
 				this.required = options.required;
-				// @ts-expect-error This is really weird lol
-				this.choices = options.choices;
+				this.choices = options.choices as Array<ArgumentChoice>;
 				this.arguments = options.arguments?.map((argument) => {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);

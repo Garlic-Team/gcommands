@@ -44,8 +44,7 @@ export class Listener<
 				this.event = options.event;
 				this.name = options.name;
 				this.once = options.once;
-				// @ts-expect-error This is really weird lol
-				this.ws = options.ws;
+				this.ws = options.ws as WS;
 				this.fileName = options.fileName;
 				this.run = options.run;
 
