@@ -50,7 +50,6 @@ export const enum LogLevel {
 	INFO = 3,
 	TIME = 4,
 	WARN = 5,
-	TIME_END = 6,
 	ERROR = 8,
 	OFF = 99,
 }
@@ -73,7 +72,6 @@ export class ILogger extends EventEmitter {
 	INFO: LogLevel.INFO;
 	TIME: LogLevel.TIME;
 	WARN: LogLevel.WARN;
-	TIME_END: LogLevel.TIME_END;
 	ERROR: LogLevel.ERROR;
 	OFF: LogLevel.OFF;
 	level: LogLevel;
@@ -88,28 +86,8 @@ export class ILogger extends EventEmitter {
 		this.INFO = LogLevel.INFO;
 		this.TIME = LogLevel.TIME;
 		this.WARN = LogLevel.WARN;
-		this.TIME_END = LogLevel.TIME_END;
 		this.ERROR = LogLevel.ERROR;
 		this.OFF = LogLevel.OFF;
-		/*JSLogger.useDefaults({
-			defaultLevel: JSLogger.TRACE,
-			formatter: function (messages: any, ctx) {
-				let color;
-				if (ctx.level === JSLogger.TRACE) color = '\x1b[91m';
-				if (ctx.level === JSLogger.DEBUG) color = '\x1b[2m';
-				if (ctx.level === JSLogger.INFO) color = '\x1b[36m';
-				if (ctx.level === JSLogger.TIME) color = '\x1b[97m';
-				if (ctx.level === JSLogger.WARN) color = '\x1b[93m';
-				if (ctx.level === JSLogger.ERROR) color = '\x1b[91m';
-        
-				const date = new Date();
-				messages[0] = `${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${ctx.level.name}]\x1b[0m ${
-					messages[0]
-				}`;
-			},
-		});
-
-		Object.assign(this, JSLogger);*/
 	}
 
 	public trace(...values: readonly unknown[]): void {
@@ -125,11 +103,11 @@ export class ILogger extends EventEmitter {
 	}
 
 	public time(val: string): void {
-		if (val.length > 0) this.invoke(LogLevel.TIME, val);
+		if (val.length > 0) this.invokeTime(LogLevel.TIME, val, 'start');
 	}
 
 	public timeEnd(val: string): void {
-		if (val.length > 0) this.invoke(LogLevel.TIME_END, val);
+		if (val.length > 0) this.invokeTime(LogLevel.TIME, val, 'stop');
 	}
 
 	public warn(...values: readonly unknown[]): void {
@@ -141,23 +119,27 @@ export class ILogger extends EventEmitter {
 	}
 
 	public invoke(level: LogLevel, ...values: readonly unknown[]): void {
+		if (!this.enabledFor(level)) return;
+
 		let color = '';
 		if (level === LogLevel.TRACE) color = '\x1b[91m';
 		else if (level === LogLevel.DEBUG) color = '\x1b[2m';
 		else if (level === LogLevel.INFO) color = '\x1b[36m';
-		else if ([LogLevel.TIME, LogLevel.TIME_END].includes(level)) color = '\x1b[97m';
 		else if (level === LogLevel.WARN) color = '\x1b[93m';
 		else color = '\x1b[91m';
 
 		const method = this.LevelMethods.get(level);
 		const date = new Date();
 
-		if ([LogLevel.TIME, LogLevel.TIME_END].includes(level)) {
-			console[method](values as unknown as string);
-		} else {
-			// @ts-expect-error Research required ):
-			console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
-		}
+		// @ts-expect-error Research required ):
+		console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
+	}
+
+	public invokeTime(level: LogLevel, val: string, type: 'start' | 'stop') {
+		if (!this.enabledFor(level)) return;
+
+		if (type == 'start') console.time(val);
+		else console.timeEnd(val);
 	}
 
 	protected readonly LevelMethods = new Map<LogLevel, LogMethods>([
@@ -166,7 +148,6 @@ export class ILogger extends EventEmitter {
 		[LogLevel.INFO, 'info'],
 		[LogLevel.TIME, 'time'],
 		[LogLevel.WARN, 'warn'],
-		[LogLevel.TIME_END, 'timeEnd'],
 		[LogLevel.ERROR, 'error'],
 	]);
 
@@ -186,28 +167,28 @@ export class ILogger extends EventEmitter {
 	 * @deprecated
 	 */
 	public useDefaults(): void {
-		Logger.warn('This feature is not supported.');
+		this.warn('This feature is not supported.');
 	}
 
 	/**
 	 * @deprecated
 	 */
 	public setHandler(): void {
-		Logger.warn('This feature is not supported.');
+		this.warn('This feature is not supported.');
 	}
 
 	/**
 	 * @deprecated
 	 */
 	public get(): void {
-		Logger.warn('This feature is not supported.');
+		this.warn('This feature is not supported.');
 	}
 
 	/**
 	 * @deprecated
 	 */
 	public createDefaultHandler(): void {
-		Logger.warn('This feature is not supported.');
+		this.warn('This feature is not supported.');
 	}
 }
 
