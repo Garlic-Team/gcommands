@@ -50,6 +50,9 @@ export const enum LogLevel {
 	INFO = 3,
 	TIME = 4,
 	WARN = 5,
+	/**
+	 * @deprecated
+	 */
 	ERROR = 8,
 	OFF = 99,
 }
@@ -100,10 +103,16 @@ export class ILogger extends EventEmitter {
 		this.invoke(LogLevel.INFO, ...values);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public time(val: string): void {
 		if (val.length > 0) this.invokeTime(LogLevel.TIME, val, 'start');
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public timeEnd(val: string): void {
 		if (val.length > 0) this.invokeTime(LogLevel.TIME, val, 'stop');
 	}
@@ -133,6 +142,9 @@ export class ILogger extends EventEmitter {
 		console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public invokeTime(level: LogLevel, val: string, type: 'start' | 'stop') {
 		if (!this.enabledFor(level)) return;
 
