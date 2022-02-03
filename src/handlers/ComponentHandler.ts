@@ -5,7 +5,7 @@ import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 import { Components } from '../lib/managers/ComponentManager';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { setTimeout } from 'node:timers';
-import { Logger, LoggerEvents } from '../lib/util/logger/Logger';
+import { Logger, Events } from '../lib/util/logger/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -71,8 +71,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 
 	await Promise.resolve(component.run(ctx))
 		.catch(async (error) => {
-			Logger.emit(LoggerEvents.HANDLER_ERROR, ctx, error);
-			Logger.emit(LoggerEvents.COMPONENT_HANDLER_ERROR, ctx, error);
+			client.emit(Events.HANDLER_ERROR, ctx, error);
+			client.emit(Events.COMPONENT_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
@@ -86,8 +86,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 			else await errorReply();
 		})
 		.then(() => {
-			Logger.emit(LoggerEvents.HANDLER_RUN, ctx);
-			Logger.emit(LoggerEvents.COMPONENT_HANDLER_RUN, ctx);
+			client.emit(Events.HANDLER_RUN, ctx);
+			client.emit(Events.COMPONENT_HANDLER_RUN, ctx);
 			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
 			Logger.debug(`Successfully ran component (${component.name}) for ${interaction.user.username}`);
 		});

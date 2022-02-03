@@ -5,7 +5,7 @@ import { CommandType } from '../lib/structures/Command';
 import { ArgumentType } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
-import { Logger, LoggerEvents } from '../lib/util/logger/Logger';
+import { Logger, Events } from '../lib/util/logger/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -92,8 +92,8 @@ export async function MessageCommandHandler(
 	if (!(await command.inhibit(ctx))) return;
 	await Promise.resolve(command.run(ctx))
 		.catch(async (error) => {
-			Logger.emit(LoggerEvents.HANDLER_ERROR, ctx, error);
-			Logger.emit(LoggerEvents.COMMAND_HANDLER_ERROR, ctx, error);
+			client.emit(Events.HANDLER_ERROR, ctx, error);
+			client.emit(Events.COMMAND_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
@@ -106,8 +106,8 @@ export async function MessageCommandHandler(
 			else await errorReply();
 		})
 		.then(() => {
-			Logger.emit(LoggerEvents.HANDLER_RUN, ctx);
-			Logger.emit(LoggerEvents.COMMAND_HANDLER_RUN, ctx);
+			client.emit(Events.HANDLER_RUN, ctx);
+			client.emit(Events.COMMAND_HANDLER_RUN, ctx);
 			Logger.debug(`Successfully ran command (${command.name}) for ${message.author.username}`);
 		});
 }

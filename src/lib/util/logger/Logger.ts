@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import { Util } from '../Util';
 import type { AutocompleteContext } from '../../structures/contexts/AutocompleteContext';
 import type { CommandContext } from '../../structures/contexts/CommandContext';
@@ -7,7 +6,6 @@ import type { Command } from '../../structures/Command';
 import type { Component } from '../../structures/Component';
 import type { Listener } from '../../structures/Listener';
 import type { Plugin } from '../../structures/Plugin';
-import type { ClientEvents } from 'discord.js';
 
 export enum Events {
 	'HANDLER_RUN' = 'handlerRun',
@@ -27,7 +25,7 @@ export enum Events {
 	'PLUGIN_REGISTERED' = 'pluginRegistered',
 }
 
-export interface GClientEvents extends ClientEvents {
+export interface GClientEvents {
 	'handlerRun': [ctx: AutocompleteContext | CommandContext | ComponentContext];
 	'handlerError': [ctx: AutocompleteContext | CommandContext | ComponentContext, error: any];
 	'commandHandlerRun': [ctx: CommandContext];
@@ -45,22 +43,8 @@ export interface GClientEvents extends ClientEvents {
 	'pluginRegistered': [plugin: Plugin];
 }
 
-export interface LoggerEventsInterface {
-	'handlerRun': (ctx: AutocompleteContext | CommandContext | ComponentContext) => void;
-	'handlerError': (ctx: AutocompleteContext | CommandContext | ComponentContext, error: any) => void;
-	'commandHandlerRun': (ctx: CommandContext) => void;
-	'commandHandlerError': (ctx: CommandContext, error: any) => void;
-	'autoCompleteHandlerRun': (ctx: AutocompleteContext) => void;
-	'autoCompleteHandlerError': (ctx: AutocompleteContext, error: any) => void;
-	'componentHandlerRun': (ctx: ComponentContext) => void;
-	'componentHandlerError': (ctx: ComponentContext, error: any) => void;
-	'commandRegistered': (command: Command) => void;
-	'commandUnregistered': (command: Command) => void;
-	'componentRegistered': (component: Component) => void;
-	'componentUnregistered': (component: Component) => void;
-	'listenerRegistered': (listener: Listener) => void;
-	'listenerUnregistered': (listener: Listener) => void;
-	'pluginRegistered': (plugin: Plugin) => void;
+declare module 'discord.js' {
+	interface ClientEvents extends GClientEvents {}
 }
 
 export const enum LogLevel {
@@ -78,17 +62,7 @@ export const enum LogLevel {
 
 export type LogMethods = 'trace' | 'debug' | 'info' | 'time' | 'warn' | 'timeEnd' | 'error';
 
-export declare interface ILogger {
-	on<U extends keyof LoggerEventsInterface>(
-	  event: U, listener: LoggerEventsInterface[U]
-	): this;
-  
-	emit<U extends keyof LoggerEventsInterface>(
-	  event: U, ...args: Parameters<LoggerEventsInterface[U]>
-	): boolean;
-}
-
-export class ILogger extends EventEmitter {
+export class ILogger {
 	TRACE: LogLevel.TRACE;
 	DEBUG: LogLevel.DEBUG;
 	INFO: LogLevel.INFO;
@@ -99,8 +73,6 @@ export class ILogger extends EventEmitter {
 	level: LogLevel = LogLevel.TRACE;
 
 	constructor() {
-		super();
-
 		this.TRACE = LogLevel.TRACE;
 		this.DEBUG = LogLevel.DEBUG;
 		this.INFO = LogLevel.INFO;
