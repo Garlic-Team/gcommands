@@ -1,4 +1,4 @@
-export class Channel {
+export class ChannelType {
     validate() {
         
     }
