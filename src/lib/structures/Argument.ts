@@ -72,6 +72,7 @@ const validationSchema = z
 			})
 			.array()
 			.optional(),
+		options: z.any().array().optional(),
 		arguments: z.any().array().optional(),
 		channelTypes: z
 			.union([z.string(), z.nativeEnum(ChannelType)])
@@ -89,6 +90,11 @@ export class Argument {
 	public required = false;
 	public choices?: Array<ArgumentChoice>;
 	public arguments?: Array<Argument>;
+	/**
+	 * @deprecated Please use Argument#arguments instead
+	 * @link https://garlic-team.js.org/docs/#/docs/gcommands/next/typedef/ArgumentOptions
+	 */
+	public options?: Array<Argument>;
 	public channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	public run?: (ctx: AutocompleteContext) => any;
 
@@ -109,6 +115,7 @@ export class Argument {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
 				});
+				this.options = this.arguments;
 				this.channelTypes = options.channelTypes;
 				this.run = options.run;
 			})
