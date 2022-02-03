@@ -1,5 +1,3 @@
-import Logger from 'js-logger';
-
 export class Util {
 	/**
 	 * @deprecated We don't support arguments in object/array
@@ -93,10 +91,4 @@ export class Util {
 		array = array.filter(item => typeof item === 'string');
 		return `(${array.join(' -> ') || 'unknown'})`;
 	}
-
-	static throwError(error: any, name: string): void {
-		const trace = Util.resolveValidationErrorTrace([name]);
-	
-		Logger.error(error, trace);
-	};
 }
