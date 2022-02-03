@@ -3,6 +3,7 @@ import type { ClientEvents, WSEventType } from 'discord.js';
 import { Listeners } from '../managers/ListenerManager';
 import Logger from 'js-logger';
 import { z } from 'zod';
+import type { EventEmitter } from 'node:events';
 
 export interface ListenerOptions<WS extends boolean, Event extends WS extends true ? WSEventType : keyof ClientEvents> {
 	event: Event | string;
@@ -10,6 +11,7 @@ export interface ListenerOptions<WS extends boolean, Event extends WS extends tr
 	once?: boolean;
 	ws?: WS;
 	fileName?: string;
+	emitter?: EventEmitter;
 	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<any>) => any;
 }
 
@@ -20,6 +22,7 @@ const validationSchema = z
 		once: z.boolean().optional(),
 		ws: z.boolean().optional().default(false),
 		fileName: z.string().optional(),
+		emitter: z.any().optional(),
 		run: z.function(),
 	})
 	.passthrough();
@@ -33,6 +36,7 @@ export class Listener<
 	public once?: boolean;
 	public ws?: WS;
 	public fileName?: string;
+	public emitter: EventEmitter;
 	public run: (...args: Array<any>) => any;
 	public owner?: string;
 	public reloading = false;
@@ -46,6 +50,7 @@ export class Listener<
 				this.once = options.once;
 				this.ws = options.ws as WS;
 				this.fileName = options.fileName;
+				this.emitter = options.emitter;
 				this.run = options.run;
 
 				Listeners.register(this);
@@ -60,7 +65,11 @@ export class Listener<
 		this.client = client;
 
 		if (this.ws) client.ws[this.once ? 'once' : 'on'](this.event as WSEventType, this._run.bind(this));
-		else client[this.once ? 'once' : 'on'](this.event as keyof ClientEvents, this._run.bind(this));
+		else
+			(this.emitter ? this.emitter : client)[this.once ? 'once' : 'on'](
+				this.event as keyof ClientEvents,
+				this._run.bind(this),
+			);
 	}
 
 	public unregister(): void {

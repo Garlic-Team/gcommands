@@ -1,8 +1,6 @@
 import { Client, ClientOptions } from 'discord.js';
 import { Plugins } from './managers/PluginManager';
-import { Commands } from './managers/CommandManager';
 import { Listeners } from './managers/ListenerManager';
-import { Components } from './managers/ComponentManager';
 import Responses from '../responses.json';
 import { setImmediate } from 'timers';
 import { registerDirectories } from './util/registerDirectories';
@@ -35,12 +33,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 		}
 
 		setImmediate(async (): Promise<void> => {
-			await Promise.all([
-				Plugins.initiate(this),
-				Commands.initiate(this),
-				Components.initiate(this),
-				Listeners.initiate(this),
-			]);
+			await Promise.all([Plugins.initiate(this), Listeners.initiate(this)]);
 		});
 	}
 

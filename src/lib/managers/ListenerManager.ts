@@ -59,7 +59,7 @@ export class ListenerManager extends Collection<string, Listener> {
 
 	public async initiate(client: GClient): Promise<void> {
 		this.client = client;
-		this.forEach((listener) => listener.initialize(client));
+		this.forEach((listener) => this.initialize(listener));
 	}
 }
 

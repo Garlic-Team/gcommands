@@ -1,4 +1,4 @@
-import { AutoDeferType, GClient } from '../GClient';
+import { AutoDeferType } from '../GClient';
 import type { ComponentContext } from './contexts/ComponentContext';
 import { Components } from '../managers/ComponentManager';
 import Logger from 'js-logger';
@@ -63,7 +63,6 @@ const validationSchema = z
 	.passthrough();
 
 export class Component {
-	public client: GClient;
 	public name: string;
 	public type: Array<ComponentType | keyof typeof ComponentType>;
 	public inhibitors: ComponentInhibitors = [];
@@ -99,14 +98,10 @@ export class Component {
 			});
 	}
 
-	public initialize(client: GClient): void {
-		this.client = client;
-
-		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
-	}
-
-	public unregister() {
-		Components.unregister(this.name);
+	public unregister(): boolean {
+		const success = Components.delete(this.name);
+		if (success) Logger.debug('Unregistered component', this.name);
+		return success;
 	}
 
 	public async inhibit(ctx: ComponentContext): Promise<boolean> {
@@ -142,6 +137,15 @@ export class Component {
 	}
 
 	public static setDefaults(defaults: Partial<ComponentOptions>): void {
-		Component.defaults = defaults;
+		validationSchema
+			.partial()
+			.parseAsync(defaults)
+			.then((defaults) => {
+				Component.defaults = defaults as Partial<ComponentOptions>;
+			})
+			.catch((error) => {
+				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				if (error.stack) Logger.trace(error.stack);
+			});
 	}
 }

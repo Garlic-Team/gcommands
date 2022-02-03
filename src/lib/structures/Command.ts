@@ -1,4 +1,4 @@
-import { AutoDeferType, GClient } from '../GClient';
+import { AutoDeferType } from '../GClient';
 import { Argument, ArgumentOptions } from './Argument';
 import type { CommandContext } from './contexts/CommandContext';
 import { Commands } from '../managers/CommandManager';
@@ -68,7 +68,6 @@ const validationSchema = z
 	.passthrough();
 
 export class Command {
-	public client: GClient;
 	public name: string;
 	public description?: string;
 	public type: Array<CommandType | keyof typeof CommandType>;
@@ -111,14 +110,10 @@ export class Command {
 			});
 	}
 
-	public initialize(client: GClient): void {
-		this.client = client;
-
-		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
-	}
-
-	public unregister(): Command {
-		return Commands.unregister(this.name);
+	public unregister(): boolean {
+		const success = Commands.delete(this.name);
+		if (success) Logger.debug('Unregistered command', this.name);
+		return success;
 	}
 
 	public async inhibit(ctx: CommandContext): Promise<boolean> {
@@ -172,17 +167,16 @@ export class Command {
 			});
 	}
 
-	public static setDefaults(defaults: Partial<CommandOptions>): boolean {
-		try {
-			validationSchema.partial().parse(defaults);
-			Command.defaults = defaults;
-
-			return true;
-		} catch (error) {
-			Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
-			if (error.stack) Logger.trace(error.stack);
-
-			return false;
-		}
+	public static setDefaults(defaults: Partial<CommandOptions>): void {
+		validationSchema
+			.partial()
+			.parseAsync(defaults)
+			.then((defaults) => {
+				Command.defaults = defaults as Partial<CommandOptions>;
+			})
+			.catch((error) => {
+				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				if (error.stack) Logger.trace(error.stack);
+			});
 	}
 }
