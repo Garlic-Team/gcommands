@@ -44,6 +44,7 @@ export interface GClientEvents {
 }
 
 declare module 'discord.js' {
+	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface ClientEvents extends GClientEvents {}
 }
 
