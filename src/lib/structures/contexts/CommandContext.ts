@@ -32,6 +32,7 @@ export interface CommandContextOptions<Cached extends CacheType = CacheType> ext
 }
 
 export class CommandContext<Cached extends CacheType = CacheType> extends Context<Cached> {
+	[key: string]: any;
 	public interaction?: CommandInteraction | ContextMenuInteraction;
 	public message?: Message;
 	public readonly command: Command;
@@ -62,7 +63,7 @@ export class CommandContext<Cached extends CacheType = CacheType> extends Contex
 		this.command = options.command;
 		this.commandName = options.command.name;
 		this.arguments = options.arguments;
-		this.deferReply = async opt => {
+		this.deferReply = async (opt) => {
 			const message = await options.deferReply(opt);
 			this.deferred = true;
 			return message;
@@ -71,7 +72,7 @@ export class CommandContext<Cached extends CacheType = CacheType> extends Contex
 		this.editReply = options.editReply;
 		this.fetchReply = options.fetchReply;
 		this.followUp = options.followUp;
-		this.reply = async opt => {
+		this.reply = async (opt) => {
 			const message = await options.reply(opt);
 			this.replied = true;
 			return message;

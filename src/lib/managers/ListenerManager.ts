@@ -13,7 +13,6 @@ export class ListenerManager extends Collection<string, Listener> {
 				this.get(listener.name).unregister();
 				if (!this.get(listener.name)?.reloading) Logger.warn('Overwriting listener', listener.name);
 			}
-			if (!Listener.validate(listener)) return;
 			if (this.client) this.initialize(listener);
 			if (Plugins.currentlyLoading) listener.owner = Plugins.currentlyLoading;
 			this.set(listener.name, listener);

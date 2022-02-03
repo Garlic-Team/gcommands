@@ -1,25 +1,31 @@
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
 import { Logger } from '../util/logger/Logger';
-import { Util } from '../util/Util';
+import { z } from 'zod';
+
+const validationSchema = z
+	.object({
+		name: z.string(),
+		run: z.function(),
+	})
+	.passthrough();
 
 export class Plugin {
-	public readonly name: string;
-	public readonly run: (client: GClient) => any;
+	public name: string;
+	public run: (client: GClient) => any;
 
 	public constructor(name: string, run: (client: GClient) => any) {
-		this.name = name;
-		this.run = run;
+		validationSchema
+			.parseAsync({ name, run })
+			.then((options) => {
+				this.name = options.name;
+				this.run = options.run;
 
-		Plugins.register(this);
-	}
-
-	public static validate(plugin: Plugin): boolean | void {
-		const trace = Util.resolveValidationErrorTrace([plugin.name]);
-
-		if (!plugin.name) return Logger.warn('Plugin must have a name', trace);
-		else if (typeof plugin.name !== 'string') return Logger.warn('Plugin name must be a string', trace);
-		else if (typeof plugin.run !== 'function') return Logger.warn('Plugin must have run a function', trace);
-		else return true;
+				Plugins.register(this);
+			})
+			.catch((error) => {
+				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				if (error.stack) Logger.trace(error.stack);
+			});
 	}
 }

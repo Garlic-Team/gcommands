@@ -2,12 +2,12 @@ import { Context, ContextOptions } from './Context';
 import type { AutocompleteInteraction, CacheType } from 'discord.js';
 import type { Command } from '../Command';
 import type { GClient } from '../../GClient';
-import type { Argument, ArgumentChoice } from '../Argument';
+import type { Argument, ArgumentChoice, ArgumentOptions } from '../Argument';
 
 export interface AutocompleteContextOptions<Cached extends CacheType = CacheType> extends ContextOptions<Cached> {
 	interaction: AutocompleteInteraction;
 	command: Command;
-	argument: Argument;
+	argument: Argument | ArgumentOptions;
 	value: string | number;
 	respond: (choices: Array<ArgumentChoice>) => Promise<void>;
 }
@@ -16,7 +16,7 @@ export class AutocompleteContext<Cached extends CacheType = CacheType> extends C
 	public interaction: AutocompleteInteraction;
 	public readonly command: Command;
 	public readonly commandName: string;
-	public readonly argument: Argument;
+	public readonly argument: Argument | ArgumentOptions;
 	public readonly argumentName: string;
 	public readonly value: string | number;
 	public respond: (choices: Array<ArgumentChoice>) => Promise<void>;
