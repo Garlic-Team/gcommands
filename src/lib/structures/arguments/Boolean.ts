@@ -1,4 +1,4 @@
-export class Boolean {
+export class BooleanType {
     validate() {
         
     }

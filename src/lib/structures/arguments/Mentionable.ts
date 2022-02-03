@@ -1,4 +1,4 @@
-export class Mentionable {
+export class MentionableType {
     validate() {
         
     }
