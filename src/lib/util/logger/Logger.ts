@@ -7,8 +7,9 @@ import type { Command } from '../../structures/Command';
 import type { Component } from '../../structures/Component';
 import type { Listener } from '../../structures/Listener';
 import type { Plugin } from '../../structures/Plugin';
+import type { ClientEvents } from 'discord.js';
 
-export enum LoggerEvents {
+export enum Events {
 	'HANDLER_RUN' = 'handlerRun',
 	'HANDLER_ERROR' = 'handlerError',
 	'COMMAND_HANDLER_RUN' = 'commandHandlerRun',
@@ -24,6 +25,24 @@ export enum LoggerEvents {
 	'LISTENER_REGISTERED' = 'listenerRegistered',
 	'LISTENER_UNREGISTERED' = 'listenerUnregistered',
 	'PLUGIN_REGISTERED' = 'pluginRegistered',
+}
+
+export interface GClientEvents extends ClientEvents {
+	'handlerRun': [ctx: AutocompleteContext | CommandContext | ComponentContext];
+	'handlerError': [ctx: AutocompleteContext | CommandContext | ComponentContext, error: any];
+	'commandHandlerRun': [ctx: CommandContext];
+	'commandHandlerError': [ctx: CommandContext, error: any];
+	'autoCompleteHandlerRun': [ctx: AutocompleteContext];
+	'autoCompleteHandlerError': [ctx: AutocompleteContext, error: any];
+	'componentHandlerRun': [ctx: ComponentContext];
+	'componentHandlerError': [ctx: ComponentContext, error: any];
+	'commandRegistered': [command: Command];
+	'commandUnregistered': [command: Command];
+	'componentRegistered': [component: Component];
+	'componentUnregistered': [component: Component];
+	'listenerRegistered': [listener: Listener];
+	'listenerUnregistered': [listener: Listener];
+	'pluginRegistered': [plugin: Plugin];
 }
 
 export interface LoggerEventsInterface {
@@ -48,11 +67,11 @@ export const enum LogLevel {
 	TRACE = 1,
 	DEBUG = 2,
 	INFO = 3,
-	TIME = 4,
-	WARN = 5,
 	/**
 	 * @deprecated
 	 */
+	TIME = 4,
+	WARN = 5,
 	ERROR = 8,
 	OFF = 99,
 }
