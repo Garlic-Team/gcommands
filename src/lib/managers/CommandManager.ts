@@ -1,7 +1,7 @@
 import { Collection } from 'discord.js';
 import { Command } from '../structures/Command';
 import type { GClient } from '../GClient';
-import { Logger, LoggerEvents } from '../util/logger/Logger';
+import { Logger, Events } from '../util/logger/Logger';
 import { Plugins } from './PluginManager';
 
 export class CommandManager extends Collection<string, Command> {
@@ -13,7 +13,7 @@ export class CommandManager extends Collection<string, Command> {
 			if (this.client) command.initialize(this.client);
 			if (Plugins.currentlyLoading) command.owner = Plugins.currentlyLoading;
 			this.set(command.name, command);
-			Logger.emit(LoggerEvents.COMMAND_REGISTERED, command);
+			this.client.emit(Events.COMMAND_REGISTERED, command);
 			Logger.debug('Registered command', command.name, command.owner ? `(by plugin ${command.owner})` : '');
 		} else Logger.warn('Command must be a instance of Command');
 
@@ -24,7 +24,7 @@ export class CommandManager extends Collection<string, Command> {
 		const command = this.get(commandName);
 		if (command) {
 			this.delete(commandName);
-			Logger.emit(LoggerEvents.COMMAND_UNREGISTERED, command);
+			this.client.emit(Events.COMMAND_UNREGISTERED, command);
 			Logger.debug('Unregistered command', command.name);
 		}
 
