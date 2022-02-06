@@ -28,7 +28,7 @@ export { Listeners, ListenerManager } from './lib/managers/ListenerManager';
 export { Handlers, HandlerManager } from './lib/managers/HandlerManager';
 
 // Logger
-export { Logger, ILogger, Events, GClientEvents, LogLevel, LogMethods } from './lib/util/logger/Logger';
+export * from './lib/util/logger/Logger';
 
 // Inhibitors
 export * as Inhibitor from './inhibitors';
