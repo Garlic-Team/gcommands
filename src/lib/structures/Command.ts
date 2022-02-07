@@ -91,7 +91,7 @@ export class Command {
 				this.name = options.name || Command.defaults?.name;
 				this.description = options.description || Command.defaults?.description;
 				this.type = options.type || Command.defaults?.type;
-				this.arguments = options.arguments.map((argument) => {
+				this.arguments = options.arguments?.map((argument) => {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
 				});
