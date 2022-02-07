@@ -86,7 +86,7 @@ export class Command {
 
 	public constructor(options: CommandOptions) {
 		validationSchema
-			.parseAsync(options)
+			.parseAsync({ ...options, ...this })
 			.then((options) => {
 				this.name = options.name || Command.defaults?.name;
 				this.description = options.description || Command.defaults?.description;
@@ -172,17 +172,16 @@ export class Command {
 			});
 	}
 
-	public static setDefaults(defaults: Partial<CommandOptions>): boolean {
-		try {
-			validationSchema.partial().parse(defaults);
-			Command.defaults = defaults;
-
-			return true;
-		} catch (error) {
-			Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
-			if (error.stack) Logger.trace(error.stack);
-
-			return false;
-		}
+	public static setDefaults(defaults: Partial<CommandOptions>): void {
+		validationSchema
+			.partial()
+			.parseAsync(defaults)
+			.then((defaults) => {
+				Command.defaults = defaults as Partial<CommandOptions>;
+			})
+			.catch((error) => {
+				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				if (error.stack) Logger.trace(error.stack);
+			});
 	}
 }

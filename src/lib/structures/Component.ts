@@ -79,7 +79,7 @@ export class Component {
 
 	public constructor(options: ComponentOptions) {
 		validationSchema
-			.parseAsync(options)
+			.parseAsync({ ...options, ...this })
 			.then((options) => {
 				this.name = options.name || Component.defaults?.name;
 				this.type = options.type || Component.defaults?.type;
@@ -142,6 +142,15 @@ export class Component {
 	}
 
 	public static setDefaults(defaults: Partial<ComponentOptions>): void {
-		Component.defaults = defaults;
+		validationSchema
+			.partial()
+			.parseAsync(defaults)
+			.then((defaults) => {
+				Component.defaults = defaults as Partial<ComponentOptions>;
+			})
+			.catch((error) => {
+				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				if (error.stack) Logger.trace(error.stack);
+			});
 	}
 }
