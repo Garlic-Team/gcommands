@@ -159,10 +159,9 @@ export class ILogger {
 		else if (level === LogLevel.WARN) color = '\x1b[93m';
 		else color = '\x1b[91m';
 
-		const method = this.LevelMethods.get(level);
+		const method = this.LevelMethods.get(level) as 'trace' | 'debug' | 'info' | 'warn' | 'error';
 		const date = new Date();
 
-		// @ts-expect-error Research required ):
 		console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
 	}
 
