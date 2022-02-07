@@ -1,9 +1,10 @@
 import { Argument, ArgumentType } from '../Argument';
+import { MessageArgumentTypeBase } from './base';
 
-export class NumberType {
+export class NumberType extends MessageArgumentTypeBase {
     value;
 
-    validate(content: string) {
+    validate(content: string): boolean {
         if (!isNaN(Number(content))) {
             this.value = content;
             return true

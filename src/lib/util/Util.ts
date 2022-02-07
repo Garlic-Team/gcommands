@@ -1,3 +1,5 @@
+import Logger from "js-logger";
+
 export class Util {
 	/**
 	 * @deprecated We don't support arguments in object/array
@@ -90,5 +92,22 @@ export class Util {
 	static resolveValidationErrorTrace(array: Array<any>): string {
 		array = array.filter(item => typeof item === 'string');
 		return `(${array.join(' -> ') || 'unknown'})`;
+	}
+
+	static throwError(error, name): void {
+		const trace = Util.resolveValidationErrorTrace([name]);
+	
+		Logger.error(error, trace);
+	}
+
+	static toPascalCase(input: string): string {
+		return input
+			.replace(new RegExp(/[-_]+/, 'g'), ' ')
+			.replace(new RegExp(/[^\w\s]/, 'g'), '')
+			.replace(
+			new RegExp(/\s+(.)(\w*)/, 'g'),
+			($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`
+			)
+			.replace(new RegExp(/\w/), s => s.toUpperCase());
 	}
 }

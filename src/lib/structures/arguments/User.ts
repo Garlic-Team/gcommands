@@ -1,10 +1,11 @@
 import type { Client, Guild } from 'discord.js';
 import { Argument, ArgumentType } from '../Argument';
+import { MessageArgumentTypeBase } from './base';
 
-export class UserType {
+export class UserType extends MessageArgumentTypeBase {
     matches;
 
-    validate(content: string) {
+    validate(content: string): boolean {
         const matches = content.match(/([0-9]+)/);
 
         if (!matches) return false;
@@ -19,7 +20,7 @@ export class UserType {
             ...argument.toJSON(),
             type: ArgumentType[argument.type],
             user: client.users.cache.get(this.matches[1]),
-            member: guild.members.cache.get(this.matches[1])
+            member: guild.members?.cache?.get(this.matches[1])
         }
     }
 }
