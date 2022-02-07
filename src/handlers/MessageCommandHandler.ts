@@ -23,7 +23,7 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string, client
 	if (!validate) return checkValidation(arg, null, client, guild, argument, channel, user);
 
 	return arg.resolve(argument, client, guild);
-}
+};
 
 export async function MessageCommandHandler(
 	message: Message,
