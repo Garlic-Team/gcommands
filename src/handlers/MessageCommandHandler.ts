@@ -92,8 +92,8 @@ export async function MessageCommandHandler(
 	if (!(await command.inhibit(ctx))) return;
 	await Promise.resolve(command.run(ctx))
 		.catch(async (error) => {
-			client.emit(Events.HANDLER_ERROR, ctx, error);
-			client.emit(Events.COMMAND_HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.COMMAND_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
@@ -106,8 +106,8 @@ export async function MessageCommandHandler(
 			else await errorReply();
 		})
 		.then(() => {
-			client.emit(Events.HANDLER_RUN, ctx);
-			client.emit(Events.COMMAND_HANDLER_RUN, ctx);
+			Logger.emit(Events.HANDLER_RUN, ctx);
+			Logger.emit(Events.COMMAND_HANDLER_RUN, ctx);
 			Logger.debug(`Successfully ran command (${command.name}) for ${message.author.username}`);
 		});
 }

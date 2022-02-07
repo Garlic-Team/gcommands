@@ -6,6 +6,7 @@ import type { Command } from '../../structures/Command';
 import type { Component } from '../../structures/Component';
 import type { Listener } from '../../structures/Listener';
 import type { Plugin } from '../../structures/Plugin';
+import type { Awaitable } from 'discord.js';
 
 export enum Events {
 	'HANDLER_RUN' = 'handlerRun',
@@ -41,6 +42,37 @@ export interface GClientEvents {
 	'listenerRegistered': [listener: Listener];
 	'listenerUnregistered': [listener: Listener];
 	'pluginRegistered': [plugin: Plugin];
+}
+
+
+export declare interface ILogger {
+	on<U extends keyof GClientEvents>(
+		event: U, listener: GClientEvents[U]
+	  ): this;
+  
+	on<K extends keyof GClientEvents>(event: K, listener: (...args: GClientEvents[K]) => Awaitable<void>): this;
+	on<S extends string | symbol>(
+		event: Exclude<S, keyof GClientEvents>,
+		listener: (...args: any[]) => Awaitable<void>,
+	): this;
+
+	once<K extends keyof GClientEvents>(event: K, listener: (...args: GClientEvents[K]) => Awaitable<void>): this;
+	once<S extends string | symbol>(
+		event: Exclude<S, keyof GClientEvents>,
+		listener: (...args: any[]) => Awaitable<void>,
+	): this;
+
+	emit<K extends keyof GClientEvents>(event: K, ...args: GClientEvents[K]): boolean;
+	emit<S extends string | symbol>(event: Exclude<S, keyof GClientEvents>, ...args: unknown[]): boolean;
+
+	off<K extends keyof GClientEvents>(event: K, listener: (...args: GClientEvents[K]) => Awaitable<void>): this;
+	off<S extends string | symbol>(
+		event: Exclude<S, keyof GClientEvents>,
+		listener: (...args: any[]) => Awaitable<void>,
+	): this;
+
+	removeAllListeners<K extends keyof GClientEvents>(event?: K): this;
+	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof GClientEvents>): this;
 }
 
 declare module 'discord.js' {

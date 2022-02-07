@@ -71,8 +71,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 
 	await Promise.resolve(component.run(ctx))
 		.catch(async (error) => {
-			client.emit(Events.HANDLER_ERROR, ctx, error);
-			client.emit(Events.COMPONENT_HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.COMPONENT_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
@@ -86,8 +86,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 			else await errorReply();
 		})
 		.then(() => {
-			client.emit(Events.HANDLER_RUN, ctx);
-			client.emit(Events.COMPONENT_HANDLER_RUN, ctx);
+			Logger.emit(Events.HANDLER_RUN, ctx);
+			Logger.emit(Events.COMPONENT_HANDLER_RUN, ctx);
 			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
 			Logger.debug(`Successfully ran component (${component.name}) for ${interaction.user.username}`);
 		});

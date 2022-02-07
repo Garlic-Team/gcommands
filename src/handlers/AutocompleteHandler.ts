@@ -40,14 +40,14 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 
 	await Promise.resolve(argument.run(ctx))
 		.catch((error) => {
-			client.emit(Events.HANDLER_ERROR, ctx, error);
-			client.emit(Events.AUTOCOMPLETE_HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.AUTOCOMPLETE_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 		})
 		.then(() => {
-			client.emit(Events.HANDLER_RUN, ctx);
-			client.emit(Events.AUTOCOMPLETE_HANDLER_RUN, ctx);
+			Logger.emit(Events.HANDLER_RUN, ctx);
+			Logger.emit(Events.AUTOCOMPLETE_HANDLER_RUN, ctx);
 			Logger.debug(
 				`Successfully ran autocomplete (${argument.name} -> ${command.name}) for ${interaction.user.username}`,
 			);
