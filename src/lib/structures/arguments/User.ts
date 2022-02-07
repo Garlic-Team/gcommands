@@ -3,24 +3,24 @@ import { Argument, ArgumentType } from '../Argument';
 import { MessageArgumentTypeBase } from './base';
 
 export class UserType extends MessageArgumentTypeBase {
-    matches;
+	matches;
 
-    validate(content: string): boolean {
-        const matches = content.match(/([0-9]+)/);
+	validate(content: string): boolean {
+		const matches = content.match(/([0-9]+)/);
 
-        if (!matches) return false;
+		if (!matches) return false;
 
-        this.matches = matches;
+		this.matches = matches;
 
-        return true;
-    }
+		return true;
+	}
 
-    resolve(argument: Argument, client: Client, guild: Guild) {
-        return {
-            ...argument.toJSON(),
-            type: ArgumentType[argument.type],
-            user: client.users.cache.get(this.matches[1]),
-            member: guild.members?.cache?.get(this.matches[1])
-        }
-    }
+	resolve(argument: Argument, client: Client, guild: Guild) {
+		return {
+			...argument.toJSON(),
+			type: ArgumentType[argument.type],
+			user: client.users.cache.get(this.matches[1]),
+			member: guild.members?.cache?.get(this.matches[1])
+		};
+	}
 }
