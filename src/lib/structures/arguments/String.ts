@@ -1,9 +1,10 @@
 import { Argument, ArgumentType } from '../Argument';
+import { MessageArgumentTypeBase } from './base';
 
-export class StringType {
+export class StringType extends MessageArgumentTypeBase {
     value;
 
-    validate(content: string) {
+    validate(content: string): boolean {
         if (typeof content === 'string') {
             this.value = content;
             return true

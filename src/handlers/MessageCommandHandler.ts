@@ -5,13 +5,15 @@ import { CommandType } from '../lib/structures/Command';
 import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
 import Logger from 'js-logger';
-import { UserType } from '../lib/structures/arguments/User';
-import type { Argument } from '../lib/structures/Argument';
+import { Argument, ArgumentType } from '../lib/structures/Argument';
+import { MessageArgumentTypeBase, MessageArgumentTypes } from '../lib/structures/arguments/base';
+import { Util } from '../lib/util/Util';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
-const checkValidation = async(arg: UserType, content: string, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
+const checkValidation = async(arg: MessageArgumentTypes, content: string, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
 	if (!content) {
+		channel.send(`${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`);
 		const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
 
 		content = [...message.values()]?.[0]?.content;
@@ -71,7 +73,7 @@ export async function MessageCommandHandler(
 		args[0].options[0].options = args[0].options.splice(1);*/
 
 	for (const argument in command.arguments) {
-		const arg = new UserType();
+		const arg = await MessageArgumentTypeBase.createArgument(command.arguments[argument].type);
 
 		args[argument] = await checkValidation(arg, args[argument] as string, client, message.guild, command.arguments[argument], message.channel as TextChannel, message.author);
 	}
