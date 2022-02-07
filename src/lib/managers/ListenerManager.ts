@@ -16,7 +16,7 @@ export class ListenerManager extends Collection<string, Listener> {
 			if (this.client) this.initialize(listener);
 			if (Plugins.currentlyLoading) listener.owner = Plugins.currentlyLoading;
 			this.set(listener.name, listener);
-			this.client.emit(Events.LISTENER_REGISTERED, listener);
+			Logger.emit(Events.LISTENER_REGISTERED, listener);
 			Logger.debug(
 				'Registered listener',
 				listener.name,
@@ -43,7 +43,7 @@ export class ListenerManager extends Collection<string, Listener> {
 					: this.client.off(listener.event as keyof ClientEvents, listener._run);
 			}
 
-			this.client.emit(Events.LISTENER_UNREGISTERED, listener);
+			Logger.emit(Events.LISTENER_UNREGISTERED, listener);
 			Logger.debug('Unregistered listener', listener.name, 'listening to', listener.event);
 		}
 

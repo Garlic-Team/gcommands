@@ -12,7 +12,7 @@ export class PluginManager extends Collection<string, Plugin> {
 		if (plugin instanceof Plugin) {
 			if (this.has(plugin.name)) Logger.warn('Overwriting plugin', plugin.name);
 			this.set(plugin.name, plugin);
-			this.client.emit(Events.PLUGIN_REGISTERED, plugin);
+			Logger.emit(Events.PLUGIN_REGISTERED, plugin);
 			Logger.debug('Registered plugin', plugin.name);
 		} else Logger.warn('Plugin must be a instance of plugin');
 

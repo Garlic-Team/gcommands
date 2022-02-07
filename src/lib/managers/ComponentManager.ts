@@ -14,7 +14,7 @@ export class ComponentManager extends Collection<string, Component> {
 			if (this.client) component.initialize(this.client);
 			if (Plugins.currentlyLoading) component.owner = Plugins.currentlyLoading;
 			this.set(component.name, component);
-			this.client.emit(Events.COMPONENT_REGISTERED, component);
+			Logger.emit(Events.COMPONENT_REGISTERED, component);
 			Logger.debug('Registered component', component.name, component.owner ? `(by plugin ${component.owner})` : '');
 		} else Logger.warn('Component must be a instance of Component');
 
@@ -25,7 +25,7 @@ export class ComponentManager extends Collection<string, Component> {
 		const component = this.get(componentName);
 		if (component) {
 			this.delete(componentName);
-			this.client.emit(Events.COMPONENT_UNREGISTERED, component);
+			Logger.emit(Events.COMPONENT_UNREGISTERED, component);
 			Logger.debug('Unregistered component', component.name);
 		}
 

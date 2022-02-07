@@ -13,7 +13,7 @@ export class CommandManager extends Collection<string, Command> {
 			if (this.client) command.initialize(this.client);
 			if (Plugins.currentlyLoading) command.owner = Plugins.currentlyLoading;
 			this.set(command.name, command);
-			this.client.emit(Events.COMMAND_REGISTERED, command);
+			Logger.emit(Events.COMMAND_REGISTERED, command);
 			Logger.debug('Registered command', command.name, command.owner ? `(by plugin ${command.owner})` : '');
 		} else Logger.warn('Command must be a instance of Command');
 
@@ -24,7 +24,7 @@ export class CommandManager extends Collection<string, Command> {
 		const command = this.get(commandName);
 		if (command) {
 			this.delete(commandName);
-			this.client.emit(Events.COMMAND_UNREGISTERED, command);
+			Logger.emit(Events.COMMAND_UNREGISTERED, command);
 			Logger.debug('Unregistered command', command.name);
 		}
 
