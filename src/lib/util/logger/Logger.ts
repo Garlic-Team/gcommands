@@ -75,11 +75,6 @@ export declare interface ILogger {
 	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof GClientEvents>): this;
 }
 
-declare module 'discord.js' {
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
-	interface ClientEvents extends GClientEvents {}
-}
-
 export const enum LogLevel {
 	TRACE = 1,
 	DEBUG = 2,
