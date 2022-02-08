@@ -8,8 +8,8 @@ export class BooleanType extends MessageArgumentTypeBase {
 	value;
 
 	validate(content: string): boolean {
-		const yes = truthy.has(content.toLowerCase());
-		const no = falsy.has(content.toLowerCase());
+		const yes = truthy.has(content?.toLowerCase());
+		const no = falsy.has(content?.toLowerCase());
 
 		if (!yes && !no) return false;
 		else {

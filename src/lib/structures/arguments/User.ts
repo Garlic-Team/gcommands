@@ -6,7 +6,7 @@ export class UserType extends MessageArgumentTypeBase {
 	matches;
 
 	validate(content: string): boolean {
-		const matches = content.match(/([0-9]+)/);
+		const matches = content?.match(/([0-9]+)/);
 
 		if (!matches) return false;
 
