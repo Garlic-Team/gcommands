@@ -1,4 +1,4 @@
-import { Client, Collection, CommandInteractionOptionResolver, Guild, Message, TextChannel, User } from 'discord.js';
+import { Client, Collection, CommandInteractionOptionResolver, Guild, Message, MessageActionRow, MessageSelectMenu, SelectMenuInteraction, TextChannel, User } from 'discord.js';
 import type { GClient } from '../lib/GClient';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';
@@ -13,10 +13,38 @@ const cooldowns = new Collection<string, Collection<string, number>>();
 
 const checkValidation = async(arg: MessageArgumentTypes, content: string, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
 	if (!content) {
-		channel.send(`${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`);
-		const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
+		const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`
+		if (argument.type === ArgumentType.STRING && argument.choices?.length !== 0) {
+			const menu = new MessageSelectMenu()
+				.setCustomId('argument_choices')
+				.setMaxValues(1)
+				.setMinValues(0)
+				.setPlaceholder('Select a choice');
 
-		content = [...message.values()]?.[0]?.content;
+			menu.setOptions(
+				argument.choices.map(
+					ch => ({
+						label: ch.name,
+						value: ch.value
+					})
+				)
+			);
+
+			const message = await channel.send({
+				content: text,
+				components: [ new MessageActionRow().addComponents(menu) ]
+			});
+
+			const component: SelectMenuInteraction = await channel.awaitMessageComponent({ filter: (m) => m.componentType === 'SELECT_MENU' && m.user.id === user.id && m.channelId === channel.id && m.message.id === message.id && m.customId === 'argument_choices', time: 60000 }) as SelectMenuInteraction;
+	
+			component.deferUpdate();
+			content = component.values?.[0];
+		} else {
+			channel.send(text);
+			const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
+	
+			content = [...message.values()]?.[0]?.content;
+		}
 	}
 
 	const validate = arg.validate(content);
