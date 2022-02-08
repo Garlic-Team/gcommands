@@ -26,7 +26,7 @@ export enum Events {
 	'PLUGIN_REGISTERED' = 'pluginRegistered',
 }
 
-export interface GClientEvents {
+export interface LoggerEvents {
 	'handlerRun': [ctx: AutocompleteContext | CommandContext | ComponentContext];
 	'handlerError': [ctx: AutocompleteContext | CommandContext | ComponentContext, error: any];
 	'commandHandlerRun': [ctx: CommandContext];
@@ -46,33 +46,33 @@ export interface GClientEvents {
 
 
 export declare interface ILogger {
-	on<U extends keyof GClientEvents>(
-		event: U, listener: GClientEvents[U]
+	on<U extends keyof LoggerEvents>(
+		event: U, listener: LoggerEvents[U]
 	  ): this;
   
-	on<K extends keyof GClientEvents>(event: K, listener: (...args: GClientEvents[K]) => Awaitable<void>): this;
+	on<K extends keyof LoggerEvents>(event: K, listener: (...args: LoggerEvents[K]) => Awaitable<void>): this;
 	on<S extends string | symbol>(
-		event: Exclude<S, keyof GClientEvents>,
+		event: Exclude<S, keyof LoggerEvents>,
 		listener: (...args: any[]) => Awaitable<void>,
 	): this;
 
-	once<K extends keyof GClientEvents>(event: K, listener: (...args: GClientEvents[K]) => Awaitable<void>): this;
+	once<K extends keyof LoggerEvents>(event: K, listener: (...args: LoggerEvents[K]) => Awaitable<void>): this;
 	once<S extends string | symbol>(
-		event: Exclude<S, keyof GClientEvents>,
+		event: Exclude<S, keyof LoggerEvents>,
 		listener: (...args: any[]) => Awaitable<void>,
 	): this;
 
-	emit<K extends keyof GClientEvents>(event: K, ...args: GClientEvents[K]): boolean;
-	emit<S extends string | symbol>(event: Exclude<S, keyof GClientEvents>, ...args: unknown[]): boolean;
+	emit<K extends keyof LoggerEvents>(event: K, ...args: LoggerEvents[K]): boolean;
+	emit<S extends string | symbol>(event: Exclude<S, keyof LoggerEvents>, ...args: unknown[]): boolean;
 
-	off<K extends keyof GClientEvents>(event: K, listener: (...args: GClientEvents[K]) => Awaitable<void>): this;
+	off<K extends keyof LoggerEvents>(event: K, listener: (...args: LoggerEvents[K]) => Awaitable<void>): this;
 	off<S extends string | symbol>(
-		event: Exclude<S, keyof GClientEvents>,
+		event: Exclude<S, keyof LoggerEvents>,
 		listener: (...args: any[]) => Awaitable<void>,
 	): this;
 
-	removeAllListeners<K extends keyof GClientEvents>(event?: K): this;
-	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof GClientEvents>): this;
+	removeAllListeners<K extends keyof LoggerEvents>(event?: K): this;
+	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof LoggerEvents>): this;
 }
 
 export const enum LogLevel {
