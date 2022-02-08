@@ -47,6 +47,8 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string, client
 		}
 	}
 
+	if (!content) return channel.send(`${user.toString()}, Time :(`);
+
 	const validate = arg.validate(content);
 	if (!validate) return checkValidation(arg, null, client, guild, argument, channel, user);
 
