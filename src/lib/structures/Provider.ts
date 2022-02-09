@@ -21,39 +21,33 @@ export declare interface Provider {
 	delete(...args): Promise<any> | any;
 }
 
-const throwError = (error, name) => {
-	const trace = Util.resolveValidationErrorTrace([name]);
-
-	Logger.error(error, trace);
-};
-
 export class Provider extends EventEmitter {
 	init() {
-		throwError('Init method is not implemented!', this.constructor.name);
+		Util.throwError('Init method is not implemented!', this.constructor.name);
 		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	insert(...args) {
-		throwError('Insert method is not implemented!', this.constructor.name);
+		Util.throwError('Insert method is not implemented!', this.constructor.name);
 		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	get(...args) {
-		throwError('Get method is not implemented!', this.constructor.name);
+		Util.throwError('Get method is not implemented!', this.constructor.name);
 		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	update(...args) {
-		throwError('Update method is not implemented!', this.constructor.name);
+		Util.throwError('Update method is not implemented!', this.constructor.name);
 		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	delete(...args) {
-		throwError('Delete method is not implemented!', this.constructor.name);
+		Util.throwError('Delete method is not implemented!', this.constructor.name);
 		return;
 	}
 }
