@@ -4,7 +4,7 @@ import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';
 import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
-import { Logger } from '../lib/util/logger/Logger';
+import { Logger, Events } from '../lib/util/logger/Logger';
 import { Argument, ArgumentType } from '../lib/structures/Argument';
 import { MessageArgumentTypeBase, MessageArgumentTypes } from '../lib/structures/arguments/base';
 import { Util } from '../lib/util/Util';
@@ -144,6 +144,8 @@ export async function MessageCommandHandler(
 	if (!(await command.inhibit(ctx))) return;
 	await Promise.resolve(command.run(ctx))
 		.catch(async (error) => {
+			Logger.emit(Events.HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.COMMAND_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
@@ -156,6 +158,8 @@ export async function MessageCommandHandler(
 			else await errorReply();
 		})
 		.then(() => {
+			Logger.emit(Events.HANDLER_RUN, ctx);
+			Logger.emit(Events.COMMAND_HANDLER_RUN, ctx);
 			Logger.debug(`Successfully ran command (${command.name}) for ${message.author.username}`);
 		});
 }
