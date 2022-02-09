@@ -1,4 +1,4 @@
-import { Logger } from '../lib/util/logger/Logger';
+import Logger from 'js-logger';
 import LruCache from 'lru-cache';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 

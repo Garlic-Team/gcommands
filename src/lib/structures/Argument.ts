@@ -1,5 +1,5 @@
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
-import { Logger } from '../util/logger/Logger';
+import Logger from 'js-logger';
 import { z } from 'zod';
 import type { ApplicationCommandOptionType } from 'discord-api-types/v9';
 

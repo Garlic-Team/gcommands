@@ -1,7 +1,7 @@
 import type { GClient } from '../GClient';
 import type { ClientEvents, WSEventType } from 'discord.js';
 import { Listeners } from '../managers/ListenerManager';
-import { Logger } from '../util/logger/Logger';
+import Logger from 'js-logger';
 import { z } from 'zod';
 
 export interface ListenerOptions<WS extends boolean, Event extends WS extends true ? WSEventType : keyof ClientEvents> {

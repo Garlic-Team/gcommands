@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Logger } from '../lib/util/logger/Logger';
+import Logger from 'js-logger';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
 export class PrismaIOProvider extends Provider {

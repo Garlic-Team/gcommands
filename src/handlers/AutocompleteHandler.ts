@@ -2,7 +2,7 @@ import type { AutocompleteInteraction } from 'discord.js';
 import { AutocompleteContext } from '../lib/structures/contexts/AutocompleteContext';
 import type { Argument, ArgumentOptions } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import Logger from 'js-logger';
 import type { GClient } from '../lib/GClient';
 
 export async function AutocompleteHandler(interaction: AutocompleteInteraction) {
@@ -40,14 +40,10 @@ export async function AutocompleteHandler(interaction: AutocompleteInteraction) 
 
 	await Promise.resolve(argument.run(ctx))
 		.catch((error) => {
-			Logger.emit(Events.HANDLER_ERROR, ctx, error);
-			Logger.emit(Events.AUTOCOMPLETE_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 		})
 		.then(() => {
-			Logger.emit(Events.HANDLER_RUN, ctx);
-			Logger.emit(Events.AUTOCOMPLETE_HANDLER_RUN, ctx);
 			Logger.debug(
 				`Successfully ran autocomplete (${argument.name} -> ${command.name}) for ${interaction.user.username}`,
 			);

@@ -2,7 +2,7 @@ import { Listener } from '../lib/structures/Listener';
 import type { GClient } from '../lib/GClient';
 import type { Message } from 'discord.js';
 import { Handlers } from '../lib/managers/HandlerManager';
-import { Logger } from '../lib/util/logger/Logger';
+import Logger from 'js-logger';
 
 new Listener({
 	event: 'messageCreate',
