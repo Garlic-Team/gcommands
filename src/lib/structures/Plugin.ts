@@ -1,6 +1,6 @@
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
-import Logger from 'js-logger';
+import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
 
 const validationSchema = z

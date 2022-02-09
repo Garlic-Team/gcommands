@@ -1,4 +1,4 @@
-import Logger from 'js-logger';
+import { Logger } from '../util/logger/Logger';
 import { EventEmitter } from 'events';
 import { Util } from '../util/Util';
 

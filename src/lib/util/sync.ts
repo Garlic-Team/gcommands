@@ -2,7 +2,7 @@ import type { GClient } from '../GClient';
 import type { Command } from '../structures/Command';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
-import Logger from 'js-logger';
+import { Logger } from './logger/Logger';
 import { setTimeout } from 'node:timers';
 import { Commands } from '../managers/CommandManager';
 
