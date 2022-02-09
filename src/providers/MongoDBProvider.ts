@@ -1,4 +1,4 @@
-import Logger from 'js-logger';
+import { Logger } from '../lib/util/logger/Logger';
 import { Db, Document, Filter, FindOptions, MongoClient, UpdateFilter, UpdateOptions } from 'mongodb';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 

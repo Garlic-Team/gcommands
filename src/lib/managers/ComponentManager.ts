@@ -1,7 +1,7 @@
 import { Collection } from 'discord.js';
 import { Component } from '../structures/Component';
 import type { GClient } from '../GClient';
-import Logger from 'js-logger';
+import { Logger } from '../util/logger/Logger';
 import { Plugins } from './PluginManager';
 
 export class ComponentManager extends Collection<string, Component> {

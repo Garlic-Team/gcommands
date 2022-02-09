@@ -4,7 +4,7 @@ import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';
 import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
-import Logger from 'js-logger';
+import { Logger } from '../lib/util/logger/Logger';
 import { Argument, ArgumentType } from '../lib/structures/Argument';
 import { MessageArgumentTypeBase, MessageArgumentTypes } from '../lib/structures/arguments/base';
 import { Util } from '../lib/util/Util';
