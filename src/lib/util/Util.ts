@@ -1,5 +1,3 @@
-import { Logger } from './logger/Logger';
-
 export class Util {
 	/**
 	 * @deprecated We don't support arguments in object/array
@@ -96,22 +94,5 @@ export class Util {
 
 	static pad(number: number): string {
 		return (number < 10 ? '0' : '') + number;
-  }
-
-	static throwError(error, name): void {
-		const trace = Util.resolveValidationErrorTrace([name]);
-	
-		Logger.error(error, trace);
-	}
-
-	static toPascalCase(input: string): string {
-		return input
-			.replace(new RegExp(/[-_]+/, 'g'), ' ')
-			.replace(new RegExp(/[^\w\s]/, 'g'), '')
-			.replace(
-				new RegExp(/\s+(.)(\w*)/, 'g'),
-				($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`
-			)
-			.replace(new RegExp(/\w/), s => s.toUpperCase());
 	}
 }
