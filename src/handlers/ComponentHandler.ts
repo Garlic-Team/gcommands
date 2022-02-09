@@ -5,7 +5,7 @@ import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 import { Components } from '../lib/managers/ComponentManager';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { setTimeout } from 'node:timers';
-import Logger from 'js-logger';
+import { Logger, Events } from '../lib/util/logger/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -71,6 +71,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 
 	await Promise.resolve(component.run(ctx))
 		.catch(async (error) => {
+			Logger.emit(Events.HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.COMPONENT_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
@@ -84,6 +86,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 			else await errorReply();
 		})
 		.then(() => {
+			Logger.emit(Events.HANDLER_RUN, ctx);
+			Logger.emit(Events.COMPONENT_HANDLER_RUN, ctx);
 			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
 			Logger.debug(`Successfully ran component (${component.name}) for ${interaction.user.username}`);
 		});

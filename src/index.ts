@@ -1,4 +1,3 @@
-import Logger from 'js-logger';
 // Listeners
 import './listeners/Ready';
 import './listeners/InteractionCommandHandler';
@@ -29,24 +28,7 @@ export { Listeners, ListenerManager } from './lib/managers/ListenerManager';
 export { Handlers, HandlerManager } from './lib/managers/HandlerManager';
 
 // Logger
-Logger.useDefaults({
-	defaultLevel: Logger.TRACE,
-	formatter: function (messages: any, ctx) {
-		let color;
-		if (ctx.level === Logger.TRACE) color = '\x1b[91m';
-		if (ctx.level === Logger.DEBUG) color = '\x1b[2m';
-		if (ctx.level === Logger.INFO) color = '\x1b[36m';
-		if (ctx.level === Logger.TIME) color = '\x1b[97m';
-		if (ctx.level === Logger.WARN) color = '\x1b[93m';
-		if (ctx.level === Logger.ERROR) color = '\x1b[91m';
-
-		const date = new Date();
-		messages[0] = `${color}[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}/${ctx.level.name}]\x1b[0m ${
-			messages[0]
-		}`;
-	},
-});
-export { Logger };
+export * from './lib/util/logger/Logger';
 
 // Inhibitors
 export * as Inhibitor from './inhibitors';
