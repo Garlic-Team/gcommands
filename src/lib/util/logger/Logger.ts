@@ -7,6 +7,7 @@ import type { Component } from '../../structures/Component';
 import type { Listener } from '../../structures/Listener';
 import type { Plugin } from '../../structures/Plugin';
 import type { Awaitable } from 'discord.js';
+import EventEmitter from 'node:events';
 
 export enum Events {
 	'HANDLER_RUN' = 'handlerRun',
@@ -90,7 +91,7 @@ export const enum LogLevel {
 
 export type LogMethods = 'trace' | 'debug' | 'info' | 'time' | 'warn' | 'timeEnd' | 'error';
 
-export class ILogger {
+export class ILogger extends EventEmitter {
 	TRACE: LogLevel.TRACE;
 	DEBUG: LogLevel.DEBUG;
 	INFO: LogLevel.INFO;
@@ -101,6 +102,8 @@ export class ILogger {
 	level: LogLevel = LogLevel.TRACE;
 
 	constructor() {
+		super();
+		
 		this.TRACE = LogLevel.TRACE;
 		this.DEBUG = LogLevel.DEBUG;
 		this.INFO = LogLevel.INFO;
