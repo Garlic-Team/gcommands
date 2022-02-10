@@ -6,6 +6,7 @@ import { ArgumentType } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { Logger, Events } from '../lib/util/logger/Logger';
+import { Util } from '../lib/util/Util';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -19,7 +20,7 @@ export async function MessageCommandHandler(
 	const command = Commands.get(commandName);
 	if (!command && client.options?.unknownCommandMessage)
 		return message.reply({
-			content: client.responses.NOT_FOUND,
+			content: (await Util.getResponse('NOT_FOUND', { client })),
 		});
 
 	if (!command.type.includes(CommandType.MESSAGE)) return;
@@ -28,7 +29,7 @@ export async function MessageCommandHandler(
 		const cooldown = Handlers.cooldownHandler(message.author.id, command, cooldowns);
 		if (cooldown)
 			return message.reply({
-				content: client.responses.COOLDOWN.replace('{time}', String(cooldown)).replace(
+				content: (await Util.getResponse('COOLDOWN', { client })).replace('{time}', String(cooldown)).replace(
 					'{name}',
 					command.name + ' command',
 				),
@@ -96,11 +97,13 @@ export async function MessageCommandHandler(
 			Logger.emit(Events.COMMAND_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
-			const errorReply = () =>
+
+			const errorReply = async() =>
 				ctx.safeReply({
-					content: client.responses.ERROR,
+					content: (await Util.getResponse('ERROR', { client })),
 					components: [],
 				});
+			
 			if (typeof command.onError === 'function')
 				await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());
 			else await errorReply();

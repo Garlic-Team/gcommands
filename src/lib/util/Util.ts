@@ -1,3 +1,7 @@
+import type { Client, CommandInteraction, ContextMenuInteraction } from 'discord.js';
+import type { GClient } from '../GClient';
+import { Plugins } from '../managers/PluginManager';
+
 export class Util {
 	/**
 	 * @deprecated We don't support arguments in object/array
@@ -96,7 +100,15 @@ export class Util {
 		return (number < 10 ? '0' : '') + number;
 	}
 
-	static languageHook() {
-		
+	static async getResponse(value: string, interaction: { client: Client | GClient }) {
+		const languagePlugin = Plugins.get('@gcommands/plugin-language');
+
+		if (languagePlugin === null) return (interaction.client as GClient).responses[value];
+		else {
+			const { LanguageManager } = await import('@gcommands/plugin-language');
+
+			// @ts-expect-error Need update @gcommands/plugin-language
+			return LanguageManager.__(interaction, value);
+		}
 	}
 }
