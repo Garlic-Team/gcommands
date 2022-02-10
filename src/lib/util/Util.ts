@@ -1,4 +1,4 @@
-import type { Client, CommandInteraction, ContextMenuInteraction } from 'discord.js';
+import type { Client } from 'discord.js';
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
 
