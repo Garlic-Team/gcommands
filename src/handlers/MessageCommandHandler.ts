@@ -16,24 +16,28 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 	if (!content) {
 		const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`;
 		if (argument.type === ArgumentType.STRING && argument.choices?.length !== 0) {
-			const menu = new MessageSelectMenu()
-				.setCustomId('argument_choices')
-				.setMaxValues(1)
-				.setMinValues(0)
-				.setPlaceholder('Select a choice');
-
-			menu.setOptions(
-				argument.choices.map(
-					ch => ({
-						label: ch.name,
-						value: ch.value
-					})
-				)
-			);
-
 			const message = await channel.send({
 				content: text,
-				components: [ new MessageActionRow().addComponents(menu) ]
+				components: [
+					{
+						type: 1,
+						components: [
+							{
+								type: 3,
+								customId: 'argument_choices',
+								minValues: 0,
+								maxValues: 1,
+								disabled: false,
+								options: argument.choices.map(
+									ch => ({
+										label: ch.name,
+										value: ch.value
+									})
+								)
+							}
+						]
+					}
+				]
 			});
 
 			const component: SelectMenuInteraction = await channel.awaitMessageComponent({ filter: (m) => m.componentType === 'SELECT_MENU' && m.user.id === user.id && m.channelId === channel.id && m.message.id === message.id && m.customId === 'argument_choices', time: 60000 }) as SelectMenuInteraction;
