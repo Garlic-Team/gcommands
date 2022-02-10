@@ -1,5 +1,6 @@
 import { Util } from '../../util/Util';
 import { Argument, ArgumentType } from '../Argument';
+import type { AttachmentType } from './Attachment';
 import type { BooleanType } from './Boolean';
 import type { ChannelType } from './Channel';
 import type { IntegerType } from './Integer';
@@ -9,7 +10,7 @@ import type { RoleType } from './Role';
 import type { StringType } from './String';
 import type { UserType } from './User';
 
-export type MessageArgumentTypes = BooleanType | ChannelType | IntegerType | MentionableType | NumberType | RoleType | StringType | UserType;
+export type MessageArgumentTypes = BooleanType | ChannelType | IntegerType | MentionableType | NumberType | RoleType | StringType | UserType | AttachmentType;
 
 export class MessageArgumentTypeBase {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -56,6 +57,11 @@ export class MessageArgumentTypeBase {
 		case ArgumentType.USER: {
 			const { UserType } = await import('./User');
 			return new UserType();
+		}
+		// @ts-expect-error TODO: Use ArgumentType.ATTACHMENT | Need wait for https://github.com/Garlic-Team/gcommands/pull/314 to be merged (:
+		case 11: {
+			const { AttachmentType } = await import('./Attachment');
+			return new AttachmentType();
 		}
 		}
 	}

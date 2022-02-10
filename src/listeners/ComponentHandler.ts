@@ -1,7 +1,7 @@
 import { Listener } from '../lib/structures/Listener';
 import type { Interaction } from 'discord.js';
 import { Handlers } from '../lib/managers/HandlerManager';
-import { Logger } from './logger/Logger';;
+import { Logger } from '../lib/util/logger/Logger';
 
 new Listener({
 	event: 'interactionCreate',

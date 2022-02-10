@@ -1,4 +1,4 @@
-import { Client, Collection, CommandInteractionOptionResolver, Guild, Message, MessageActionRow, MessageSelectMenu, SelectMenuInteraction, TextChannel, User } from 'discord.js';
+import { Client, Collection, CommandInteractionOptionResolver, Guild, Message, MessageActionRow, MessageAttachment, MessageSelectMenu, SelectMenuInteraction, TextChannel, User } from 'discord.js';
 import type { GClient } from '../lib/GClient';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';
@@ -8,10 +8,11 @@ import { Logger, Events } from '../lib/util/logger/Logger';
 import { Argument, ArgumentType } from '../lib/structures/Argument';
 import { MessageArgumentTypeBase, MessageArgumentTypes } from '../lib/structures/arguments/base';
 import { Util } from '../lib/util/Util';
+import { AttachmentType } from '../lib/structures/arguments/Attachment';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
-const checkValidation = async(arg: MessageArgumentTypes, content: string, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
+const checkValidation = async(arg: MessageArgumentTypes, content: string | MessageAttachment, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
 	if (!content) {
 		const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`
 		if (argument.type === ArgumentType.STRING && argument.choices?.length !== 0) {
@@ -43,13 +44,15 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string, client
 			channel.send(text);
 			const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
 	
-			content = [...message.values()]?.[0]?.content;
+			// @ts-expect-error TODO: Use ArgumentType.ATTACHMENT | Need wait for https://github.com/Garlic-Team/gcommands/pull/314 to be merged (:
+			if (argument.type == 11) {
+				content = [...[...message.values()]?.[0]?.attachments?.values()]?.[0];
+			}
+			else content = [...message.values()]?.[0]?.content;
 		}
 	}
 
-	if (!content) return channel.send(`${user.toString()}, Time :(`);
-
-	const validate = arg.validate(content);
+	const validate = arg instanceof AttachmentType ? arg.validate(content) : arg.validate(content as string);
 	if (!validate) return checkValidation(arg, null, client, guild, argument, channel, user);
 
 	return arg.resolve(argument, client, guild);
