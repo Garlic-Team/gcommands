@@ -14,7 +14,7 @@ const cooldowns = new Collection<string, Collection<string, number>>();
 
 const checkValidation = async(arg: MessageArgumentTypes, content: string | MessageAttachment, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
 	if (!content) {
-		const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`
+		const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`;
 		if (argument.type === ArgumentType.STRING && argument.choices?.length !== 0) {
 			const menu = new MessageSelectMenu()
 				.setCustomId('argument_choices')
@@ -46,7 +46,8 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 	
 			// @ts-expect-error TODO: Use ArgumentType.ATTACHMENT | Need wait for https://github.com/Garlic-Team/gcommands/pull/314 to be merged (:
 			if (argument.type == 11) {
-				content = [...[...message.values()]?.[0]?.attachments?.values()]?.[0];
+				const attachments = [...message.values()]?.[0]?.attachments;
+				content = attachments ? [...attachments.values()][0] : null;
 			}
 			else content = [...message.values()]?.[0]?.content;
 		}
