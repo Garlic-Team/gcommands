@@ -107,8 +107,9 @@ export class Util {
 		else {
 			const { LanguageManager } = await import('@gcommands/plugin-language');
 
-			// @ts-expect-error Need update @gcommands/plugin-language
-			return LanguageManager.__(interaction, value);
+			const text = LanguageManager.__(interaction, value);
+			if (text) return text;
+			else return (interaction.client as GClient).responses[value];
 		}
 	}
 }
