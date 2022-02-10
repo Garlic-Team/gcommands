@@ -95,4 +95,8 @@ export class Util {
 	static pad(number: number): string {
 		return (number < 10 ? '0' : '') + number;
 	}
+
+	static languageHook() {
+		
+	}
 }
