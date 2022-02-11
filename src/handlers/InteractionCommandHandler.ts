@@ -5,6 +5,7 @@ import { Handlers } from '../lib/managers/HandlerManager';
 import { Commands } from '../lib/managers/CommandManager';
 import { setTimeout } from 'node:timers';
 import { Logger, Events } from '../lib/util/logger/Logger';
+import { Util } from '../lib/util/Util';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -14,7 +15,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	const command = Commands.get(interaction.commandName);
 	if (!command && client.options?.unknownCommandMessage)
 		return interaction.reply({
-			content: client.responses.NOT_FOUND,
+			content: (await Util.getResponse('NOT_FOUND', interaction)),
 			ephemeral: true,
 		});
 
@@ -22,7 +23,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 		const cooldown = Handlers.cooldownHandler(interaction.user.id, command, cooldowns);
 		if (cooldown)
 			return interaction.reply({
-				content: client.responses.COOLDOWN.replace('{time}', String(cooldown)).replace(
+				content: (await Util.getResponse('COOLDOWN', interaction)).replace('{time}', String(cooldown)).replace(
 					'{name}',
 					command.name + ' command',
 				),
@@ -66,9 +67,10 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 			Logger.emit(Events.COMMAND_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
-			const errorReply = () =>
+			
+			const errorReply = async() =>
 				ctx.safeReply({
-					content: client.responses.ERROR,
+					content: (await Util.getResponse('ERROR', interaction)),
 					components: [],
 					ephemeral: true,
 				});
