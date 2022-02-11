@@ -1,5 +1,5 @@
 import { Firestore } from '@google-cloud/firestore';
-import Logger from 'js-logger';
+import { Logger } from '../lib/util/logger/Logger';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 
 export class FirestoreProvider extends Provider {

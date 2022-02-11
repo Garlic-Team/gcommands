@@ -4,7 +4,7 @@ import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { Commands } from '../lib/managers/CommandManager';
 import { setTimeout } from 'node:timers';
-import Logger from 'js-logger';
+import { Logger, Events } from '../lib/util/logger/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -62,6 +62,8 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 
 	await Promise.resolve(command.run(ctx))
 		.catch(async (error) => {
+			Logger.emit(Events.HANDLER_ERROR, ctx, error);
+			Logger.emit(Events.COMMAND_HANDLER_ERROR, ctx, error);
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 			const errorReply = () =>
@@ -76,6 +78,8 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 			else await errorReply();
 		})
 		.then(() => {
+			Logger.emit(Events.HANDLER_RUN, ctx);
+			Logger.emit(Events.COMMAND_HANDLER_RUN, ctx);
 			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
 			Logger.debug(`Successfully ran command (${command.name}) for ${interaction.user.username}`);
 		});

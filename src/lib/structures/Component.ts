@@ -1,7 +1,7 @@
 import { AutoDeferType, GClient } from '../GClient';
 import type { ComponentContext } from './contexts/ComponentContext';
 import { Components } from '../managers/ComponentManager';
-import Logger from 'js-logger';
+import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
 
 export enum ComponentType {

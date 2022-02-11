@@ -91,4 +91,8 @@ export class Util {
 		array = array.filter(item => typeof item === 'string');
 		return `(${array.join(' -> ') || 'unknown'})`;
 	}
+
+	static pad(number: number): string {
+		return (number < 10 ? '0' : '') + number;
+	}
 }
