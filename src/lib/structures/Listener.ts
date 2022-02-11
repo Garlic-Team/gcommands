@@ -39,7 +39,7 @@ export class Listener<
 
 	public constructor(options: ListenerOptions<WS, Event>) {
 		validationSchema
-			.parseAsync(options)
+			.parseAsync({ ...options, ...this })
 			.then((options) => {
 				this.event = options.event;
 				this.name = options.name;

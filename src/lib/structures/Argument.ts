@@ -104,7 +104,7 @@ export class Argument {
 			options.arguments = options.options;
 		}
 		validationSchema
-			.parseAsync(options)
+			.parseAsync({ ...options, ...this })
 			.then((options) => {
 				this.name = options.name;
 				this.description = options.description;

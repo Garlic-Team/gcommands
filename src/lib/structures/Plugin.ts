@@ -16,7 +16,7 @@ export class Plugin {
 
 	public constructor(name: string, run: (client: GClient) => any) {
 		validationSchema
-			.parseAsync({ name, run })
+			.parseAsync({ name, run, ...this })
 			.then((options) => {
 				this.name = options.name;
 				this.run = options.run;
