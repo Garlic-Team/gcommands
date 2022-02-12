@@ -48,7 +48,9 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 			channel.send(text);
 			const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
 	
-			// @ts-expect-error TODO: Use ArgumentType.ATTACHMENT | Need wait for https://github.com/Garlic-Team/gcommands/pull/314 to be merged (:
+			/**
+			 * TODO: Use ArgumentType.ATTACHMENT | Need wait for https://github.com/Garlic-Team/gcommands/pull/314 to be merged (:
+			 * @ts-expect-error */
 			if (argument.type == 11) {
 				const attachments = [...message.values()]?.[0]?.attachments;
 				content = attachments ? [...attachments.values()][0] : null;
@@ -60,7 +62,7 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 	const validate = arg instanceof AttachmentType ? arg.validate(content) : arg.validate(content as string);
 	if (!validate) return checkValidation(arg, null, client, guild, argument, channel, user);
 
-	return arg.resolve(argument, client, guild);
+	return arg.resolve(argument);
 };
 
 export async function MessageCommandHandler(
@@ -111,7 +113,7 @@ export async function MessageCommandHandler(
 		args[0].options[0].options = args[0].options.splice(1);*/
 
 	for (const argument in command.arguments) {
-		const arg = await MessageArgumentTypeBase.createArgument(command.arguments[argument].type);
+		const arg = await MessageArgumentTypeBase.createArgument(command.arguments[argument].type, message.guild);
 
 		args[argument] = await checkValidation(arg, args[argument] as string, client, message.guild, command.arguments[argument], message.channel as TextChannel, message.author);
 	}

@@ -1,26 +1,34 @@
 import type { Client, Guild } from 'discord.js';
+import { userRegexp } from '../../util/regexes';
 import { Argument, ArgumentType } from '../Argument';
 import { MessageArgumentTypeBase } from './base';
 
 export class UserType extends MessageArgumentTypeBase {
-	matches;
+	value;
+	guild: Guild;
+	client: Client;
+	constructor(guild: Guild) {
+		super();
+
+		this.client = guild.client;
+		this.guild = guild;
+	}
 
 	validate(content: string): boolean {
-		const matches = content?.match(/([0-9]+)/);
+		const matches = userRegexp.exec(content);
+		if (!matches || !this.client.users.cache.get(matches?.[1])) return false;
 
-		if (!matches) return false;
-
-		this.matches = matches;
+		this.value = matches[1];
 
 		return true;
 	}
 
-	resolve(argument: Argument, client: Client, guild: Guild) {
+	resolve(argument: Argument) {
 		return {
 			...argument.toJSON(),
 			type: ArgumentType[argument.type],
-			user: client.users.cache.get(this.matches[1]),
-			member: guild.members?.cache?.get(this.matches[1])
+			user: this.client.users.cache.get(this.value),
+			member: this.guild.members.cache.get(this.value)
 		};
 	}
 }
