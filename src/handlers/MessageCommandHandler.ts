@@ -91,27 +91,6 @@ export async function MessageCommandHandler(
 			});
 	}
 
-	/*args = args.map(
-		(arg, i) =>
-			new Object({
-				name: command.arguments[i].name,
-				type: command.arguments[i].type,
-				choices: command.arguments[i].choices,
-				options: [],
-				value: arg,
-			}),
-	);
-
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	if (args[0]?.type === (ArgumentType.SUB_COMMAND_GROUP || ArgumentType.SUB_COMMAND)) args[0].options = args.splice(1);
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	if (args[0]?.type === ArgumentType.SUB_COMMAND_GROUP && args[0]?.options[0]?.type === ArgumentType.SUB_COMMAND)
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		args[0].options[0].options = args[0].options.splice(1);*/
-
 	for (const argument in command.arguments) {
 		const arg = await MessageArgumentTypeBase.createArgument(command.arguments[argument].type, message.guild);
 
