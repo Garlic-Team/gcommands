@@ -37,19 +37,7 @@ const validationSchema = z
 			)
 			.array()
 			.nonempty(),
-		inhibitors: z
-			.union([
-				z
-					.object({
-						run: z.function().args(z.any()),
-					})
-					.strict()
-					.required()
-					.passthrough(),
-				z.function().args(z.any()),
-			])
-			.array()
-			.optional(),
+		inhibitors: z.any().optional(),
 		guildId: z.string().optional(),
 		cooldown: z.string().optional(),
 		autoDefer: z
@@ -83,7 +71,7 @@ export class Component {
 			.then((options) => {
 				this.name = options.name || Component.defaults?.name;
 				this.type = options.type || Component.defaults?.type;
-				this.inhibitors = (options.inhibitors as ComponentInhibitors) || Component.defaults?.inhibitors;
+				this.inhibitors = options.inhibitors || Component.defaults?.inhibitors;
 				this.guildId = options.guildId || Component.defaults?.guildId;
 				this.cooldown = options.cooldown || Component.defaults?.cooldown;
 				this.fileName = options.fileName || Component.defaults?.fileName;

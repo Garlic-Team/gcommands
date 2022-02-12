@@ -42,19 +42,7 @@ const validationSchema = z
 			.nonempty(),
 		arguments: z.any().array().optional(),
 		description: z.string().max(100).optional(),
-		inhibitors: z
-			.union([
-				z
-					.object({
-						run: z.function().args(z.any()),
-					})
-					.strict()
-					.required()
-					.passthrough(),
-				z.function().args(z.any()),
-			])
-			.array()
-			.optional(),
+		inhibitors: z.any().array().optional(),
 		guildId: z.string().optional(),
 		cooldown: z.string().optional(),
 		autoDefer: z
@@ -95,7 +83,7 @@ export class Command {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
 				});
-				this.inhibitors = (options.inhibitors as CommandInhibitors) || Command.defaults?.inhibitors;
+				this.inhibitors = options.inhibitors || Command.defaults?.inhibitors;
 				this.guildId = options.guildId || Command.defaults?.guildId;
 				this.cooldown = options.cooldown || Command.defaults?.cooldown;
 				this.fileName = options.fileName || Command.defaults?.fileName;
