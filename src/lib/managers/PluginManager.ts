@@ -2,7 +2,7 @@ import { Collection } from 'discord.js';
 import { Plugin } from '../structures/Plugin';
 import type { GClient } from '../GClient';
 import { pluginFinder } from '../loaders/pluginFinder';
-import Logger from 'js-logger';
+import { Logger, Events } from '../util/logger/Logger';
 
 export class PluginManager extends Collection<string, Plugin> {
 	private client: GClient;
@@ -11,8 +11,8 @@ export class PluginManager extends Collection<string, Plugin> {
 	public register(plugin: any): PluginManager {
 		if (plugin instanceof Plugin) {
 			if (this.has(plugin.name)) Logger.warn('Overwriting plugin', plugin.name);
-			if (!Plugin.validate(plugin)) return;
 			this.set(plugin.name, plugin);
+			Logger.emit(Events.PLUGIN_REGISTERED, plugin);
 			Logger.debug('Registered plugin', plugin.name);
 		} else Logger.warn('Plugin must be a instance of plugin');
 

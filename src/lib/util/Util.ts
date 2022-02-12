@@ -1,3 +1,7 @@
+import type { Client } from 'discord.js';
+import type { GClient } from '../GClient';
+import { Plugins } from '../managers/PluginManager';
+
 export class Util {
 	/**
 	 * @deprecated We don't support arguments in object/array
@@ -90,5 +94,22 @@ export class Util {
 	static resolveValidationErrorTrace(array: Array<any>): string {
 		array = array.filter(item => typeof item === 'string');
 		return `(${array.join(' -> ') || 'unknown'})`;
+	}
+
+	static pad(number: number): string {
+		return (number < 10 ? '0' : '') + number;
+	}
+
+	static async getResponse(value: string, interaction: { client: Client | GClient }) {
+		const languagePlugin = Plugins.get('@gcommands/plugin-language');
+
+		if (languagePlugin !== null) {
+			const { LanguageManager } = await import('@gcommands/plugin-language');
+
+			const text = LanguageManager.__(interaction, value);
+			if (text) return text;
+		}
+
+		return (interaction.client as GClient).responses[value];
 	}
 }

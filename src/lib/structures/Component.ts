@@ -1,8 +1,8 @@
 import { AutoDeferType, GClient } from '../GClient';
 import type { ComponentContext } from './contexts/ComponentContext';
 import { Components } from '../managers/ComponentManager';
-import Logger from 'js-logger';
-import { Util } from '../util/Util';
+import { Logger } from '../util/logger/Logger';
+import { z } from 'zod';
 
 export enum ComponentType {
 	'BUTTON' = 1,
@@ -24,33 +24,67 @@ export interface ComponentOptions {
 	onError?: (interaction: ComponentContext, error: any) => any;
 }
 
+const validationSchema = z
+	.object({
+		name: z
+			.string()
+			.max(32)
+			.regex(/^[a-z1-9]/),
+		type: z
+			.union([z.string(), z.nativeEnum(ComponentType)])
+			.transform((arg) =>
+				typeof arg === 'string' && Object.keys(ComponentType).includes(arg) ? ComponentType[arg] : arg,
+			)
+			.array()
+			.nonempty(),
+		inhibitors: z.any().optional(),
+		guildId: z.string().optional(),
+		cooldown: z.string().optional(),
+		autoDefer: z
+			.union([z.string(), z.nativeEnum(AutoDeferType)])
+			.transform((arg) => (Object.keys(AutoDeferType).includes(String(arg)) ? AutoDeferType[arg] : arg))
+			.optional(),
+		fileName: z.string().optional(),
+		run: z.function(),
+		onError: z.function().optional(),
+	})
+	.passthrough();
+
 export class Component {
 	public client: GClient;
-	public readonly name: string;
-	public readonly type: Array<ComponentType | keyof typeof ComponentType>;
-	public readonly inhibitors: ComponentInhibitors = [];
+	public name: string;
+	public type: Array<ComponentType | keyof typeof ComponentType>;
+	public inhibitors: ComponentInhibitors = [];
 	public guildId?: string;
 	private static defaults: Partial<ComponentOptions>;
-	public readonly cooldown?: string;
-	public readonly fileName?: string;
-	public readonly run: (ctx: ComponentContext) => any;
-	public readonly onError?: (ctx: ComponentContext, error: any) => any;
+	public cooldown?: string;
+	public fileName?: string;
+	public run: (ctx: ComponentContext) => any;
+	public onError?: (ctx: ComponentContext, error: any) => any;
 	public owner?: string;
 	public reloading = false;
-	public readonly autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
+	public autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
 
 	public constructor(options: ComponentOptions) {
-		Object.assign(this, Component.defaults);
-		Object.assign(this, options);
+		validationSchema
+			.parseAsync({ ...options, ...this })
+			.then((options) => {
+				this.name = options.name || Component.defaults?.name;
+				this.type = options.type || Component.defaults?.type;
+				this.inhibitors = options.inhibitors || Component.defaults?.inhibitors;
+				this.guildId = options.guildId || Component.defaults?.guildId;
+				this.cooldown = options.cooldown || Component.defaults?.cooldown;
+				this.fileName = options.fileName || Component.defaults?.fileName;
+				this.run = options.run || Component.defaults?.run;
+				this.onError = options.onError || Component.defaults?.onError;
+				this.autoDefer = options.autoDefer || Component.defaults?.autoDefer;
 
-		if (Array.isArray(this.type))
-			this.type = this.type.map((type) =>
-				typeof type === 'string' && Object.keys(ComponentType).includes(type) ? ComponentType[type] : type,
-			);
-		if (typeof this.autoDefer === 'string' && Object.keys(AutoDeferType).includes(this.autoDefer))
-			this.autoDefer = AutoDeferType[this.autoDefer];
-
-		if (this.validate()) Components.register(this);
+				Components.register(this);
+			})
+			.catch((error) => {
+				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				if (error.stack) Logger.trace(error.stack);
+			});
 	}
 
 	public initialize(client: GClient): void {
@@ -64,6 +98,8 @@ export class Component {
 	}
 
 	public async inhibit(ctx: ComponentContext): Promise<boolean> {
+		if (!this.inhibitors) return true;
+
 		for await (const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
@@ -94,34 +130,15 @@ export class Component {
 	}
 
 	public static setDefaults(defaults: Partial<ComponentOptions>): void {
-		Component.defaults = defaults;
-	}
-
-	private validate(): boolean | void {
-		const trace = Util.resolveValidationErrorTrace([this.name, this.fileName]);
-
-		if (!this.name) return Logger.warn('Component must have a name', trace);
-		else if (typeof this.name !== 'string') return Logger.warn('Component name must be a string', trace);
-		else if (!Array.isArray(this.type) || !this.type.every((type) => Object.values(ComponentType).includes(type)))
-			return Logger.warn('Component type must be a array of ComponentType', trace);
-		else if (
-			!this.inhibitors.every((inhibitor) => typeof inhibitor !== 'function' && typeof inhibitor?.run !== 'function')
-		)
-			return Logger.warn(
-				'Component inhibitors must be a array of functions/object with run function or undefined',
-				trace,
-			);
-		else if (this.guildId && typeof this.guildId !== 'string')
-			return Logger.warn('Component guildId must be a string or undefined', trace);
-		else if (this.cooldown && typeof this.cooldown !== 'string')
-			return Logger.warn('Component cooldown must be a string or undefined', trace);
-		else if (this.autoDefer && !Object.values(AutoDeferType).includes(this.autoDefer))
-			return Logger.warn('Component autoDefer must be one of AutoDeferType or undefined', trace);
-		else if (this.fileName && typeof this.fileName !== 'string')
-			return Logger.warn('Component filePath must be a string or undefined', trace);
-		else if (typeof this.run !== 'function') return Logger.warn('Component must have a run function', trace);
-		else if (this.onError && typeof this.onError !== 'function')
-			return Logger.warn('Component onError must be a function or undefined', trace);
-		else return true;
+		validationSchema
+			.partial()
+			.parseAsync(defaults)
+			.then((defaults) => {
+				Component.defaults = defaults as Partial<ComponentOptions>;
+			})
+			.catch((error) => {
+				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				if (error.stack) Logger.trace(error.stack);
+			});
 	}
 }

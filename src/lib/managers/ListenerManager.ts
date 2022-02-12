@@ -1,7 +1,7 @@
 import type { GClient } from '../GClient';
 import { Listener } from '../structures/Listener';
 import { ClientEvents, Collection, WSEventType } from 'discord.js';
-import Logger from 'js-logger';
+import { Logger, Events } from '../util/logger/Logger';
 import { Plugins } from './PluginManager';
 
 export class ListenerManager extends Collection<string, Listener> {
@@ -13,10 +13,10 @@ export class ListenerManager extends Collection<string, Listener> {
 				this.get(listener.name).unregister();
 				if (!this.get(listener.name)?.reloading) Logger.warn('Overwriting listener', listener.name);
 			}
-			if (!Listener.validate(listener)) return;
 			if (this.client) this.initialize(listener);
 			if (Plugins.currentlyLoading) listener.owner = Plugins.currentlyLoading;
 			this.set(listener.name, listener);
+			Logger.emit(Events.LISTENER_REGISTERED, listener);
 			Logger.debug(
 				'Registered listener',
 				listener.name,
@@ -43,6 +43,7 @@ export class ListenerManager extends Collection<string, Listener> {
 					: this.client.off(listener.event as keyof ClientEvents, listener._run);
 			}
 
+			Logger.emit(Events.LISTENER_UNREGISTERED, listener);
 			Logger.debug('Unregistered listener', listener.name, 'listening to', listener.event);
 		}
 

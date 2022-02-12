@@ -28,3 +28,5 @@
   color: '276bd1'
 - name: 'chore'
   color: 'ffffff'
+- name: 'feature request'
+  color: 'fcf95a'
