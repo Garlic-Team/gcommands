@@ -98,6 +98,8 @@ export async function MessageCommandHandler(
 	}
 
 	for (const argument in command.arguments) {
+		if ([ArgumentType.SUB_COMMAND, ArgumentType.SUB_COMMAND_GROUP].includes(command.arguments[argument].type as ArgumentType)) continue;
+		
 		const arg = await MessageArgumentTypeBase.createArgument(command.arguments[argument].type, message.guild);
 		const check = await checkValidation(arg, args[argument] as string, client, message.guild, command.arguments[argument], message.channel as TextChannel, message.author);
 
