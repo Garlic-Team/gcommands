@@ -1,5 +1,6 @@
 {
   "NOT_FOUND": "Looks like that command went to play hide and seek!",
   "ERROR": "Something went wrong",
-  "COOLDOWN": "You have to wait {time} before using the {name} again"
+  "COOLDOWN": "You have to wait {time} before using the {name} again",
+  "ARGUMENT_REQUIRED": "{user}, please define argument {name}, type: `{type}`"
 }
