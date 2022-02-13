@@ -77,7 +77,9 @@ const validationSchema = z
 		arguments: z.any().array().optional(),
 		channelTypes: z
 			.union([z.string(), z.nativeEnum(ChannelType)])
-			.transform((arg) => (Object.keys(ChannelType).includes(String(arg)) ? ChannelType[arg] : arg))
+			.transform((arg) =>
+				typeof arg === 'string' && Object.keys(ChannelType).includes(arg) ? ChannelType[arg] : arg,
+			)
 			.array()
 			.optional(),
 		run: z.function().optional(),
