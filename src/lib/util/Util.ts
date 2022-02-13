@@ -1,4 +1,3 @@
-import { Logger } from './logger/Logger';
 import type { Client } from 'discord.js';
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
@@ -101,24 +100,7 @@ export class Util {
 		return (number < 10 ? '0' : '') + number;
 	}
 
-	static throwError(error, name): void {
-		const trace = Util.resolveValidationErrorTrace([name]);
-	
-		Logger.error(error, trace);
-	}
-
-	static toPascalCase(input: string): string {
-		return input
-			.replace(new RegExp(/[-_]+/, 'g'), ' ')
-			.replace(new RegExp(/[^\w\s]/, 'g'), '')
-			.replace(
-				new RegExp(/\s+(.)(\w*)/, 'g'),
-				($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`
-			)
-			.replace(new RegExp(/\w/), s => s.toUpperCase());
-	}
-  
-	static async getResponse(value: string, interaction: { client: Client | GClient }): Promise<string> {
+	static async getResponse(value: string, interaction: { client: Client | GClient }) {
 		const languagePlugin = Plugins.get('@gcommands/plugin-language');
 
 		if (languagePlugin) {

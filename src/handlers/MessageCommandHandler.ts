@@ -1,67 +1,14 @@
-import { Client, Collection, CommandInteractionOptionResolver, Guild, Message, MessageAttachment, SelectMenuInteraction, TextChannel, User } from 'discord.js';
+import { Collection, CommandInteractionOptionResolver, Message } from 'discord.js';
 import type { GClient } from '../lib/GClient';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';
+import { ArgumentType } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { Logger, Events } from '../lib/util/logger/Logger';
-import { Argument, ArgumentType } from '../lib/structures/Argument';
-import { MessageArgumentTypeBase, MessageArgumentTypes } from '../lib/structures/arguments/base';
 import { Util } from '../lib/util/Util';
-import { AttachmentType } from '../lib/structures/arguments/Attachment';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
-
-const checkValidation = async(arg: MessageArgumentTypes, content: string | MessageAttachment, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
-	if (!content) {
-		const text = (await Util.getResponse('ARGUMENT_REQUIRED', { client })).replace('{user}', user.toString()).replace('{name}', argument.name).replace('{type}', Util.toPascalCase(ArgumentType[argument.type.toString()]));
-		//const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`;
-		if (argument.type === ArgumentType.STRING && argument.choices?.length !== 0) {
-			const message = await channel.send({
-				content: text,
-				components: [
-					{
-						type: 1,
-						components: [
-							{
-								type: 3,
-								customId: 'argument_choices',
-								minValues: 0,
-								maxValues: 1,
-								disabled: false,
-								options: argument.choices.map(
-									ch => ({
-										label: ch.name,
-										value: ch.value
-									})
-								)
-							}
-						]
-					}
-				]
-			});
-
-			const component: SelectMenuInteraction = await channel.awaitMessageComponent({ filter: (m) => m.componentType === 'SELECT_MENU' && m.user.id === user.id && m.channelId === channel.id && m.message.id === message.id && m.customId === 'argument_choices', time: 60000 }) as SelectMenuInteraction;
-	
-			component.deferUpdate();
-			content = component.values?.[0];
-		} else {
-			channel.send(text);
-			const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
-
-			if (argument.type == ArgumentType.ATTACHMENT) {
-				const attachments = [...message.values()]?.[0]?.attachments;
-				content = attachments ? [...attachments.values()][0] : null;
-			}
-			else content = [...message.values()]?.[0]?.content;
-		}
-	}
-
-	const validate = arg instanceof AttachmentType ? arg.validate(content) : arg.validate(content as string);
-	if (!validate) return checkValidation(arg, null, client, guild, argument, channel, user);
-
-	return arg.resolve(argument);
-};
 
 export async function MessageCommandHandler(
 	message: Message,
@@ -89,11 +36,26 @@ export async function MessageCommandHandler(
 			});
 	}
 
-	for (const argument in command.arguments) {
-		const arg = await MessageArgumentTypeBase.createArgument(command.arguments[argument].type, message.guild);
+	args = args.map(
+		(arg, i) =>
+			new Object({
+				name: command.arguments[i].name,
+				type: command.arguments[i].type,
+				choices: command.arguments[i].choices,
+				options: [],
+				value: arg,
+			}),
+	);
 
-		args[argument] = await checkValidation(arg, args[argument] as string, client, message.guild, command.arguments[argument], message.channel as TextChannel, message.author);
-	}
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	if (args[0]?.type === (ArgumentType.SUB_COMMAND_GROUP || ArgumentType.SUB_COMMAND)) args[0].options = args.splice(1);
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	if (args[0]?.type === ArgumentType.SUB_COMMAND_GROUP && args[0]?.options[0]?.type === ArgumentType.SUB_COMMAND)
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		args[0].options[0].options = args[0].options.splice(1);
 
 	let replied: Message;
 	const ctx = new CommandContext(client, {
