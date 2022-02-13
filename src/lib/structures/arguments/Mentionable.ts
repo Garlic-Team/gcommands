@@ -16,7 +16,7 @@ export class MentionableType extends MessageArgumentTypeBase {
 
 	validate(content: string): boolean {
 		const matches = mentionableRegexp.exec(content);
-		if (!matches || (this.guild.roles.cache.get(matches?.[1]) || this.client.users.cache.get(matches?.[1]))) return false;
+		if (!matches || (!this.guild.roles.cache.get(matches?.[1]) && !this.client.users.cache.get(matches?.[1]))) return false;
 
 		this.value = matches[1];
 
