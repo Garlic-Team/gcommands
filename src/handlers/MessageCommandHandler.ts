@@ -15,7 +15,6 @@ const cooldowns = new Collection<string, Collection<string, number>>();
 const checkValidation = async(arg: MessageArgumentTypes, content: string | MessageAttachment, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
 	if (!content) {
 		const text = (await Util.getResponse('ARGUMENT_REQUIRED', { client })).replace('{user}', user.toString()).replace('{name}', argument.name).replace('{type}', Util.toPascalCase(ArgumentType[argument.type.toString()]));
-		//const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`;
 		if (argument.type === ArgumentType.STRING && argument.choices?.length !== 0) {
 			const message = await channel.send({
 				content: text,
@@ -42,18 +41,27 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 			});
 
 			const component: SelectMenuInteraction = await channel.awaitMessageComponent({ filter: (m) => m.componentType === 'SELECT_MENU' && m.user.id === user.id && m.channelId === channel.id && m.message.id === message.id && m.customId === 'argument_choices', time: 60000 }) as SelectMenuInteraction;
-	
+			if (component.customId === null) {
+				channel.send((await Util.getResponse('ARGUMENT_TIME', { client })).replace('{user}', user.toString()));
+				return null;
+			}
+
 			component.deferUpdate();
 			content = component.values?.[0];
 		} else {
 			channel.send(text);
+
 			const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
+			if (message.size === 0) {
+				channel.send((await Util.getResponse('ARGUMENT_TIME', { client })).replace('{user}', user.toString()));
+				return null;
+			}
 
 			if (argument.type == ArgumentType.ATTACHMENT) {
-				const attachments = [...message.values()]?.[0]?.attachments;
+				const attachments = [...(message as Collection<string, Message<boolean>>).values()]?.[0]?.attachments;
 				content = attachments ? [...attachments.values()][0] : null;
 			}
-			else content = [...message.values()]?.[0]?.content;
+			else content = [...(message as Collection<string, Message<boolean>>).values()]?.[0]?.content;
 		}
 	}
 
@@ -91,8 +99,11 @@ export async function MessageCommandHandler(
 
 	for (const argument in command.arguments) {
 		const arg = await MessageArgumentTypeBase.createArgument(command.arguments[argument].type, message.guild);
+		const check = await checkValidation(arg, args[argument] as string, client, message.guild, command.arguments[argument], message.channel as TextChannel, message.author);
 
-		args[argument] = await checkValidation(arg, args[argument] as string, client, message.guild, command.arguments[argument], message.channel as TextChannel, message.author);
+		if (check === null) return;
+
+		args[argument] = check;
 	}
 
 	let replied: Message;
