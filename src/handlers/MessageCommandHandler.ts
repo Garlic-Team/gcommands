@@ -14,7 +14,8 @@ const cooldowns = new Collection<string, Collection<string, number>>();
 
 const checkValidation = async(arg: MessageArgumentTypes, content: string | MessageAttachment, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
 	if (!content) {
-		const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`;
+		const text = (await Util.getResponse('ARGUMENT_REQUIRED', { client })).replace('{user}', user.toString()).replace('{name}', argument.name).replace('{type}', Util.toPascalCase(ArgumentType[argument.type.toString()]));
+		//const text = `${user.toString()}, please define argument \`${argument.name}\`, type: ${Util.toPascalCase(ArgumentType[argument.type.toString()])}`;
 		if (argument.type === ArgumentType.STRING && argument.choices?.length !== 0) {
 			const message = await channel.send({
 				content: text,

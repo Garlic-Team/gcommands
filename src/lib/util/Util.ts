@@ -118,10 +118,10 @@ export class Util {
 			.replace(new RegExp(/\w/), s => s.toUpperCase());
 	}
   
-	static async getResponse(value: string, interaction: { client: Client | GClient }) {
+	static async getResponse(value: string, interaction: { client: Client | GClient }): Promise<string> {
 		const languagePlugin = Plugins.get('@gcommands/plugin-language');
 
-		if (languagePlugin !== null) {
+		if (languagePlugin) {
 			const { LanguageManager } = await import('@gcommands/plugin-language');
 
 			const text = LanguageManager.__(interaction, value);
