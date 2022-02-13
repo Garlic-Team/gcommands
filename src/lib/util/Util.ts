@@ -103,7 +103,7 @@ export class Util {
 	static async getResponse(value: string, interaction: { client: Client | GClient }) {
 		const languagePlugin = Plugins.get('@gcommands/plugin-language');
 
-		if (languagePlugin !== null) {
+		if (languagePlugin) {
 			const { LanguageManager } = await import('@gcommands/plugin-language');
 
 			const text = LanguageManager.__(interaction, value);
