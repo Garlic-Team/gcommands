@@ -59,8 +59,7 @@ export class MessageArgumentTypeBase {
 			const { UserType } = await import('./User');
 			return new UserType(guild);
 		}
-		// @ts-expect-error TODO: Use ArgumentType.ATTACHMENT | Need wait for https://github.com/Garlic-Team/gcommands/pull/314 to be merged (:
-		case 11: {
+		case ArgumentType.ATTACHMENT: {
 			const { AttachmentType } = await import('./Attachment');
 			return new AttachmentType();
 		}

@@ -48,11 +48,8 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 		} else {
 			channel.send(text);
 			const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
-	
-			/**
-			 * TODO: Use ArgumentType.ATTACHMENT | Need wait for https://github.com/Garlic-Team/gcommands/pull/314 to be merged (:
-			 * @ts-expect-error */
-			if (argument.type == 11) {
+
+			if (argument.type == ArgumentType.ATTACHMENT) {
 				const attachments = [...message.values()]?.[0]?.attachments;
 				content = attachments ? [...attachments.values()][0] : null;
 			}
