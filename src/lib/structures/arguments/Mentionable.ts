@@ -1,5 +1,5 @@
 import type { Client, Guild } from 'discord.js';
-import { channelRegexp, mentionableRegexp } from '../../util/regexes';
+import { mentionableRegexp } from '../../util/regexes';
 import { Argument, ArgumentType } from '../Argument';
 import { MessageArgumentTypeBase } from './base';
 

@@ -1,4 +1,4 @@
-import { Client, Collection, CommandInteractionOptionResolver, Guild, Message, MessageActionRow, MessageAttachment, MessageSelectMenu, SelectMenuInteraction, TextChannel, User } from 'discord.js';
+import { Client, Collection, CommandInteractionOptionResolver, Guild, Message, MessageAttachment, SelectMenuInteraction, TextChannel, User } from 'discord.js';
 import type { GClient } from '../lib/GClient';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';

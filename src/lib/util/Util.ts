@@ -116,7 +116,7 @@ export class Util {
 				($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`
 			)
 			.replace(new RegExp(/\w/), s => s.toUpperCase());
-  }
+	}
   
 	static async getResponse(value: string, interaction: { client: Client | GClient }) {
 		const languagePlugin = Plugins.get('@gcommands/plugin-language');
