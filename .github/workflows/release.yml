@@ -1,6 +1,6 @@
-name: "Release"
+name: 'Release'
 
-on: [ workflow_dispatch ]
+on: [workflow_dispatch]
 
 jobs:
   release:
@@ -32,6 +32,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.get_version.outputs.version }}
+          generateReleaseNotes: true
           name: ${{ steps.get_version.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
