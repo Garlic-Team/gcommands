@@ -47,7 +47,7 @@ const validationSchema = z
 		cooldown: z.string().optional(),
 		autoDefer: z
 			.union([z.string(), z.nativeEnum(AutoDeferType)])
-			.transform((arg) => (Object.keys(AutoDeferType).includes(String(arg)) ? AutoDeferType[arg] : arg))
+			.transform((arg) => (typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg))
 			.optional(),
 		fileName: z.string().optional(),
 		run: z.function(),

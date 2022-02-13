@@ -34,10 +34,7 @@
       "import": "./dist/providers/*.js",
       "require": "./dist/providers/*.js"
     },
-    "./dist/**/*": {
-      "import": "./dist/**/*.js",
-      "require": "./dist/**/*.js"
-    }
+    "./*": "./*"
   },
   "scripts": {
     "build": "bash scripts/build.bash",
