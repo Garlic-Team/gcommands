@@ -1,4 +1,4 @@
-import { Client, Collection, CommandInteractionOptionResolver, Guild, Message, MessageAttachment, SelectMenuInteraction, TextChannel, User } from 'discord.js';
+import { Client, Collection, CommandInteractionOptionResolver, Guild, InteractionReplyOptions, Message, MessageAttachment, MessagePayload, ReplyMessageOptions, SelectMenuInteraction, TextChannel, User } from 'discord.js';
 import type { GClient } from '../lib/GClient';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';
@@ -15,7 +15,7 @@ const cooldowns = new Collection<string, Collection<string, number>>();
 const checkValidation = async(arg: MessageArgumentTypes, content: string | MessageAttachment, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
 	if (!content) {
 		const text = (await Util.getResponse('ARGUMENT_REQUIRED', { client })).replace('{user}', user.toString()).replace('{name}', argument.name).replace('{type}', Util.toPascalCase(ArgumentType[argument.type.toString()]));
-		if (argument.type === ArgumentType.STRING && argument.choices?.length !== 0) {
+		if (argument.type === ArgumentType.STRING && argument.choices && argument.choices.length !== 0) {
 			const message = await channel.send({
 				content: text,
 				components: [
@@ -138,7 +138,12 @@ export async function MessageCommandHandler(
 			return replied;
 		},
 		followUp: message.reply.bind(message),
-		reply: message.reply.bind(message),
+		// @ts-expect-error This will not be fixed (typings for interaction are more important)
+		reply: async(options: string | MessagePayload | ReplyMessageOptions | InteractionReplyOptions) => {
+			const msg = await message.reply(options);
+			replied = msg;
+			return msg;
+		},
 	});
 
 	if (!(await command.inhibit(ctx))) return;
