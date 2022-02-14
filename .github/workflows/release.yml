@@ -12,7 +12,7 @@ jobs:
   create_pr:
     name: PR for new version
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'Garlic-Team' && github.event_name != 'workflow_dispatch'
+    if: github.repository_owner == 'Garlic-Team' && github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout repository
@@ -44,7 +44,7 @@ jobs:
         run: |
           git checkout -b "chore/release/${{ steps.get_version.outputs.version }}"
 
-          npm run ci:changelog
+          npm run changelog
 
           git add --all .
           git commit -m "chore(release): ${{ steps.get_version.outputs.version }} 🎉" -m "Build ran for ${GITHUB_SHA}"

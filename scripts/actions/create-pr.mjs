@@ -31,8 +31,8 @@ const pullRequestBody = [
 console.log(`🎉 Creating pull request for gcommands ${packageJson.version}`);
 
 const pullRequest = await octokit.pulls.create({
-	base: 'main',
-	// The format must stay in sync with the one in create-pr-for-release-and-publish.yml
+	base: 'next',
+	// The format must stay in sync with the one in release.yml
 	head: `chore/release/${packageJson.version}`,
 	owner: OWNER,
 	repo: REPOSITORY,
