@@ -1,13 +1,21 @@
+# https://github.com/discordjs/discord-api-types/blob/main/.github/workflows/create-pr-for-release-and-publish.yml
+
 name: 'Release'
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - next
 
 jobs:
-  release:
-    name: publish
+  create_pr:
+    name: PR for new version
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'Garlic-Team' && github.event_name != 'workflow_dispatch'
+
     steps:
-      - name: checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Install Node v16
@@ -16,10 +24,54 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
 
-      - name: Install
+      - name: Install dependencies
         run: npm ci
 
-      - name: build
+      - name: Set Github Actions bot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Get version & asign
+        id: get_version
+        run: |
+          variable=$(jq --raw-output '.version' package.json)
+          echo ::set-output name=version::$variable
+
+      - name: Create branch and push changes
+        run: |
+          git checkout -b "chore/release/${{ steps.get_version.outputs.version }}"
+
+          npm run ci:changelog
+
+          git add --all .
+          git commit -m "chore(release): ${{ steps.get_version.outputs.version }} 🎉" -m "Build ran for ${GITHUB_SHA}"
+          git push -u origin "chore/release/${{ steps.get_version.outputs.version }}"
+
+      - name: Create Pull Request
+        run: node ./scripts/actions/create-pr.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create_release:
+    name: Create release and publish
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'Garlic-Team' && github.event_name == 'push' && startsWith(github.event.head_commit.message, 'chore(release)') && !contains(github.event.head_commit.message, '[skip ci]')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node v16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
         run: npm run build
 
       - name: Get version & asign
@@ -28,15 +80,13 @@ jobs:
           variable=$(jq --raw-output '.version' package.json)
           echo ::set-output name=version::$variable
 
-      - name: Publish releases
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.get_version.outputs.version }}
-          generateReleaseNotes: true
-          name: ${{ steps.get_version.outputs.version }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: publish
+      - name: Publish NPM package
         run: npm publish --tag latest
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+
+      - name: Publish releases
+        uses: ncipollo/release-action@v1
+        run: node ./scripts/actions/create-release.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
