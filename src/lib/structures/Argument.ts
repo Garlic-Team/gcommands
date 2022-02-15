@@ -106,6 +106,9 @@ export class Argument {
 			Logger.warn('The use of ArgumentOptions#options is depracted. Please use ArgumentOptions#arguments instead');
 			options.arguments = options.options;
 		}
+
+		if (this.run) options.run = this.run;
+
 		validationSchema
 			.parseAsync({ ...options, ...this })
 			.then((options) => {
