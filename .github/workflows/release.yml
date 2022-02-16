@@ -73,7 +73,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build package
+      - name: Build a package
         run: npm run build
 
       - name: Get version & asign
@@ -82,7 +82,7 @@ jobs:
           variable=$(jq --raw-output '.version' package.json)
           echo ::set-output name=version::$variable
 
-      - name: Publish NPM package
+      - name: Publish a NPM package
         run: npm publish --tag latest
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
