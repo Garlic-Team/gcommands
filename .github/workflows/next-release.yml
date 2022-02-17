@@ -49,7 +49,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: Publish NPM package
+      - name: Publish a NPM package
         run: |
           TAGINVER=$([[ '${{ github.event.inputs.prNumber }}' == '' ]] && echo '-next' || echo '-pr-${{ github.event.inputs.prNumber }}')
           TAG=$([[ '${{ github.event.inputs.prNumber }}' == '' ]] && echo 'next' || echo 'pr-${{ github.event.inputs.prNumber }}')
