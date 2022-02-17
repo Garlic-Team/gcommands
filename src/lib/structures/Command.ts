@@ -73,6 +73,9 @@ export class Command {
 	public autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
 
 	public constructor(options: CommandOptions) {
+		if (this.run) options.run = this.run;
+		if (this.onError) options.onError = this.onError;
+
 		validationSchema
 			.parseAsync({ ...options, ...this })
 			.then((options) => {

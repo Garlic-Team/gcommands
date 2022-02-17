@@ -38,6 +38,8 @@ export class Listener<
 	public reloading = false;
 
 	public constructor(options: ListenerOptions<WS, Event>) {
+		if (this.run) options.run = this.run;
+
 		validationSchema
 			.parseAsync({ ...options, ...this })
 			.then((options) => {
