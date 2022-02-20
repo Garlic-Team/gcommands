@@ -90,7 +90,7 @@ export class Argument {
 	public name: string;
 	public description: string;
 	public type: ArgumentType | keyof typeof ArgumentType;
-	public required = false;
+	public required?: boolean;
 	public choices?: Array<ArgumentChoice>;
 	public arguments?: Array<Argument>;
 	/**
