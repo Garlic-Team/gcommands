@@ -28,7 +28,7 @@ jobs:
           ref: ${{ github.event.inputs.ref || 'next' }}
 
       - name: Install Node v16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
