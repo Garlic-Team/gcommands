@@ -33,18 +33,20 @@ export class LruCacheProvider extends Provider {
 	}
 
 	async update(key: string, value: any, maxAge?: number) {
-		const data = await this.client.set(key, value, maxAge);
+		const data = await this.client.set(key, value, {
+			ttl: maxAge
+		});
 
 		return data;
 	}
 
 	async delete(key: string) {
-		const data = await this.client.del(key);
+		const data = await this.client.delete(key);
 
 		return data;
 	}
 
 	clear() {
-		return this.client.reset();
+		return this.client.clear();
 	}
 }
