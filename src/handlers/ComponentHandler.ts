@@ -16,7 +16,7 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 	const regex = new RegExp('[A-Za-z0-9]+', 'gd');
 	const args = interaction.customId.match(regex);
 
-	const component = Components.get(args.shift());
+	const component = Components.get(args?.shift());
 	if (
 		!component ||
 		!component.type.includes(interaction.isButton() ? ComponentType.BUTTON : ComponentType.SELECT_MENU) ||
