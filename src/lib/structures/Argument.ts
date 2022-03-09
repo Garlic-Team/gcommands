@@ -50,6 +50,8 @@ export interface ArgumentOptions {
 	 */
 	options?: Array<Argument | ArgumentOptions>;
 	channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
+	minValue?: number;
+	maxValue?: number;
 	run?: (ctx: AutocompleteContext) => any;
 }
 
@@ -82,6 +84,8 @@ const validationSchema = z
 			)
 			.array()
 			.optional(),
+		minValue: z.number().optional(),
+		maxValue: z.number().optional(),
 		run: z.function().optional(),
 	})
 	.passthrough();
@@ -99,6 +103,8 @@ export class Argument {
 	 */
 	public options?: Array<Argument>;
 	public channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
+	public minValue?: number;
+	public maxValue?: number;
 	public run?: (ctx: AutocompleteContext) => any;
 
 	constructor(options: ArgumentOptions) {
@@ -123,6 +129,8 @@ export class Argument {
 				});
 				this.options = this.arguments;
 				this.channelTypes = options.channelTypes;
+				this.minValue = options.minValue;
+				this.maxValue = options.maxValue;
 				this.run = options.run;
 			})
 			.catch((error) => {
@@ -148,6 +156,8 @@ export class Argument {
 			required: this.required,
 			choices: this.choices,
 			channel_types: this.channelTypes,
+			min_value: this.minValue,
+			max_value: this.maxValue,
 			autocomplete: typeof this.run === 'function',
 		};
 	}
