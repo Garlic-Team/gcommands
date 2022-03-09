@@ -21,6 +21,7 @@ export enum ChannelType {
 	'GUILD_TEXT' = 0,
 	'GUILD_VOICE' = 2,
 	'GUILD_CATEGORY' = 4,
+	'GUILD_NEWS' = 5 ,
 	'GUILD_STORE' = 6,
 	'GUILD_NEWS_THREAD' = 10,
 	'GUILD_PUBLIC_THREAD' = 11,
