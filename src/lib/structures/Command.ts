@@ -34,7 +34,7 @@ const validationSchema = z
 		name: z
 			.string()
 			.max(32)
-			.regex(/^[a-z1-9]/),
+			.regex(/^[aA-zZ1-9]/),
 		type: z
 			.union([z.string(), z.nativeEnum(CommandType)])
 			.transform((arg) => (typeof arg === 'string' && Object.keys(CommandType).includes(arg) ? CommandType[arg] : arg))
