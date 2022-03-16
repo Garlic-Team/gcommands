@@ -62,7 +62,7 @@
     "keyv": "4.1.1",
     "lru-cache": "7.4.2",
     "mongodb": "4.4.1",
-    "prettier": "2.5.1",
+    "prettier": "2.6.0",
     "typedoc-plugin-djs-links": "1.0.4",
     "typescript": "4.6.2"
   },
