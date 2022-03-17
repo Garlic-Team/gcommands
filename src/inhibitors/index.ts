@@ -10,7 +10,6 @@ export * from './ClientRoles';
 export * from './Nsfw';
 export * from './Or';
 export * from './UserOnly';
-export * from './Confirm';
 
 export * from './MemberPermissions';
 export * from './MemberRoles';

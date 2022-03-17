@@ -1,20 +1,45 @@
-import { Client, Collection, CommandInteractionOptionResolver, Guild, InteractionReplyOptions, Message, MessageAttachment, MessagePayload, ReplyMessageOptions, SelectMenuInteraction, TextChannel, User } from 'discord.js';
+import {
+	Client,
+	Collection,
+	CommandInteractionOptionResolver,
+	Guild,
+	InteractionReplyOptions,
+	Message,
+	MessageAttachment,
+	MessagePayload,
+	ReplyMessageOptions,
+	SelectMenuInteraction,
+	TextChannel,
+	User,
+} from 'discord.js';
 import type { GClient } from '../lib/GClient';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { CommandType } from '../lib/structures/Command';
 import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import { Events, Logger } from '../lib/util/logger/Logger';
 import { Argument, ArgumentType } from '../lib/structures/Argument';
 import { MessageArgumentTypeBase, MessageArgumentTypes } from '../lib/structures/arguments/base';
 import { Util } from '../lib/util/Util';
 import { AttachmentType } from '../lib/structures/arguments/Attachment';
+import { isErr } from '@sapphire/result';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
-const checkValidation = async(arg: MessageArgumentTypes, content: string | MessageAttachment, client: Client, guild: Guild, argument: Argument, channel: TextChannel, user: User) => {
+const checkValidation = async (
+	arg: MessageArgumentTypes,
+	content: string | MessageAttachment,
+	client: Client,
+	guild: Guild,
+	argument: Argument,
+	channel: TextChannel,
+	user: User,
+) => {
 	if (!content) {
-		const text = (await Util.getResponse('ARGUMENT_REQUIRED', { client })).replace('{user}', user.toString()).replace('{name}', argument.name).replace('{type}', Util.toPascalCase(ArgumentType[argument.type.toString()]));
+		const text = (await Util.getResponse('ARGUMENT_REQUIRED', { client }))
+			.replace('{user}', user.toString())
+			.replace('{name}', argument.name)
+			.replace('{type}', Util.toPascalCase(ArgumentType[argument.type.toString()]));
 		if (argument.type === ArgumentType.STRING && argument.choices && argument.choices.length !== 0) {
 			const message = await channel.send({
 				content: text,
@@ -28,19 +53,25 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 								minValues: 0,
 								maxValues: 1,
 								disabled: false,
-								options: argument.choices.map(
-									ch => ({
-										label: ch.name,
-										value: ch.value
-									})
-								)
-							}
-						]
-					}
-				]
+								options: argument.choices.map((ch) => ({
+									label: ch.name,
+									value: ch.value,
+								})),
+							},
+						],
+					},
+				],
 			});
 
-			const component: SelectMenuInteraction = await channel.awaitMessageComponent({ filter: (m) => m.componentType === 'SELECT_MENU' && m.user.id === user.id && m.channelId === channel.id && m.message.id === message.id && m.customId === 'argument_choices', time: 60000 }) as SelectMenuInteraction;
+			const component: SelectMenuInteraction = (await channel.awaitMessageComponent({
+				filter: (m) =>
+					m.componentType === 'SELECT_MENU' &&
+					m.user.id === user.id &&
+					m.channelId === channel.id &&
+					m.message.id === message.id &&
+					m.customId === 'argument_choices',
+				time: 60000,
+			})) as SelectMenuInteraction;
 			if (component.customId === null) {
 				channel.send((await Util.getResponse('ARGUMENT_TIME', { client })).replace('{user}', user.toString()));
 				return null;
@@ -51,7 +82,11 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 		} else {
 			channel.send(text);
 
-			const message = await channel.awaitMessages({ filter: (m) => m.author.id === user.id && m.channelId === channel.id, time: 60000, max: 1 });
+			const message = await channel.awaitMessages({
+				filter: (m) => m.author.id === user.id && m.channelId === channel.id,
+				time: 60000,
+				max: 1,
+			});
 			if (message.size === 0) {
 				channel.send((await Util.getResponse('ARGUMENT_TIME', { client })).replace('{user}', user.toString()));
 				return null;
@@ -60,8 +95,7 @@ const checkValidation = async(arg: MessageArgumentTypes, content: string | Messa
 			if (argument.type == ArgumentType.ATTACHMENT) {
 				const attachments = [...(message as Collection<string, Message<boolean>>).values()]?.[0]?.attachments;
 				content = attachments ? [...attachments.values()][0] : null;
-			}
-			else content = [...(message as Collection<string, Message<boolean>>).values()]?.[0]?.content;
+			} else content = [...(message as Collection<string, Message<boolean>>).values()]?.[0]?.content;
 		}
 	}
 
@@ -80,9 +114,11 @@ export async function MessageCommandHandler(
 
 	const command = Commands.get(commandName);
 	if (!command)
-		return client.options?.unknownCommandMessage ? message.reply({
-			content: (await Util.getResponse('NOT_FOUND', { client })),
-		}) : null;
+		return client.options?.unknownCommandMessage
+			? message.reply({
+					content: await Util.getResponse('NOT_FOUND', { client }),
+			  })
+			: null;
 
 	if (!command.type.includes(CommandType.MESSAGE)) return;
 
@@ -90,18 +126,30 @@ export async function MessageCommandHandler(
 		const cooldown = Handlers.cooldownHandler(message.author.id, command, cooldowns);
 		if (cooldown)
 			return message.reply({
-				content: (await Util.getResponse('COOLDOWN', { client })).replace('{time}', String(cooldown)).replace(
-					'{name}',
-					command.name + ' command',
-				),
+				content: (await Util.getResponse('COOLDOWN', { client }))
+					.replace('{time}', String(cooldown))
+					.replace('{name}', command.name + ' command'),
 			});
 	}
 
 	for (const argument in command.arguments) {
-		if ([ArgumentType.SUB_COMMAND, ArgumentType.SUB_COMMAND_GROUP].includes(command.arguments[argument].type as ArgumentType)) continue;
-		
+		if (
+			[ArgumentType.SUB_COMMAND, ArgumentType.SUB_COMMAND_GROUP].includes(
+				command.arguments[argument].type as ArgumentType,
+			)
+		)
+			continue;
+
 		const arg = await MessageArgumentTypeBase.createArgument(command.arguments[argument].type, message.guild);
-		const check = await checkValidation(arg, args[argument] as string, client, message.guild, command.arguments[argument], message.channel as TextChannel, message.author);
+		const check = await checkValidation(
+			arg,
+			args[argument] as string,
+			client,
+			message.guild,
+			command.arguments[argument],
+			message.channel as TextChannel,
+			message.author,
+		);
 
 		if (check === null) return;
 
@@ -139,14 +187,16 @@ export async function MessageCommandHandler(
 		},
 		followUp: message.reply.bind(message),
 		// @ts-expect-error This will not be fixed (typings for interaction are more important)
-		reply: async(options: string | MessagePayload | ReplyMessageOptions | InteractionReplyOptions) => {
+		reply: async (options: string | MessagePayload | ReplyMessageOptions | InteractionReplyOptions) => {
 			const msg = await message.reply(options);
 			replied = msg;
 			return msg;
 		},
 	});
 
-	if (!(await command.inhibit(ctx))) return;
+	const inhibit = await command.inhibit(ctx);
+	if (isErr(inhibit)) return;
+
 	await Promise.resolve(command.run(ctx))
 		.catch(async (error) => {
 			Logger.emit(Events.HANDLER_ERROR, ctx, error);
@@ -154,12 +204,12 @@ export async function MessageCommandHandler(
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 
-			const errorReply = async() =>
+			const errorReply = async () =>
 				ctx.safeReply({
-					content: (await Util.getResponse('ERROR', { client })),
+					content: await Util.getResponse('ERROR', { client }),
 					components: [],
 				});
-			
+
 			if (typeof command.onError === 'function')
 				await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());
 			else await errorReply();

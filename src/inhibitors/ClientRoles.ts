@@ -5,13 +5,18 @@ import type { Snowflake } from 'discord.js';
 
 export interface ClientRolesOptions extends InhibitorOptions {
 	ids?: Array<Snowflake>;
+
 	getIds?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
+
 	requireAll?: boolean;
 }
+
+const DEFAULT_MESSAGE = 'You do not have the required roles to execute this command';
 
 export class ClientRoles extends Inhibitor {
 	public ids?: Array<Snowflake>;
 	public readonly requireAll?: boolean = true;
+
 	public getIds?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
 
 	constructor(options: ClientRolesOptions) {
@@ -27,12 +32,9 @@ export class ClientRoles extends Inhibitor {
 
 		const dynamicRoles = this.getIds?.(ctx);
 		if (dynamicRoles) this.ids = dynamicRoles;
-		
+
 		if (!ctx.guild.me.roles.cache[this.requireAll ? 'hasAll' : 'hasAny'](...this.ids))
-			return ctx.reply({
-				content: this.resolveMessage(ctx) || 'You do not have the required roles to execute this command',
-				ephemeral: this.ephemeral,
-			});
-		else return true;
+			return this.error(this.resolveMessage(ctx, DEFAULT_MESSAGE));
+		else return this.ok();
 	}
 }

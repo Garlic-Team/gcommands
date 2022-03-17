@@ -5,11 +5,15 @@ import { Inhibitor, InhibitorOptions } from './Inhibitor';
 
 export interface ChannelOnlyOptions extends InhibitorOptions {
 	ids?: Array<Snowflake>;
+
 	getIds?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
 }
 
+const DEFAULT_MESSAGE = 'This command can not be used in this channel';
+
 export class ChannelOnly extends Inhibitor {
 	public ids?: Array<Snowflake>;
+
 	public getIds?(ctx: CommandContext | ComponentContext): Array<Snowflake>;
 
 	constructor(options: ChannelOnlyOptions) {
@@ -23,11 +27,7 @@ export class ChannelOnly extends Inhibitor {
 		const dynamicChannels = this.getIds?.(ctx);
 		if (dynamicChannels) this.ids = dynamicChannels;
 
-		if (!this.ids.includes(ctx.channelId))
-			return ctx.reply({
-				content: this.resolveMessage(ctx) || 'This command can not be used in this channel',
-				ephemeral: this.ephemeral,
-			});
-		else return true;
+		if (!this.ids.includes(ctx.channelId)) return this.error(this.resolveMessage(ctx, DEFAULT_MESSAGE));
+		else return this.ok();
 	}
 }
