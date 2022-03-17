@@ -19,7 +19,7 @@ export class Inhibitor {
 		return ok();
 	}
 
-	public error(error: { content: string; ephemeral: boolean }) {
+	public error(error?: { content: string; ephemeral: boolean }) {
 		return err(error);
 	}
 

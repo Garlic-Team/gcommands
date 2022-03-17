@@ -127,7 +127,7 @@ export class Command {
 			}
 			if (isErr(result)) {
 				Logger.error(result.error);
-			} else if (isErr(result.value)) {
+			} else if (isErr(result.value) && 'content' in result.value.error) {
 				await ctx.safeReply(result.value.error);
 				return err();
 			}
