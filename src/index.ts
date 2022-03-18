@@ -19,13 +19,14 @@ export * from './lib/structures/contexts/CommandContext';
 export * from './lib/structures/contexts/ComponentContext';
 export * from './lib/structures/contexts/AutocompleteContext';
 export * from './lib/structures/Argument';
+export * from './lib/structures/Container';
 
 // Managers
-export { Plugins, PluginManager } from './lib/managers/PluginManager';
-export { Commands, CommandManager } from './lib/managers/CommandManager';
-export { Components, ComponentManager } from './lib/managers/ComponentManager';
-export { Listeners, ListenerManager } from './lib/managers/ListenerManager';
-export { Handlers, HandlerManager } from './lib/managers/HandlerManager';
+export * from './lib/managers/PluginManager';
+export * from './lib/managers/CommandManager';
+export * from './lib/managers/ComponentManager';
+export * from './lib/managers/ListenerManager';
+export * from './lib/managers/HandlerManager';
 
 // Logger
 export * from './lib/util/logger/Logger';

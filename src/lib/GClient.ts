@@ -1,11 +1,12 @@
 import { Client, ClientOptions } from 'discord.js';
-import { Plugins } from './managers/PluginManager';
-import { Commands } from './managers/CommandManager';
+import { PluginHookType, Plugins } from './managers/PluginManager';
 import { Listeners } from './managers/ListenerManager';
-import { Components } from './managers/ComponentManager';
 import Responses from '../responses.json';
 import { setImmediate } from 'timers';
 import { registerDirectories } from './util/registerDirectories';
+import { container } from './structures/Container';
+import { Commands } from './managers/CommandManager';
+import { Components } from './managers/ComponentManager';
 
 export enum AutoDeferType {
 	'EPHEMERAL' = 1,
@@ -34,18 +35,23 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 			if (typeof this.options.database.init === 'function') this.options.database.init();
 		}
 
+		container.client = this;
+		Commands.load();
+		Components.load();
+		Listeners.load();
+
 		setImmediate(async (): Promise<void> => {
-			await Promise.all([
-				Plugins.initiate(this),
-				Commands.initiate(this),
-				Components.initiate(this),
-				Listeners.initiate(this),
-			]);
+			await Plugins.load(PluginHookType.AfterInitialization);
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public getDatabase<Database>(_?: Database): Database {
-		return this.options.database;
+	public async login(token?: string): Promise<string> {
+		await Plugins.load(PluginHookType.BeforeLogin);
+
+		const login = await super.login(token);
+
+		await Plugins.load(PluginHookType.AfterLogin);
+
+		return login;
 	}
 }

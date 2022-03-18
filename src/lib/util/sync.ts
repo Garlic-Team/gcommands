@@ -5,6 +5,7 @@ import { Routes } from 'discord-api-types/v9';
 import { Logger } from './logger/Logger';
 import { setTimeout } from 'node:timers';
 import { Commands } from '../managers/CommandManager';
+import { container } from '../structures/Container';
 
 async function _sync(client: GClient, commands: Array<Command>, guildId?: string) {
 	const rest = new REST({ version: '9' }).setToken(client.token as string);
@@ -28,9 +29,11 @@ async function _sync(client: GClient, commands: Array<Command>, guildId?: string
 export async function sync(client: GClient) {
 	if (Commands.size === 0) return;
 
-	const [guild, global] = Commands.partition((command) => typeof command.guildId === 'string');
+	const [guild, global] = Commands.partition(
+		(command) => typeof command.guildId === 'string' || typeof container.client.options.devGuildId === 'string',
+	);
 
-	const guildIds = new Set(guild.map((c) => c.guildId));
+	const guildIds = new Set(guild.map((c) => c.guildId || container.client.options.devGuildId));
 	for await (const guildId of guildIds) {
 		const commands = guild.filter((item) => item.guildId === guildId);
 		await _sync(client, [...commands.values()], guildId);
