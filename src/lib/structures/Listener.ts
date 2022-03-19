@@ -65,8 +65,8 @@ export class Listener<
 		else client[this.once ? 'once' : 'on'](this.event as keyof ClientEvents, this._run.bind(this));
 	}
 
-	public unregister(): void {
-		Listeners.unregister(this.name);
+	public unregister(): Listener | void {
+		return Listeners.unregister(this.name);
 	}
 
 	public async _run(...args: Array<any>): Promise<void> {

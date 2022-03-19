@@ -42,7 +42,9 @@ const validationSchema = z
 		cooldown: z.string().optional(),
 		autoDefer: z
 			.union([z.string(), z.nativeEnum(AutoDeferType)])
-			.transform((arg) => (typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg))
+			.transform((arg) =>
+				typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg,
+			)
 			.optional(),
 		fileName: z.string().optional(),
 		run: z.function(),
@@ -96,8 +98,8 @@ export class Component {
 		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
 	}
 
-	public unregister() {
-		Components.unregister(this.name);
+	public unregister(): Component | undefined {
+		return Components.unregister(this.name);
 	}
 
 	public async inhibit(ctx: ComponentContext): Promise<boolean> {
