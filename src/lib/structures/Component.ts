@@ -1,4 +1,4 @@
-import { AutoDeferType, GClient } from '../GClient';
+import { AutoDeferType } from '../GClient';
 import type { ComponentContext } from './contexts/ComponentContext';
 import { Components } from '../managers/ComponentManager';
 import { Logger } from '../util/logger/Logger';
@@ -54,7 +54,6 @@ const validationSchema = z
 	.passthrough();
 
 export class Component {
-	public client: GClient;
 	public name: string;
 	public type: Array<ComponentType | keyof typeof ComponentType>;
 	public inhibitors: ComponentInhibitors = [];

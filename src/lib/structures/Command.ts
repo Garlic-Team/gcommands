@@ -1,4 +1,4 @@
-import { AutoDeferType, GClient } from '../GClient';
+import { AutoDeferType } from '../GClient';
 import { Argument, ArgumentOptions } from './Argument';
 import type { CommandContext } from './contexts/CommandContext';
 import { Commands } from '../managers/CommandManager';
@@ -59,7 +59,6 @@ const validationSchema = z
 	.passthrough();
 
 export class Command {
-	public client: GClient;
 	public name: string;
 	public description?: string;
 	public type: Array<CommandType | keyof typeof CommandType>;
