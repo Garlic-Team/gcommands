@@ -30,3 +30,5 @@
   color: 'ffffff'
 - name: 'feature request'
   color: 'fcf95a'
+- name: 'on hold'
+  color: '32a852'
