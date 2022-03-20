@@ -14,10 +14,13 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	const client = interaction.client as GClient;
 
 	const command = Commands.get(interaction.commandName);
-	if (!command && client.options.unknownCommandMessage)
-		return interaction.reply({
-			content: await Util.getResponse('NOT_FOUND', { client }),
-		});
+	if (!command) {
+		if (client.options.unknownCommandMessage)
+			interaction.reply({
+				content: await Util.getResponse('NOT_FOUND', { client }),
+			});
+		return;
+	}
 
 	if (command.cooldown) {
 		const cooldown = Handlers.cooldownHandler(interaction.user.id, command, cooldowns);
