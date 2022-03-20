@@ -112,10 +112,13 @@ export async function MessageCommandHandler(
 	const { client } = container;
 
 	const command = Commands.get(commandName);
-	if (!command && client.options.unknownCommandMessage)
-		return message.reply({
-			content: await Util.getResponse('NOT_FOUND', { client }),
-		});
+	if (!command) {
+		if (client.options.unknownCommandMessage)
+			message.reply({
+				content: await Util.getResponse('NOT_FOUND', { client }),
+			});
+		return;
+	}
 
 	if (!command.type.includes(CommandType.MESSAGE)) return;
 
