@@ -1,21 +1,17 @@
 import { Collection } from 'discord.js';
 import { Component } from '../structures/Component';
-import type { GClient } from '../GClient';
-import { Logger, Events } from '../util/logger/Logger';
-import { Plugins } from './PluginManager';
+import { Events, Logger } from '../util/logger/Logger';
+import { container } from '../structures/Container';
 
 export class ComponentManager extends Collection<string, Component> {
-	private client: GClient;
-
 	public register(component: Component): ComponentManager {
 		if (component instanceof Component) {
 			if (this.has(component.name) && !this.get(component.name)?.reloading)
 				Logger.warn('Overwriting component', component.name);
-			if (this.client) component.initialize(this.client);
-			if (Plugins.currentlyLoading) component.owner = Plugins.currentlyLoading;
+			if (container.client) component.load();
 			this.set(component.name, component);
 			Logger.emit(Events.COMPONENT_REGISTERED, component);
-			Logger.debug('Registered component', component.name, component.owner ? `(by plugin ${component.owner})` : '');
+			Logger.debug('Registered component', component.name);
 		} else Logger.warn('Component must be a instance of Component');
 
 		return this;
@@ -32,9 +28,8 @@ export class ComponentManager extends Collection<string, Component> {
 		return component;
 	}
 
-	public async initiate(client: GClient): Promise<void> {
-		this.client = client;
-		this.forEach(component => component.initialize(client));
+	public load() {
+		this.forEach((component) => component.load());
 	}
 }
 

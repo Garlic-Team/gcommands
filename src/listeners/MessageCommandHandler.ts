@@ -1,14 +1,14 @@
 import { Listener } from '../lib/structures/Listener';
-import type { GClient } from '../lib/GClient';
 import type { Message } from 'discord.js';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { Logger } from '../lib/util/logger/Logger';
+import { container } from '../lib/structures/Container';
 
 new Listener({
 	event: 'messageCreate',
 	name: 'gcommands-messageCommandHandler',
 	run: async (message: Message): Promise<void> => {
-		const client = message.client as GClient;
+		const { client } = container;
 
 		if (!client.options.messageSupport) return;
 

@@ -1,46 +1,38 @@
-import type { GClient } from '../GClient';
 import { Listener } from '../structures/Listener';
 import { ClientEvents, Collection, WSEventType } from 'discord.js';
-import { Logger, Events } from '../util/logger/Logger';
-import { Plugins } from './PluginManager';
+import { Events, Logger } from '../util/logger/Logger';
+import { container } from '../structures/Container';
 
 export class ListenerManager extends Collection<string, Listener> {
-	private client: GClient;
-
 	public register(listener: Listener): ListenerManager {
 		if (listener instanceof Listener) {
 			if (this.has(listener.name)) {
 				this.get(listener.name).unregister();
 				if (!this.get(listener.name)?.reloading) Logger.warn('Overwriting listener', listener.name);
 			}
-			if (this.client) this.initialize(listener);
-			if (Plugins.currentlyLoading) listener.owner = Plugins.currentlyLoading;
+			if (container.client) listener.load();
 			this.set(listener.name, listener);
 			Logger.emit(Events.LISTENER_REGISTERED, listener);
-			Logger.debug(
-				'Registered listener',
-				listener.name,
-				'listening to',
-				listener.event,
-				listener.owner ? `(by plugin ${listener.owner})` : '',
-			);
+			Logger.debug('Registered listener', listener.name, 'listening to', listener.event);
 		} else Logger.warn('Listener must be a instance of Listener');
 
 		return this;
 	}
 
 	public unregister(name: string): Listener | undefined {
+		const { client } = container;
+
 		const listener = this.get(name);
 		if (listener) {
 			this.delete(name);
 
-			if (this.client) {
-				const maxListeners = this.client.getMaxListeners();
-				if (maxListeners !== 0) this.client.setMaxListeners(maxListeners - 1);
+			if (client) {
+				const maxListeners = client.getMaxListeners();
+				if (maxListeners !== 0) client.setMaxListeners(maxListeners - 1);
 
 				listener.ws
-					? this.client.ws.off(listener.event as WSEventType, listener._run)
-					: this.client.off(listener.event as keyof ClientEvents, listener._run);
+					? client.ws.off(listener.event as WSEventType, listener._run)
+					: client.off(listener.event as keyof ClientEvents, listener._run);
 			}
 
 			Logger.emit(Events.LISTENER_UNREGISTERED, listener);
@@ -50,18 +42,8 @@ export class ListenerManager extends Collection<string, Listener> {
 		return listener;
 	}
 
-	private initialize(listener: Listener): Listener {
-		const maxListeners = this.client.getMaxListeners();
-		if (maxListeners !== 0) this.client.setMaxListeners(maxListeners + 1);
-
-		listener.initialize(this.client);
-
-		return listener;
-	}
-
-	public async initiate(client: GClient): Promise<void> {
-		this.client = client;
-		this.forEach((listener) => listener.initialize(client));
+	public load() {
+		this.forEach((listener) => listener.load());
 	}
 }
 

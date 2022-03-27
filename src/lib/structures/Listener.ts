@@ -1,8 +1,8 @@
-import type { GClient } from '../GClient';
 import type { ClientEvents, WSEventType } from 'discord.js';
 import { Listeners } from '../managers/ListenerManager';
 import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
+import { container } from './Container';
 
 export interface ListenerOptions<WS extends boolean, Event extends WS extends true ? WSEventType : keyof ClientEvents> {
 	event: Event | string;
@@ -27,14 +27,12 @@ export class Listener<
 	WS extends boolean = boolean,
 	Event extends WS extends true ? WSEventType : keyof ClientEvents = WS extends true ? WSEventType : keyof ClientEvents,
 > {
-	public client: GClient;
 	public event: Event | string;
 	public name: string;
 	public once?: boolean;
 	public ws?: WS;
 	public fileName?: string;
 	public run: (...args: Array<any>) => any;
-	public owner?: string;
 	public reloading = false;
 
 	public constructor(options: ListenerOptions<WS, Event>) {
@@ -58,8 +56,11 @@ export class Listener<
 			});
 	}
 
-	public initialize(client: GClient): void {
-		this.client = client;
+	public load(): void {
+		const { client } = container;
+
+		const maxListeners = client.getMaxListeners();
+		if (maxListeners !== 0) client.setMaxListeners(maxListeners + 1);
 
 		if (this.ws) client.ws[this.once ? 'once' : 'on'](this.event as WSEventType, this._run.bind(this));
 		else client[this.once ? 'once' : 'on'](this.event as keyof ClientEvents, this._run.bind(this));

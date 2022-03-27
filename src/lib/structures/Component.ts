@@ -1,8 +1,9 @@
-import { AutoDeferType, GClient } from '../GClient';
+import { AutoDeferType } from '../GClient';
 import type { ComponentContext } from './contexts/ComponentContext';
 import { Components } from '../managers/ComponentManager';
 import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
+import { container } from './Container';
 
 export enum ComponentType {
 	'BUTTON' = 1,
@@ -53,7 +54,6 @@ const validationSchema = z
 	.passthrough();
 
 export class Component {
-	public client: GClient;
 	public name: string;
 	public type: Array<ComponentType | keyof typeof ComponentType>;
 	public inhibitors: ComponentInhibitors = [];
@@ -63,7 +63,6 @@ export class Component {
 	public fileName?: string;
 	public run: (ctx: ComponentContext) => any;
 	public onError?: (ctx: ComponentContext, error: any) => any;
-	public owner?: string;
 	public reloading = false;
 	public autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
 
@@ -92,10 +91,8 @@ export class Component {
 			});
 	}
 
-	public initialize(client: GClient): void {
-		this.client = client;
-
-		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
+	public load() {
+		if (!this.guildId && container.client?.options?.devGuildId) this.guildId = container.client.options.devGuildId;
 	}
 
 	public unregister(): Component | undefined {

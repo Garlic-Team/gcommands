@@ -2,11 +2,11 @@ import type { AutocompleteInteraction } from 'discord.js';
 import { AutocompleteContext } from '../lib/structures/contexts/AutocompleteContext';
 import type { Argument, ArgumentOptions } from '../lib/structures/Argument';
 import { Commands } from '../lib/managers/CommandManager';
-import { Logger, Events } from '../lib/util/logger/Logger';
-import type { GClient } from '../lib/GClient';
+import { Events, Logger } from '../lib/util/logger/Logger';
+import { container } from '../lib/structures/Container';
 
 export async function AutocompleteHandler(interaction: AutocompleteInteraction) {
-	const client = interaction.client as GClient;
+	const { client } = container;
 
 	const command = Commands.get(interaction.commandName);
 	if (!command) return;

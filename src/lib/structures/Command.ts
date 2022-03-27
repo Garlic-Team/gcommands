@@ -1,9 +1,10 @@
-import { AutoDeferType, GClient } from '../GClient';
+import { AutoDeferType } from '../GClient';
 import { Argument, ArgumentOptions } from './Argument';
 import type { CommandContext } from './contexts/CommandContext';
 import { Commands } from '../managers/CommandManager';
 import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
+import { container } from './Container';
 
 export enum CommandType {
 	'MESSAGE' = 0,
@@ -47,7 +48,9 @@ const validationSchema = z
 		cooldown: z.string().optional(),
 		autoDefer: z
 			.union([z.string(), z.nativeEnum(AutoDeferType)])
-			.transform((arg) => (typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg))
+			.transform((arg) =>
+				typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg,
+			)
 			.optional(),
 		fileName: z.string().optional(),
 		run: z.function(),
@@ -56,7 +59,6 @@ const validationSchema = z
 	.passthrough();
 
 export class Command {
-	public client: GClient;
 	public name: string;
 	public description?: string;
 	public type: Array<CommandType | keyof typeof CommandType>;
@@ -68,7 +70,6 @@ export class Command {
 	public fileName?: string;
 	public run: (ctx: CommandContext) => any;
 	public onError?: (ctx: CommandContext, error: any) => any;
-	public owner?: string;
 	public reloading = false;
 	public autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
 
@@ -102,14 +103,12 @@ export class Command {
 			});
 	}
 
-	public initialize(client: GClient): void {
-		this.client = client;
-
-		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
-	}
-
 	public unregister(): Command {
 		return Commands.unregister(this.name);
+	}
+
+	public load() {
+		if (!this.guildId && container.client?.options?.devGuildId) this.guildId = container.client.options.devGuildId;
 	}
 
 	public async inhibit(ctx: CommandContext): Promise<boolean> {
