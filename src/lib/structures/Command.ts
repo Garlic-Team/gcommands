@@ -44,7 +44,7 @@ const validationSchema = z
 				.transform((arg) =>
 					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
 				),
-				z.string().max(32).regex(/^[a-zA-Z1-9]/)
+			z.string().max(32).regex(/^[a-zA-Z1-9]/)
 		).optional(),
 		description: z.string().max(100).optional(),
 		descriptionLocalizations: z.record(
@@ -53,7 +53,7 @@ const validationSchema = z
 				.transform((arg) =>
 					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
 				),
-				z.string().max(100)
+			z.string().max(100)
 		).optional(),
 		type: z
 			.union([z.string(), z.nativeEnum(CommandType)])
