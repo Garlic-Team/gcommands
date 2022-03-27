@@ -46,7 +46,7 @@
     "@gcommands/plugin-language": "1.0.4",
     "@google-cloud/firestore": "5.0.2",
     "@octokit/action": "3.18.0",
-    "@prisma/client": "3.11.0",
+    "@prisma/client": "3.11.1",
     "@types/keyv": "3.1.4",
     "@types/lru-cache": "7.6.0",
     "@types/node": "16.11.26",
