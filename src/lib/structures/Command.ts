@@ -4,6 +4,7 @@ import type { CommandContext } from './contexts/CommandContext';
 import { Commands } from '../managers/CommandManager';
 import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
+import type { LocaleString } from '../util/common';
 
 export enum CommandType {
 	'MESSAGE' = 0,
@@ -17,8 +18,10 @@ export type CommandInhibitors = Array<{ run: CommandInhibitor } | CommandInhibit
 
 export interface CommandOptions {
 	name: string;
-	type: Array<CommandType | keyof typeof CommandType>;
+	nameLocalizations?: Record<LocaleString, string>;
 	description?: string;
+	descriptionLocalizations?: Record<LocaleString, string>;
+	type: Array<CommandType | keyof typeof CommandType>;
 	arguments?: Array<Argument | ArgumentOptions>;
 	inhibitors?: CommandInhibitors;
 	guildId?: string;
@@ -35,13 +38,15 @@ const validationSchema = z
 			.string()
 			.max(32)
 			.regex(/^[aA-zZ1-9]/),
+		nameLocalizations: z.any().optional(),
+		description: z.string().max(100).optional(),
+		descriptionLocalizations: z.any().optional(),
 		type: z
 			.union([z.string(), z.nativeEnum(CommandType)])
 			.transform((arg) => (typeof arg === 'string' && Object.keys(CommandType).includes(arg) ? CommandType[arg] : arg))
 			.array()
 			.nonempty(),
 		arguments: z.any().array().optional(),
-		description: z.string().max(100).optional(),
 		inhibitors: z.any().array().optional(),
 		guildId: z.string().optional(),
 		cooldown: z.string().optional(),
@@ -58,7 +63,9 @@ const validationSchema = z
 export class Command {
 	public client: GClient;
 	public name: string;
+	public nameLocalizations?: Record<LocaleString, string>;
 	public description?: string;
+	public descriptionLocalizations?: Record<LocaleString, string>;
 	public type: Array<CommandType | keyof typeof CommandType>;
 	public arguments?: Array<Argument>;
 	public inhibitors: CommandInhibitors;
@@ -80,7 +87,9 @@ export class Command {
 			.parseAsync({ ...options, ...this })
 			.then((options) => {
 				this.name = options.name || Command.defaults?.name;
+				this.nameLocalizations = options.nameLocalizations || Command.defaults?.nameLocalizations;
 				this.description = options.description || Command.defaults?.description;
+				this.descriptionLocalizations = options.descriptionLocalizations || Command.defaults.descriptionLocalizations;
 				this.type = options.type || Command.defaults?.type;
 				this.arguments = options.arguments?.map((argument) => {
 					if (argument instanceof Argument) return argument;
@@ -151,7 +160,9 @@ export class Command {
 				if (type === CommandType.SLASH)
 					return {
 						name: this.name,
+						nameLocalizations: this.nameLocalizations,
 						description: this.description,
+						descriptionLocalizations: this.descriptionLocalizations,
 						options: this.arguments?.map((argument) => argument.toJSON()),
 						type: type,
 					};
