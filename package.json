@@ -48,7 +48,7 @@
     "@octokit/action": "3.18.0",
     "@prisma/client": "3.11.0",
     "@types/keyv": "3.1.4",
-    "@types/lru-cache": "7.5.0",
+    "@types/lru-cache": "7.6.0",
     "@types/node": "16.11.26",
     "@typescript-eslint/eslint-plugin": "5.15.0",
     "@typescript-eslint/parser": "5.15.0",
