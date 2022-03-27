@@ -1,6 +1,6 @@
 {
   "name": "gcommands",
-  "version": "9.1.1",
+  "version": "9.2.0",
   "description": "Powerful and flexible framework!",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

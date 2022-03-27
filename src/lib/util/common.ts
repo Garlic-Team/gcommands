@@ -2,7 +2,7 @@
  * TODO: Replace with discord-api-types
  * Grabbed from discord-api-types (We can't use it from the package because it's not in a package version 0.26.1)
  */
- export enum Locale {
+export enum Locale {
 	EnglishUS = 'en-US',
 	EnglishGB = 'en-GB',
 	Bulgarian = 'bg',
