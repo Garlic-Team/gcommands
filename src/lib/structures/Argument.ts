@@ -2,7 +2,7 @@ import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
 import type { ApplicationCommandOptionType } from 'discord-api-types/v9';
-import type { LocaleString } from '../util/common';
+import { Locale, LocaleString } from '../util/common';
 
 export enum ArgumentType {
 	'SUB_COMMAND' = 1,
@@ -65,9 +65,23 @@ const validationSchema = z
 			.string()
 			.max(32)
 			.regex(/^[a-zA-Z1-9]/),
-		nameLocalizations: z.any().optional(),
+		nameLocalizations: z.record(
+			z
+				.union([z.string(), z.nativeEnum(Locale)])
+				.transform((arg) =>
+					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
+				),
+				z.string().max(32).regex(/^[a-zA-Z1-9]/)
+		).optional(),
 		description: z.string().max(100),
-		descriptionLocalizations: z.any().optional(),
+		descriptionLocalizations: z.record(
+			z
+				.union([z.string(), z.nativeEnum(Locale)])
+				.transform((arg) =>
+					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
+				),
+				z.string().max(100)
+		).optional(),
 		type: z
 			.union([z.string(), z.nativeEnum(ArgumentType)])
 			.transform((arg) =>
