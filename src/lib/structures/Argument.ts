@@ -153,7 +153,9 @@ export class Argument {
 		if (this.type === ArgumentType.SUB_COMMAND || this.type === ArgumentType.SUB_COMMAND_GROUP) {
 			return {
 				name: this.name,
+				name_localizations: this.nameLocalizations,
 				description: this.description,
+				description_localizations: this.descriptionLocalizations,
 				type: this.type,
 				options: this.arguments?.map((argument) => argument.toJSON()),
 			};

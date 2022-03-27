@@ -89,7 +89,7 @@ export class Command {
 				this.name = options.name || Command.defaults?.name;
 				this.nameLocalizations = options.nameLocalizations || Command.defaults?.nameLocalizations;
 				this.description = options.description || Command.defaults?.description;
-				this.descriptionLocalizations = options.descriptionLocalizations || Command.defaults.descriptionLocalizations;
+				this.descriptionLocalizations = options.descriptionLocalizations || Command.defaults?.descriptionLocalizations;
 				this.type = options.type || Command.defaults?.type;
 				this.arguments = options.arguments?.map((argument) => {
 					if (argument instanceof Argument) return argument;
@@ -160,9 +160,9 @@ export class Command {
 				if (type === CommandType.SLASH)
 					return {
 						name: this.name,
-						nameLocalizations: this.nameLocalizations,
+						name_localizations: this.nameLocalizations,
 						description: this.description,
-						descriptionLocalizations: this.descriptionLocalizations,
+						description_localizations: this.descriptionLocalizations,
 						options: this.arguments?.map((argument) => argument.toJSON()),
 						type: type,
 					};
