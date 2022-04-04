@@ -5,10 +5,10 @@ import { Provider, ProviderTypes } from '../lib/structures/Provider';
 export class KeyvProvider extends Provider {
 	uri: string | undefined;
 	client: Keyv | null;
-	opts: Keyv.Options<any> | undefined;
+	opts: Keyv.Options | undefined;
 	type: ProviderTypes;
 
-	constructor(uri?: string, opts?: Keyv.Options<any>) {
+	constructor(uri?: string, opts?: Keyv.Options) {
 		super();
 
 		this.uri = uri;
