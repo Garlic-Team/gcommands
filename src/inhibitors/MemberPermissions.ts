@@ -7,6 +7,13 @@ export interface MemberPermissionsOptions extends InhibitorOptions {
 	permissions: Array<PermissionResolvable>;
 }
 
+const defaultMessage = (permissions: PermissionResolvable[]) => {
+	return `You need the following permissions to execute this command: ${permissions
+		.join(', ')
+		.replace(/_/g, ' ')
+		.toLowerCase()}`;
+};
+
 export class MemberPermissions extends Inhibitor {
 	public readonly permissions: Array<PermissionResolvable>;
 
@@ -18,15 +25,7 @@ export class MemberPermissions extends Inhibitor {
 	run(ctx: CommandContext | ComponentContext): boolean | any {
 		if (!ctx.inGuild()) return;
 		if (!ctx.memberPermissions.has(this.permissions))
-			return ctx.reply({
-				content:
-					this.resolveMessage(ctx) ||
-					`You need the following permissions to execute this command: ${this.permissions
-						.join(', ')
-						.replace(/_/g, ' ')
-						.toLowerCase()}`,
-				ephemeral: this.ephemeral,
-			});
-		else return true;
+			return this.error(this.resolveMessage(ctx, defaultMessage(this.permissions)));
+		else return this.ok();
 	}
 }

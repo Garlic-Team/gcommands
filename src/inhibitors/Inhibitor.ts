@@ -1,5 +1,6 @@
 import type { CommandContext } from '../lib/structures/contexts/CommandContext';
 import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
+import { err, ok } from '@sapphire/result';
 
 export interface InhibitorOptions {
 	message?: string | ((ctx: CommandContext | ComponentContext) => string);
@@ -14,8 +15,20 @@ export class Inhibitor {
 		this.message = options.message;
 	}
 
-	protected resolveMessage(ctx: CommandContext | ComponentContext): string | void {
-		if (typeof this.message === 'function') return this.message(ctx);
-		else if (typeof this.message === 'string') return this.message;
+	public ok() {
+		return ok();
+	}
+
+	public error(error?: { content: string; ephemeral: boolean }) {
+		return err(error);
+	}
+
+	protected resolveMessage(
+		ctx: CommandContext | ComponentContext,
+		defaultMessage: string,
+	): { content: string; ephemeral: boolean } {
+		if (typeof this.message === 'function') return { content: this.message(ctx), ephemeral: this.ephemeral };
+		else if (typeof this.message === 'string') return { content: this.message, ephemeral: this.ephemeral };
+		else return { content: defaultMessage, ephemeral: this.ephemeral };
 	}
 }

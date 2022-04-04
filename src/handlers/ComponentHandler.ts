@@ -5,8 +5,9 @@ import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 import { Components } from '../lib/managers/ComponentManager';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { setTimeout } from 'node:timers';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import { Events, Logger } from '../lib/util/logger/Logger';
 import { Util } from '../lib/util/Util';
+import { isErr } from '@sapphire/result';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -28,10 +29,9 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		const cooldown = Handlers.cooldownHandler(interaction.user.id, component, cooldowns);
 		if (cooldown)
 			return interaction.reply({
-				content: (await Util.getResponse('COOLDOWN', interaction)).replace('{time}', String(cooldown)).replace(
-					'{name}',
-					component.name + (interaction.isButton() ? ' button' : ' select menu'),
-				),
+				content: (await Util.getResponse('COOLDOWN', interaction))
+					.replace('{time}', String(cooldown))
+					.replace('{name}', component.name + (interaction.isButton() ? ' button' : ' select menu')),
 				ephemeral: true,
 			});
 	}
@@ -60,7 +60,8 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 		type: interaction.isButton() ? 'BUTTON' : 'SELECT_MENU',
 	});
 
-	if (!(await component.inhibit(ctx))) return;
+	const inhibit = await component.inhibit(ctx);
+	if (isErr(inhibit)) return;
 
 	let autoDeferTimeout;
 	if (component.autoDefer)
@@ -77,13 +78,13 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
 			if (error.stack) Logger.trace(error.stack);
 
-			const errorReply = async() =>
+			const errorReply = async () =>
 				ctx.safeReply({
-					content: (await Util.getResponse('ERROR', interaction)),
+					content: await Util.getResponse('ERROR', interaction),
 					ephemeral: true,
 					components: [],
 				});
-			
+
 			if (typeof component.onError === 'function')
 				await Promise.resolve(component.onError(ctx, error)).catch(async () => await errorReply());
 			else await errorReply();

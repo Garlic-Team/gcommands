@@ -21,7 +21,7 @@ export enum ChannelType {
 	'GUILD_TEXT' = 0,
 	'GUILD_VOICE' = 2,
 	'GUILD_CATEGORY' = 4,
-	'GUILD_NEWS' = 5 ,
+	'GUILD_NEWS' = 5,
 	'GUILD_STORE' = 6,
 	'GUILD_NEWS_THREAD' = 10,
 	'GUILD_PUBLIC_THREAD' = 11,
@@ -80,9 +80,7 @@ const validationSchema = z
 		arguments: z.any().array().optional(),
 		channelTypes: z
 			.union([z.string(), z.nativeEnum(ChannelType)])
-			.transform((arg) =>
-				typeof arg === 'string' && Object.keys(ChannelType).includes(arg) ? ChannelType[arg] : arg,
-			)
+			.transform((arg) => (typeof arg === 'string' && Object.keys(ChannelType).includes(arg) ? ChannelType[arg] : arg))
 			.array()
 			.optional(),
 		minValue: z.number().optional(),

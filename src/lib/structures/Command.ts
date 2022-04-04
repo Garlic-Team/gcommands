@@ -4,6 +4,7 @@ import type { CommandContext } from './contexts/CommandContext';
 import { Commands } from '../managers/CommandManager';
 import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
+import { Err, err, fromAsync, isErr, ok, Ok } from '@sapphire/result';
 
 export enum CommandType {
 	'MESSAGE' = 0,
@@ -47,7 +48,9 @@ const validationSchema = z
 		cooldown: z.string().optional(),
 		autoDefer: z
 			.union([z.string(), z.nativeEnum(AutoDeferType)])
-			.transform((arg) => (typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg))
+			.transform((arg) =>
+				typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg,
+			)
 			.optional(),
 		fileName: z.string().optional(),
 		run: z.function(),
@@ -112,25 +115,24 @@ export class Command {
 		return Commands.unregister(this.name);
 	}
 
-	public async inhibit(ctx: CommandContext): Promise<boolean> {
-		if (!this.inhibitors) return true;
+	public async inhibit(ctx: CommandContext): Promise<Err<any> | Ok<any>> {
+		if (!this.inhibitors) return ok();
 
 		for await (const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch((error) => {
-					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
-					if (error.stack) Logger.trace(error.stack);
-				});
+				result = await fromAsync(async () => inhibitor(ctx));
 			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch((error) => {
-					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
-					if (error.stack) Logger.trace(error.stack);
-				});
+				result = await fromAsync(async () => inhibitor.run(ctx));
 			}
-			if (result !== true) return false;
+			if (isErr(result)) {
+				Logger.error(result.error);
+			} else if (isErr(result.value) && 'content' in result.value.error) {
+				await ctx.safeReply(result.value.error);
+				return err();
+			}
 		}
-		return true;
+		return ok();
 	}
 
 	public async reload(): Promise<Command> {
