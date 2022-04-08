@@ -2,6 +2,7 @@ import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import { Logger } from '../util/logger/Logger';
 import { z } from 'zod';
 import type { ApplicationCommandOptionType } from 'discord-api-types/v9';
+import { Locale, LocaleString } from '../util/common';
 
 export enum ArgumentType {
 	'SUB_COMMAND' = 1,
@@ -36,7 +37,9 @@ export interface ArgumentChoice {
 
 export interface ArgumentOptions {
 	name: string;
+	nameLocalizations?: Record<LocaleString, string>;
 	description: string;
+	descriptionLocalizations?: Record<LocaleString, string>;
 	type:
 		| ArgumentType
 		| keyof typeof ArgumentType
@@ -62,7 +65,23 @@ const validationSchema = z
 			.string()
 			.max(32)
 			.regex(/^[a-zA-Z1-9]/),
+		nameLocalizations: z.record(
+			z
+				.union([z.string(), z.nativeEnum(Locale)])
+				.transform((arg) =>
+					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
+				),
+			z.string().max(32).regex(/^[a-zA-Z1-9]/)
+		).optional(),
 		description: z.string().max(100),
+		descriptionLocalizations: z.record(
+			z
+				.union([z.string(), z.nativeEnum(Locale)])
+				.transform((arg) =>
+					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
+				),
+			z.string().max(100)
+		).optional(),
 		type: z
 			.union([z.string(), z.nativeEnum(ArgumentType)])
 			.transform((arg) =>
@@ -93,7 +112,9 @@ const validationSchema = z
 
 export class Argument {
 	public name: string;
+	public nameLocalizations?: Record<LocaleString, string>;
 	public description: string;
+	public descriptionLocalizations?: Record<LocaleString, string>;
 	public type: ArgumentType | keyof typeof ArgumentType;
 	public required?: boolean;
 	public choices?: Array<ArgumentChoice>;
@@ -120,7 +141,9 @@ export class Argument {
 			.parseAsync({ ...options, ...this })
 			.then((options) => {
 				this.name = options.name;
+				this.nameLocalizations = options.nameLocalizations;
 				this.description = options.description;
+				this.descriptionLocalizations = options.descriptionLocalizations;
 				this.type = options.type;
 				this.required = options.required;
 				this.choices = options.choices as Array<ArgumentChoice>;
@@ -144,7 +167,9 @@ export class Argument {
 		if (this.type === ArgumentType.SUB_COMMAND || this.type === ArgumentType.SUB_COMMAND_GROUP) {
 			return {
 				name: this.name,
+				name_localizations: this.nameLocalizations,
 				description: this.description,
+				description_localizations: this.descriptionLocalizations,
 				type: this.type,
 				options: this.arguments?.map((argument) => argument.toJSON()),
 			};
@@ -152,7 +177,9 @@ export class Argument {
 
 		return {
 			name: this.name,
+			name_localizations: this.nameLocalizations,
 			description: this.description,
+			description_localizations: this.descriptionLocalizations,
 			type: this.type,
 			required: this.required,
 			choices: this.choices,
