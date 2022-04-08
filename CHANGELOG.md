@@ -1,3 +1,20 @@
+# [9.2.0](https://github.com/Garlic-Team/GCommands/compare/9.1.0...9.2.0) (2022-04-08)
+
+
+### Bug Fixes
+
+* **KeyvProvider:** generic ([188ea5a](https://github.com/Garlic-Team/GCommands/commit/188ea5ab941548f0d79fae8e3a42805687adcad9))
+* return raw ([4fe618a](https://github.com/Garlic-Team/GCommands/commit/4fe618a43bd659a798013065b00daba90df0d8c5))
+* unregister types for Component.ts and Listener.ts ([1817f9c](https://github.com/Garlic-Team/GCommands/commit/1817f9c59d367322b04edfad7afa7ce275a0503e))
+* zod validation ([7d52c6d](https://github.com/Garlic-Team/GCommands/commit/7d52c6d3bc9f9a7ccb9fd23bc1643bde69060776))
+
+
+### Features
+
+* localizations ([706dcee](https://github.com/Garlic-Team/GCommands/commit/706dceecb572a7b2bf444749474ff4bef45b3be3))
+
+
+
 # [9.1.0](https://github.com/Garlic-Team/GCommands/compare/9.0.1-next...9.1.0) (2022-03-10)
 
 
