@@ -1,5 +1,5 @@
 import type { CommandContext } from '../lib/structures/contexts/CommandContext';
-import { ButtonInteraction, MessageActionRow, MessageButton } from 'discord.js';
+import { ButtonInteraction, MessageActionRow, MessageButton, MessageButtonStyle } from 'discord.js';
 import { customId } from './customId';
 import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
@@ -9,7 +9,7 @@ export interface ConfirmOptions {
 	ephemeral?: boolean;
 	button?: {
 		label?: string;
-		style?: 'DANGER' | 'SUCCESS' | 'PRIMARY' | 'SECONDARY';
+		style?: MessageButtonStyle;
 		emoji?: string;
 	};
 }
