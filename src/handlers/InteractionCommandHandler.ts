@@ -57,7 +57,7 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	let autoDeferTimeout;
 	if (command.autoDefer)
 		autoDeferTimeout = setTimeout(() => {
-			ctx.deferReply({ ephemeral: command.autoDefer === AutoDeferType.EPHEMERAL });
+			if (!interaction.deferred && !interaction.replied) ctx.deferReply({ ephemeral: command.autoDefer === AutoDeferType.EPHEMERAL });
 		}, 2500 - client.ws.ping);
 
 	await Promise.resolve(command.run(ctx))
@@ -79,9 +79,10 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 			else await errorReply();
 		})
 		.then(() => {
+			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
+			
 			Logger.emit(Events.HANDLER_RUN, ctx);
 			Logger.emit(Events.COMMAND_HANDLER_RUN, ctx);
-			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
 			Logger.debug(`Successfully ran command (${command.name}) for ${interaction.user.username}`);
 		});
 }

@@ -89,9 +89,10 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 			else await errorReply();
 		})
 		.then(() => {
+			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
+			
 			Logger.emit(Events.HANDLER_RUN, ctx);
 			Logger.emit(Events.COMPONENT_HANDLER_RUN, ctx);
-			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
 			Logger.debug(`Successfully ran component (${component.name}) for ${interaction.user.username}`);
 		});
 }
