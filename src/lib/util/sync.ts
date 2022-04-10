@@ -7,7 +7,7 @@ import { setTimeout } from 'node:timers';
 import { Commands } from '../managers/CommandManager';
 
 async function _sync(client: GClient, commands: Array<Command>, guildId?: string) {
-	const rest = new REST({ version: '9' }).setToken(client.token as string);
+	const rest = new REST({ version: '10' }).setToken(client.token as string);
 
 	await rest
 		.put(
