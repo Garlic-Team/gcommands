@@ -4,12 +4,21 @@ import { Commands } from './managers/CommandManager';
 import { Listeners } from './managers/ListenerManager';
 import { Components } from './managers/ComponentManager';
 import Responses from '../responses.json';
-import { setImmediate } from 'timers';
+import { setImmediate } from 'node:timers';
 import { registerDirectories } from './util/registerDirectories';
 
 export enum AutoDeferType {
+	/**
+	 * @example interaction.deferReply({ ephemeral: true })
+	 */
 	'EPHEMERAL' = 1,
+	/**
+	 * @example interaction.deferReply()
+	 */
 	'NORMAL' = 2,
+	/**
+	 * @example interaction.deferUpdate()
+	 */
 	'UPDATE' = 3,
 }
 

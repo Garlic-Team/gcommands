@@ -7,9 +7,21 @@ import { z } from 'zod';
 import { Locale, LocaleString } from '../util/common';
 
 export enum CommandType {
+	/**
+	 * ![](https://garlic-team.js.org/guide/message.png)
+	 */
 	'MESSAGE' = 0,
+	/**
+	 * ![](https://garlic-team.js.org/guide/slash.png)
+	 */
 	'SLASH' = 1,
+	/**
+	 * ![](https://garlic-team.js.org/guide/context_user.png)
+	 */
 	'CONTEXT_USER' = 2,
+	/**
+	 * ![](https://garlic-team.js.org/guide/context_message.png)
+	 */
 	'CONTEXT_MESSAGE' = 3,
 }
 
