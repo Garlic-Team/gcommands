@@ -1,7 +1,7 @@
 import type { Snowflake } from 'discord.js';
+import { Inhibitor, InhibitorOptions } from './Inhibitor';
 import type { CommandContext } from '../lib/structures/contexts/CommandContext';
 import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
-import { Inhibitor, InhibitorOptions } from './Inhibitor';
 
 export interface ChannelOnlyOptions extends InhibitorOptions {
 	ids?: Array<Snowflake>;
@@ -23,11 +23,15 @@ export class ChannelOnly extends Inhibitor {
 		const dynamicChannels = this.getIds?.(ctx);
 		if (dynamicChannels) this.ids = dynamicChannels;
 
-		if (!this.ids.includes(ctx.channelId))
+		if (!this.ids.includes(ctx.channelId)) {
 			return ctx.reply({
-				content: this.resolveMessage(ctx) || 'This command can not be used in this channel',
+				content:
+					this.resolveMessage(ctx) ||
+					'This command can not be used in this channel',
 				ephemeral: this.ephemeral,
 			});
-		else return true;
+		} else {
+			return true;
+		}
 	}
 }

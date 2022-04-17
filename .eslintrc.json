@@ -13,10 +13,7 @@
     "prettier"
   ],
   "rules": {
-    "indent": [
-      "error",
-      "tab"
-    ],
+    "strict": ["error", "global"],
     "linebreak-style": [
       "error",
       "unix"

@@ -1,6 +1,6 @@
 import { Firestore } from '@google-cloud/firestore';
-import { Logger } from '../lib/util/logger/Logger';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
+import { Logger } from '../lib/util/logger/Logger';
 
 export class FirestoreProvider extends Provider {
 	client: Firestore;
@@ -16,11 +16,12 @@ export class FirestoreProvider extends Provider {
 	async init(): Promise<void> {
 		Logger.debug('Firestore initializated!');
 		this.emit('connected', this.client);
-
-		return;
 	}
 
-	async insert(documentName: string, value: FirebaseFirestore.WithFieldValue<FirebaseFirestore.DocumentData>) {
+	async insert(
+		documentName: string,
+		value: FirebaseFirestore.WithFieldValue<FirebaseFirestore.DocumentData>,
+	) {
 		const document = this.client.doc(documentName);
 		const data = await document.set(value);
 
@@ -34,7 +35,10 @@ export class FirestoreProvider extends Provider {
 		return data;
 	}
 
-	async update(documentName: string, value: FirebaseFirestore.WithFieldValue<FirebaseFirestore.DocumentData>) {
+	async update(
+		documentName: string,
+		value: FirebaseFirestore.WithFieldValue<FirebaseFirestore.DocumentData>,
+	) {
 		const document = this.client.doc(documentName);
 		const data = await document.update(value);
 

@@ -1,7 +1,7 @@
 import type { Guild } from 'discord.js';
+import { MessageArgumentTypeBase } from './base';
 import { channelRegexp } from '../../util/regexes';
 import { Argument, ArgumentType } from '../Argument';
-import { MessageArgumentTypeBase } from './base';
 
 export class ChannelType extends MessageArgumentTypeBase {
 	value;
@@ -25,7 +25,7 @@ export class ChannelType extends MessageArgumentTypeBase {
 		return {
 			...argument.toJSON(),
 			type: ArgumentType[argument.type],
-			channel: this.guild.channels.cache.get(this.value)
+			channel: this.guild.channels.cache.get(this.value),
 		};
 	}
 }

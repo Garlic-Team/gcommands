@@ -1,11 +1,11 @@
-import { Client, ClientOptions } from 'discord.js';
-import { Plugins } from './managers/PluginManager';
-import { Commands } from './managers/CommandManager';
-import { Listeners } from './managers/ListenerManager';
-import { Components } from './managers/ComponentManager';
-import Responses from '../responses.json';
 import { setImmediate } from 'node:timers';
+import { Client, ClientOptions } from 'discord.js';
+import { Commands } from './managers/CommandManager';
+import { Components } from './managers/ComponentManager';
+import { Listeners } from './managers/ListenerManager';
+import { Plugins } from './managers/PluginManager';
 import { registerDirectories } from './util/registerDirectories';
+import Responses from '../responses.json';
 
 export enum AutoDeferType {
 	/**
@@ -40,7 +40,8 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 
 		if (options.dirs) registerDirectories(options.dirs);
 		if (this.options.database) {
-			if (typeof this.options.database.init === 'function') this.options.database.init();
+			if (typeof this.options.database.init === 'function')
+				this.options.database.init();
 		}
 
 		setImmediate(async (): Promise<void> => {

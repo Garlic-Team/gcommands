@@ -1,33 +1,46 @@
-import { Collection, CommandInteraction, ContextMenuInteraction } from 'discord.js';
-import { AutoDeferType, GClient } from '../lib/GClient';
-import { CommandContext } from '../lib/structures/contexts/CommandContext';
-import { Handlers } from '../lib/managers/HandlerManager';
-import { Commands } from '../lib/managers/CommandManager';
 import { setTimeout } from 'node:timers';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import {
+	Collection,
+	CommandInteraction,
+	ContextMenuInteraction,
+} from 'discord.js';
+import { AutoDeferType, GClient } from '../lib/GClient';
+import { Commands } from '../lib/managers/CommandManager';
+import { Handlers } from '../lib/managers/HandlerManager';
+import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { Util } from '../lib/util/Util';
+import { Logger, Events } from '../lib/util/logger/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
-export async function InteractionCommandHandler(interaction: CommandInteraction | ContextMenuInteraction) {
+export async function InteractionCommandHandler(
+	interaction: CommandInteraction | ContextMenuInteraction,
+) {
 	const client = interaction.client as GClient;
 
 	const command = Commands.get(interaction.commandName);
-	if (!command)
-		return client.options?.unknownCommandMessage ? interaction.reply({
-			content: (await Util.getResponse('NOT_FOUND', { client })),
-		}) : null;
+	if (!command) {
+		return client.options?.unknownCommandMessage
+			? interaction.reply({
+					content: await Util.getResponse('NOT_FOUND', { client }),
+			  })
+			: null;
+	}
 
 	if (command.cooldown) {
-		const cooldown = Handlers.cooldownHandler(interaction.user.id, command, cooldowns);
-		if (cooldown)
+		const cooldown = Handlers.cooldownHandler(
+			interaction.user.id,
+			command,
+			cooldowns,
+		);
+		if (cooldown) {
 			return interaction.reply({
-				content: (await Util.getResponse('COOLDOWN', interaction)).replace('{time}', String(cooldown)).replace(
-					'{name}',
-					command.name + ' command',
-				),
+				content: (await Util.getResponse('COOLDOWN', interaction))
+					.replace('{time}', String(cooldown))
+					.replace('{name}', `${command.name} command`),
 				ephemeral: true,
 			});
+		}
 	}
 
 	const ctx = new CommandContext(client, {
@@ -55,34 +68,47 @@ export async function InteractionCommandHandler(interaction: CommandInteraction 
 	if (!(await command.inhibit(ctx))) return;
 
 	let autoDeferTimeout;
-	if (command.autoDefer)
+	if (command.autoDefer) {
 		autoDeferTimeout = setTimeout(() => {
-			if (!interaction.deferred && !interaction.replied) ctx.deferReply({ ephemeral: command.autoDefer === AutoDeferType.EPHEMERAL });
+			if (!interaction.deferred && !interaction.replied)
+				ctx.deferReply({
+					ephemeral: command.autoDefer === AutoDeferType.EPHEMERAL,
+				});
 		}, 2500 - client.ws.ping);
+	}
 
 	await Promise.resolve(command.run(ctx))
-		.catch(async (error) => {
+		.catch(async error => {
 			Logger.emit(Events.HANDLER_ERROR, ctx, error);
 			Logger.emit(Events.COMMAND_HANDLER_ERROR, ctx, error);
-			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			Logger.error(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
 			if (error.stack) Logger.trace(error.stack);
-			
-			const errorReply = async() =>
+
+			const errorReply = async () =>
 				ctx.safeReply({
-					content: (await Util.getResponse('ERROR', interaction)),
+					content: await Util.getResponse('ERROR', interaction),
 					components: [],
 					ephemeral: true,
 				});
 
-			if (typeof command.onError === 'function')
-				await Promise.resolve(command.onError(ctx, error)).catch(async () => await errorReply());
-			else await errorReply();
+			if (typeof command.onError === 'function') {
+				await Promise.resolve(command.onError(ctx, error)).catch(
+					async () => await errorReply(),
+				);
+			} else {
+				await errorReply();
+			}
 		})
 		.then(() => {
 			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
-			
+
 			Logger.emit(Events.HANDLER_RUN, ctx);
 			Logger.emit(Events.COMMAND_HANDLER_RUN, ctx);
-			Logger.debug(`Successfully ran command (${command.name}) for ${interaction.user.username}`);
+			Logger.debug(
+				`Successfully ran command (${command.name}) for ${interaction.user.username}`,
+			);
 		});
 }

@@ -1,8 +1,8 @@
 import { Collection } from 'discord.js';
-import { Component } from '../structures/Component';
-import type { GClient } from '../GClient';
-import { Logger, Events } from '../util/logger/Logger';
 import { Plugins } from './PluginManager';
+import type { GClient } from '../GClient';
+import { Component } from '../structures/Component';
+import { Logger, Events } from '../util/logger/Logger';
 
 export class ComponentManager extends Collection<string, Component> {
 	private client: GClient;
@@ -15,8 +15,14 @@ export class ComponentManager extends Collection<string, Component> {
 			if (Plugins.currentlyLoading) component.owner = Plugins.currentlyLoading;
 			this.set(component.name, component);
 			Logger.emit(Events.COMPONENT_REGISTERED, component);
-			Logger.debug('Registered component', component.name, component.owner ? `(by plugin ${component.owner})` : '');
-		} else Logger.warn('Component must be a instance of Component');
+			Logger.debug(
+				'Registered component',
+				component.name,
+				component.owner ? `(by plugin ${component.owner})` : '',
+			);
+		} else {
+			Logger.warn('Component must be a instance of Component');
+		}
 
 		return this;
 	}

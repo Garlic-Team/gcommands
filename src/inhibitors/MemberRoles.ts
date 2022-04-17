@@ -1,7 +1,7 @@
+import type { Snowflake } from 'discord.js';
 import { Inhibitor, InhibitorOptions } from './Inhibitor';
 import type { CommandContext } from '../lib/structures/contexts/CommandContext';
 import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
-import type { Snowflake } from 'discord.js';
 
 export interface MemberRolesOptions extends InhibitorOptions {
 	ids?: Array<Snowflake>;
@@ -28,11 +28,19 @@ export class MemberRoles extends Inhibitor {
 		const dynamicRoles = this.getIds?.(ctx);
 		if (dynamicRoles) this.ids = dynamicRoles;
 
-		if (!ctx.member.roles.cache[this.requireAll ? 'hasAll' : 'hasAny'](...this.ids))
+		if (
+			!ctx.member.roles.cache[this.requireAll ? 'hasAll' : 'hasAny'](
+				...this.ids,
+			)
+		) {
 			return ctx.reply({
-				content: this.resolveMessage(ctx) || 'You do not have the required roles to execute this command',
+				content:
+					this.resolveMessage(ctx) ||
+					'You do not have the required roles to execute this command',
 				ephemeral: this.ephemeral,
 			});
-		else return true;
+		} else {
+			return true;
+		}
 	}
 }

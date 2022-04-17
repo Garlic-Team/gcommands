@@ -1,7 +1,7 @@
 import type { Client, Guild } from 'discord.js';
+import { MessageArgumentTypeBase } from './base';
 import { userRegexp } from '../../util/regexes';
 import { Argument, ArgumentType } from '../Argument';
-import { MessageArgumentTypeBase } from './base';
 
 export class UserType extends MessageArgumentTypeBase {
 	value;
@@ -28,7 +28,7 @@ export class UserType extends MessageArgumentTypeBase {
 			...argument.toJSON(),
 			type: ArgumentType[argument.type],
 			user: this.client.users.cache.get(this.value),
-			member: this.guild.members.cache.get(this.value)
+			member: this.guild.members.cache.get(this.value),
 		};
 	}
 }

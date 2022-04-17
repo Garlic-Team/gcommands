@@ -1,7 +1,7 @@
 import { Collection } from 'discord.js';
-import { Plugin } from '../structures/Plugin';
 import type { GClient } from '../GClient';
 import { pluginFinder } from '../loaders/pluginFinder';
+import { Plugin } from '../structures/Plugin';
 import { Logger, Events } from '../util/logger/Logger';
 
 export class PluginManager extends Collection<string, Plugin> {
@@ -14,7 +14,9 @@ export class PluginManager extends Collection<string, Plugin> {
 			this.set(plugin.name, plugin);
 			Logger.emit(Events.PLUGIN_REGISTERED, plugin);
 			Logger.debug('Registered plugin', plugin.name);
-		} else Logger.warn('Plugin must be a instance of plugin');
+		} else {
+			Logger.warn('Plugin must be a instance of plugin');
+		}
 
 		return this;
 	}
@@ -28,8 +30,11 @@ export class PluginManager extends Collection<string, Plugin> {
 		for await (const plugin of this.values()) {
 			this.currentlyLoading = plugin.name;
 			await Promise.resolve(plugin.run(client))
-				.catch((error) => {
-					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				.catch(error => {
+					Logger.error(
+						typeof error.code !== 'undefined' ? error.code : '',
+						error.message,
+					);
 					if (error.stack) Logger.trace(error.stack);
 				})
 				.then(() => {

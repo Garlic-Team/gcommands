@@ -1,16 +1,21 @@
-import type { GClient } from '../GClient';
 import type { ClientEvents, WSEventType } from 'discord.js';
+import { z } from 'zod';
+import type { GClient } from '../GClient';
 import { Listeners } from '../managers/ListenerManager';
 import { Logger } from '../util/logger/Logger';
-import { z } from 'zod';
 
-export interface ListenerOptions<WS extends boolean, Event extends WS extends true ? WSEventType : keyof ClientEvents> {
+export interface ListenerOptions<
+	WS extends boolean,
+	Event extends WS extends true ? WSEventType : keyof ClientEvents,
+> {
 	event: Event | string;
 	name: string;
 	once?: boolean;
 	ws?: WS;
 	fileName?: string;
-	run?: (...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<any>) => any;
+	run?: (
+		...args: Event extends keyof ClientEvents ? ClientEvents[Event] : Array<any>
+	) => any;
 }
 
 const validationSchema = z
@@ -25,7 +30,9 @@ const validationSchema = z
 	.passthrough();
 export class Listener<
 	WS extends boolean = boolean,
-	Event extends WS extends true ? WSEventType : keyof ClientEvents = WS extends true ? WSEventType : keyof ClientEvents,
+	Event extends WS extends true
+		? WSEventType
+		: keyof ClientEvents = WS extends true ? WSEventType : keyof ClientEvents,
 > {
 	public client: GClient;
 	public event: Event | string;
@@ -42,7 +49,7 @@ export class Listener<
 
 		validationSchema
 			.parseAsync({ ...options, ...this })
-			.then((options) => {
+			.then(options => {
 				this.event = options.event;
 				this.name = options.name;
 				this.once = options.once;
@@ -52,8 +59,11 @@ export class Listener<
 
 				Listeners.register(this);
 			})
-			.catch((error) => {
-				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			.catch(error => {
+				Logger.warn(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	}
@@ -61,8 +71,16 @@ export class Listener<
 	public initialize(client: GClient): void {
 		this.client = client;
 
-		if (this.ws) client.ws[this.once ? 'once' : 'on'](this.event as WSEventType, this._run.bind(this));
-		else client[this.once ? 'once' : 'on'](this.event as keyof ClientEvents, this._run.bind(this));
+		if (this.ws)
+			client.ws[this.once ? 'once' : 'on'](
+				this.event as WSEventType,
+				this._run.bind(this),
+			);
+		else
+			client[this.once ? 'once' : 'on'](
+				this.event as keyof ClientEvents,
+				this._run.bind(this),
+			);
 	}
 
 	public unregister(): Listener | void {
@@ -70,8 +88,11 @@ export class Listener<
 	}
 
 	public async _run(...args: Array<any>): Promise<void> {
-		await Promise.resolve(this.run.call(this, ...args)).catch((error) => {
-			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+		await Promise.resolve(this.run.call(this, ...args)).catch(error => {
+			Logger.error(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
 			if (error.stack) Logger.trace(error.stack);
 		});
 	}

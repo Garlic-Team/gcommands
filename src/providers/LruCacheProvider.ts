@@ -1,6 +1,6 @@
-import { Logger } from '../lib/util/logger/Logger';
 import LruCache from 'lru-cache';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
+import { Logger } from '../lib/util/logger/Logger';
 
 export class LruCacheProvider extends Provider {
 	client: LruCache<unknown, unknown>;
@@ -16,8 +16,6 @@ export class LruCacheProvider extends Provider {
 	async init(): Promise<void> {
 		Logger.debug('LruCache initializated!');
 		this.emit('connected', this.client);
-
-		return;
 	}
 
 	async insert(key: string, value: any, maxAge?: number) {
@@ -34,7 +32,7 @@ export class LruCacheProvider extends Provider {
 
 	async update(key: string, value: any, maxAge?: number) {
 		const data = await this.client.set(key, value, {
-			ttl: maxAge
+			ttl: maxAge,
 		});
 
 		return data;

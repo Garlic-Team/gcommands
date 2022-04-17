@@ -46,4 +46,9 @@ export * from './util/confirm';
 export * from './lib/util/Util';
 
 // Re-exports
-export { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';
+export {
+	MessageEmbed,
+	MessageActionRow,
+	MessageButton,
+	MessageSelectMenu,
+} from 'discord.js';

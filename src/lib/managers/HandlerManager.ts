@@ -6,17 +6,23 @@ import type {
 	Message,
 	MessageComponentInteraction,
 } from 'discord.js';
-import { InteractionCommandHandler } from '../../handlers/InteractionCommandHandler';
-import { MessageCommandHandler } from '../../handlers/MessageCommandHandler';
+import { AutocompleteHandler } from '../../handlers/AutocompleteHandler';
 import { ComponentHandler } from '../../handlers/ComponentHandler';
 import { CooldownHandler } from '../../handlers/CooldownHandler';
+import { InteractionCommandHandler } from '../../handlers/InteractionCommandHandler';
+import { MessageCommandHandler } from '../../handlers/MessageCommandHandler';
 import type { Command } from '../structures/Command';
 import type { Component } from '../structures/Component';
-import { AutocompleteHandler } from '../../handlers/AutocompleteHandler';
 
 export class HandlerManager {
-	public interactionCommandHandler: (interaction: CommandInteraction | ContextMenuInteraction) => any;
-	public messageCommandHandler: (message: Message, commandName: string, args: Array<string> | Array<object>) => any;
+	public interactionCommandHandler: (
+		interaction: CommandInteraction | ContextMenuInteraction,
+	) => any;
+	public messageCommandHandler: (
+		message: Message,
+		commandName: string,
+		args: Array<string> | Array<object>,
+	) => any;
 	public componentHandler: (interaction: MessageComponentInteraction) => any;
 	public autocompleteHandler: (interaction: AutocompleteInteraction) => any;
 	public cooldownHandler: (
@@ -42,20 +48,28 @@ export class HandlerManager {
 	}
 
 	public setMessageCommandHandler(
-		handler: (message: Message, commandName: string, args: Array<string> | Array<object>) => any,
+		handler: (
+			message: Message,
+			commandName: string,
+			args: Array<string> | Array<object>,
+		) => any,
 	): HandlerManager {
 		this.messageCommandHandler = handler;
 
 		return this;
 	}
 
-	public setComponentHandler(handler: (interaction: MessageComponentInteraction) => any): HandlerManager {
+	public setComponentHandler(
+		handler: (interaction: MessageComponentInteraction) => any,
+	): HandlerManager {
 		this.componentHandler = handler;
 
 		return this;
 	}
 
-	public setAutocompleteHandler(handler: (interaction: AutocompleteInteraction) => any): HandlerManager {
+	public setAutocompleteHandler(
+		handler: (interaction: AutocompleteInteraction) => any,
+	): HandlerManager {
 		this.autocompleteHandler = handler;
 
 		return this;

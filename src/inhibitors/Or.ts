@@ -2,14 +2,18 @@ import { Inhibitor, InhibitorOptions } from './Inhibitor';
 import type { CommandContext } from '../lib/structures/contexts/CommandContext';
 import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
-type InhibitorFunction = (ctx: CommandContext | ComponentContext) => boolean | any;
+type InhibitorFunction = (
+	ctx: CommandContext | ComponentContext,
+) => boolean | any;
 
 export interface OrOptions extends InhibitorOptions {
 	inhibitors: Array<{ run: InhibitorFunction } | InhibitorFunction>;
 }
 
 export class Or extends Inhibitor {
-	public readonly inhibitors: Array<{ run: InhibitorFunction } | InhibitorFunction>;
+	public readonly inhibitors: Array<
+		{ run: InhibitorFunction } | InhibitorFunction
+	>;
 
 	constructor(options: OrOptions) {
 		super(options);
@@ -20,7 +24,8 @@ export class Or extends Inhibitor {
 		const results = [];
 
 		for await (const inhibitor of this.inhibitors) {
-			if (typeof inhibitor === 'function') results.push(!!(await inhibitor(ctx)));
+			if (typeof inhibitor === 'function')
+				results.push(!!(await inhibitor(ctx)));
 			if (typeof inhibitor === 'object' && typeof inhibitor?.run === 'function')
 				results.push(!!(await inhibitor.run(ctx)));
 		}

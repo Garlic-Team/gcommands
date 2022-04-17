@@ -1,13 +1,13 @@
-import { Util } from '../Util';
-import type { AutocompleteContext } from '../../structures/contexts/AutocompleteContext';
-import type { CommandContext } from '../../structures/contexts/CommandContext';
-import type { ComponentContext } from '../../structures/contexts/ComponentContext';
+import EventEmitter from 'node:events';
+import type { Awaitable } from 'discord.js';
 import type { Command } from '../../structures/Command';
 import type { Component } from '../../structures/Component';
 import type { Listener } from '../../structures/Listener';
 import type { Plugin } from '../../structures/Plugin';
-import type { Awaitable } from 'discord.js';
-import EventEmitter from 'node:events';
+import type { AutocompleteContext } from '../../structures/contexts/AutocompleteContext';
+import type { CommandContext } from '../../structures/contexts/CommandContext';
+import type { ComponentContext } from '../../structures/contexts/ComponentContext';
+import { Util } from '../Util';
 
 export enum Events {
 	'HANDLER_RUN' = 'handlerRun',
@@ -28,52 +28,69 @@ export enum Events {
 }
 
 export interface LoggerEvents {
-	'handlerRun': [ctx: AutocompleteContext | CommandContext | ComponentContext];
-	'handlerError': [ctx: AutocompleteContext | CommandContext | ComponentContext, error: any];
-	'commandHandlerRun': [ctx: CommandContext];
-	'commandHandlerError': [ctx: CommandContext, error: any];
-	'autoCompleteHandlerRun': [ctx: AutocompleteContext];
-	'autoCompleteHandlerError': [ctx: AutocompleteContext, error: any];
-	'componentHandlerRun': [ctx: ComponentContext];
-	'componentHandlerError': [ctx: ComponentContext, error: any];
-	'commandRegistered': [command: Command];
-	'commandUnregistered': [command: Command];
-	'componentRegistered': [component: Component];
-	'componentUnregistered': [component: Component];
-	'listenerRegistered': [listener: Listener];
-	'listenerUnregistered': [listener: Listener];
-	'pluginRegistered': [plugin: Plugin];
+	handlerRun: [ctx: AutocompleteContext | CommandContext | ComponentContext];
+	handlerError: [
+		ctx: AutocompleteContext | CommandContext | ComponentContext,
+		error: any,
+	];
+	commandHandlerRun: [ctx: CommandContext];
+	commandHandlerError: [ctx: CommandContext, error: any];
+	autoCompleteHandlerRun: [ctx: AutocompleteContext];
+	autoCompleteHandlerError: [ctx: AutocompleteContext, error: any];
+	componentHandlerRun: [ctx: ComponentContext];
+	componentHandlerError: [ctx: ComponentContext, error: any];
+	commandRegistered: [command: Command];
+	commandUnregistered: [command: Command];
+	componentRegistered: [component: Component];
+	componentUnregistered: [component: Component];
+	listenerRegistered: [listener: Listener];
+	listenerUnregistered: [listener: Listener];
+	pluginRegistered: [plugin: Plugin];
 }
 
-
 export declare interface ILogger {
-	on<U extends keyof LoggerEvents>(
-		event: U, listener: LoggerEvents[U]
-	  ): this;
-  
-	on<K extends keyof LoggerEvents>(event: K, listener: (...args: LoggerEvents[K]) => Awaitable<void>): this;
+	on<U extends keyof LoggerEvents>(event: U, listener: LoggerEvents[U]): this;
+
+	on<K extends keyof LoggerEvents>(
+		event: K,
+		listener: (...args: LoggerEvents[K]) => Awaitable<void>,
+	): this;
 	on<S extends string | symbol>(
 		event: Exclude<S, keyof LoggerEvents>,
 		listener: (...args: any[]) => Awaitable<void>,
 	): this;
 
-	once<K extends keyof LoggerEvents>(event: K, listener: (...args: LoggerEvents[K]) => Awaitable<void>): this;
+	once<K extends keyof LoggerEvents>(
+		event: K,
+		listener: (...args: LoggerEvents[K]) => Awaitable<void>,
+	): this;
 	once<S extends string | symbol>(
 		event: Exclude<S, keyof LoggerEvents>,
 		listener: (...args: any[]) => Awaitable<void>,
 	): this;
 
-	emit<K extends keyof LoggerEvents>(event: K, ...args: LoggerEvents[K]): boolean;
-	emit<S extends string | symbol>(event: Exclude<S, keyof LoggerEvents>, ...args: unknown[]): boolean;
+	emit<K extends keyof LoggerEvents>(
+		event: K,
+		...args: LoggerEvents[K]
+	): boolean;
+	emit<S extends string | symbol>(
+		event: Exclude<S, keyof LoggerEvents>,
+		...args: unknown[]
+	): boolean;
 
-	off<K extends keyof LoggerEvents>(event: K, listener: (...args: LoggerEvents[K]) => Awaitable<void>): this;
+	off<K extends keyof LoggerEvents>(
+		event: K,
+		listener: (...args: LoggerEvents[K]) => Awaitable<void>,
+	): this;
 	off<S extends string | symbol>(
 		event: Exclude<S, keyof LoggerEvents>,
 		listener: (...args: any[]) => Awaitable<void>,
 	): this;
 
 	removeAllListeners<K extends keyof LoggerEvents>(event?: K): this;
-	removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof LoggerEvents>): this;
+	removeAllListeners<S extends string | symbol>(
+		event?: Exclude<S, keyof LoggerEvents>,
+	): this;
 }
 
 export const enum LogLevel {
@@ -89,7 +106,14 @@ export const enum LogLevel {
 	OFF = 99,
 }
 
-export type LogMethods = 'trace' | 'debug' | 'info' | 'time' | 'warn' | 'timeEnd' | 'error';
+export type LogMethods =
+	| 'trace'
+	| 'debug'
+	| 'info'
+	| 'time'
+	| 'warn'
+	| 'timeEnd'
+	| 'error';
 
 export class ILogger extends EventEmitter {
 	TRACE: LogLevel.TRACE;
@@ -103,7 +127,7 @@ export class ILogger extends EventEmitter {
 
 	constructor() {
 		super();
-		
+
 		this.TRACE = LogLevel.TRACE;
 		this.DEBUG = LogLevel.DEBUG;
 		this.INFO = LogLevel.INFO;
@@ -157,10 +181,22 @@ export class ILogger extends EventEmitter {
 		else if (level === LogLevel.WARN) color = '\x1b[93m';
 		else color = '\x1b[91m';
 
-		const method = this.LevelMethods.get(level) as 'trace' | 'debug' | 'info' | 'warn' | 'error';
+		const method = this.LevelMethods.get(level) as
+			| 'trace'
+			| 'debug'
+			| 'info'
+			| 'warn'
+			| 'error';
 		const date = new Date();
 
-		console[method](`${color}[${Util.pad(date.getHours())}:${Util.pad(date.getMinutes())}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${values[0]}`, ...values.slice(1));
+		console[method](
+			`${color}[${Util.pad(date.getHours())}:${Util.pad(
+				date.getMinutes(),
+			)}:${Util.pad(date.getSeconds())}/${method.toUpperCase()}]\x1b[0m ${
+				values[0]
+			}`,
+			...values.slice(1),
+		);
 	}
 
 	/**

@@ -1,6 +1,11 @@
-import type { CommandContext } from '../lib/structures/contexts/CommandContext';
-import { ButtonInteraction, MessageActionRow, MessageButton, MessageButtonStyle } from 'discord.js';
+import {
+	ButtonInteraction,
+	MessageActionRow,
+	MessageButton,
+	MessageButtonStyle,
+} from 'discord.js';
 import { customId } from './customId';
+import type { CommandContext } from '../lib/structures/contexts/CommandContext';
 import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 
 export interface ConfirmOptions {
@@ -14,27 +19,40 @@ export interface ConfirmOptions {
 	};
 }
 
-export async function confirm(ctx: CommandContext | ComponentContext, options: ConfirmOptions = {}) {
+export async function confirm(
+	ctx: CommandContext | ComponentContext,
+	options: ConfirmOptions = {},
+) {
 	const id = customId('confirm', ctx.userId);
-	const button = new MessageButton().setCustomId(id).setLabel('Confirm').setStyle('DANGER');
+	const button = new MessageButton()
+		.setCustomId(id)
+		.setLabel('Confirm')
+		.setStyle('DANGER');
 
-	if (typeof options.button?.label === 'string') button.setLabel(options.button.label);
-	if (typeof options.button?.style === 'string') button.setStyle(options.button.style);
-	if (typeof options.button?.emoji === 'string') button.setEmoji(options.button.emoji);
+	if (typeof options.button?.label === 'string')
+		button.setLabel(options.button.label);
+	if (typeof options.button?.style === 'string')
+		button.setStyle(options.button.style);
+	if (typeof options.button?.emoji === 'string')
+		button.setEmoji(options.button.emoji);
 
 	const row = new MessageActionRow().addComponents([button]);
 
 	const messageContent = {
-		content: typeof options.message === 'function' ? options.message(ctx) : options.message || 'Are you sure?',
+		content:
+			typeof options.message === 'function'
+				? options.message(ctx)
+				: options.message || 'Are you sure?',
 		components: [row],
 		ephemeral: options.ephemeral,
 	};
 
-	ctx.deferred ? await ctx.editReply(messageContent) : await ctx.reply(messageContent);
+	ctx.deferred
+		? await ctx.editReply(messageContent)
+		: await ctx.reply(messageContent);
 
-	const filter = (interaction: ButtonInteraction) => {
-		return interaction.customId === id && interaction.user.id === ctx.userId;
-	};
+	const filter = (interaction: ButtonInteraction) =>
+		interaction.customId === id && interaction.user.id === ctx.userId;
 
 	const result = await ctx.channel
 		?.awaitMessageComponent({
@@ -42,9 +60,7 @@ export async function confirm(ctx: CommandContext | ComponentContext, options: C
 			time: options.time || 10000,
 			componentType: 'BUTTON',
 		})
-		?.catch(() => {
-			return undefined;
-		});
+		?.catch(() => undefined);
 
 	if (result instanceof ButtonInteraction) result.deferUpdate();
 

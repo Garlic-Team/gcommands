@@ -1,7 +1,7 @@
 import type { Snowflake } from 'discord.js';
+import { Inhibitor, InhibitorOptions } from './Inhibitor';
 import type { CommandContext } from '../lib/structures/contexts/CommandContext';
 import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
-import { Inhibitor, InhibitorOptions } from './Inhibitor';
 
 export interface UserOnlyOptions extends InhibitorOptions {
 	ids: Array<Snowflake>;
@@ -22,11 +22,13 @@ export class UserOnly extends Inhibitor {
 		const dynamicUsers = this.getIds?.(ctx);
 		if (dynamicUsers) this.ids = dynamicUsers;
 
-		if (!this.ids.includes(ctx.userId))
+		if (!this.ids.includes(ctx.userId)) {
 			return ctx.reply({
 				content: this.resolveMessage(ctx) || 'You can not use this command',
 				ephemeral: this.ephemeral,
 			});
-		else return true;
+		} else {
+			return true;
+		}
 	}
 }

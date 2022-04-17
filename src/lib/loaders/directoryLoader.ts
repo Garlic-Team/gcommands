@@ -10,7 +10,10 @@ export async function directoryLoader(dir: string): Promise<Array<any>> {
 			const fileType = path.extname(rawFileName);
 
 			if (fsDirent.isDirectory()) {
-				files = [...files, ...(await directoryLoader(path.join(dir, rawFileName)))];
+				files = [
+					...files,
+					...(await directoryLoader(path.join(dir, rawFileName))),
+				];
 				continue;
 			} else if (!['.js', '.mjs', '.ts', '.json'].includes(fileType)) {
 				continue;

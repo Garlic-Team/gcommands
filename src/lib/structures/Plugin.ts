@@ -1,7 +1,7 @@
+import { z } from 'zod';
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
 import { Logger } from '../util/logger/Logger';
-import { z } from 'zod';
 
 const validationSchema = z
 	.object({
@@ -17,14 +17,17 @@ export class Plugin {
 	public constructor(name: string, run: (client: GClient) => any) {
 		validationSchema
 			.parseAsync({ name, run, ...this })
-			.then((options) => {
+			.then(options => {
 				this.name = options.name;
 				this.run = options.run;
 
 				Plugins.register(this);
 			})
-			.catch((error) => {
-				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			.catch(error => {
+				Logger.warn(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	}

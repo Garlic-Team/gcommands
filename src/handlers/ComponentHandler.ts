@@ -1,16 +1,18 @@
+import { setTimeout } from 'node:timers';
 import { Collection, MessageComponentInteraction } from 'discord.js';
 import { AutoDeferType, GClient } from '../lib/GClient';
-import { ComponentType } from '../lib/structures/Component';
-import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 import { Components } from '../lib/managers/ComponentManager';
 import { Handlers } from '../lib/managers/HandlerManager';
-import { setTimeout } from 'node:timers';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import { ComponentType } from '../lib/structures/Component';
+import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 import { Util } from '../lib/util/Util';
+import { Logger, Events } from '../lib/util/logger/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
-export async function ComponentHandler(interaction: MessageComponentInteraction) {
+export async function ComponentHandler(
+	interaction: MessageComponentInteraction,
+) {
 	const client = interaction.client as GClient;
 
 	const regex = new RegExp('[A-Za-z0-9]+', 'gd');
@@ -19,21 +21,31 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 	const component = Components.get(args?.shift());
 	if (
 		!component ||
-		!component.type.includes(interaction.isButton() ? ComponentType.BUTTON : ComponentType.SELECT_MENU) ||
+		!component.type.includes(
+			interaction.isButton() ? ComponentType.BUTTON : ComponentType.SELECT_MENU,
+		) ||
 		(component.guildId && component.guildId !== interaction.guildId)
 	)
 		return;
 
 	if (component.cooldown) {
-		const cooldown = Handlers.cooldownHandler(interaction.user.id, component, cooldowns);
-		if (cooldown)
+		const cooldown = Handlers.cooldownHandler(
+			interaction.user.id,
+			component,
+			cooldowns,
+		);
+		if (cooldown) {
 			return interaction.reply({
-				content: (await Util.getResponse('COOLDOWN', interaction)).replace('{time}', String(cooldown)).replace(
-					'{name}',
-					component.name + (interaction.isButton() ? ' button' : ' select menu'),
-				),
+				content: (await Util.getResponse('COOLDOWN', interaction))
+					.replace('{time}', String(cooldown))
+					.replace(
+						'{name}',
+						component.name +
+							(interaction.isButton() ? ' button' : ' select menu'),
+					),
 				ephemeral: true,
 			});
+		}
 	}
 
 	const ctx = new ComponentContext(client, {
@@ -63,36 +75,48 @@ export async function ComponentHandler(interaction: MessageComponentInteraction)
 	if (!(await component.inhibit(ctx))) return;
 
 	let autoDeferTimeout;
-	if (component.autoDefer)
+	if (component.autoDefer) {
 		autoDeferTimeout = setTimeout(() => {
 			component.autoDefer === AutoDeferType.UPDATE
 				? ctx.deferUpdate()
-				: ctx.deferReply({ ephemeral: component.autoDefer === AutoDeferType.EPHEMERAL });
+				: ctx.deferReply({
+						ephemeral: component.autoDefer === AutoDeferType.EPHEMERAL,
+				  });
 		}, 2500 - client.ws.ping);
+	}
 
 	await Promise.resolve(component.run(ctx))
-		.catch(async (error) => {
+		.catch(async error => {
 			Logger.emit(Events.HANDLER_ERROR, ctx, error);
 			Logger.emit(Events.COMPONENT_HANDLER_ERROR, ctx, error);
-			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			Logger.error(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
 			if (error.stack) Logger.trace(error.stack);
 
-			const errorReply = async() =>
+			const errorReply = async () =>
 				ctx.safeReply({
-					content: (await Util.getResponse('ERROR', interaction)),
+					content: await Util.getResponse('ERROR', interaction),
 					ephemeral: true,
 					components: [],
 				});
-			
-			if (typeof component.onError === 'function')
-				await Promise.resolve(component.onError(ctx, error)).catch(async () => await errorReply());
-			else await errorReply();
+
+			if (typeof component.onError === 'function') {
+				await Promise.resolve(component.onError(ctx, error)).catch(
+					async () => await errorReply(),
+				);
+			} else {
+				await errorReply();
+			}
 		})
 		.then(() => {
 			if (autoDeferTimeout) clearTimeout(autoDeferTimeout);
-			
+
 			Logger.emit(Events.HANDLER_RUN, ctx);
 			Logger.emit(Events.COMPONENT_HANDLER_RUN, ctx);
-			Logger.debug(`Successfully ran component (${component.name}) for ${interaction.user.username}`);
+			Logger.debug(
+				`Successfully ran component (${component.name}) for ${interaction.user.username}`,
+			);
 		});
 }

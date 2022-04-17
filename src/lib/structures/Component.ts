@@ -1,8 +1,8 @@
-import { AutoDeferType, GClient } from '../GClient';
+import { z } from 'zod';
 import type { ComponentContext } from './contexts/ComponentContext';
+import { AutoDeferType, GClient } from '../GClient';
 import { Components } from '../managers/ComponentManager';
 import { Logger } from '../util/logger/Logger';
-import { z } from 'zod';
 
 export enum ComponentType {
 	'BUTTON' = 1,
@@ -10,7 +10,9 @@ export enum ComponentType {
 }
 
 export type ComponentInhibitor = (ctx: ComponentContext) => boolean | any;
-export type ComponentInhibitors = Array<{ run: ComponentInhibitor } | ComponentInhibitor>;
+export type ComponentInhibitors = Array<
+	{ run: ComponentInhibitor } | ComponentInhibitor
+>;
 
 export interface ComponentOptions {
 	name: string;
@@ -32,8 +34,10 @@ const validationSchema = z
 			.regex(/^[a-z1-9]/),
 		type: z
 			.union([z.string(), z.nativeEnum(ComponentType)])
-			.transform((arg) =>
-				typeof arg === 'string' && Object.keys(ComponentType).includes(arg) ? ComponentType[arg] : arg,
+			.transform(arg =>
+				typeof arg === 'string' && Object.keys(ComponentType).includes(arg)
+					? ComponentType[arg]
+					: arg,
 			)
 			.array()
 			.nonempty(),
@@ -42,8 +46,10 @@ const validationSchema = z
 		cooldown: z.string().optional(),
 		autoDefer: z
 			.union([z.string(), z.nativeEnum(AutoDeferType)])
-			.transform((arg) =>
-				typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg,
+			.transform(arg =>
+				typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg)
+					? AutoDeferType[arg]
+					: arg,
 			)
 			.optional(),
 		fileName: z.string().optional(),
@@ -73,7 +79,7 @@ export class Component {
 
 		validationSchema
 			.parseAsync({ ...options, ...this })
-			.then((options) => {
+			.then(options => {
 				this.name = options.name || Component.defaults?.name;
 				this.type = options.type || Component.defaults?.type;
 				this.inhibitors = options.inhibitors || Component.defaults?.inhibitors;
@@ -86,8 +92,11 @@ export class Component {
 
 				Components.register(this);
 			})
-			.catch((error) => {
-				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			.catch(error => {
+				Logger.warn(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	}
@@ -95,7 +104,8 @@ export class Component {
 	public initialize(client: GClient): void {
 		this.client = client;
 
-		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
+		if (!this.guildId && client.options?.devGuildId)
+			this.guildId = client.options.devGuildId;
 	}
 
 	public unregister(): Component | undefined {
@@ -108,13 +118,19 @@ export class Component {
 		for await (const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch((error) => {
-					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
+					Logger.error(
+						typeof error.code !== 'undefined' ? error.code : '',
+						error.message,
+					);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch((error) => {
-					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
+					Logger.error(
+						typeof error.code !== 'undefined' ? error.code : '',
+						error.message,
+					);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			}
@@ -138,11 +154,14 @@ export class Component {
 		validationSchema
 			.partial()
 			.parseAsync(defaults)
-			.then((defaults) => {
+			.then(defaults => {
 				Component.defaults = defaults as Partial<ComponentOptions>;
 			})
-			.catch((error) => {
-				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			.catch(error => {
+				Logger.warn(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	}

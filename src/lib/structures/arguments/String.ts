@@ -1,5 +1,5 @@
-import { Argument, ArgumentType } from '../Argument';
 import { MessageArgumentTypeBase } from './base';
+import { Argument, ArgumentType } from '../Argument';
 
 export class StringType extends MessageArgumentTypeBase {
 	value;
@@ -8,15 +8,16 @@ export class StringType extends MessageArgumentTypeBase {
 		if (typeof content === 'string') {
 			this.value = content;
 			return true;
+		} else {
+			return false;
 		}
-		else return false;
 	}
 
 	resolve(argument: Argument) {
 		return {
 			...argument.toJSON(),
 			type: ArgumentType[argument.type],
-			value: this.value
+			value: this.value,
 		};
 	}
 }

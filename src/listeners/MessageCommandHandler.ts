@@ -1,7 +1,7 @@
-import { Listener } from '../lib/structures/Listener';
-import type { GClient } from '../lib/GClient';
 import type { Message } from 'discord.js';
+import type { GClient } from '../lib/GClient';
 import { Handlers } from '../lib/managers/HandlerManager';
+import { Listener } from '../lib/structures/Listener';
 import { Logger } from '../lib/util/logger/Logger';
 
 new Listener({
@@ -12,17 +12,27 @@ new Listener({
 
 		if (!client.options.messageSupport) return;
 
-		const mention = message.content.split(' ')[0].match(new RegExp(`^<@!?(${client.user?.id})>`));
+		const mention = message.content
+			.split(' ')[0]
+			.match(new RegExp(`^<@!?(${client.user?.id})>`));
 
 		const prefix = mention?.[0] || client.options?.messagePrefix;
 
 		if (!message.content.startsWith(prefix as string)) return;
 
-		const [commandName, ...args] = message.content.slice(prefix?.length).trim().split(/ +/g);
+		const [commandName, ...args] = message.content
+			.slice(prefix?.length)
+			.trim()
+			.split(/ +/g);
 		if (commandName.length === 0) return;
 
-		await Promise.resolve(Handlers.messageCommandHandler(message, commandName, args)).catch((error) => {
-			Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+		await Promise.resolve(
+			Handlers.messageCommandHandler(message, commandName, args),
+		).catch(error => {
+			Logger.error(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
 			if (error.stack) Logger.trace(error.stack);
 		});
 	},

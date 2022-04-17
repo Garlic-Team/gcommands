@@ -1,7 +1,7 @@
 import type { Client, Guild } from 'discord.js';
+import { MessageArgumentTypeBase } from './base';
 import { mentionableRegexp } from '../../util/regexes';
 import { Argument, ArgumentType } from '../Argument';
-import { MessageArgumentTypeBase } from './base';
 
 export class MentionableType extends MessageArgumentTypeBase {
 	value;
@@ -16,7 +16,12 @@ export class MentionableType extends MessageArgumentTypeBase {
 
 	validate(content: string): boolean {
 		const matches = mentionableRegexp.exec(content);
-		if (!matches || (!this.guild.roles.cache.get(matches?.[1]) && !this.client.users.cache.get(matches?.[1]))) return false;
+		if (
+			!matches ||
+			(!this.guild.roles.cache.get(matches?.[1]) &&
+				!this.client.users.cache.get(matches?.[1]))
+		)
+			return false;
 
 		this.value = matches[1];
 

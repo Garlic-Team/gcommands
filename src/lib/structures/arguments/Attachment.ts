@@ -1,6 +1,6 @@
 import { MessageAttachment } from 'discord.js';
-import { Argument, ArgumentType } from '../Argument';
 import { MessageArgumentTypeBase } from './base';
+import { Argument, ArgumentType } from '../Argument';
 
 export class AttachmentType extends MessageArgumentTypeBase {
 	value;
@@ -18,7 +18,7 @@ export class AttachmentType extends MessageArgumentTypeBase {
 		return {
 			...argument.toJSON(),
 			type: ArgumentType[argument.type],
-			attachment: this.value
+			attachment: this.value,
 		};
 	}
 }

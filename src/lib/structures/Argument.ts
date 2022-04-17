@@ -1,8 +1,8 @@
-import type { AutocompleteContext } from './contexts/AutocompleteContext';
-import { Logger } from '../util/logger/Logger';
-import { z } from 'zod';
 import type { ApplicationCommandOptionType } from 'discord-api-types/v9';
+import { z } from 'zod';
+import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import { Locale, LocaleString } from '../util/common';
+import { Logger } from '../util/logger/Logger';
 
 export enum ArgumentType {
 	'SUB_COMMAND' = 1,
@@ -22,7 +22,7 @@ export enum ChannelType {
 	'GUILD_TEXT' = 0,
 	'GUILD_VOICE' = 2,
 	'GUILD_CATEGORY' = 4,
-	'GUILD_NEWS' = 5 ,
+	'GUILD_NEWS' = 5,
 	'GUILD_STORE' = 6,
 	'GUILD_NEWS_THREAD' = 10,
 	'GUILD_PUBLIC_THREAD' = 11,
@@ -65,27 +65,40 @@ const validationSchema = z
 			.string()
 			.max(32)
 			.regex(/^[a-zA-Z1-9]/),
-		nameLocalizations: z.record(
-			z
-				.union([z.string(), z.nativeEnum(Locale)])
-				.transform((arg) =>
-					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
-				),
-			z.string().max(32).regex(/^[a-zA-Z1-9]/)
-		).optional(),
+		nameLocalizations: z
+			.record(
+				z
+					.union([z.string(), z.nativeEnum(Locale)])
+					.transform(arg =>
+						typeof arg === 'string' && Object.keys(Locale).includes(arg)
+							? Locale[arg]
+							: arg,
+					),
+				z
+					.string()
+					.max(32)
+					.regex(/^[a-zA-Z1-9]/),
+			)
+			.optional(),
 		description: z.string().max(100),
-		descriptionLocalizations: z.record(
-			z
-				.union([z.string(), z.nativeEnum(Locale)])
-				.transform((arg) =>
-					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
-				),
-			z.string().max(100)
-		).optional(),
+		descriptionLocalizations: z
+			.record(
+				z
+					.union([z.string(), z.nativeEnum(Locale)])
+					.transform(arg =>
+						typeof arg === 'string' && Object.keys(Locale).includes(arg)
+							? Locale[arg]
+							: arg,
+					),
+				z.string().max(100),
+			)
+			.optional(),
 		type: z
 			.union([z.string(), z.nativeEnum(ArgumentType)])
-			.transform((arg) =>
-				typeof arg === 'string' && Object.keys(ArgumentType).includes(arg) ? ArgumentType[arg] : arg,
+			.transform(arg =>
+				typeof arg === 'string' && Object.keys(ArgumentType).includes(arg)
+					? ArgumentType[arg]
+					: arg,
 			),
 		required: z.boolean().optional(),
 		choices: z
@@ -99,8 +112,10 @@ const validationSchema = z
 		arguments: z.any().array().optional(),
 		channelTypes: z
 			.union([z.string(), z.nativeEnum(ChannelType)])
-			.transform((arg) =>
-				typeof arg === 'string' && Object.keys(ChannelType).includes(arg) ? ChannelType[arg] : arg,
+			.transform(arg =>
+				typeof arg === 'string' && Object.keys(ChannelType).includes(arg)
+					? ChannelType[arg]
+					: arg,
 			)
 			.array()
 			.optional(),
@@ -131,7 +146,9 @@ export class Argument {
 
 	constructor(options: ArgumentOptions) {
 		if (options.options) {
-			Logger.warn('The use of ArgumentOptions#options is depracted. Please use ArgumentOptions#arguments instead');
+			Logger.warn(
+				'The use of ArgumentOptions#options is depracted. Please use ArgumentOptions#arguments instead',
+			);
 			options.arguments = options.options;
 		}
 
@@ -139,7 +156,7 @@ export class Argument {
 
 		validationSchema
 			.parseAsync({ ...options, ...this })
-			.then((options) => {
+			.then(options => {
 				this.name = options.name;
 				this.nameLocalizations = options.nameLocalizations;
 				this.description = options.description;
@@ -147,7 +164,7 @@ export class Argument {
 				this.type = options.type;
 				this.required = options.required;
 				this.choices = options.choices as Array<ArgumentChoice>;
-				this.arguments = options.arguments?.map((argument) => {
+				this.arguments = options.arguments?.map(argument => {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
 				});
@@ -157,21 +174,27 @@ export class Argument {
 				this.maxValue = options.maxValue;
 				this.run = options.run;
 			})
-			.catch((error) => {
-				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			.catch(error => {
+				Logger.warn(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	}
 
 	public toJSON(): Record<string, any> {
-		if (this.type === ArgumentType.SUB_COMMAND || this.type === ArgumentType.SUB_COMMAND_GROUP) {
+		if (
+			this.type === ArgumentType.SUB_COMMAND ||
+			this.type === ArgumentType.SUB_COMMAND_GROUP
+		) {
 			return {
 				name: this.name,
 				name_localizations: this.nameLocalizations,
 				description: this.description,
 				description_localizations: this.descriptionLocalizations,
 				type: this.type,
-				options: this.arguments?.map((argument) => argument.toJSON()),
+				options: this.arguments?.map(argument => argument.toJSON()),
 			};
 		}
 

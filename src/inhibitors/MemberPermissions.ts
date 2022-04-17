@@ -17,7 +17,7 @@ export class MemberPermissions extends Inhibitor {
 
 	run(ctx: CommandContext | ComponentContext): boolean | any {
 		if (!ctx.inGuild()) return;
-		if (!ctx.memberPermissions.has(this.permissions))
+		if (!ctx.memberPermissions.has(this.permissions)) {
 			return ctx.reply({
 				content:
 					this.resolveMessage(ctx) ||
@@ -27,6 +27,8 @@ export class MemberPermissions extends Inhibitor {
 						.toLowerCase()}`,
 				ephemeral: this.ephemeral,
 			});
-		else return true;
+		} else {
+			return true;
+		}
 	}
 }

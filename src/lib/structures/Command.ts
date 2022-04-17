@@ -1,10 +1,10 @@
-import { AutoDeferType, GClient } from '../GClient';
+import { z } from 'zod';
 import { Argument, ArgumentOptions } from './Argument';
 import type { CommandContext } from './contexts/CommandContext';
+import { AutoDeferType, GClient } from '../GClient';
 import { Commands } from '../managers/CommandManager';
-import { Logger } from '../util/logger/Logger';
-import { z } from 'zod';
 import { Locale, LocaleString } from '../util/common';
+import { Logger } from '../util/logger/Logger';
 
 export enum CommandType {
 	/**
@@ -26,7 +26,9 @@ export enum CommandType {
 }
 
 export type CommandInhibitor = (ctx: CommandContext) => boolean | any;
-export type CommandInhibitors = Array<{ run: CommandInhibitor } | CommandInhibitor>;
+export type CommandInhibitors = Array<
+	{ run: CommandInhibitor } | CommandInhibitor
+>;
 
 export interface CommandOptions {
 	name: string;
@@ -50,26 +52,41 @@ const validationSchema = z
 			.string()
 			.max(32)
 			.regex(/^[aA-zZ1-9]/),
-		nameLocalizations: z.record(
-			z
-				.union([z.string(), z.nativeEnum(Locale)])
-				.transform((arg) =>
-					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
-				),
-			z.string().max(32).regex(/^[a-zA-Z1-9]/)
-		).optional(),
+		nameLocalizations: z
+			.record(
+				z
+					.union([z.string(), z.nativeEnum(Locale)])
+					.transform(arg =>
+						typeof arg === 'string' && Object.keys(Locale).includes(arg)
+							? Locale[arg]
+							: arg,
+					),
+				z
+					.string()
+					.max(32)
+					.regex(/^[a-zA-Z1-9]/),
+			)
+			.optional(),
 		description: z.string().max(100).optional(),
-		descriptionLocalizations: z.record(
-			z
-				.union([z.string(), z.nativeEnum(Locale)])
-				.transform((arg) =>
-					typeof arg === 'string' && Object.keys(Locale).includes(arg) ? Locale[arg] : arg,
-				),
-			z.string().max(100)
-		).optional(),
+		descriptionLocalizations: z
+			.record(
+				z
+					.union([z.string(), z.nativeEnum(Locale)])
+					.transform(arg =>
+						typeof arg === 'string' && Object.keys(Locale).includes(arg)
+							? Locale[arg]
+							: arg,
+					),
+				z.string().max(100),
+			)
+			.optional(),
 		type: z
 			.union([z.string(), z.nativeEnum(CommandType)])
-			.transform((arg) => (typeof arg === 'string' && Object.keys(CommandType).includes(arg) ? CommandType[arg] : arg))
+			.transform(arg =>
+				typeof arg === 'string' && Object.keys(CommandType).includes(arg)
+					? CommandType[arg]
+					: arg,
+			)
 			.array()
 			.nonempty(),
 		arguments: z.any().array().optional(),
@@ -78,7 +95,11 @@ const validationSchema = z
 		cooldown: z.string().optional(),
 		autoDefer: z
 			.union([z.string(), z.nativeEnum(AutoDeferType)])
-			.transform((arg) => (typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg) ? AutoDeferType[arg] : arg))
+			.transform(arg =>
+				typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg)
+					? AutoDeferType[arg]
+					: arg,
+			)
 			.optional(),
 		fileName: z.string().optional(),
 		run: z.function(),
@@ -111,13 +132,16 @@ export class Command {
 
 		validationSchema
 			.parseAsync({ ...options, ...this })
-			.then((options) => {
+			.then(options => {
 				this.name = options.name || Command.defaults?.name;
-				this.nameLocalizations = options.nameLocalizations || Command.defaults?.nameLocalizations;
+				this.nameLocalizations =
+					options.nameLocalizations || Command.defaults?.nameLocalizations;
 				this.description = options.description || Command.defaults?.description;
-				this.descriptionLocalizations = options.descriptionLocalizations || Command.defaults?.descriptionLocalizations;
+				this.descriptionLocalizations =
+					options.descriptionLocalizations ||
+					Command.defaults?.descriptionLocalizations;
 				this.type = options.type || Command.defaults?.type;
-				this.arguments = options.arguments?.map((argument) => {
+				this.arguments = options.arguments?.map(argument => {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
 				});
@@ -131,8 +155,11 @@ export class Command {
 
 				Commands.register(this);
 			})
-			.catch((error) => {
-				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			.catch(error => {
+				Logger.warn(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	}
@@ -140,7 +167,8 @@ export class Command {
 	public initialize(client: GClient): void {
 		this.client = client;
 
-		if (!this.guildId && client.options?.devGuildId) this.guildId = client.options.devGuildId;
+		if (!this.guildId && client.options?.devGuildId)
+			this.guildId = client.options.devGuildId;
 	}
 
 	public unregister(): Command {
@@ -153,13 +181,19 @@ export class Command {
 		for await (const inhibitor of this.inhibitors) {
 			let result;
 			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch((error) => {
-					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
+					Logger.error(
+						typeof error.code !== 'undefined' ? error.code : '',
+						error.message,
+					);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch((error) => {
-					Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
+					Logger.error(
+						typeof error.code !== 'undefined' ? error.code : '',
+						error.message,
+					);
 					if (error.stack) Logger.trace(error.stack);
 				});
 			}
@@ -181,22 +215,23 @@ export class Command {
 
 	public toJSON(): Array<Record<string, any>> {
 		return this.type
-			.filter((type) => type !== CommandType.MESSAGE)
-			.map((type) => {
-				if (type === CommandType.SLASH)
+			.filter(type => type !== CommandType.MESSAGE)
+			.map(type => {
+				if (type === CommandType.SLASH) {
 					return {
 						name: this.name,
 						name_localizations: this.nameLocalizations,
 						description: this.description,
 						description_localizations: this.descriptionLocalizations,
-						options: this.arguments?.map((argument) => argument.toJSON()),
+						options: this.arguments?.map(argument => argument.toJSON()),
 						type: type,
 					};
-				else
+				} else {
 					return {
 						name: this.name,
 						type: type,
 					};
+				}
 			});
 	}
 
@@ -204,11 +239,14 @@ export class Command {
 		validationSchema
 			.partial()
 			.parseAsync(defaults)
-			.then((defaults) => {
+			.then(defaults => {
 				Command.defaults = defaults as Partial<CommandOptions>;
 			})
-			.catch((error) => {
-				Logger.warn(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			.catch(error => {
+				Logger.warn(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
 				if (error.stack) Logger.trace(error.stack);
 			});
 	}

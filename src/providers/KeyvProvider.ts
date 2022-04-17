@@ -1,6 +1,6 @@
-import { Logger } from '../lib/util/logger/Logger';
 import Keyv from 'keyv';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
+import { Logger } from '../lib/util/logger/Logger';
 
 export class KeyvProvider extends Provider {
 	uri: string | undefined;
@@ -23,8 +23,6 @@ export class KeyvProvider extends Provider {
 
 		Logger.debug('Keyv initializated!');
 		this.emit('connected', this.client);
-
-		return;
 	}
 
 	async insert(key: string, value: any, ttl?: number) {

@@ -1,7 +1,7 @@
 import type { Guild } from 'discord.js';
+import { MessageArgumentTypeBase } from './base';
 import { roleRegexp } from '../../util/regexes';
 import { Argument, ArgumentType } from '../Argument';
-import { MessageArgumentTypeBase } from './base';
 
 export class RoleType extends MessageArgumentTypeBase {
 	value;
@@ -25,7 +25,7 @@ export class RoleType extends MessageArgumentTypeBase {
 		return {
 			...argument.toJSON(),
 			type: ArgumentType[argument.type],
-			channel: this.guild.roles.cache.get(this.value)
+			channel: this.guild.roles.cache.get(this.value),
 		};
 	}
 }

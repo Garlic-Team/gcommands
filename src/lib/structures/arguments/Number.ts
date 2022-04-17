@@ -1,5 +1,5 @@
-import { Argument, ArgumentType } from '../Argument';
 import { MessageArgumentTypeBase } from './base';
+import { Argument, ArgumentType } from '../Argument';
 
 export class NumberType extends MessageArgumentTypeBase {
 	value;
@@ -8,15 +8,16 @@ export class NumberType extends MessageArgumentTypeBase {
 		if (!isNaN(Number(content))) {
 			this.value = content;
 			return true;
+		} else {
+			return false;
 		}
-		else return false;
 	}
 
 	resolve(argument: Argument) {
 		return {
 			...argument.toJSON(),
 			type: ArgumentType[argument.type],
-			value: this.value
+			value: this.value,
 		};
 	}
 }

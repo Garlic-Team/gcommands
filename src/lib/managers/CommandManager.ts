@@ -1,21 +1,28 @@
 import { Collection } from 'discord.js';
-import { Command } from '../structures/Command';
-import type { GClient } from '../GClient';
-import { Logger, Events } from '../util/logger/Logger';
 import { Plugins } from './PluginManager';
+import type { GClient } from '../GClient';
+import { Command } from '../structures/Command';
+import { Logger, Events } from '../util/logger/Logger';
 
 export class CommandManager extends Collection<string, Command> {
 	private client: GClient;
 
 	public register(command: any): CommandManager {
 		if (command instanceof Command) {
-			if (this.has(command.name) && !this.get(command.name)?.reloading) Logger.warn('Overriding command', command.name);
+			if (this.has(command.name) && !this.get(command.name)?.reloading)
+				Logger.warn('Overriding command', command.name);
 			if (this.client) command.initialize(this.client);
 			if (Plugins.currentlyLoading) command.owner = Plugins.currentlyLoading;
 			this.set(command.name, command);
 			Logger.emit(Events.COMMAND_REGISTERED, command);
-			Logger.debug('Registered command', command.name, command.owner ? `(by plugin ${command.owner})` : '');
-		} else Logger.warn('Command must be a instance of Command');
+			Logger.debug(
+				'Registered command',
+				command.name,
+				command.owner ? `(by plugin ${command.owner})` : '',
+			);
+		} else {
+			Logger.warn('Command must be a instance of Command');
+		}
 
 		return this;
 	}

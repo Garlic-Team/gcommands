@@ -1,8 +1,8 @@
-import { Listener } from '../lib/structures/Listener';
-import type { GClient } from '../lib/GClient';
 import type { Client } from 'discord.js';
-import { sync } from '../lib/util/sync';
+import type { GClient } from '../lib/GClient';
+import { Listener } from '../lib/structures/Listener';
 import { Logger } from '../lib/util/logger/Logger';
+import { sync } from '../lib/util/sync';
 
 new Listener({
 	event: 'ready',

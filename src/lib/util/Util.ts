@@ -1,5 +1,5 @@
-import { Logger } from './logger/Logger';
 import type { Client } from 'discord.js';
+import { Logger } from './logger/Logger';
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
 
@@ -45,26 +45,36 @@ export class Util {
 
 		return args;
 	}
-	
+
 	/**
 	 * @deprecated We don't support arguments in object/array
 	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
-	*/
+	 */
 	static checkIfSubOrGroup(type: string) {
 		// Why? Because discord.js v14 (:
-		return !!['SUB_COMMAND', 'SUB_COMMAND_GROUP', 'Subcommand', 'SubcommandGroup'].includes(type);
+		return !![
+			'SUB_COMMAND',
+			'SUB_COMMAND_GROUP',
+			'Subcommand',
+			'SubcommandGroup',
+		].includes(type);
 	}
 
 	static isClass(input: any): boolean {
 		return (
-			typeof input === 'function' && typeof input.prototype === 'object' && input.toString().substring(0, 5) === 'class'
+			typeof input === 'function' &&
+			typeof input.prototype === 'object' &&
+			input.toString().substring(0, 5) === 'class'
 		);
 	}
 
 	static resolveArgumentOptions(options: any): any {
 		for (const [key, value] of Object.entries(options)) {
 			const option = key.match(/[A-Z]/g)?.[0]
-				? key.replace(key?.match(/[A-Z]/g)?.[0], `_${key?.match(/[A-Z]/g)?.[0]?.toLowerCase()}`)
+				? key.replace(
+						key?.match(/[A-Z]/g)?.[0],
+						`_${key?.match(/[A-Z]/g)?.[0]?.toLowerCase()}`,
+				  )
 				: key;
 
 			if (option !== key) {
@@ -103,7 +113,7 @@ export class Util {
 
 	static throwError(error, name): void {
 		const trace = Util.resolveValidationErrorTrace([name]);
-	
+
 		Logger.error(error, trace);
 	}
 
@@ -113,12 +123,15 @@ export class Util {
 			.replace(new RegExp(/[^\w\s]/, 'g'), '')
 			.replace(
 				new RegExp(/\s+(.)(\w*)/, 'g'),
-				($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`
+				($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`,
 			)
 			.replace(new RegExp(/\w/), s => s.toUpperCase());
 	}
-  
-	static async getResponse(value: string, interaction: { client: Client | GClient }): Promise<string> {
+
+	static async getResponse(
+		value: string,
+		interaction: { client: Client | GClient },
+	): Promise<string> {
 		const languagePlugin = Plugins.get('@gcommands/plugin-language');
 
 		if (languagePlugin) {

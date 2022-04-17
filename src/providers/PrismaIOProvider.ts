@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { Logger } from '../lib/util/logger/Logger';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
+import { Logger } from '../lib/util/logger/Logger';
 
 export class PrismaIOProvider extends Provider {
 	client: PrismaClient;
@@ -16,8 +16,6 @@ export class PrismaIOProvider extends Provider {
 	async init(): Promise<void> {
 		Logger.debug('PrismaIO initializated!');
 		this.emit('connected', this.client);
-
-		return;
 	}
 
 	async insert(model: string, options: any) {

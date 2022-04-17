@@ -1,4 +1,4 @@
-import type { GClient } from '../../GClient';
+import type { APIInteractionGuildMember } from 'discord-api-types/v9';
 import type {
 	CacheType,
 	CacheTypeReducer,
@@ -10,10 +10,10 @@ import type {
 	TextBasedChannel,
 	User,
 } from 'discord.js';
-import type { APIInteractionGuildMember } from 'discord-api-types/v9';
-import type { CommandContext } from './CommandContext';
 import type { AutocompleteContext } from './AutocompleteContext';
+import type { CommandContext } from './CommandContext';
 import type { ComponentContext } from './ComponentContext';
+import type { GClient } from '../../GClient';
 
 export interface ContextOptions<Cached extends CacheType = CacheType> {
 	channel: CacheTypeReducer<
@@ -47,7 +47,11 @@ export class Context<Cached extends CacheType = CacheType> {
 	public readonly createdTimestamp: number;
 	public readonly guild: CacheTypeReducer<Cached, Guild, null>;
 	public guildId: CacheTypeReducer<Cached, Snowflake>;
-	public member: CacheTypeReducer<Cached, GuildMember, APIInteractionGuildMember>;
+	public member: CacheTypeReducer<
+		Cached,
+		GuildMember,
+		APIInteractionGuildMember
+	>;
 	public user: User;
 	public userId: Snowflake;
 	public memberPermissions: CacheTypeReducer<Cached, Readonly<Permissions>>;

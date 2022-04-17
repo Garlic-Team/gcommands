@@ -1,6 +1,14 @@
-import { Logger } from '../lib/util/logger/Logger';
-import { Db, Document, Filter, FindOptions, MongoClient, UpdateFilter, UpdateOptions } from 'mongodb';
+import {
+	Db,
+	Document,
+	Filter,
+	FindOptions,
+	MongoClient,
+	UpdateFilter,
+	UpdateOptions,
+} from 'mongodb';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
+import { Logger } from '../lib/util/logger/Logger';
 
 export class MongoDBProvider extends Provider {
 	uri: string;
@@ -23,8 +31,11 @@ export class MongoDBProvider extends Provider {
 	async init(): Promise<void> {
 		await this.client
 			.connect()
-			.catch((error) => {
-				Logger.error(typeof error.code !== 'undefined' ? error.code : '', error.message);
+			.catch(error => {
+				Logger.error(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
 				if (error.stack) Logger.trace(error.stack);
 			})
 			.then(() => {
@@ -33,8 +44,6 @@ export class MongoDBProvider extends Provider {
 				this.db = this.client.db(this?.dbName);
 				this.emit('connected', this.client);
 			});
-
-		return;
 	}
 
 	async insert(collectionName: string, document: Document) {
@@ -44,23 +53,42 @@ export class MongoDBProvider extends Provider {
 		return data;
 	}
 
-	async get(collectionName: string, filter: Filter<Document>, options?: FindOptions<Document>) {
+	async get(
+		collectionName: string,
+		filter: Filter<Document>,
+		options?: FindOptions<Document>,
+	) {
 		const collection = this.db?.collection(collectionName);
-		const data = options ? await collection?.findOne(filter, options) : await collection?.findOne(filter);
+		const data = options
+			? await collection?.findOne(filter, options)
+			: await collection?.findOne(filter);
 
 		return data;
 	}
 
-	async getMany(collectionName: string, filter: Filter<Document>, options?: FindOptions<Document>) {
+	async getMany(
+		collectionName: string,
+		filter: Filter<Document>,
+		options?: FindOptions<Document>,
+	) {
 		const collection = this.db?.collection(collectionName);
-		const data = options ? await collection?.find(filter, options) : await collection?.find(filter);
+		const data = options
+			? await collection?.find(filter, options)
+			: await collection?.find(filter);
 
 		return data;
 	}
 
-	async update(collectionName: string, filter: Filter<Document>, set: UpdateFilter<Document>, options?: UpdateOptions) {
+	async update(
+		collectionName: string,
+		filter: Filter<Document>,
+		set: UpdateFilter<Document>,
+		options?: UpdateOptions,
+	) {
 		const collection = this.db?.collection(collectionName);
-		const data = options ? await collection?.updateOne(filter, set, options) : await collection?.updateOne(filter, set);
+		const data = options
+			? await collection?.updateOne(filter, set, options)
+			: await collection?.updateOne(filter, set);
 
 		return data;
 	}

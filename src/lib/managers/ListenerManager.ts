@@ -1,8 +1,8 @@
+import { ClientEvents, Collection, WSEventType } from 'discord.js';
+import { Plugins } from './PluginManager';
 import type { GClient } from '../GClient';
 import { Listener } from '../structures/Listener';
-import { ClientEvents, Collection, WSEventType } from 'discord.js';
 import { Logger, Events } from '../util/logger/Logger';
-import { Plugins } from './PluginManager';
 
 export class ListenerManager extends Collection<string, Listener> {
 	private client: GClient;
@@ -11,7 +11,8 @@ export class ListenerManager extends Collection<string, Listener> {
 		if (listener instanceof Listener) {
 			if (this.has(listener.name)) {
 				this.get(listener.name).unregister();
-				if (!this.get(listener.name)?.reloading) Logger.warn('Overwriting listener', listener.name);
+				if (!this.get(listener.name)?.reloading)
+					Logger.warn('Overwriting listener', listener.name);
 			}
 			if (this.client) this.initialize(listener);
 			if (Plugins.currentlyLoading) listener.owner = Plugins.currentlyLoading;
@@ -24,7 +25,9 @@ export class ListenerManager extends Collection<string, Listener> {
 				listener.event,
 				listener.owner ? `(by plugin ${listener.owner})` : '',
 			);
-		} else Logger.warn('Listener must be a instance of Listener');
+		} else {
+			Logger.warn('Listener must be a instance of Listener');
+		}
 
 		return this;
 	}
@@ -40,11 +43,19 @@ export class ListenerManager extends Collection<string, Listener> {
 
 				listener.ws
 					? this.client.ws.off(listener.event as WSEventType, listener._run)
-					: this.client.off(listener.event as keyof ClientEvents, listener._run);
+					: this.client.off(
+							listener.event as keyof ClientEvents,
+							listener._run,
+					  );
 			}
 
 			Logger.emit(Events.LISTENER_UNREGISTERED, listener);
-			Logger.debug('Unregistered listener', listener.name, 'listening to', listener.event);
+			Logger.debug(
+				'Unregistered listener',
+				listener.name,
+				'listening to',
+				listener.event,
+			);
 		}
 
 		return listener;
@@ -61,7 +72,7 @@ export class ListenerManager extends Collection<string, Listener> {
 
 	public async initiate(client: GClient): Promise<void> {
 		this.client = client;
-		this.forEach((listener) => listener.initialize(client));
+		this.forEach(listener => listener.initialize(client));
 	}
 }
 
