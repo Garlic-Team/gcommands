@@ -24,6 +24,17 @@
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
     "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs"
   },
+  "author": "Garlic-Team",
+  "contributors": [
+    {
+      "name": "xHyroM",
+      "url": "https://github.com/xHyroM"
+    },
+    {
+      "name": "S222em",
+      "url": "https://github.com/S222em"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Garlic-Team/GCommands.git"
@@ -32,7 +43,6 @@
     "url": "https://github.com/Garlic-Team/GCommands/issues"
   },
   "homepage": "https://garlic-team.js.org/#/docs/gcommands/next/general/welcome",
-  "author": "Garlic-Team",
   "license": "ISC",
   "dependencies": {
     "@discordjs/rest": "^0.3.0",
