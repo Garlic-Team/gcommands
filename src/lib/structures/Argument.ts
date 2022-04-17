@@ -32,6 +32,7 @@ export enum ChannelType {
 
 export interface ArgumentChoice {
 	name: string;
+	nameLocalizations?: Record<LocaleString, string>;
 	value: string;
 }
 
@@ -104,6 +105,21 @@ const validationSchema = z
 		choices: z
 			.object({
 				name: z.string(),
+				nameLocalizations: z
+					.record(
+						z
+							.union([z.string(), z.nativeEnum(Locale)])
+							.transform(arg =>
+								typeof arg === 'string' && Object.keys(Locale).includes(arg)
+									? Locale[arg]
+									: arg,
+							),
+						z
+							.string()
+							.max(32)
+							.regex(/^[a-zA-Z1-9]/),
+					)
+					.optional(),
 				value: z.string(),
 			})
 			.array()
