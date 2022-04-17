@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import { Locale, LocaleString } from '../util/common';
 import { Logger } from '../util/logger/Logger';
+import { commandAndOptionNameRegexp } from '../util/regexes';
 
 export enum ArgumentType {
 	'SUB_COMMAND' = 1,
@@ -62,10 +63,7 @@ export interface ArgumentOptions {
 
 const validationSchema = z
 	.object({
-		name: z
-			.string()
-			.max(32)
-			.regex(/^[a-zA-Z1-9]/),
+		name: z.string().max(32).regex(commandAndOptionNameRegexp),
 		nameLocalizations: z
 			.record(
 				z
@@ -75,10 +73,7 @@ const validationSchema = z
 							? Locale[arg]
 							: arg,
 					),
-				z
-					.string()
-					.max(32)
-					.regex(/^[a-zA-Z1-9]/),
+				z.string().max(32).regex(commandAndOptionNameRegexp),
 			)
 			.optional(),
 		description: z.string().max(100),
@@ -114,10 +109,7 @@ const validationSchema = z
 									? Locale[arg]
 									: arg,
 							),
-						z
-							.string()
-							.max(32)
-							.regex(/^[a-zA-Z1-9]/),
+						z.string().max(32).regex(commandAndOptionNameRegexp),
 					)
 					.optional(),
 				value: z.string(),
