@@ -16,6 +16,7 @@
     }
   },
   "scripts": {
+    "test": "npm run lint",
     "build": "bash scripts/build.bash",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -24,7 +25,8 @@
     "build:tsc": "tsc -p . && gen-esm-wrapper dist/index.js dist/index.mjs",
     "build:fix": "node scripts/fixer.mjs",
     "build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
-    "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs"
+    "build:nextdocs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs",
+    "prepare": "husky install"
   },
   "author": "Garlic-Team",
   "contributors": [
