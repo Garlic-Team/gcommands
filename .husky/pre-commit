@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx --no-install lint-staged
+
+# https://github.com/discordjs/discord.js/blob/v13/.husky/pre-commit
