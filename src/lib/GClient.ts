@@ -90,11 +90,9 @@ export interface GClientOptions extends ClientOptions {
 }
 
 /**
- * The base {@link Client} extension that makes GCommands work. To use GCommands, you must use this class or extend it.
+ * The base {@link Client} that GCommands uses.
  *
- * GCommands automatically loads everything.
- *
- * @see {@link GClientOptions} for all available options in GClient.
+ * @see {@link GClientOptions} for all available options for GClient.
  *
  * @extends {Client}
  */
