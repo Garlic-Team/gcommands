@@ -80,10 +80,9 @@ export interface GClientOptions extends ClientOptions {
 	 */
 	database?: any;
 	/**
-	 * The guild id that will serve as development server.
+	 * The guild id that will serve as the development server for your application.
 	 *
-	 * All application commands are not automatically loaded as global, but only as guildOnly for this option.
-	 * If you want to make the commands public, you need to delete this options.
+	 * If this option is present, all slash commands will be registered only for the specified guild id.
 	 *
 	 * @type {Snowflake}
 	 */
