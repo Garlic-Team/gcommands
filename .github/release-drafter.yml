@@ -28,3 +28,10 @@ autolabeler:
     title:
       - '/docs/i'
       - '/documentation/i'
+  - label: 'typings'
+    branch:
+      - '/types\/.+/'
+      - '/typings\/.+/'
+    title:
+      - '/types/i'
+      - '/typings/i'
