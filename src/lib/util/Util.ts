@@ -13,7 +13,7 @@ import { Plugins } from '../managers/PluginManager';
  */
 export class Util extends null {
 	/**
-	 * Converts [CommandInteractionOptionResolveer](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver) to an array
+	 * Converts [CommandInteractionOptionResolver](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver) to an array
 	 * @param {import('discord.js').CommandInteractionOptionResolver[]} options The options to convert
 	 * @deprecated We don't support arguments in object
 	 * @returns {string[]}
@@ -36,7 +36,7 @@ export class Util extends null {
 	}
 
 	/**
-	 * Converts [CommandInteractionOptionResolveer](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver) to an object
+	 * Converts [CommandInteractionOptionResolver](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver) to an object
 	 * @param {import('discord.js').CommandInteractionOptionResolver[]} options The options to convert
 	 * @deprecated We don't support arguments in object
 	 * @returns {any}
@@ -61,7 +61,7 @@ export class Util extends null {
 	/**
 	 * Check if the type is a sub command or sub command group
 	 * @param {ApplicationCommandType} type The type to check
-	 * @deprecated We don't support checking arguments
+	 * @deprecated We don't support arguments in object/array. Use [CommandInteractionOptionResolveer](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver)
 	 * @returns {boolean}
 	 */
 	static checkIfSubOrGroup(type: ApplicationCommandType): boolean {
