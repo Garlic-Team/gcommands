@@ -1,0 +1,30 @@
+autolabeler:
+  - label: 'semver: patch'
+    branch:
+      - '/fix\/.+/'
+    title:
+      - '/fix/i'
+  - label: 'semver: minor'
+    branch:
+      - '/feat\/.+/'
+      - '/feature\/.+/'
+    title:
+      - '/feat/i'
+      - '/feature/i'
+  - label: 'semver: major'
+    branch:
+      - '/refactor\/.+/'
+    title:
+      - '/refactor/i'
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'
+    title:
+      - '/chore/i'
+  - label: 'documentation'
+    branch:
+      - '/docs\/.+/'
+      - '/documentation\/.+/'
+    title:
+      - '/docs/i'
+      - '/documentation/i'
