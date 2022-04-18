@@ -53,10 +53,10 @@ export interface GClientOptions extends ClientOptions {
 	/**
 	 * Array of all folders to be loaded by GCommands.
 	 *
-	 * It can load from these folders:
-	 * * Commands
-	 * * Listeners (Events)
-	 * * Components
+	 * GCommands will check all the files in each folder for these classes:
+	 * * Command
+	 * * Listener
+	 * * Component
 	 *
 	 * @type {string[]}
 	 * @example
