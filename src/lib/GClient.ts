@@ -74,8 +74,7 @@ export interface GClientOptions extends ClientOptions {
 	/**
 	 * The database to be used in the project.
 	 *
-	 * You can put whatever you want in this option, it only serves your purposes.
-	 * The library itself does not use the database.
+	 * This option is only for easier access and is not used by GCommands.
 	 *
 	 * @type {any}
 	 */
