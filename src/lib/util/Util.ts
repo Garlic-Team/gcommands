@@ -61,7 +61,7 @@ export class Util extends null {
 	/**
 	 * Check if the type is a sub command or sub command group
 	 * @param {ApplicationCommandType} type The type to check
-	 * @deprecated We don't support arguments in object/array
+	 * @deprecated We don't support checking arguments
 	 * @returns {boolean}
 	 */
 	static checkIfSubOrGroup(type: ApplicationCommandType): boolean {
