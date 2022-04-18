@@ -8,8 +8,9 @@ import { registerDirectories } from './util/registerDirectories';
 import Responses from '../responses.json';
 
 /**
- * Enum for auto defer feature.
- * Automatic defer if bot does not reply within more than 3s
+ * Enum for the auto defer feature.
+ *
+ * Automatically defers interaction if application doesn't respond in 3s
  * * EPHEMERAL
  * * NORMAL
  * * UPDATE
