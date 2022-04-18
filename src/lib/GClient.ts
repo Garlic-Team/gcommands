@@ -63,9 +63,9 @@ export interface GClientOptions extends ClientOptions {
 	 * ```typescript
 	 * new GClient({
 	 * 		dirs: [
-	 * 			'commands',
-	 * 			'events',
-	 * 			'components',
+	 * 			join(__dirname, 'commands'),
+	 * 			join(__dirname, 'events'),
+	 * 			join(__dirname, 'components'),
 	 * 		]
 	 * })
 	 * ```
