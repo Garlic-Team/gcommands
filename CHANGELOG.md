@@ -1,3 +1,28 @@
+# [9.2.0](https://github.com/Garlic-Team/GCommands/compare/9.1.0...9.2.0) (2022-04-18)
+
+
+### Bug Fixes
+
+* add {duration} variable ([35ddf60](https://github.com/Garlic-Team/GCommands/commit/35ddf60f32ee36952be24bd518daf3a278be4cd0))
+* add check for autoDefer ([fb22ec2](https://github.com/Garlic-Team/GCommands/commit/fb22ec20367ee38c7ad4466b704c5c3f5aec5423))
+* add missing nameLocalizations for ArgumentChoice ([038d9c4](https://github.com/Garlic-Team/GCommands/commit/038d9c4117e90d14644fbb2ecd7f69e47dc80828))
+* command & option name regex validating ([f97440c](https://github.com/Garlic-Team/GCommands/commit/f97440c1067c61aeb593b250c24e6273e08f2635))
+* **deps:** update dependency @discordjs/rest to ^0.4.0 ([5cfa70c](https://github.com/Garlic-Team/GCommands/commit/5cfa70c8ef697cc6966b2a954e0361127fbaabc2))
+* **KeyvProvider:** generic ([188ea5a](https://github.com/Garlic-Team/GCommands/commit/188ea5ab941548f0d79fae8e3a42805687adcad9))
+* **KeyvProvider:** generic ._. ([debfbcc](https://github.com/Garlic-Team/GCommands/commit/debfbcccdd00fdeef30215dfa8f5d125af6a4674))
+* responses.json ([af45f26](https://github.com/Garlic-Team/GCommands/commit/af45f26a09f9a899e0e3cb299457a2f5141633d6))
+* return raw ([4fe618a](https://github.com/Garlic-Team/GCommands/commit/4fe618a43bd659a798013065b00daba90df0d8c5))
+* unregister types for Component.ts and Listener.ts ([1817f9c](https://github.com/Garlic-Team/GCommands/commit/1817f9c59d367322b04edfad7afa7ce275a0503e))
+* zod validation ([7d52c6d](https://github.com/Garlic-Team/GCommands/commit/7d52c6d3bc9f9a7ccb9fd23bc1643bde69060776))
+
+
+### Features
+
+* api v10 ([dc2d215](https://github.com/Garlic-Team/GCommands/commit/dc2d215ef479fceeddcd0cf644288c1b8acde88e))
+* localizations ([706dcee](https://github.com/Garlic-Team/GCommands/commit/706dceecb572a7b2bf444749474ff4bef45b3be3))
+
+
+
 # [9.1.0](https://github.com/Garlic-Team/GCommands/compare/9.0.1-next...9.1.0) (2022-03-10)
 
 
