@@ -135,8 +135,9 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	}
 
 	/**
-	 * The method that returns original types from {@link GClientOptions.database}
-	 * @param {any} _ Prototype of your class to get types.
+	/**
+	 * The method that returns the database option provided in {@link GClientOptions}
+	 * @param {any} _ Used for typings
 	 * @returns {Database}
 	 * @example TypeScript example
 	 * ```typescript
@@ -148,7 +149,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	 * })
 	 *
 	 * const db = client.getDatabase(MongoDBProvider.prototype);
-	 * // Types working in `db`
+	 * // returns <MongoDBProvider>
 	 * ```
 	 * @example JavaScript example
 	 * ```javascript
@@ -160,10 +161,9 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	 * })
 	 *
 	 * const db = client.getDatabase(MongoDBProvider.prototype);
-	 * // Types working in `db`
+	 * // returns <MongoDBProvider>
 	 * ```
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public getDatabase<Database>(_?: Database): Database {
 		return this.options.database;
 	}
