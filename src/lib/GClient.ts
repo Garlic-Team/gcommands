@@ -98,9 +98,9 @@ export interface GClientOptions extends ClientOptions {
  */
 export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	/**
-	 * Object of all basic messages if a problem occurs.
+	 * Object of the default responses that GCommands uses for auto responding in the case of something happening.
 	 *
-	 * However, you can customize these messages using the
+	 * You can customize these messages using the
 	 * [@gcommands/plugin-language](https://github.com/Garlic-Team/gcommands-addons/tree/master/packages/plugin-language)
 	 * plugin.
 	 *
