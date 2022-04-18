@@ -11,7 +11,7 @@ import { Plugins } from '../managers/PluginManager';
 /**
  * Includes many useful functions
  */
-export class Util {
+export class Util extends null {
 	/**
 	 * Converts [CommandInteractionOptionResolveer](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver) to an array
 	 * @param {import('discord.js').CommandInteractionOptionResolver[]} options The options to convert
