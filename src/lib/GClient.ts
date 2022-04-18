@@ -104,7 +104,9 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	/**
 	 * Object of all basic messages if a problem occurs.
 	 *
-	 * However, you can customize these messages using the [@gcommands/plugin-language](https://github.com/Garlic-Team/gcommands-addons/tree/master/packages/plugin-language) plugin.
+	 * However, you can customize these messages using the
+	 * [@gcommands/plugin-language](https://github.com/Garlic-Team/gcommands-addons/tree/master/packages/plugin-language)
+	 * plugin.
 	 *
 	 * @see {@link Responses}
 	 */
@@ -135,7 +137,6 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	/**
 	 * The method that returns original types from {@link GClientOptions.database}
 	 * @param {any} _ Prototype of your class to get types.
@@ -165,6 +166,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	 * // Types working in `db`
 	 * ```
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public getDatabase<Database>(_?: Database): Database {
 		return this.options.database;
 	}

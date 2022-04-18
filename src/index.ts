@@ -33,8 +33,9 @@ export * from './lib/util/logger/Logger';
 // Inhibitors
 export * as Inhibitor from './inhibitors';
 
-/* Providers
- * Providers will not be exported due to additional modules. To import, just use the path gcommands/dist/providers/{name}
+/**
+ * Providers will not be exported due to additional modules.
+ * To import, just use the path gcommands/dist/providers/{name}
  */
 export * from './lib/structures/Provider';
 
