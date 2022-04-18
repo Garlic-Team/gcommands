@@ -46,7 +46,7 @@ export interface GClientOptions extends ClientOptions {
 	 */
 	messagePrefix?: string;
 	/**
-	 * Whether to send a message for a unknown command.
+	 * Whether to send a message for an unknown command.
 	 * @type {boolean}
 	 */
 	unknownCommandMessage?: boolean;
