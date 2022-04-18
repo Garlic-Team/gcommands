@@ -1,14 +1,24 @@
-import type { Client } from 'discord.js';
+/* eslint-disable max-len */
+import type {
+	Client,
+	CommandInteractionOption,
+	ApplicationCommandType,
+} from 'discord.js';
 import { Logger } from './logger/Logger';
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
 
+/**
+ * Includes many useful functions
+ */
 export class Util {
 	/**
-	 * @deprecated We don't support arguments in object/array
-	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
+	 * Converts [CommandInteractionOptionResolveer](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver) to an array
+	 * @param {import('discord.js').CommandInteractionOptionResolver[]} options The options to convert
+	 * @deprecated We don't support arguments in object
+	 * @returns {string[]}
 	 */
-	static argumentsToArray(options: Array<any>): Array<string> {
+	static argumentsToArray(options: CommandInteractionOption[]): string[] {
 		const args = [];
 
 		const check = options => {
@@ -26,10 +36,12 @@ export class Util {
 	}
 
 	/**
-	 * @deprecated We don't support arguments in object/array
-	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
+	 * Converts [CommandInteractionOptionResolveer](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver) to an object
+	 * @param {import('discord.js').CommandInteractionOptionResolver[]} options The options to convert
+	 * @deprecated We don't support arguments in object
+	 * @returns {any}
 	 */
-	static argumentsToObject(options: Array<any>) {
+	static argumentsToObject(options: CommandInteractionOption[]): any {
 		const args = {};
 
 		const check = (options, object) => {
@@ -47,10 +59,12 @@ export class Util {
 	}
 
 	/**
+	 * Check if the type is a sub command or sub command group
+	 * @param {ApplicationCommandType} type The type to check
 	 * @deprecated We don't support arguments in object/array
-	 * @link https://discord.js.org/#/docs/main/stable/class/CommandInteractionOptionResolver
+	 * @returns {boolean}
 	 */
-	static checkIfSubOrGroup(type: string) {
+	static checkIfSubOrGroup(type: ApplicationCommandType): boolean {
 		// Why? Because discord.js v14 (:
 		return !![
 			'SUB_COMMAND',
@@ -60,6 +74,11 @@ export class Util {
 		].includes(type);
 	}
 
+	/**
+	 * Check if the input is a class
+	 * @param {any} input The input to check
+	 * @returns {boolean}
+	 */
 	static isClass(input: any): boolean {
 		return (
 			typeof input === 'function' &&
@@ -68,7 +87,15 @@ export class Util {
 		);
 	}
 
-	static resolveArgumentOptions(options: any): any {
+	/**
+	 * Converts option names from camelCase to snake_case
+	 * @param {Object<string, string>} options The options to convert
+	 * @deprecated This method is no longer used anywhere
+	 * @returns {Object<string, string>}
+	 */
+	static resolveArgumentOptions(
+		options: [key: string, value: string],
+	): [key: string, value: string] {
 		for (const [key, value] of Object.entries(options)) {
 			const option = key.match(/[A-Z]/g)?.[0]
 				? key.replace(
@@ -87,6 +114,12 @@ export class Util {
 		return options;
 	}
 
+	/**
+	 * The method that resolves the file for directoryLoader
+	 * @param {any} file The file that will be resolved
+	 * @param {string} fileType The file type
+	 * @returns {any}
+	 */
 	static resolveFile(file: any, fileType: string): any {
 		if (fileType === '.ts') return file.default || Object.values(file)[0];
 		if (fileType === '.js') {
@@ -97,28 +130,55 @@ export class Util {
 		return file;
 	}
 
-	static stringToBoolean(string: string): boolean {
+	/**
+	 * The method that converts a string to a boolean
+	 * @param {string} text The text to convert
+	 * @deprecated This method is no longer used anywhere
+	 * @returns
+	 */
+	static stringToBoolean(text: string): boolean {
 		const regex = /^\s*(true|1|on)\s*$/i;
-		return regex.test(string);
+		return regex.test(text);
 	}
 
-	static resolveValidationErrorTrace(array: Array<any>): string {
+	/**
+	 * The method that solves the error validation trace
+	 * @param {any[]} array
+	 * @returns
+	 */
+	static resolveValidationErrorTrace(array: any[]): string {
 		array = array.filter(item => typeof item === 'string');
 		return `(${array.join(' -> ') || 'unknown'})`;
 	}
 
+	/**
+	 * The method that modifies numbers and adds `0` before numbers that are less than 10
+	 * @param {number} number The number to modify
+	 * @returns {string}
+	 */
 	static pad(number: number): string {
 		return (number < 10 ? '0' : '') + number;
 	}
 
+	/**
+	 * The method that throws an error to the console
+	 * @param {string} error  The error to throw
+	 * @param {string} name  The name of the class or file path that threw the error
+	 */
 	static throwError(error, name): void {
 		const trace = Util.resolveValidationErrorTrace([name]);
 
 		Logger.error(error, trace);
 	}
 
-	static toPascalCase(input: string): string {
-		return input
+	/**
+	 * The method that converts case to PascalCase
+	 * @param {string} text The text to convert
+	 * @deprecated This method is no longer used anywhere
+	 * @returns {string}
+	 */
+	static toPascalCase(text: string): string {
+		return text
 			.replace(new RegExp(/[-_]+/, 'g'), ' ')
 			.replace(new RegExp(/[^\w\s]/, 'g'), '')
 			.replace(
@@ -128,6 +188,12 @@ export class Util {
 			.replace(new RegExp(/\w/), s => s.toUpperCase());
 	}
 
+	/**
+	 * The method that uses `@gcommands/plugin-language` to get a message in a specific language
+	 * @param {string} value The value to get
+	 * @param {{client: import('discord.js').Client | import('../GClient').GClient}} client The client to get the default response
+	 * @returns {Promise<string>}
+	 */
 	static async getResponse(
 		value: string,
 		interaction: { client: Client | GClient },

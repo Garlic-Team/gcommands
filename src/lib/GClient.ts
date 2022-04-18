@@ -135,7 +135,6 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	}
 
 	/**
-	/**
 	 * The method that returns the database option provided in {@link GClientOptions}
 	 * @param {any} _ Used for typings
 	 * @returns {Database}
@@ -164,6 +163,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	 * // returns <MongoDBProvider>
 	 * ```
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public getDatabase<Database>(_?: Database): Database {
 		return this.options.database;
 	}
