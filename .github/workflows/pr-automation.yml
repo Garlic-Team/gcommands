@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Automatically label PR
         uses: release-drafter/release-drafter@v5
+        with:
+          disable-releaser: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
