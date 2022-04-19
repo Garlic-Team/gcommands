@@ -1,6 +1,6 @@
 # https://github.com/discordjs/discord-api-types/blob/main/.github/workflows/create-pr-for-release-and-publish.yml
 
-name: 'Release'
+name: Release
 
 on:
   workflow_dispatch:

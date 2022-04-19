@@ -162,8 +162,12 @@ export async function MessageCommandHandler(
 		if (cooldown) {
 			return message.reply({
 				content: (await Util.getResponse('COOLDOWN', { client }))
-					.replace('{time}', String(cooldown))
-					.replace('{name}', `${command.name} command`),
+					/**
+					 * @deprecated Use {duration} instead
+					 */
+					.replaceAll('{time}', String(cooldown))
+					.replaceAll('{duration}', String(cooldown))
+					.replaceAll('{name}', command.name),
 			});
 		}
 	}

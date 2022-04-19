@@ -37,12 +37,12 @@ export async function ComponentHandler(
 		if (cooldown) {
 			return interaction.reply({
 				content: (await Util.getResponse('COOLDOWN', interaction))
-					.replace('{time}', String(cooldown))
-					.replace(
-						'{name}',
-						component.name +
-							(interaction.isButton() ? ' button' : ' select menu'),
-					),
+					/**
+					 * @deprecated Use {duration} instead
+					 */
+					.replaceAll('{time}', String(cooldown))
+					.replaceAll('{duration}', String(cooldown))
+					.replaceAll('{name}', component.name),
 				ephemeral: true,
 			});
 		}

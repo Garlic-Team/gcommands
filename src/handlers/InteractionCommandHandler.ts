@@ -36,8 +36,12 @@ export async function InteractionCommandHandler(
 		if (cooldown) {
 			return interaction.reply({
 				content: (await Util.getResponse('COOLDOWN', interaction))
-					.replace('{time}', String(cooldown))
-					.replace('{name}', `${command.name} command`),
+					/**
+					 * @deprecated Use {duration} instead
+					 */
+					.replaceAll('{time}', String(cooldown))
+					.replaceAll('{duration}', String(cooldown))
+					.replaceAll('{name}', command.name),
 				ephemeral: true,
 			});
 		}
