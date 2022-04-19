@@ -1,8 +1,32 @@
 import type { Message } from 'discord.js';
-import type { GClient } from '../lib/GClient';
+import type { GClient, GClientMessagePrefix } from '../lib/GClient';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { Listener } from '../lib/structures/Listener';
 import { Logger } from '../lib/util/logger/Logger';
+
+const getMentionPrefix = (message: Message): string | null => {
+	if (message.content.length < 20 || !message.content.startsWith('<@'))
+		return null;
+
+	const mention = message.content
+		.split(' ')[0]
+		.match(new RegExp(`^<@!?(${message.client.user.id})>`));
+
+	return mention?.[0] ?? null;
+};
+
+const getPrefix = (
+	message: Message,
+	prefixes: GClientMessagePrefix,
+): string | null => {
+	const mention = getMentionPrefix(message);
+	if (mention) return mention;
+
+	if (typeof prefixes === 'string')
+		return message.content.startsWith(prefixes) ? prefixes : null;
+
+	return prefixes.find(prefix => message.content.startsWith(prefix)) ?? null;
+};
 
 new Listener({
 	event: 'messageCreate',
@@ -12,13 +36,14 @@ new Listener({
 
 		if (!client.options.messageSupport) return;
 
-		const mention = message.content
-			.split(' ')[0]
-			.match(new RegExp(`^<@!?(${client.user?.id})>`));
+		const prefix = getPrefix(
+			message,
+			typeof client.options.messagePrefix === 'function'
+				? await client.options.messagePrefix(message)
+				: client.options.messagePrefix,
+		);
 
-		const prefix = mention?.[0] || client.options?.messagePrefix;
-
-		if (!message.content.startsWith(prefix as string)) return;
+		if (!prefix || !message.content.startsWith(prefix)) return;
 
 		const [commandName, ...args] = message.content
 			.slice(prefix?.length)

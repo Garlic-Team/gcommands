@@ -1,11 +1,13 @@
 import { setImmediate } from 'node:timers';
-import { Client, ClientOptions } from 'discord.js';
+import { Awaitable, Client, ClientOptions, Message } from 'discord.js';
 import { Commands } from './managers/CommandManager';
 import { Components } from './managers/ComponentManager';
 import { Listeners } from './managers/ListenerManager';
 import { Plugins } from './managers/PluginManager';
 import { registerDirectories } from './util/registerDirectories';
 import Responses from '../responses.json';
+
+export type GClientMessagePrefix = string | string[] | null;
 
 export enum AutoDeferType {
 	/**
@@ -24,7 +26,9 @@ export enum AutoDeferType {
 
 export interface GClientOptions extends ClientOptions {
 	messageSupport?: boolean;
-	messagePrefix?: string;
+	messagePrefix?:
+		| ((message: Message) => Awaitable<GClientMessagePrefix>)
+		| GClientMessagePrefix;
 	unknownCommandMessage?: boolean;
 	dirs?: Array<string>;
 	database?: any;
