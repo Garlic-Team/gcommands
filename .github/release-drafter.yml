@@ -3,38 +3,21 @@ template: |
 
 autolabeler:
   - label: 'semver: patch'
-    branch:
-      - '/fix\/.+/'
     title:
-      - '/fix/i'
+      - '/^(fix)(\([a-z ]+\))?: [\w ]+$/g'
   - label: 'semver: minor'
-    branch:
-      - '/feat\/.+/'
-      - '/feature\/.+/'
     title:
-      - '/feat/i'
-      - '/feature/i'
+      - '/^(feat|feature)(\([a-z ]+\))?: [\w ]+$/g'
   - label: 'semver: major'
-    branch:
-      - '/refactor\/.+/'
     title:
-      - '/refactor/i'
+      - '/^(feat|feature|fix|refactor|types|typings|docs|documentation)!(\([a-z ]+\))?: [\w ]+$/g'
+      - '/^(refactor)(\([a-z ]+\))?: [\w ]+$/g'
   - label: 'chore'
-    branch:
-      - '/chore\/.+/'
     title:
-      - '/chore/i'
+      - '/^(chore)(\([a-z ]+\))?: [\w ]+$/g'
   - label: 'documentation'
-    branch:
-      - '/docs\/.+/'
-      - '/documentation\/.+/'
     title:
-      - '/docs/i'
-      - '/documentation/i'
+      - '/^(docs|documentation)(\([a-z ]+\))?: [\w ]+$/g'
   - label: 'typings'
-    branch:
-      - '/types\/.+/'
-      - '/typings\/.+/'
     title:
-      - '/types/i'
-      - '/typings/i'
+      - '/^(types|typings)(\([a-z ]+\))?: [\w ]+$/g'
