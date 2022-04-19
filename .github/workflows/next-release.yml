@@ -42,9 +42,9 @@ jobs:
       - name: Deprecate old versions
         run: |
           if [ '${{ github.event.inputs.prNumber }}' == '' ]; then
-            npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)-next" "no longer supported" || true
+            npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)-next" "This version is no longer supported. Please upgrade to the latest version using npm i gcommands@latest" || true
           else
-            npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)-pr-${{ github.event.inputs.prNumber }}" "no longer supported" || true
+            npm deprecate gcommands@"~$(jq --raw-output '.version' package.json)-pr-${{ github.event.inputs.prNumber }}" "This version is no longer supported. Please upgrade to the latest version using npm i gcommands@latest" || true
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
