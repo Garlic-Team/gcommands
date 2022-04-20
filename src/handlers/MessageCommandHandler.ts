@@ -64,7 +64,7 @@ const checkValidation = async (
 								disabled: false,
 								options: argument.choices.map(ch => ({
 									label: ch.name,
-									value: ch.value,
+									value: ch.value.toString(),
 								})),
 							},
 						],
