@@ -110,7 +110,6 @@ const validationSchema = z
 									: arg,
 							),
 						z.string().max(32).regex(commandAndOptionNameRegexp),
-						z.number(),
 					)
 					.optional(),
 				value: z.union([z.string(), z.number()]),
