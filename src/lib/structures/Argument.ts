@@ -34,7 +34,7 @@ export enum ChannelType {
 export interface ArgumentChoice {
 	name: string;
 	nameLocalizations?: Record<LocaleString, string>;
-	value: string;
+	value: string | number;
 }
 
 export interface ArgumentOptions {
@@ -112,7 +112,7 @@ const validationSchema = z
 						z.string().max(32).regex(commandAndOptionNameRegexp),
 					)
 					.optional(),
-				value: z.string(),
+				value: z.union([z.string(), z.number()]),
 			})
 			.array()
 			.optional(),
