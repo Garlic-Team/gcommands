@@ -1,0 +1,1 @@
+{"version":3,"file":"Integer.d.ts","sourceRoot":"","sources":["../../../../src/lib/structures/arguments/Integer.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,aAAa,CAAC;AACrD,OAAO,EAAE,uBAAuB,EAAE,MAAM,QAAQ,CAAC;AAEjD,qBAAa,WAAY,SAAQ,uBAAuB;IACvD,KAAK,MAAC;IAEN,QAAQ,CAAC,OAAO,EAAE,MAAM,GAAG,OAAO;IAQlC,OAAO,CAAC,QAAQ,EAAE,QAAQ;;;;CAO1B"}

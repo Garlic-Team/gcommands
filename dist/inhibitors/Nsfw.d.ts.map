@@ -1,0 +1,1 @@
+{"version":3,"file":"Nsfw.d.ts","sourceRoot":"","sources":["../../src/inhibitors/Nsfw.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,aAAa,CAAC;AACxC,OAAO,KAAK,EAAE,cAAc,EAAE,MAAM,2CAA2C,CAAC;AAChF,OAAO,KAAK,EAAE,gBAAgB,EAAE,MAAM,6CAA6C,CAAC;AAEpF,qBAAa,IAAK,SAAQ,SAAS;IAClC,GAAG,CAAC,GAAG,EAAE,cAAc,GAAG,gBAAgB,GAAG,OAAO,GAAG,GAAG;CAU1D"}

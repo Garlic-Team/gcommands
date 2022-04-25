@@ -1,0 +1,1 @@
+{"version":3,"file":"Boolean.d.ts","sourceRoot":"","sources":["../../../../src/lib/structures/arguments/Boolean.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,aAAa,CAAC;AACrD,OAAO,EAAE,uBAAuB,EAAE,MAAM,QAAQ,CAAC;AAKjD,qBAAa,WAAY,SAAQ,uBAAuB;IACvD,KAAK,MAAC;IAEN,QAAQ,CAAC,OAAO,EAAE,MAAM,GAAG,OAAO;IAWlC,OAAO,CAAC,QAAQ,EAAE,QAAQ;;;;CAO1B"}
