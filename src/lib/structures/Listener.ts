@@ -1,5 +1,5 @@
 import type { ClientEvents, WSEventType } from 'discord.js';
-import { z } from 'zod';
+import { s } from '@sapphire/shapeshift';
 import type { GClient } from '../GClient';
 import { Listeners } from '../managers/ListenerManager';
 import { Logger } from '../util/logger/Logger';
@@ -18,16 +18,15 @@ export interface ListenerOptions<
 	) => any;
 }
 
-const validationSchema = z
-	.object({
-		event: z.string(),
-		name: z.string(),
-		once: z.boolean().optional(),
-		ws: z.boolean().optional().default(false),
-		fileName: z.string().optional(),
-		run: z.function(),
-	})
-	.passthrough();
+const parser = s.object({
+	event: s.string,
+	name: s.string,
+	once: s.boolean.optional.default(false),
+	ws: s.boolean.optional.default(false),
+	fileName: s.string.optional,
+	run: s.any,
+});
+
 export class Listener<
 	WS extends boolean = boolean,
 	Event extends WS extends true
@@ -45,27 +44,23 @@ export class Listener<
 	public reloading = false;
 
 	public constructor(options: ListenerOptions<WS, Event>) {
-		if (this.run) options.run = this.run;
+		try {
+			const parsed = parser.passthrough.parse({ ...options, ...this });
+			this.event = parsed.event;
+			this.name = parsed.name;
+			this.once = parsed.once;
+			this.ws = parsed.ws as WS;
+			this.fileName = parsed.fileName;
+			this.run = parsed.run;
 
-		validationSchema
-			.parseAsync({ ...options, ...this })
-			.then(options => {
-				this.event = options.event;
-				this.name = options.name;
-				this.once = options.once;
-				this.ws = options.ws as WS;
-				this.fileName = options.fileName;
-				this.run = options.run;
-
-				Listeners.register(this);
-			})
-			.catch(error => {
-				Logger.warn(
-					typeof error.code !== 'undefined' ? error.code : '',
-					error.message,
-				);
-				if (error.stack) Logger.trace(error.stack);
-			});
+			Listeners.register(this);
+		} catch (error) {
+			Logger.warn(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
+			if (error.stack) Logger.trace(error.stack);
+		}
 	}
 
 	public initialize(client: GClient): void {

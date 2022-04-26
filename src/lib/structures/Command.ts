@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import { s } from '@sapphire/shapeshift';
 import { Argument, ArgumentOptions } from './Argument';
 import type { CommandContext } from './contexts/CommandContext';
 import { AutoDeferType, GClient } from '../GClient';
 import { Commands } from '../managers/CommandManager';
-import { Locale, LocaleString } from '../util/common';
+import type { LocaleString } from '../util/common';
 import { Logger } from '../util/logger/Logger';
 import { commandAndOptionNameRegexp } from '../util/regexes';
 
@@ -47,60 +47,32 @@ export interface CommandOptions {
 	onError?: (ctx: CommandContext, error: any) => any;
 }
 
-const validationSchema = z
-	.object({
-		name: z.string().max(32).regex(commandAndOptionNameRegexp),
-		nameLocalizations: z
-			.record(
-				z
-					.union([z.string(), z.nativeEnum(Locale)])
-					.transform(arg =>
-						typeof arg === 'string' && Object.keys(Locale).includes(arg)
-							? Locale[arg]
-							: arg,
-					),
-				z.string().max(32).regex(commandAndOptionNameRegexp),
-			)
-			.optional(),
-		description: z.string().max(100).optional(),
-		descriptionLocalizations: z
-			.record(
-				z
-					.union([z.string(), z.nativeEnum(Locale)])
-					.transform(arg =>
-						typeof arg === 'string' && Object.keys(Locale).includes(arg)
-							? Locale[arg]
-							: arg,
-					),
-				z.string().max(100),
-			)
-			.optional(),
-		type: z
-			.union([z.string(), z.nativeEnum(CommandType)])
-			.transform(arg =>
-				typeof arg === 'string' && Object.keys(CommandType).includes(arg)
-					? CommandType[arg]
-					: arg,
-			)
-			.array()
-			.nonempty(),
-		arguments: z.any().array().optional(),
-		inhibitors: z.any().array().optional(),
-		guildId: z.string().optional(),
-		cooldown: z.string().optional(),
-		autoDefer: z
-			.union([z.string(), z.nativeEnum(AutoDeferType)])
-			.transform(arg =>
-				typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg)
-					? AutoDeferType[arg]
-					: arg,
-			)
-			.optional(),
-		fileName: z.string().optional(),
-		run: z.function(),
-		onError: z.function().optional(),
-	})
-	.passthrough();
+const parser = s.object({
+	name: s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+	nameLocalizations: s.record(
+		s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+	).optional,
+	description: s.string.lengthLe(100),
+	descriptionLocalizations: s.record(s.string.lengthLe(100)),
+	type: s.union(s.string, s.nativeEnum(CommandType)).transform(value => {
+		return typeof value === 'string' && Object.keys(CommandType).includes(value)
+			? CommandType[value]
+			: value;
+	}),
+	arguments: s.array(s.any).optional,
+	inhibitors: s.array(s.any).optional,
+	guildId: s.string.optional,
+	cooldown: s.string.optional,
+	autoDefer: s.union(s.string, s.nativeEnum(AutoDeferType)).transform(value => {
+		return typeof value === 'string' &&
+			Object.keys(AutoDeferType).includes(value)
+			? AutoDeferType[value]
+			: value;
+	}),
+	fileName: s.string.optional,
+	run: s.any,
+	onError: s.any,
+});
 
 export class Command {
 	public client: GClient;
@@ -122,41 +94,37 @@ export class Command {
 	public autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
 
 	public constructor(options: CommandOptions) {
-		if (this.run) options.run = this.run;
-		if (this.onError) options.onError = this.onError;
+		try {
+			const parsed = parser.passthrough.parse({ ...options, ...this });
 
-		validationSchema
-			.parseAsync({ ...options, ...this })
-			.then(options => {
-				this.name = options.name || Command.defaults?.name;
-				this.nameLocalizations =
-					options.nameLocalizations || Command.defaults?.nameLocalizations;
-				this.description = options.description || Command.defaults?.description;
-				this.descriptionLocalizations =
-					options.descriptionLocalizations ||
-					Command.defaults?.descriptionLocalizations;
-				this.type = options.type || Command.defaults?.type;
-				this.arguments = options.arguments?.map(argument => {
-					if (argument instanceof Argument) return argument;
-					else return new Argument(argument);
-				});
-				this.inhibitors = options.inhibitors || Command.defaults?.inhibitors;
-				this.guildId = options.guildId || Command.defaults?.guildId;
-				this.cooldown = options.cooldown || Command.defaults?.cooldown;
-				this.fileName = options.fileName || Command.defaults?.fileName;
-				this.run = options.run || Command.defaults?.run;
-				this.onError = options.onError || Command.defaults?.onError;
-				this.autoDefer = options.autoDefer || Command.defaults?.autoDefer;
-
-				Commands.register(this);
-			})
-			.catch(error => {
-				Logger.warn(
-					typeof error.code !== 'undefined' ? error.code : '',
-					error.message,
-				);
-				if (error.stack) Logger.trace(error.stack);
+			this.name = parsed.name || Command.defaults?.name;
+			this.nameLocalizations =
+				parsed.nameLocalizations || Command.defaults?.nameLocalizations;
+			this.description = parsed.description || Command.defaults?.description;
+			this.descriptionLocalizations =
+				parsed.descriptionLocalizations ||
+				Command.defaults?.descriptionLocalizations;
+			this.type = parsed.type || Command.defaults?.type;
+			this.arguments = parsed.arguments?.map(argument => {
+				if (argument instanceof Argument) return argument;
+				else return new Argument(argument);
 			});
+			this.inhibitors = parsed.inhibitors || Command.defaults?.inhibitors;
+			this.guildId = parsed.guildId || Command.defaults?.guildId;
+			this.cooldown = parsed.cooldown || Command.defaults?.cooldown;
+			this.fileName = parsed.fileName || Command.defaults?.fileName;
+			this.run = parsed.run || Command.defaults?.run;
+			this.onError = parsed.onError || Command.defaults?.onError;
+			this.autoDefer = parsed.autoDefer || Command.defaults?.autoDefer;
+
+			Commands.register(this);
+		} catch (error) {
+			Logger.warn(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
+			if (error.stack) Logger.trace(error.stack);
+		}
 	}
 
 	public initialize(client: GClient): void {
@@ -231,18 +199,14 @@ export class Command {
 	}
 
 	public static setDefaults(defaults: Partial<CommandOptions>): void {
-		validationSchema
-			.partial()
-			.parseAsync(defaults)
-			.then(defaults => {
-				Command.defaults = defaults as Partial<CommandOptions>;
-			})
-			.catch(error => {
-				Logger.warn(
-					typeof error.code !== 'undefined' ? error.code : '',
-					error.message,
-				);
-				if (error.stack) Logger.trace(error.stack);
-			});
+		try {
+			Command.defaults = parser.partial.passthrough.parse(defaults);
+		} catch (error) {
+			Logger.warn(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
+			if (error.stack) Logger.trace(error.stack);
+		}
 	}
 }

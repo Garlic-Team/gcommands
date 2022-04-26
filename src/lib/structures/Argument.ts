@@ -1,9 +1,9 @@
 import type { ApplicationCommandOptionType } from 'discord-api-types/v9';
-import { z } from 'zod';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
-import { Locale, LocaleString } from '../util/common';
+import type { LocaleString } from '../util/common';
 import { Logger } from '../util/logger/Logger';
 import { commandAndOptionNameRegexp } from '../util/regexes';
+import { s } from '@sapphire/shapeshift';
 
 export enum ArgumentType {
 	'SUB_COMMAND' = 1,
@@ -61,77 +61,42 @@ export interface ArgumentOptions {
 	run?: (ctx: AutocompleteContext) => any;
 }
 
-const validationSchema = z
-	.object({
-		name: z.string().max(32).regex(commandAndOptionNameRegexp),
-		nameLocalizations: z
-			.record(
-				z
-					.union([z.string(), z.nativeEnum(Locale)])
-					.transform(arg =>
-						typeof arg === 'string' && Object.keys(Locale).includes(arg)
-							? Locale[arg]
-							: arg,
-					),
-				z.string().max(32).regex(commandAndOptionNameRegexp),
-			)
-			.optional(),
-		description: z.string().max(100),
-		descriptionLocalizations: z
-			.record(
-				z
-					.union([z.string(), z.nativeEnum(Locale)])
-					.transform(arg =>
-						typeof arg === 'string' && Object.keys(Locale).includes(arg)
-							? Locale[arg]
-							: arg,
-					),
-				z.string().max(100),
-			)
-			.optional(),
-		type: z
-			.union([z.string(), z.nativeEnum(ArgumentType)])
-			.transform(arg =>
-				typeof arg === 'string' && Object.keys(ArgumentType).includes(arg)
-					? ArgumentType[arg]
-					: arg,
-			),
-		required: z.boolean().optional(),
-		choices: z
-			.object({
-				name: z.string(),
-				nameLocalizations: z
-					.record(
-						z
-							.union([z.string(), z.nativeEnum(Locale)])
-							.transform(arg =>
-								typeof arg === 'string' && Object.keys(Locale).includes(arg)
-									? Locale[arg]
-									: arg,
-							),
-						z.string().max(32).regex(commandAndOptionNameRegexp),
-					)
-					.optional(),
-				value: z.union([z.string(), z.number()]),
-			})
-			.array()
-			.optional(),
-		options: z.any().array().optional(),
-		arguments: z.any().array().optional(),
-		channelTypes: z
-			.union([z.string(), z.nativeEnum(ChannelType)])
-			.transform(arg =>
-				typeof arg === 'string' && Object.keys(ChannelType).includes(arg)
-					? ChannelType[arg]
-					: arg,
-			)
-			.array()
-			.optional(),
-		minValue: z.number().optional(),
-		maxValue: z.number().optional(),
-		run: z.function().optional(),
-	})
-	.passthrough();
+const parser = s.object({
+	name: s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+	nameLocalizations: s.record(
+		s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+	).optional,
+	description: s.string.lengthLe(100),
+	descriptionLocalizations: s.record(s.string.lengthLe(100)),
+	type: s.union(s.string, s.nativeEnum(ArgumentType)).transform(value => {
+		return typeof value === 'string' &&
+			Object.keys(ArgumentType).includes(value)
+			? ArgumentType[value]
+			: value;
+	}),
+	required: s.boolean.optional,
+	choices: s.array(
+		s.object({
+			name: s.string,
+			nameLocalizations: s.record(
+				s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+			).optional,
+			value: s.union(s.string, s.number),
+		}),
+	).optional,
+	arguments: s.any.optional,
+	channelTypes: s.array(
+		s.union(s.string, s.nativeEnum(ChannelType)).transform(value => {
+			return typeof value === 'string' &&
+				Object.keys(ChannelType).includes(value)
+				? ChannelType[value]
+				: value;
+		}),
+	),
+	minValue: s.number.optional,
+	maxValue: s.number.optional,
+	run: s.any,
+});
 
 export class Argument {
 	public name: string;
@@ -153,42 +118,30 @@ export class Argument {
 	public run?: (ctx: AutocompleteContext) => any;
 
 	constructor(options: ArgumentOptions) {
-		if (options.options) {
-			Logger.warn(
-				'The use of ArgumentOptions#options is depracted. Please use ArgumentOptions#arguments instead',
-			);
-			options.arguments = options.options;
-		}
-
-		if (this.run) options.run = this.run;
-
-		validationSchema
-			.parseAsync({ ...options, ...this })
-			.then(options => {
-				this.name = options.name;
-				this.nameLocalizations = options.nameLocalizations;
-				this.description = options.description;
-				this.descriptionLocalizations = options.descriptionLocalizations;
-				this.type = options.type;
-				this.required = options.required;
-				this.choices = options.choices as Array<ArgumentChoice>;
-				this.arguments = options.arguments?.map(argument => {
-					if (argument instanceof Argument) return argument;
-					else return new Argument(argument);
-				});
-				this.options = this.arguments;
-				this.channelTypes = options.channelTypes;
-				this.minValue = options.minValue;
-				this.maxValue = options.maxValue;
-				this.run = options.run;
-			})
-			.catch(error => {
-				Logger.warn(
-					typeof error.code !== 'undefined' ? error.code : '',
-					error.message,
-				);
-				if (error.stack) Logger.trace(error.stack);
+		try {
+			const parsed = parser.parse({ ...options, ...this });
+			this.name = parsed.name;
+			this.nameLocalizations = parsed.nameLocalizations;
+			this.description = parsed.description;
+			this.descriptionLocalizations = parsed.descriptionLocalizations;
+			this.type = parsed.type;
+			this.required = parsed.required;
+			this.choices = parsed.choices as Array<ArgumentChoice>;
+			this.arguments = parsed.arguments?.map(argument => {
+				if (argument instanceof Argument) return argument;
+				else return new Argument(argument);
 			});
+			this.channelTypes = parsed.channelTypes;
+			this.minValue = parsed.minValue;
+			this.maxValue = parsed.maxValue;
+			this.run = parsed.run;
+		} catch (error) {
+			Logger.warn(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
+			if (error.stack) Logger.trace(error.stack);
+		}
 	}
 
 	public toJSON(): Record<string, any> {
