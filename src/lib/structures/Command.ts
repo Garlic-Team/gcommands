@@ -6,6 +6,7 @@ import { Commands } from '../managers/CommandManager';
 import { Locale, LocaleString } from '../util/common';
 import { Logger } from '../util/logger/Logger';
 import { commandAndOptionNameRegexp } from '../util/regexes';
+import type { PermissionResolvable, Permissions } from 'discord.js';
 
 export enum CommandType {
 	/**
@@ -37,6 +38,8 @@ export interface CommandOptions {
 	description?: string;
 	descriptionLocalizations?: Record<LocaleString, string>;
 	type: Array<CommandType | keyof typeof CommandType>;
+	defaultMemberPermissions?: PermissionResolvable;
+	dmPermission?: boolean;
 	arguments?: Array<Argument | ArgumentOptions>;
 	inhibitors?: CommandInhibitors;
 	guildId?: string;
@@ -84,6 +87,8 @@ const validationSchema = z
 			)
 			.array()
 			.nonempty(),
+		defaultMemberPermissions: z.any().optional(),
+		dmPermission: z.boolean().optional(),
 		arguments: z.any().array().optional(),
 		inhibitors: z.any().array().optional(),
 		guildId: z.string().optional(),
@@ -109,6 +114,8 @@ export class Command {
 	public description?: string;
 	public descriptionLocalizations?: Record<LocaleString, string>;
 	public type: Array<CommandType | keyof typeof CommandType>;
+	public defaultMemberPermissions?: PermissionResolvable;
+	public dmPermission?: boolean;
 	public arguments?: Array<Argument>;
 	public inhibitors: CommandInhibitors;
 	public guildId?: string;
@@ -136,6 +143,11 @@ export class Command {
 					options.descriptionLocalizations ||
 					Command.defaults?.descriptionLocalizations;
 				this.type = options.type || Command.defaults?.type;
+				this.defaultMemberPermissions =
+					options.defaultMemberPermissions ||
+					Command.defaults?.defaultMemberPermissions;
+				this.dmPermission =
+					options.dmPermission || Command.defaults?.dmPermission;
 				this.arguments = options.arguments?.map(argument => {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
@@ -218,6 +230,8 @@ export class Command {
 						name_localizations: this.nameLocalizations,
 						description: this.description,
 						description_localizations: this.descriptionLocalizations,
+						dm_permission: this.dmPermission,
+						default_member_permissions: this.defaultMemberPermissions,
 						options: this.arguments?.map(argument => argument.toJSON()),
 						type: type,
 					};
