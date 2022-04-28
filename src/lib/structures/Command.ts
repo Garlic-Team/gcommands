@@ -6,7 +6,7 @@ import { Commands } from '../managers/CommandManager';
 import { Locale, LocaleString } from '../util/common';
 import { Logger } from '../util/logger/Logger';
 import { commandAndOptionNameRegexp } from '../util/regexes';
-import type { PermissionResolvable, Permissions } from 'discord.js';
+import type { PermissionResolvable } from 'discord.js';
 
 export enum CommandType {
 	/**
