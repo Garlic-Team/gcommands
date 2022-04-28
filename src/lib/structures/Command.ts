@@ -37,6 +37,7 @@ export interface CommandOptions {
 	description?: string;
 	descriptionLocalizations?: Record<LocaleString, string>;
 	type: Array<CommandType | keyof typeof CommandType>;
+	dm?: Boolean;
 	arguments?: Array<Argument | ArgumentOptions>;
 	inhibitors?: CommandInhibitors;
 	guildId?: string;
@@ -88,6 +89,7 @@ const validationSchema = z
 		inhibitors: z.any().array().optional(),
 		guildId: z.string().optional(),
 		cooldown: z.string().optional(),
+		dm: z.boolean().optional(),
 		autoDefer: z
 			.union([z.string(), z.nativeEnum(AutoDeferType)])
 			.transform(arg =>
@@ -109,6 +111,7 @@ export class Command {
 	public description?: string;
 	public descriptionLocalizations?: Record<LocaleString, string>;
 	public type: Array<CommandType | keyof typeof CommandType>;
+	public dm: boolean;
 	public arguments?: Array<Argument>;
 	public inhibitors: CommandInhibitors;
 	public guildId?: string;
@@ -141,6 +144,7 @@ export class Command {
 					else return new Argument(argument);
 				});
 				this.inhibitors = options.inhibitors || Command.defaults?.inhibitors;
+				this.dm = options.dm || Command.defaults?.dm;
 				this.guildId = options.guildId || Command.defaults?.guildId;
 				this.cooldown = options.cooldown || Command.defaults?.cooldown;
 				this.fileName = options.fileName || Command.defaults?.fileName;
@@ -217,6 +221,7 @@ export class Command {
 						name: this.name,
 						name_localizations: this.nameLocalizations,
 						description: this.description,
+						dm_permission: this.dm,
 						description_localizations: this.descriptionLocalizations,
 						options: this.arguments?.map(argument => argument.toJSON()),
 						type: type,
