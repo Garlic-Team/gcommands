@@ -192,7 +192,12 @@ export class Util extends null {
 			.replace(new RegExp(/\w/), s => s.toUpperCase());
 	}
 
-  // TODO: jsdocs
+	/**
+	 * The method that runs command or component inhibitor
+	 * @param {CommandContext|ComponentContext} ctx The context to run the inhibitor on
+	 * @param {CommandInhibitor|ComponentInhibitor} inhibitor The inhibitor to run
+	 * @returns
+	 */
 	static async runInhibitor(
 		ctx: CommandContext | ComponentContext,
 		inhibitor: CommandInhibitor | ComponentInhibitor,
