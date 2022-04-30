@@ -1,6 +1,11 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
+/**
+ * The method that loads plugin files from a directory
+ * @param basedir The base plugin directory
+ * @param folder The plugin folder
+ */
 export async function loadPluginFolder(basedir: string, folder: fs.Dirent) {
 	if (folder.isDirectory()) {
 		if (fs.existsSync(path.join(basedir, folder.name, 'index.js'))) {
@@ -19,6 +24,10 @@ export async function loadPluginFolder(basedir: string, folder: fs.Dirent) {
 	}
 }
 
+/**
+ * The method that find all plugins in a directory
+ * @param {string} basedir The directory to find plugins in
+ */
 export async function pluginFinder(basedir: string) {
 	if (fs.existsSync(basedir)) {
 		if (fs.existsSync(path.join(basedir, 'plugins'))) {
