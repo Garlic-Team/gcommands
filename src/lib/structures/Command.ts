@@ -90,7 +90,7 @@ const validationSchema = z
 		defaultMemberPermissions: z.any().optional(),
 		dmPermission: z.boolean().optional(),
 		arguments: z.any().array().optional(),
-		inhibitors: z.any().array().optional(),
+		inhibitors: z.any().array().optional().default([]),
 		guildId: z.string().optional(),
 		cooldown: z.string().optional(),
 		autoDefer: z
@@ -232,7 +232,9 @@ export class Command {
 						description_localizations: this.descriptionLocalizations,
 						dm_permission: this.dmPermission,
 						default_member_permissions: this.defaultMemberPermissions
-							? new Permissions(this.defaultMemberPermissions).bitfield
+							? new Permissions(
+									this.defaultMemberPermissions,
+							  ).bitfield.toString()
 							: null,
 						options: this.arguments?.map(argument => argument.toJSON()),
 						type: type,

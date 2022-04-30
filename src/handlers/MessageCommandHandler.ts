@@ -25,6 +25,7 @@ import {
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { Util } from '../lib/util/Util';
 import { Logger, Events } from '../lib/util/logger/Logger';
+import { MemberPermissions } from '../inhibitors';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -153,6 +154,18 @@ export async function MessageCommandHandler(
 
 	if (!command.type.includes(CommandType.MESSAGE)) return;
 	if (!message.guild && command.dmPermission === false) return;
+	if (
+		command.defaultMemberPermissions &&
+		!command.inhibitors?.some(
+			inhibitor => inhibitor.constructor.name !== 'MemberPermissions',
+		)
+	) {
+		command.inhibitors.push(
+			new MemberPermissions({
+				permissions: [command.defaultMemberPermissions],
+			}),
+		);
+	}
 
 	if (command.cooldown) {
 		const cooldown = Handlers.cooldownHandler(
