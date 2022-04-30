@@ -1,8 +1,9 @@
-import { z } from 'zod';
 import type { ComponentContext } from './contexts/ComponentContext';
 import { AutoDeferType, GClient } from '../GClient';
 import { Components } from '../managers/ComponentManager';
 import { Logger } from '../util/logger/Logger';
+import { s } from '@sapphire/shapeshift';
+import { commandAndOptionNameRegexp } from '../util/regexes';
 
 export enum ComponentType {
 	'BUTTON' = 1,
@@ -26,37 +27,27 @@ export interface ComponentOptions {
 	onError?: (interaction: ComponentContext, error: any) => any;
 }
 
-const validationSchema = z
-	.object({
-		name: z
-			.string()
-			.max(32)
-			.regex(/^[a-z1-9]/),
-		type: z
-			.union([z.string(), z.nativeEnum(ComponentType)])
-			.transform(arg =>
-				typeof arg === 'string' && Object.keys(ComponentType).includes(arg)
-					? ComponentType[arg]
-					: arg,
-			)
-			.array()
-			.nonempty(),
-		inhibitors: z.any().optional(),
-		guildId: z.string().optional(),
-		cooldown: z.string().optional(),
-		autoDefer: z
-			.union([z.string(), z.nativeEnum(AutoDeferType)])
-			.transform(arg =>
-				typeof arg === 'string' && Object.keys(AutoDeferType).includes(arg)
-					? AutoDeferType[arg]
-					: arg,
-			)
-			.optional(),
-		fileName: z.string().optional(),
-		run: z.function(),
-		onError: z.function().optional(),
-	})
-	.passthrough();
+const parser = s.object({
+	name: s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+	type: s.union(s.string, s.nativeEnum(ComponentType)).transform(value => {
+		return typeof value === 'string' &&
+			Object.keys(ComponentType).includes(value)
+			? ComponentType[value]
+			: value;
+	}),
+	inhibitors: s.array(s.any).optional,
+	guildId: s.string.optional,
+	cooldown: s.string.optional,
+	autoDefer: s.union(s.string, s.nativeEnum(AutoDeferType)).transform(value => {
+		return typeof value === 'string' &&
+			Object.keys(AutoDeferType).includes(value)
+			? AutoDeferType[value]
+			: value;
+	}),
+	fileName: s.string.optional,
+	run: s.any,
+	onError: s.any,
+});
 
 export class Component {
 	public client: GClient;
@@ -74,31 +65,26 @@ export class Component {
 	public autoDefer?: AutoDeferType | keyof typeof AutoDeferType;
 
 	public constructor(options: ComponentOptions) {
-		if (this.run) options.run = this.run;
-		if (this.onError) options.onError = this.onError;
+		try {
+			const parsed = parser.passthrough.parse({ ...options, ...this });
+			this.name = parsed.name || Component.defaults?.name;
+			this.type = parsed.type || Component.defaults?.type;
+			this.inhibitors = parsed.inhibitors || Component.defaults?.inhibitors;
+			this.guildId = parsed.guildId || Component.defaults?.guildId;
+			this.cooldown = parsed.cooldown || Component.defaults?.cooldown;
+			this.fileName = parsed.fileName || Component.defaults?.fileName;
+			this.run = parsed.run || Component.defaults?.run;
+			this.onError = parsed.onError || Component.defaults?.onError;
+			this.autoDefer = parsed.autoDefer || Component.defaults?.autoDefer;
 
-		validationSchema
-			.parseAsync({ ...options, ...this })
-			.then(options => {
-				this.name = options.name || Component.defaults?.name;
-				this.type = options.type || Component.defaults?.type;
-				this.inhibitors = options.inhibitors || Component.defaults?.inhibitors;
-				this.guildId = options.guildId || Component.defaults?.guildId;
-				this.cooldown = options.cooldown || Component.defaults?.cooldown;
-				this.fileName = options.fileName || Component.defaults?.fileName;
-				this.run = options.run || Component.defaults?.run;
-				this.onError = options.onError || Component.defaults?.onError;
-				this.autoDefer = options.autoDefer || Component.defaults?.autoDefer;
-
-				Components.register(this);
-			})
-			.catch(error => {
-				Logger.warn(
-					typeof error.code !== 'undefined' ? error.code : '',
-					error.message,
-				);
-				if (error.stack) Logger.trace(error.stack);
-			});
+			Components.register(this);
+		} catch (error) {
+			Logger.warn(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
+			if (error.stack) Logger.trace(error.stack);
+		}
 	}
 
 	public initialize(client: GClient): void {
@@ -151,18 +137,14 @@ export class Component {
 	}
 
 	public static setDefaults(defaults: Partial<ComponentOptions>): void {
-		validationSchema
-			.partial()
-			.parseAsync(defaults)
-			.then(defaults => {
-				Component.defaults = defaults as Partial<ComponentOptions>;
-			})
-			.catch(error => {
-				Logger.warn(
-					typeof error.code !== 'undefined' ? error.code : '',
-					error.message,
-				);
-				if (error.stack) Logger.trace(error.stack);
-			});
+		try {
+			Component.defaults = parser.partial.passthrough.parse(defaults);
+		} catch (error) {
+			Logger.warn(
+				typeof error.code !== 'undefined' ? error.code : '',
+				error.message,
+			);
+			if (error.stack) Logger.trace(error.stack);
+		}
 	}
 }
