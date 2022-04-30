@@ -1,11 +1,14 @@
 import { setImmediate } from 'node:timers';
-import { Client, ClientOptions, Snowflake } from 'discord.js';
+import { Awaitable, Client, ClientOptions, Message, Snowflake } from 'discord.js';
 import { Commands } from './managers/CommandManager';
 import { Components } from './managers/ComponentManager';
 import { Listeners } from './managers/ListenerManager';
 import { Plugins } from './managers/PluginManager';
 import { registerDirectories } from './util/registerDirectories';
 import Responses from '../responses.json';
+
+// TODO: jsdocs
+export type GClientMessagePrefix = string | string[] | null;
 
 /**
  * Enum for the auto defer feature.
@@ -45,7 +48,9 @@ export interface GClientOptions extends ClientOptions {
 	 * @requires {@link GClientOptions.messageSupport} to be enabled
 	 * @type {string}
 	 */
-	messagePrefix?: string;
+	messagePrefix?:
+		| ((message: Message) => Awaitable<GClientMessagePrefix>)
+		| GClientMessagePrefix;
 	/**
 	 * Whether to send a message for an unknown command.
 	 * @type {boolean}

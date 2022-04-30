@@ -104,7 +104,7 @@ export class CommandContext<
 			| MessagePayload
 			| InteractionReplyOptions,
 	): Promise<Fetch extends true ? GuildCacheMessage<Cached> : void> {
-		return this.deferred || this.replied
+		return this.deferred || this.replied || this.interaction?.deferred || this.interaction?.replied
 			? this.editReply(options)
 			: this.reply(options);
 	}

@@ -64,7 +64,7 @@ const checkValidation = async (
 								disabled: false,
 								options: argument.choices.map(ch => ({
 									label: ch.name,
-									value: ch.value,
+									value: ch.value.toString(),
 								})),
 							},
 						],
@@ -209,7 +209,7 @@ export async function MessageCommandHandler(
 		guildId: message.guildId,
 		user: message.author,
 		member: message.member,
-		memberPermissions: message.member.permissions,
+		memberPermissions: message.member?.permissions ?? null,
 		command: command,
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
