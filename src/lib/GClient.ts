@@ -1,5 +1,11 @@
 import { setImmediate } from 'node:timers';
-import { Awaitable, Client, ClientOptions, Message, Snowflake } from 'discord.js';
+import {
+	Awaitable,
+	Client,
+	ClientOptions,
+	Message,
+	Snowflake,
+} from 'discord.js';
 import { Commands } from './managers/CommandManager';
 import { Components } from './managers/ComponentManager';
 import { Listeners } from './managers/ListenerManager';
@@ -7,7 +13,12 @@ import { Plugins } from './managers/PluginManager';
 import { registerDirectories } from './util/registerDirectories';
 import Responses from '../responses.json';
 
-// TODO: jsdocs
+/**
+ * A valid prefix for GCommands.
+ * * `string`: for single prefix, like `'?'`.
+ * * `string[]`: an array of prefixes, like `['?', '!']`.
+ * * `null`: disabled prefix, only mention works.
+ */
 export type GClientMessagePrefix = string | string[] | null;
 
 /**
@@ -46,7 +57,6 @@ export interface GClientOptions extends ClientOptions {
 	/**
 	 * Prefix for message commands
 	 * @requires {@link GClientOptions.messageSupport} to be enabled
-	 * @type {string}
 	 */
 	messagePrefix?:
 		| ((message: Message) => Awaitable<GClientMessagePrefix>)
@@ -116,6 +126,7 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 
 	/**
 	 * Object of all provided options.
+	 * @see {@link GClientOptions}
 	 */
 	public declare options: GClientOptions;
 
