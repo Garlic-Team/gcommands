@@ -7,6 +7,10 @@ import type {
 import { Logger } from './logger/Logger';
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
+import type { CommandContext } from '../structures/contexts/CommandContext';
+import type { ComponentContext } from '../structures/contexts/ComponentContext';
+import type { CommandInhibitor } from '../structures/Command';
+import type { ComponentInhibitor } from '../structures/Component';
 
 /**
  * Includes many useful functions
@@ -186,6 +190,36 @@ export class Util extends null {
 				($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`,
 			)
 			.replace(new RegExp(/\w/), s => s.toUpperCase());
+	}
+
+  // TODO: jsdocs
+	static async runInhibitor(
+		ctx: CommandContext | ComponentContext,
+		inhibitor: CommandInhibitor | ComponentInhibitor,
+	) {
+		let result;
+		if (typeof inhibitor === 'function') {
+			// @ts-expect-error Duplication
+			result = await Promise.resolve(inhibitor(ctx)).catch(error => {
+				Logger.error(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
+				if (error.stack) Logger.trace(error.stack);
+			});
+		} else if (typeof inhibitor.run === 'function') {
+			// @ts-expect-error Duplication
+			result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
+				Logger.error(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
+				if (error.stack) Logger.trace(error.stack);
+			});
+		}
+
+		if (result !== true) return false;
+		return true;
 	}
 
 	/**
