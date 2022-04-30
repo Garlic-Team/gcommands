@@ -3,16 +3,17 @@ import type { ComponentContext } from './contexts/ComponentContext';
 import { AutoDeferType, GClient } from '../GClient';
 import { Components } from '../managers/ComponentManager';
 import { Logger } from '../util/logger/Logger';
+import { Util } from '../util/Util';
 
 export enum ComponentType {
 	'BUTTON' = 1,
 	'SELECT_MENU' = 2,
 }
 
-export type ComponentInhibitor = (ctx: ComponentContext) => boolean | any;
-export type ComponentInhibitors = Array<
-	{ run: ComponentInhibitor } | ComponentInhibitor
->;
+export type ComponentInhibitor =
+	| ((ctx: ComponentContext) => boolean | any)
+	| { run: ComponentInhibitor };
+export type ComponentInhibitors = Array<ComponentInhibitor>;
 
 export interface ComponentOptions {
 	name: string;
@@ -116,26 +117,9 @@ export class Component {
 		if (!this.inhibitors) return true;
 
 		for await (const inhibitor of this.inhibitors) {
-			let result;
-			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
-					Logger.error(
-						typeof error.code !== 'undefined' ? error.code : '',
-						error.message,
-					);
-					if (error.stack) Logger.trace(error.stack);
-				});
-			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
-					Logger.error(
-						typeof error.code !== 'undefined' ? error.code : '',
-						error.message,
-					);
-					if (error.stack) Logger.trace(error.stack);
-				});
-			}
-			if (result !== true) return false;
+			if ((await Util.runInhibitor(ctx, inhibitor)) !== true) return false;
 		}
+
 		return true;
 	}
 

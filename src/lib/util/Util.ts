@@ -2,6 +2,10 @@ import type { Client } from 'discord.js';
 import { Logger } from './logger/Logger';
 import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
+import type { CommandContext } from '../structures/contexts/CommandContext';
+import type { ComponentContext } from '../structures/contexts/ComponentContext';
+import type { CommandInhibitor } from '../structures/Command';
+import type { ComponentInhibitor } from '../structures/Component';
 
 export class Util {
 	/**
@@ -126,6 +130,35 @@ export class Util {
 				($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`,
 			)
 			.replace(new RegExp(/\w/), s => s.toUpperCase());
+	}
+
+	static async runInhibitor(
+		ctx: CommandContext | ComponentContext,
+		inhibitor: CommandInhibitor | ComponentInhibitor,
+	) {
+		let result;
+		if (typeof inhibitor === 'function') {
+			// @ts-expect-error Duplication
+			result = await Promise.resolve(inhibitor(ctx)).catch(error => {
+				Logger.error(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
+				if (error.stack) Logger.trace(error.stack);
+			});
+		} else if (typeof inhibitor.run === 'function') {
+			// @ts-expect-error Duplication
+			result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
+				Logger.error(
+					typeof error.code !== 'undefined' ? error.code : '',
+					error.message,
+				);
+				if (error.stack) Logger.trace(error.stack);
+			});
+		}
+
+		if (result !== true) return false;
+		return true;
 	}
 
 	static async getResponse(

@@ -6,6 +6,8 @@ import { Commands } from '../managers/CommandManager';
 import { Locale, LocaleString } from '../util/common';
 import { Logger } from '../util/logger/Logger';
 import { commandAndOptionNameRegexp } from '../util/regexes';
+import { PermissionResolvable, Permissions } from 'discord.js';
+import { Util } from '../util/Util';
 
 export enum CommandType {
 	/**
@@ -26,10 +28,10 @@ export enum CommandType {
 	'CONTEXT_MESSAGE' = 3,
 }
 
-export type CommandInhibitor = (ctx: CommandContext) => boolean | any;
-export type CommandInhibitors = Array<
-	{ run: CommandInhibitor } | CommandInhibitor
->;
+export type CommandInhibitor =
+	| ((ctx: CommandContext) => boolean | any)
+	| { run: CommandInhibitor };
+export type CommandInhibitors = Array<CommandInhibitor>;
 
 export interface CommandOptions {
 	name: string;
@@ -37,6 +39,8 @@ export interface CommandOptions {
 	description?: string;
 	descriptionLocalizations?: Record<LocaleString, string>;
 	type: Array<CommandType | keyof typeof CommandType>;
+	defaultMemberPermissions?: PermissionResolvable;
+	dmPermission?: boolean;
 	arguments?: Array<Argument | ArgumentOptions>;
 	inhibitors?: CommandInhibitors;
 	guildId?: string;
@@ -84,8 +88,10 @@ const validationSchema = z
 			)
 			.array()
 			.nonempty(),
+		defaultMemberPermissions: z.any().optional(),
+		dmPermission: z.boolean().optional(),
 		arguments: z.any().array().optional(),
-		inhibitors: z.any().array().optional(),
+		inhibitors: z.any().array().optional().default([]),
 		guildId: z.string().optional(),
 		cooldown: z.string().optional(),
 		autoDefer: z
@@ -109,6 +115,8 @@ export class Command {
 	public description?: string;
 	public descriptionLocalizations?: Record<LocaleString, string>;
 	public type: Array<CommandType | keyof typeof CommandType>;
+	public defaultMemberPermissions?: PermissionResolvable;
+	public dmPermission?: boolean;
 	public arguments?: Array<Argument>;
 	public inhibitors: CommandInhibitors;
 	public guildId?: string;
@@ -136,6 +144,11 @@ export class Command {
 					options.descriptionLocalizations ||
 					Command.defaults?.descriptionLocalizations;
 				this.type = options.type || Command.defaults?.type;
+				this.defaultMemberPermissions =
+					options.defaultMemberPermissions ||
+					Command.defaults?.defaultMemberPermissions;
+				this.dmPermission =
+					options.dmPermission || Command.defaults?.dmPermission;
 				this.arguments = options.arguments?.map(argument => {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
@@ -174,26 +187,9 @@ export class Command {
 		if (!this.inhibitors) return true;
 
 		for await (const inhibitor of this.inhibitors) {
-			let result;
-			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
-					Logger.error(
-						typeof error.code !== 'undefined' ? error.code : '',
-						error.message,
-					);
-					if (error.stack) Logger.trace(error.stack);
-				});
-			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
-					Logger.error(
-						typeof error.code !== 'undefined' ? error.code : '',
-						error.message,
-					);
-					if (error.stack) Logger.trace(error.stack);
-				});
-			}
-			if (result !== true) return false;
+			if ((await Util.runInhibitor(ctx, inhibitor)) !== true) return false;
 		}
+
 		return true;
 	}
 
@@ -218,6 +214,12 @@ export class Command {
 						name_localizations: this.nameLocalizations,
 						description: this.description,
 						description_localizations: this.descriptionLocalizations,
+						dm_permission: this.dmPermission,
+						default_member_permissions: this.defaultMemberPermissions
+							? new Permissions(
+									this.defaultMemberPermissions,
+							  ).bitfield.toString()
+							: null,
 						options: this.arguments?.map(argument => argument.toJSON()),
 						type: type,
 					};
