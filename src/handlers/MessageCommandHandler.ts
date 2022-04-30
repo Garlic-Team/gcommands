@@ -154,18 +154,6 @@ export async function MessageCommandHandler(
 
 	if (!command.type.includes(CommandType.MESSAGE)) return;
 	if (!message.guild && command.dmPermission === false) return;
-	if (
-		command.defaultMemberPermissions &&
-		!command.inhibitors?.some(
-			inhibitor => inhibitor.constructor.name !== 'MemberPermissions',
-		)
-	) {
-		command.inhibitors.push(
-			new MemberPermissions({
-				permissions: [command.defaultMemberPermissions],
-			}),
-		);
-	}
 
 	if (command.cooldown) {
 		const cooldown = Handlers.cooldownHandler(
@@ -251,6 +239,23 @@ export async function MessageCommandHandler(
 			return msg;
 		},
 	});
+
+	if (
+		command.defaultMemberPermissions &&
+		!command.inhibitors?.some(
+			inhibitor => inhibitor.constructor.name !== 'MemberPermissions',
+		)
+	) {
+		if (
+			!Util.runInhibitor(
+				ctx,
+				new MemberPermissions({
+					permissions: [command.defaultMemberPermissions],
+				}),
+			)
+		)
+			return;
+	}
 
 	if (!(await command.inhibit(ctx))) return;
 	await Promise.resolve(command.run(ctx))

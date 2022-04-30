@@ -7,6 +7,7 @@ import { Locale, LocaleString } from '../util/common';
 import { Logger } from '../util/logger/Logger';
 import { commandAndOptionNameRegexp } from '../util/regexes';
 import { PermissionResolvable, Permissions } from 'discord.js';
+import { Util } from '../util/Util';
 
 export enum CommandType {
 	/**
@@ -27,10 +28,10 @@ export enum CommandType {
 	'CONTEXT_MESSAGE' = 3,
 }
 
-export type CommandInhibitor = (ctx: CommandContext) => boolean | any;
-export type CommandInhibitors = Array<
-	{ run: CommandInhibitor } | CommandInhibitor
->;
+export type CommandInhibitor =
+	| ((ctx: CommandContext) => boolean | any)
+	| { run: CommandInhibitor };
+export type CommandInhibitors = Array<CommandInhibitor>;
 
 export interface CommandOptions {
 	name: string;
@@ -186,26 +187,9 @@ export class Command {
 		if (!this.inhibitors) return true;
 
 		for await (const inhibitor of this.inhibitors) {
-			let result;
-			if (typeof inhibitor === 'function') {
-				result = await Promise.resolve(inhibitor(ctx)).catch(error => {
-					Logger.error(
-						typeof error.code !== 'undefined' ? error.code : '',
-						error.message,
-					);
-					if (error.stack) Logger.trace(error.stack);
-				});
-			} else if (typeof inhibitor.run === 'function') {
-				result = await Promise.resolve(inhibitor.run(ctx)).catch(error => {
-					Logger.error(
-						typeof error.code !== 'undefined' ? error.code : '',
-						error.message,
-					);
-					if (error.stack) Logger.trace(error.stack);
-				});
-			}
-			if (result !== true) return false;
+			if ((await Util.runInhibitor(ctx, inhibitor)) !== true) return false;
 		}
+
 		return true;
 	}
 
