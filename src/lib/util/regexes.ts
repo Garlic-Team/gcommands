@@ -32,4 +32,4 @@ export const mentionableRegexp = /^(?:<@!?)?(?:<@&?)?([0-9]+)>?$/;
  * Regex for command and option names
  * @raw `/^[\P{Lu}\p{N}_-]+$/u`
  */
-export const commandAndOptionNameRegexp = /^[\P{Lu}\p{N}_-a-A-zZ]+|[\s]$/u;
+export const commandAndOptionNameRegexp = /^[\P{Lu}\p{N}_-aA-zZ]+|[\s]$/u;
