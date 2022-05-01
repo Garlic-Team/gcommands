@@ -48,6 +48,7 @@ export class Listener<
 	public constructor(options: ListenerOptions<WS, Event>) {
 		if (this.run) options.run = this.run;
 
+		this.options = options;
 		validationSchema
 			.parseAsync({ ...options, ...this })
 			.then(options => {
@@ -57,7 +58,6 @@ export class Listener<
 				this.ws = options.ws as WS;
 				this.fileName = options.fileName;
 				this.run = options.run;
-				this.options = options;
 
 				Listeners.register(this);
 			})
