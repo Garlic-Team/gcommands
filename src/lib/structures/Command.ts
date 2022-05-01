@@ -39,6 +39,7 @@ export interface CommandOptions {
 	description?: string;
 	descriptionLocalizations?: Record<LocaleString, string>;
 	type: Array<CommandType | keyof typeof CommandType>;
+	category?: string;
 	defaultMemberPermissions?: PermissionResolvable;
 	dmPermission?: boolean;
 	arguments?: Array<Argument | ArgumentOptions>;
@@ -88,6 +89,7 @@ const validationSchema = z
 			)
 			.array()
 			.nonempty(),
+		category: z.string().optional(),
 		defaultMemberPermissions: z.any().optional(),
 		dmPermission: z.boolean().optional(),
 		arguments: z.any().array().optional(),
@@ -115,6 +117,7 @@ export class Command {
 	public description?: string;
 	public descriptionLocalizations?: Record<LocaleString, string>;
 	public type: Array<CommandType | keyof typeof CommandType>;
+	public category?: string;
 	public defaultMemberPermissions?: PermissionResolvable;
 	public dmPermission?: boolean;
 	public arguments?: Array<Argument>;
@@ -155,6 +158,7 @@ export class Command {
 				});
 				this.inhibitors = options.inhibitors || Command.defaults?.inhibitors;
 				this.guildId = options.guildId || Command.defaults?.guildId;
+				this.category = options.category;
 				this.cooldown = options.cooldown || Command.defaults?.cooldown;
 				this.fileName = options.fileName || Command.defaults?.fileName;
 				this.run = options.run || Command.defaults?.run;
