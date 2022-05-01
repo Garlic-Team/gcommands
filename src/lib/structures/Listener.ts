@@ -57,7 +57,7 @@ export class Listener<
 				this.ws = options.ws as WS;
 				this.fileName = options.fileName;
 				this.run = options.run;
-				this.options = this;
+				this.options = options;
 
 				Listeners.register(this);
 			})
