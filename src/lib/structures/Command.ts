@@ -119,6 +119,7 @@ export class Command {
 	public dmPermission?: boolean;
 	public arguments?: Array<Argument>;
 	public inhibitors: CommandInhibitors;
+	public options: CommandOptions;
 	public guildId?: string;
 	private static defaults?: Partial<CommandOptions>;
 	public cooldown?: string;
@@ -160,6 +161,7 @@ export class Command {
 				this.run = options.run || Command.defaults?.run;
 				this.onError = options.onError || Command.defaults?.onError;
 				this.autoDefer = options.autoDefer || Command.defaults?.autoDefer;
+				this.options = this;
 
 				Commands.register(this);
 			})
