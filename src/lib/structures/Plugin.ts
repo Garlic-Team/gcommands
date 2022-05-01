@@ -21,7 +21,7 @@ export class Plugin {
 			.then(options => {
 				this.name = options.name;
 				this.run = options.run;
-				this.options = this;
+				this.options = options;
 
 				Plugins.register(this);
 			})
