@@ -43,6 +43,7 @@ export class Listener<
 	public run: (...args: Array<any>) => any;
 	public owner?: string;
 	public reloading = false;
+	public options: ListenerOptions<WS, Event>;
 
 	public constructor(options: ListenerOptions<WS, Event>) {
 		if (this.run) options.run = this.run;
@@ -56,6 +57,7 @@ export class Listener<
 				this.ws = options.ws as WS;
 				this.fileName = options.fileName;
 				this.run = options.run;
+				this.options = this;
 
 				Listeners.register(this);
 			})
