@@ -158,7 +158,7 @@ export class Command {
 				});
 				this.inhibitors = options.inhibitors || Command.defaults?.inhibitors;
 				this.guildId = options.guildId || Command.defaults?.guildId;
-				this.category = options.category;
+				this.category = options.category || Command.defaults?.category;
 				this.cooldown = options.cooldown || Command.defaults?.cooldown;
 				this.fileName = options.fileName || Command.defaults?.fileName;
 				this.run = options.run || Command.defaults?.run;
