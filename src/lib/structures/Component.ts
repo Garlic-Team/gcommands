@@ -79,6 +79,7 @@ export class Component {
 		if (this.run) options.run = this.run;
 		if (this.onError) options.onError = this.onError;
 
+		this.options = options;
 		validationSchema
 			.parseAsync({ ...options, ...this })
 			.then(options => {
@@ -91,7 +92,6 @@ export class Component {
 				this.run = options.run || Component.defaults?.run;
 				this.onError = options.onError || Component.defaults?.onError;
 				this.autoDefer = options.autoDefer || Component.defaults?.autoDefer;
-				this.options = options;
 
 				Components.register(this);
 			})
