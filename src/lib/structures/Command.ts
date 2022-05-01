@@ -133,7 +133,7 @@ export class Command {
 	public constructor(options: CommandOptions) {
 		if (this.run) options.run = this.run;
 		if (this.onError) options.onError = this.onError;
-
+		this.options = options;
 		validationSchema
 			.parseAsync({ ...options, ...this })
 			.then(options => {
@@ -161,7 +161,6 @@ export class Command {
 				this.run = options.run || Command.defaults?.run;
 				this.onError = options.onError || Command.defaults?.onError;
 				this.autoDefer = options.autoDefer || Command.defaults?.autoDefer;
-				this.options = options;
 
 				Commands.register(this);
 			})
