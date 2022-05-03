@@ -91,7 +91,7 @@ export class Component {
 				this.run = options.run || Component.defaults?.run;
 				this.onError = options.onError || Component.defaults?.onError;
 				this.autoDefer = options.autoDefer || Component.defaults?.autoDefer;
-				this.options = options || Command.defaults?;
+				this.options = options || Component.defaults?;
 
 				Components.register(this);
 			})
