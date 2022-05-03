@@ -161,7 +161,6 @@ export class Command {
 				this.run = options.run || Command.defaults?.run;
 				this.onError = options.onError || Command.defaults?.onError;
 				this.autoDefer = options.autoDefer || Command.defaults?.autoDefer;
-				this.options = this;
 
 				Commands.register(this);
 			})
