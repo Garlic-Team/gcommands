@@ -81,15 +81,15 @@ export class Component {
 		validationSchema
 			.parseAsync({ ...options, ...this })
 			.then(options => {
-				this.name = options.name || Component.defaults?.name;
-				this.type = options.type || Component.defaults?.type;
-				this.inhibitors = options.inhibitors || Component.defaults?.inhibitors;
-				this.guildId = options.guildId || Component.defaults?.guildId;
-				this.cooldown = options.cooldown || Component.defaults?.cooldown;
-				this.fileName = options.fileName || Component.defaults?.fileName;
-				this.run = options.run || Component.defaults?.run;
-				this.onError = options.onError || Component.defaults?.onError;
-				this.autoDefer = options.autoDefer || Component.defaults?.autoDefer;
+				this.name = options.name ?? Component.defaults?.name;
+				this.type = options.type ?? Component.defaults?.type;
+				this.inhibitors = options.inhibitors ?? Component.defaults?.inhibitors;
+				this.guildId = options.guildId ?? Component.defaults?.guildId;
+				this.cooldown = options.cooldown ?? Component.defaults?.cooldown;
+				this.fileName = options.fileName ?? Component.defaults?.fileName;
+				this.run = options.run ?? Component.defaults?.run;
+				this.onError = options.onError ?? Component.defaults?.onError;
+				this.autoDefer = options.autoDefer ?? Component.defaults?.autoDefer;
 
 				Components.register(this);
 			})

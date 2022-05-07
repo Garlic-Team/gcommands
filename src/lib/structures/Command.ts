@@ -136,30 +136,30 @@ export class Command {
 		validationSchema
 			.parseAsync({ ...options, ...this })
 			.then(options => {
-				this.name = options.name || Command.defaults?.name;
+				this.name = options.name ?? Command.defaults?.name;
 				this.nameLocalizations =
-					options.nameLocalizations || Command.defaults?.nameLocalizations;
-				this.description = options.description || Command.defaults?.description;
+					options.nameLocalizations ?? Command.defaults?.nameLocalizations;
+				this.description = options.description ?? Command.defaults?.description;
 				this.descriptionLocalizations =
-					options.descriptionLocalizations ||
+					options.descriptionLocalizations ??
 					Command.defaults?.descriptionLocalizations;
-				this.type = options.type || Command.defaults?.type;
+				this.type = options.type ?? Command.defaults?.type;
 				this.defaultMemberPermissions =
-					options.defaultMemberPermissions ||
+					options.defaultMemberPermissions ??
 					Command.defaults?.defaultMemberPermissions;
 				this.dmPermission =
-					options.dmPermission || Command.defaults?.dmPermission;
+					options.dmPermission ?? Command.defaults?.dmPermission;
 				this.arguments = options.arguments?.map(argument => {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
 				});
-				this.inhibitors = options.inhibitors || Command.defaults?.inhibitors;
-				this.guildId = options.guildId || Command.defaults?.guildId;
-				this.cooldown = options.cooldown || Command.defaults?.cooldown;
-				this.fileName = options.fileName || Command.defaults?.fileName;
-				this.run = options.run || Command.defaults?.run;
-				this.onError = options.onError || Command.defaults?.onError;
-				this.autoDefer = options.autoDefer || Command.defaults?.autoDefer;
+				this.inhibitors = options.inhibitors ?? Command.defaults?.inhibitors;
+				this.guildId = options.guildId ?? Command.defaults?.guildId;
+				this.cooldown = options.cooldown ?? Command.defaults?.cooldown;
+				this.fileName = options.fileName ?? Command.defaults?.fileName;
+				this.run = options.run ?? Command.defaults?.run;
+				this.onError = options.onError ?? Command.defaults?.onError;
+				this.autoDefer = options.autoDefer ?? Command.defaults?.autoDefer;
 
 				Commands.register(this);
 			})
