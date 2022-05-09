@@ -13,7 +13,6 @@ const validationSchema = z
 export class Plugin {
 	public name: string;
 	public run: (client: GClient) => any;
-	public options: Object;
 
 	public constructor(name: string, run: (client: GClient) => any) {
 		validationSchema
