@@ -43,7 +43,6 @@ export class Listener<
 	public run: (...args: Array<any>) => any;
 	public owner?: string;
 	public reloading = false;
-	public options: ListenerOptions<WS, Event>;
 
 	public constructor(options: ListenerOptions<WS, Event>) {
 		if (this.run) options.run = this.run;
