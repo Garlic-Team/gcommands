@@ -119,7 +119,6 @@ export class Command {
 	public dmPermission?: boolean;
 	public arguments?: Array<Argument>;
 	public inhibitors: CommandInhibitors;
-	public options: CommandOptions;
 	public guildId?: string;
 	private static defaults?: Partial<CommandOptions>;
 	public cooldown?: string;
