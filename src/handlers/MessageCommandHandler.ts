@@ -247,12 +247,12 @@ export async function MessageCommandHandler(
 		)
 	) {
 		if (
-			!Util.runInhibitor(
+			!(await Util.runInhibitor(
 				ctx,
 				new MemberPermissions({
 					permissions: [command.defaultMemberPermissions],
 				}),
-			)
+			))
 		)
 			return;
 	}
