@@ -63,7 +63,6 @@ export class Component {
 	public client: GClient;
 	public name: string;
 	public type: Array<ComponentType | keyof typeof ComponentType>;
-	public options: ComponentOptions;
 	public inhibitors: ComponentInhibitors = [];
 	public guildId?: string;
 	private static defaults: Partial<ComponentOptions>;
