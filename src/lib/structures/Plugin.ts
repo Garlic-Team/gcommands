@@ -3,6 +3,11 @@ import type { GClient } from '../GClient';
 import { Plugins } from '../managers/PluginManager';
 import { Logger } from '../util/logger/Logger';
 
+export interface PluginOptions {
+    name: string;
+    run: (client: GClient) => any;
+}
+
 const validationSchema = z
 	.object({
 		name: z.string(),
@@ -13,6 +18,7 @@ const validationSchema = z
 export class Plugin {
 	public name: string;
 	public run: (client: GClient) => any;
+	public options: PluginOptions;
 
 	public constructor(name: string, run: (client: GClient) => any) {
 		validationSchema
@@ -20,6 +26,7 @@ export class Plugin {
 			.then(options => {
 				this.name = options.name;
 				this.run = options.run;
+				this.options = options;
 
 				Plugins.register(this);
 			})

@@ -63,6 +63,7 @@ export class Component {
 	public client: GClient;
 	public name: string;
 	public type: Array<ComponentType | keyof typeof ComponentType>;
+	public options: ComponentOptions;
 	public inhibitors: ComponentInhibitors = [];
 	public guildId?: string;
 	private static defaults: Partial<ComponentOptions>;
@@ -90,6 +91,7 @@ export class Component {
 				this.run = options.run ?? Component.defaults?.run;
 				this.onError = options.onError ?? Component.defaults?.onError;
 				this.autoDefer = options.autoDefer ?? Component.defaults?.autoDefer;
+				this.options = { ...Component.defaults, ...options };
 
 				Components.register(this);
 			})
