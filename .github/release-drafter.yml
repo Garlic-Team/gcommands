@@ -4,20 +4,20 @@ template: |
 autolabeler:
   - label: 'semver: patch'
     title:
-      - '/^(fix)(\([a-z ]+\))?: [\w ]+$|@|\./g'
+      - '/^(fix)(\([a-z ]+\))?: [\w |@|\.]+$/g'
   - label: 'semver: minor'
     title:
-      - '/^(feat|feature)(\([a-z ]+\))?: [\w ]+$|@|\./g'
+      - '/^(feat|feature)(\([a-z ]+\))?: [\w |@|\.]+$/g'
   - label: 'semver: major'
     title:
-      - '/^(feat|feature|fix|refactor|types|typings|docs|documentation)!(\([a-z ]+\))?: [\w ]+$|@|\./g'
-      - '/^(refactor)(\([a-z ]+\))?: [\w ]+$|@|\./g'
+      - '/^(feat|feature|fix|refactor|types|typings|docs|documentation)!(\([a-z ]+\))?: [\w |@|\.]+$/g'
+      - '/^(refactor)(\([a-z ]+\))?: [\w |@|\.]+$/g'
   - label: 'chore'
     title:
-      - '/^(chore)(\([a-z ]+\))?: [\w ]+$|@|\./g'
+      - '/^(chore)(\([a-z ]+\))?: [\w |@|\.]+$|@|\./g'
   - label: 'documentation'
     title:
-      - '/^(docs|documentation)(\([a-z ]+\))?: [\w ]+$|@|\./g'
+      - '/^(docs|documentation)(\([a-z ]+\))?: [\w |@|\.]+$/g'
   - label: 'typings'
     title:
-      - '/^(types|typings)(\([a-z ]+\))?: [\w ]+$|@|\./g'
+      - '/^(types|typings)(\([a-z ]+\))?: [\w |@|\.]+$/g'
