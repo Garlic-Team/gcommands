@@ -65,7 +65,7 @@
 		"@prisma/client": "3.14.0",
 		"@types/keyv": "3.1.4",
 		"@types/lru-cache": "7.6.1",
-		"@types/node": "16.11.33",
+		"@types/node": "16.11.34",
 		"@typescript-eslint/eslint-plugin": "5.22.0",
 		"@typescript-eslint/parser": "5.22.0",
 		"conventional-changelog-cli": "2.2.2",
