@@ -4,8 +4,8 @@ import { Plugins } from '../managers/PluginManager';
 import { Logger } from '../util/logger/Logger';
 
 export interface PluginOptions {
-    name: string;
-    run: (client: GClient) => any;
+	name: string;
+	run: (client: GClient) => any;
 }
 
 const validationSchema = z
@@ -26,6 +26,7 @@ export class Plugin {
 			.then(options => {
 				this.name = options.name;
 				this.run = options.run;
+				// @ts-expect-error Zod :))
 				this.options = options;
 
 				Plugins.register(this);

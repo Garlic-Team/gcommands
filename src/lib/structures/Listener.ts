@@ -28,6 +28,7 @@ const validationSchema = z
 		run: z.function(),
 	})
 	.passthrough();
+
 export class Listener<
 	WS extends boolean = boolean,
 	Event extends WS extends true
@@ -57,6 +58,7 @@ export class Listener<
 				this.ws = options.ws as WS;
 				this.fileName = options.fileName;
 				this.run = options.run;
+				// @ts-expect-error Zod :))
 				this.options = options;
 
 				Listeners.register(this);
