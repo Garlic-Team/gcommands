@@ -6,6 +6,7 @@ import type {
 	InteractionReplyOptions,
 	MessageComponentInteraction,
 	MessagePayload,
+	ModalSubmitFieldsResolver,
 	WebhookEditMessageOptions,
 } from 'discord.js';
 import { Context, ContextOptions } from './Context';
@@ -19,6 +20,7 @@ export interface ComponentContextOptions<Cached extends CacheType = CacheType>
 	customId: string;
 	arguments: Array<string>;
 	values?: Array<string>;
+	fields?: ModalSubmitFieldsResolver;
 	deferReply: <Fetch extends boolean = boolean>(
 		options?: InteractionDeferReplyOptions & { fetchReply?: Fetch },
 	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
@@ -52,6 +54,7 @@ export class ComponentContext<
 	public readonly customId: string;
 	public arguments: Array<string>;
 	public values?: Array<string>;
+	public fields?: ModalSubmitFieldsResolver;
 	public deferred = false;
 	public replied = false;
 	public deferReply: <Fetch extends boolean = boolean>(
@@ -75,7 +78,7 @@ export class ComponentContext<
 			| MessagePayload
 			| InteractionReplyOptions,
 	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
-	public inGuild: () => this is ComponentContext<'present'>;
+	public inGuild: () => this is ComponentContext<undefined>;
 	public inCachedGuild: () => this is ComponentContext<'cached'>;
 	public inRawGuild: () => this is ComponentContext<'raw'>;
 
@@ -87,6 +90,7 @@ export class ComponentContext<
 		this.customId = options.customId;
 		this.arguments = options.arguments;
 		this.values = options.values;
+		this.fields = options.fields;
 		this.deferReply = async opt => {
 			const message = await options.deferReply(opt);
 			this.deferred = true;

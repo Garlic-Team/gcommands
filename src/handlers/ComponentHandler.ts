@@ -6,7 +6,7 @@ import { Handlers } from '../lib/managers/HandlerManager';
 import { ComponentType } from '../lib/structures/Component';
 import { ComponentContext } from '../lib/structures/contexts/ComponentContext';
 import { Util } from '../lib/util/Util';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import { Events, Logger } from '../lib/util/logger/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -56,12 +56,14 @@ export async function ComponentHandler(
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
+		// @ts-expect-error Idk what this is
 		member: interaction.member,
 		memberPermissions: interaction.memberPermissions,
 		component: component,
 		customId: interaction.customId,
 		arguments: args,
 		values: interaction.isSelectMenu() ? interaction.values : undefined,
+		fields: interaction.isModalSubmit() ? interaction.fields : undefined,
 		deferReply: interaction.deferReply.bind(interaction),
 		deferUpdate: interaction.deferUpdate.bind(interaction),
 		deleteReply: interaction.deleteReply.bind(interaction),

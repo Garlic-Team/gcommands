@@ -9,7 +9,7 @@ import { Commands } from '../lib/managers/CommandManager';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { Util } from '../lib/util/Util';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import { Events, Logger } from '../lib/util/logger/Logger';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
@@ -55,6 +55,7 @@ export async function InteractionCommandHandler(
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
+		// @ts-expect-error Idk what this is
 		member: interaction.member,
 		memberPermissions: interaction.memberPermissions,
 		command: command,

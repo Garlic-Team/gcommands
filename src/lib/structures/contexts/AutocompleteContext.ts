@@ -24,7 +24,7 @@ export class AutocompleteContext<
 	public readonly argumentName: string;
 	public readonly value: string | number;
 	public respond: (choices: Array<ArgumentChoice>) => Promise<void>;
-	public inGuild: () => this is AutocompleteContext<'present'>;
+	public inGuild: () => this is AutocompleteContext<undefined>;
 	public inCachedGuild: () => this is AutocompleteContext<'cached'>;
 	public inRawGuild: () => this is AutocompleteContext<'raw'>;
 
