@@ -5,6 +5,7 @@ import type {
 	ContextMenuInteraction,
 	Message,
 	MessageComponentInteraction,
+	ModalSubmitInteraction,
 } from 'discord.js';
 import { AutocompleteHandler } from '../../handlers/AutocompleteHandler';
 import { ComponentHandler } from '../../handlers/ComponentHandler';
@@ -23,7 +24,9 @@ export class HandlerManager {
 		commandName: string,
 		args: Array<string> | Array<object>,
 	) => any;
-	public componentHandler: (interaction: MessageComponentInteraction) => any;
+	public componentHandler: (
+		interaction: MessageComponentInteraction | ModalSubmitInteraction,
+	) => any;
 	public autocompleteHandler: (interaction: AutocompleteInteraction) => any;
 	public cooldownHandler: (
 		userId: string,
@@ -60,7 +63,9 @@ export class HandlerManager {
 	}
 
 	public setComponentHandler(
-		handler: (interaction: MessageComponentInteraction) => any,
+		handler: (
+			interaction: MessageComponentInteraction | ModalSubmitInteraction,
+		) => any,
 	): HandlerManager {
 		this.componentHandler = handler;
 

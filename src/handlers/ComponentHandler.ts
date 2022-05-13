@@ -22,7 +22,11 @@ export async function ComponentHandler(
 	if (
 		!component ||
 		!component.type.includes(
-			interaction.isButton() ? ComponentType.BUTTON : ComponentType.SELECT_MENU,
+			interaction.isButton()
+				? ComponentType.BUTTON
+				: interaction.isSelectMenu()
+				? ComponentType.SELECT_MENU
+				: ComponentType.MODAL,
 		) ||
 		(component.guildId && component.guildId !== interaction.guildId)
 	)

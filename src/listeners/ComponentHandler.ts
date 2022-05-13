@@ -7,7 +7,7 @@ new Listener({
 	event: 'interactionCreate',
 	name: 'gcommands-componentHandler',
 	run: async (interaction: Interaction): Promise<void> => {
-		if (interaction.isMessageComponent()) {
+		if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
 			await Handlers.componentHandler(interaction).catch(error => {
 				Logger.error(
 					typeof error.code !== 'undefined' ? error.code : '',

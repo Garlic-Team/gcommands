@@ -7,6 +7,7 @@ import type {
 	MessageComponentInteraction,
 	MessagePayload,
 	ModalSubmitFieldsResolver,
+	ModalSubmitInteraction,
 	WebhookEditMessageOptions,
 } from 'discord.js';
 import { Context, ContextOptions } from './Context';
@@ -15,7 +16,7 @@ import type { Component } from '../Component';
 
 export interface ComponentContextOptions<Cached extends CacheType = CacheType>
 	extends ContextOptions<Cached> {
-	interaction: MessageComponentInteraction;
+	interaction: MessageComponentInteraction | ModalSubmitInteraction;
 	component: Component;
 	customId: string;
 	arguments: Array<string>;
@@ -48,7 +49,7 @@ export interface ComponentContextOptions<Cached extends CacheType = CacheType>
 export class ComponentContext<
 	Cached extends CacheType = CacheType,
 > extends Context<Cached> {
-	public interaction: MessageComponentInteraction;
+	public interaction: MessageComponentInteraction | ModalSubmitInteraction;
 	public readonly component: Component;
 	public readonly componentName: string;
 	public readonly customId: string;
