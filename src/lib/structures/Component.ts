@@ -28,7 +28,7 @@ export interface ComponentOptions {
 }
 
 const parser = s.object({
-	name: s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+	name: s.string.lengthLessThanOrEqual(32).regex(commandAndOptionNameRegexp),
 	type: s.union(s.string, s.nativeEnum(ComponentType)).transform(value => {
 		return typeof value === 'string' &&
 			Object.keys(ComponentType).includes(value)

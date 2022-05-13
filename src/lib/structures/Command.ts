@@ -48,12 +48,12 @@ export interface CommandOptions {
 }
 
 const parser = s.object({
-	name: s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+	name: s.string.lengthLessThanOrEqual(32).regex(commandAndOptionNameRegexp),
 	nameLocalizations: s.record(
-		s.string.lengthLe(32).regex(commandAndOptionNameRegexp),
+		s.string.lengthLessThanOrEqual(32).regex(commandAndOptionNameRegexp),
 	).optional,
-	description: s.string.lengthLe(100),
-	descriptionLocalizations: s.record(s.string.lengthLe(100)),
+	description: s.string.lengthLessThanOrEqual(100),
+	descriptionLocalizations: s.record(s.string.lengthLessThanOrEqual(100)),
 	type: s.union(s.string, s.nativeEnum(CommandType)).transform(value => {
 		return typeof value === 'string' && Object.keys(CommandType).includes(value)
 			? CommandType[value]
