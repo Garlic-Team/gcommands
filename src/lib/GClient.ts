@@ -62,7 +62,7 @@ export interface GClientOptions extends ClientOptions {
 		| ((message: Message) => Awaitable<GClientMessagePrefix>)
 		| GClientMessagePrefix;
 	/**
-	 * Whether to send a message for an unknown command.
+	 * Whether to send a message for an unknown message command.
 	 * @type {boolean}
 	 */
 	unknownCommandMessage?: boolean;
