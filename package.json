@@ -49,8 +49,8 @@
 	"homepage": "https://garlic-team.js.org/#/docs/gcommands/next/general/welcome",
 	"license": "ISC",
 	"dependencies": {
-		"@discordjs/rest": "^0.4.0",
-		"discord-api-types": "^0.26.1",
+		"@discordjs/rest": "^0.4.1",
+		"discord-api-types": "^0.30.0",
 		"ms": "^2.1.3",
 		"tslib": "^2.3.1",
 		"zod": "^3.11.6"
