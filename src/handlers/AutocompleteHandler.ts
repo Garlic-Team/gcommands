@@ -3,7 +3,7 @@ import type { GClient } from '../lib/GClient';
 import { Commands } from '../lib/managers/CommandManager';
 import type { Argument, ArgumentOptions } from '../lib/structures/Argument';
 import { AutocompleteContext } from '../lib/structures/contexts/AutocompleteContext';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import { Events, Logger } from '../lib/util/logger/Logger';
 
 export async function AutocompleteHandler(
 	interaction: AutocompleteInteraction,
@@ -36,6 +36,7 @@ export async function AutocompleteHandler(
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
+		// @ts-expect-error Idk what this is
 		member: interaction.member,
 		memberPermissions: interaction.memberPermissions,
 		command: command,

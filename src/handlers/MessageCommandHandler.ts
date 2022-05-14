@@ -3,7 +3,6 @@ import {
 	Collection,
 	CommandInteractionOptionResolver,
 	Guild,
-	InteractionReplyOptions,
 	Message,
 	MessageAttachment,
 	MessagePayload,
@@ -24,7 +23,7 @@ import {
 } from '../lib/structures/arguments/base';
 import { CommandContext } from '../lib/structures/contexts/CommandContext';
 import { Util } from '../lib/util/Util';
-import { Logger, Events } from '../lib/util/logger/Logger';
+import { Events, Logger } from '../lib/util/logger/Logger';
 import { MemberPermissions } from '../inhibitors';
 
 const cooldowns = new Collection<string, Collection<string, number>>();
@@ -204,6 +203,7 @@ export async function MessageCommandHandler(
 	let replied: Message;
 	const ctx = new CommandContext(client, {
 		message: message,
+		// @ts-expect-error Idk what this is
 		channel: message.channel,
 		createdAt: message.createdAt,
 		createdTimestamp: message.createdTimestamp,
@@ -227,13 +227,7 @@ export async function MessageCommandHandler(
 		fetchReply: async () => replied,
 		followUp: message.reply.bind(message),
 		// @ts-expect-error This will not be fixed (typings for interaction are more important)
-		reply: async (
-			options:
-				| string
-				| MessagePayload
-				| ReplyMessageOptions
-				| InteractionReplyOptions,
-		) => {
+		reply: async (options: string | MessagePayload | ReplyMessageOptions) => {
 			const msg = await message.reply(options);
 			replied = msg;
 			return msg;

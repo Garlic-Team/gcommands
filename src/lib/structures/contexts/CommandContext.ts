@@ -69,7 +69,7 @@ export class CommandContext<
 			| MessagePayload
 			| InteractionReplyOptions,
 	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
-	public inGuild: () => this is CommandContext<'present'>;
+	public inGuild: () => this is CommandContext<undefined>;
 	public inCachedGuild: () => this is CommandContext<'cached'>;
 	public inRawGuild: () => this is CommandContext<'raw'>;
 

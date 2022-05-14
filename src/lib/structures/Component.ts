@@ -8,6 +8,7 @@ import { Util } from '../util/Util';
 export enum ComponentType {
 	'BUTTON' = 1,
 	'SELECT_MENU' = 2,
+	'MODAL' = 3,
 }
 
 export type ComponentInhibitor =

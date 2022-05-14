@@ -1,4 +1,3 @@
-import type { APIInteractionGuildMember } from 'discord-api-types/v9';
 import type {
 	CacheType,
 	CacheTypeReducer,
@@ -14,6 +13,7 @@ import type { AutocompleteContext } from './AutocompleteContext';
 import type { CommandContext } from './CommandContext';
 import type { ComponentContext } from './ComponentContext';
 import type { GClient } from '../../GClient';
+import type { APIInteractionGuildMember } from 'discord-api-types/v9';
 
 export interface ContextOptions<Cached extends CacheType = CacheType> {
 	channel: CacheTypeReducer<
@@ -71,7 +71,7 @@ export class Context<Cached extends CacheType = CacheType> {
 		this.memberPermissions = options.memberPermissions;
 	}
 
-	public inGuild(): this is Context<'present'> {
+	public inGuild(): this is Context<undefined> {
 		return Boolean(this.guildId && this.member);
 	}
 
