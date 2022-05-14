@@ -71,7 +71,7 @@ export class Context<Cached extends CacheType = CacheType> {
 		this.memberPermissions = options.memberPermissions;
 	}
 
-	public inGuild(): this is Context<undefined> {
+	public inGuild(): this is Context<'raw' | 'cached'> {
 		return Boolean(this.guildId && this.member);
 	}
 
