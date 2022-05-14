@@ -60,7 +60,6 @@ export async function ComponentHandler(
 		guild: interaction.guild,
 		guildId: interaction.guildId,
 		user: interaction.user,
-		// @ts-expect-error Idk what this is
 		member: interaction.member,
 		memberPermissions: interaction.memberPermissions,
 		component: component,
