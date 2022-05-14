@@ -99,6 +99,7 @@ export interface GClientOptions extends ClientOptions {
 	 * The guild id that will serve as the development server for your application.
 	 *
 	 * If this option is present, all slash commands will be registered only for the specified guild id.
+	 * However, if the command contains the `guildId` option, it is used instead of this option.
 	 *
 	 * @type {Snowflake}
 	 */
