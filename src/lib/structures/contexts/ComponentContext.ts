@@ -79,7 +79,7 @@ export class ComponentContext<
 			| MessagePayload
 			| InteractionReplyOptions,
 	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
-	public inGuild: () => this is ComponentContext<undefined>;
+	public inGuild: () => this is ComponentContext<'raw' | 'cached'>;
 	public inCachedGuild: () => this is ComponentContext<'cached'>;
 	public inRawGuild: () => this is ComponentContext<'raw'>;
 
