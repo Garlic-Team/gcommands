@@ -65,7 +65,7 @@ jobs:
       - name: Checkout docs repository
         uses: actions/checkout@v2
         with:
-          repository: 'discordjs/docs'
+          repository: 'garlic-team/docs'
           token: ${{ secrets.ACCESS_TOKEN }}
           path: 'out'
 
@@ -102,6 +102,7 @@ jobs:
         run: |
           mkdir -p out/gcommands
           mv docs/docs.json out/gcommands/${BRANCH_NAME}.json
+
       - name: Commit and push
         run: |
           cd out
