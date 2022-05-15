@@ -28,23 +28,102 @@ export enum Events {
 }
 
 export interface LoggerEvents {
+	/**
+	 * Emitted when a handler is run.
+	 * @event Logger#handlerRun
+	 * @param {import('../../structures/contexts/AutocompleteContext')|import('../../structures/contexts/CommandContext')|import('../../structures/contexts/ComponentContext')} ctx The type of handler.
+	 */
 	handlerRun: [ctx: AutocompleteContext | CommandContext | ComponentContext];
+	/**
+	 * Emitted when a handler errors.
+	 * @event Logger#handlerError
+	 * @param {import('../../structures/contexts/AutocompleteContext')|import('../../structures/contexts/CommandContext')|import('../../structures/contexts/ComponentContext')} ctx The type of handler.
+	 * @param {any} error The error that occurred.
+	 */
 	handlerError: [
 		ctx: AutocompleteContext | CommandContext | ComponentContext,
 		error: any,
 	];
+	/**
+	 * Emitted when a command handler is run.
+	 * @event Logger#commandHandlerRun
+	 * @param {import('../../structures/contexts/CommandContext')} ctx The command context.
+	 */
 	commandHandlerRun: [ctx: CommandContext];
+	/**
+	 * Emitted when a command handler errors.
+	 * @event Logger#commandHandlerError
+	 * @param {import('../../structures/contexts/CommandContext')} ctx The command context.
+	 * @param {any} error The error that occurred.
+	 */
 	commandHandlerError: [ctx: CommandContext, error: any];
+	/**
+	 * Emitted when an auto complete handler is run.
+	 * @event Logger#autoCompleteHandlerRun
+	 * @param {import('../../structures/contexts/AutocompleteContext')} ctx The auto complete context.
+	 */
 	autoCompleteHandlerRun: [ctx: AutocompleteContext];
+	/**
+	 * Emitted when an auto complete handler errors.
+	 * @event Logger#autoCompleteHandlerError
+	 * @param {import('../../structures/contexts/AutocompleteContext')} ctx The auto complete context.
+	 * @param {any} error The error that occurred.
+	 */
 	autoCompleteHandlerError: [ctx: AutocompleteContext, error: any];
+	/**
+	 * Emitted when a component handler is run.
+	 * @event Logger#componentHandlerRun
+	 * @param {import('../../structures/contexts/ComponentContext')} ctx The component context.
+	 */
 	componentHandlerRun: [ctx: ComponentContext];
+	/**
+	 * Emitted when a component handler errors.
+	 * @event Logger#componentHandlerError
+	 * @param {import('../../structures/contexts/ComponentContext')} ctx The component context.
+	 * @param {any} error The error that occurred.
+	 */
 	componentHandlerError: [ctx: ComponentContext, error: any];
+	/**
+	 * Emitted when a command is registered.
+	 * @event Logger#commandRegistered
+	 * @param {import('../../structures/Command')} command The command that was registered.
+	 */
 	commandRegistered: [command: Command];
+	/**
+	 * Emitted when a command is unregistered.
+	 * @event Logger#commandUnregistered
+	 * @param {import('../../structures/Command')} command The command that was unregistered.
+	 */
 	commandUnregistered: [command: Command];
+	/**
+	 * Emitted when a component is registered.
+	 * @event Logger#componentRegistered
+	 * @param {import('../../structures/Component')} component The component that was registered.
+	 */
 	componentRegistered: [component: Component];
+	/**
+	 * Emitted when a component is unregistered.
+	 * @event Logger#componentUnregistered
+	 * @param {import('../../structures/Component')} component The component that was unregistered.
+	 */
 	componentUnregistered: [component: Component];
+	/**
+	 * Emitted when a listener is registered.
+	 * @event Logger#listenerRegistered
+	 * @param {import('../../structures/Listener')} listener The listener that was registered.
+	 */
 	listenerRegistered: [listener: Listener];
+	/**
+	 * Emitted when a listener is unregistered.
+	 * @event Logger#listenerUnregistered
+	 * @param {import('../../structures/Listener')} listener The listener that was unregistered.
+	 */
 	listenerUnregistered: [listener: Listener];
+	/**
+	 * Emitted when a plugin is registered.
+	 * @event Logger#pluginRegistered
+	 * @param {import('../../structures/Plugin')} plugin The plugin that was registered.
+	 */
 	pluginRegistered: [plugin: Plugin];
 }
 
