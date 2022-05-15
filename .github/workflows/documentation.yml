@@ -1,57 +1,113 @@
-name: Build documentation
+# https://github.com/discordjs/discord.js/blob/main/.github/workflows/documentation.yml
+
+name: Documentation
 
 on:
   push:
     branches:
       - next
-  workflow_dispatch:
-  release:
-    types:
-      - published
+    tags:
+      - '**'
 
 jobs:
-  deploy:
+  build:
+    name: Build documentation
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'release') || (github.event_name == 'workflow_dispatch') }}
-
+    if: github.repository_owner == 'Garlic-Team'
+    outputs:
+      BRANCH_NAME: ${{ steps.env.outputs.BRANCH_NAME }}
+      BRANCH_OR_TAG: ${{ steps.env.outputs.BRANCH_OR_TAG }}
+      SHA: ${{ steps.env.outputs.SHA }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Download
-        run: npm i @discordjs/ts-docgen typedoc-plugin-djs-links
+      - name: Install Node v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
 
-      - name: Build
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build docs
         run: npm run build:docs
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
         with:
-          github_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: docs
-          destination_dir: ./docs/
-          keep_files: true
+          name: docs
+          path: docs/docs.json
 
-  deploy_next:
+      - name: Set outputs for upload job
+        id: env
+        run: |
+          echo "::set-output name=BRANCH_NAME::${GITHUB_REF_NAME}"
+          echo "::set-output name=BRANCH_OR_TAG::${GITHUB_REF_TYPE}"
+          echo "::set-output name=SHA::${GITHUB_SHA}"
+
+  upload:
+    name: Upload Documentation
+    needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-
+    env:
+      BRANCH_NAME: ${{ needs.build.outputs.BRANCH_NAME }}
+      BRANCH_OR_TAG: ${{ needs.build.outputs.BRANCH_OR_TAG }}
+      SHA: ${{ needs.build.outputs.SHA }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Download
-        run: npm i @discordjs/ts-docgen typedoc-plugin-djs-links
-
-      - name: Build
-        run: npm run build:next-docs
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
         with:
-          github_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: docs
-          destination_dir: ./docs/
-          keep_files: true
+          name: docs
+          path: docs
+
+      - name: Checkout docs repository
+        uses: actions/checkout@v2
+        with:
+          repository: 'garlic-team/docs'
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: 'out'
+
+      - name: 'Extract package from tag'
+        if: env.BRANCH_OR_TAG == 'tag'
+        id: package-name
+        uses: frabert/replace-string-action@v2.0
+        with:
+          pattern: '(^@.*\\/(?<package>.*)@v?)?(?<semver>\\d+.\\d+.\\d+)-?.*'
+          string: ${{ env.BRANCH_NAME }}
+          replace-with: '$<package>'
+
+      - name: 'Extract semver from tag'
+        if: env.BRANCH_OR_TAG == 'tag'
+        id: semver
+        uses: frabert/replace-string-action@v2.0
+        with:
+          pattern: '(^@.*\\/(?<package>.*)@v?)?(?<semver>\\d+.\\d+.\\d+)-?.*'
+          string: ${{ env.BRANCH_NAME }}
+          replace-with: '$<semver>'
+
+      - name: Move docs to correct directory
+        if: env.BRANCH_OR_TAG == 'tag'
+        env:
+          PACKAGE: ${{ steps.package-name.outputs.replaced }}
+          SEMVER: ${{ steps.semver.outputs.replaced }}
+        run: |
+          mkdir -p out/gcommands
+          mv docs/docs.json out/gcommands/${SEMVER}.json
+      - name: Move docs to correct directory
+        if: env.BRANCH_OR_TAG == 'branch'
+        env:
+          PACKAGE: ${{ matrix.package }}
+        run: |
+          mkdir -p out/gcommands
+          mv docs/docs.json out/gcommands/${BRANCH_NAME}.json
+
+      - name: Commit and push
+        run: |
+          cd out
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "Docs build for ${BRANCH_OR_TAG} ${BRANCH_NAME}: ${SHA}" || true
+          git push
