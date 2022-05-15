@@ -5,10 +5,10 @@ name: Documentation
 on:
   push:
     branches:
-      - next
+      - 'next'
+      - 'stable'
     tags:
       - '**'
-  create:
 
 jobs:
   build:
