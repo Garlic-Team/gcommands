@@ -25,7 +25,6 @@
 		"build:tsc": "tsc -p . && gen-esm-wrapper dist/index.js dist/index.mjs",
 		"build:fix": "node scripts/fixer.mjs",
 		"build:docs": "typedoc --json docs/typedoc-out.json src/index.ts && node scripts/docs.mjs",
-		"build:next-docs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs",
 		"prepare": "husky install"
 	},
 	"author": "Garlic-Team",
