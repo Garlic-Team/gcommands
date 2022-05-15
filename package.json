@@ -59,7 +59,7 @@
 		"@commitlint/cli": "16.3.0",
 		"@commitlint/config-angular": "16.3.0",
 		"@discordjs/ts-docgen": "0.4.1",
-		"@gcommands/plugin-language": "1.0.4",
+		"@gcommands/plugin-language": "1.0.5",
 		"@google-cloud/firestore": "5.0.2",
 		"@octokit/action": "3.18.1",
 		"@prisma/client": "3.14.0",
