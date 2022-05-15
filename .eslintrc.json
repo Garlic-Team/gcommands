@@ -1,55 +1,44 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "prettier",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 12
-  },
-  "plugins": [
-    "@typescript-eslint",
-    "prettier"
-  ],
-  "rules": {
-    "strict": ["error", "global"],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "prefer-const": "error",
-    "@typescript-eslint/no-explicit-any": "off",
-    "no-restricted-globals": [
-      "error",
-      {
-        "name": "Buffer",
-        "message": "Import Buffer from `node:buffer` instead"
-      },
-      {
-        "name": "process",
-        "message": "Import process from `node:process` instead"
-      },
-      {
-        "name": "setTimeout",
-        "message": "Import setTimeout from `node:timers` instead"
-      },
-      {
-        "name": "setInterval",
-        "message": "Import setInterval from `node:timers` instead"
-      },
-      {
-        "name": "setImmediate",
-        "message": "Import setImmediate from `node:timers` instead"
-      }
-    ]
-  }
+	"extends": [
+		"eslint:recommended",
+		"prettier",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 12
+	},
+	"plugins": ["@typescript-eslint", "prettier"],
+	"rules": {
+		"strict": ["error", "global"],
+		"max-len": ["error", 120, 2],
+		"linebreak-style": ["error", "unix"],
+		"quotes": ["error", "single"],
+		"semi": ["error", "always"],
+		"prefer-const": "error",
+		"@typescript-eslint/no-explicit-any": "off",
+		"no-restricted-globals": [
+			"error",
+			{
+				"name": "Buffer",
+				"message": "Import Buffer from `node:buffer` instead"
+			},
+			{
+				"name": "process",
+				"message": "Import process from `node:process` instead"
+			},
+			{
+				"name": "setTimeout",
+				"message": "Import setTimeout from `node:timers` instead"
+			},
+			{
+				"name": "setInterval",
+				"message": "Import setInterval from `node:timers` instead"
+			},
+			{
+				"name": "setImmediate",
+				"message": "Import setImmediate from `node:timers` instead"
+			}
+		]
+	}
 }

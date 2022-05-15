@@ -2,7 +2,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Util } from '../util/Util';
 
-export async function directoryLoader(dir: string): Promise<Array<any>> {
+/**
+ * The method that loads all files from a directory
+ * @param {string} dir The directory to load
+ * @returns {Promise<any[]>}
+ */
+export async function directoryLoader(dir: string): Promise<any[]> {
 	let files = [];
 	if (fs.existsSync(dir)) {
 		for await (const fsDirent of fs.readdirSync(dir, { withFileTypes: true })) {
