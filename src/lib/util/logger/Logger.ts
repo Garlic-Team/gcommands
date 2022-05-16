@@ -175,15 +175,42 @@ export declare interface ILogger {
 }
 
 export const enum LogLevel {
+	/**
+	 * Logs everything.
+	 * @type {number}
+	 * @default
+	 */
 	TRACE = 1,
+	/**
+	 * Logs everything except trace messages.
+	 * @type {number}
+	 */
 	DEBUG = 2,
+	/**
+	 * Logs everything except trace and debug messages.
+	 * @type {number}
+	 */
 	INFO = 3,
 	/**
+	 * Logs everything except trace, debug and info messages.
+	 * @type {number}
 	 * @deprecated
 	 */
 	TIME = 4,
+	/**
+	 * Logs everything except trace, debug, info and time messages.
+	 * @type {number}
+	 */
 	WARN = 5,
+	/**
+	 * Logs everything except trace, debug, info, time and warn messages.
+	 * @type {number}
+	 */
 	ERROR = 8,
+	/**
+	 * Turn off all logging.
+	 * @type {number}
+	 */
 	OFF = 99,
 }
 
@@ -197,14 +224,14 @@ export type LogMethods =
 	| 'error';
 
 export class ILogger extends EventEmitter {
-	TRACE: LogLevel.TRACE;
-	DEBUG: LogLevel.DEBUG;
-	INFO: LogLevel.INFO;
-	TIME: LogLevel.TIME;
-	WARN: LogLevel.WARN;
-	ERROR: LogLevel.ERROR;
-	OFF: LogLevel.OFF;
-	level: LogLevel = LogLevel.TRACE;
+	public TRACE: LogLevel.TRACE;
+	public DEBUG: LogLevel.DEBUG;
+	public INFO: LogLevel.INFO;
+	public TIME: LogLevel.TIME;
+	public WARN: LogLevel.WARN;
+	public ERROR: LogLevel.ERROR;
+	public OFF: LogLevel.OFF;
+	public level: LogLevel = LogLevel.TRACE;
 
 	constructor() {
 		super();
@@ -218,19 +245,33 @@ export class ILogger extends EventEmitter {
 		this.OFF = LogLevel.OFF;
 	}
 
+	/**
+	 * Logs a message at the trace level.
+	 * @param {unknown[]} values
+	 */
 	public trace(...values: readonly unknown[]): void {
 		this.invoke(LogLevel.TRACE, ...values);
 	}
 
+	/**
+	 * Logs a message at the debug level.
+	 * @param {unknown[]} values
+	 */
 	public debug(...values: readonly unknown[]): void {
 		this.invoke(LogLevel.DEBUG, ...values);
 	}
 
+	/**
+	 * Logs a message at the info level.
+	 * @param {unknown[]} values
+	 */
 	public info(...values: readonly unknown[]): void {
 		this.invoke(LogLevel.INFO, ...values);
 	}
 
 	/**
+	 * Logs a message at the time level.
+	 * @param {unknown[]} values
 	 * @deprecated
 	 */
 	public time(val: string): void {
@@ -238,20 +279,36 @@ export class ILogger extends EventEmitter {
 	}
 
 	/**
+	 * Logs a message at the time level.
+	 * @param {unknown[]} values
 	 * @deprecated
 	 */
 	public timeEnd(val: string): void {
 		if (val.length > 0) this.invokeTime(LogLevel.TIME, val, 'stop');
 	}
 
+	/**
+	 * Logs a message at the warn level.
+	 * @param {unknown[]} values
+	 */
 	public warn(...values: readonly unknown[]): void {
 		this.invoke(LogLevel.WARN, ...values);
 	}
 
+	/**
+	 * Logs a message at the error level.
+	 * @param {unknown[]} values
+	 */
 	public error(...values: readonly unknown[]): void {
 		this.invoke(LogLevel.ERROR, ...values);
 	}
 
+	/**
+	 * Logs a message at the given level.
+	 * @param {LogLevel} level
+	 * @param {unknown[]} values
+	 * @returns {void}
+	 */
 	public invoke(level: LogLevel, ...values: readonly unknown[]): void {
 		if (!this.enabledFor(level)) return;
 
@@ -281,32 +338,45 @@ export class ILogger extends EventEmitter {
 	}
 
 	/**
-	 * @deprecated
+	 * Logs a time message at the given level.
+	 * @param {LogLevel} level
+	 * @param {unknown[]} values
+	 * @param {'start' | 'stop'} type
+	 * @returns {void}
 	 */
-	public invokeTime(level: LogLevel, val: string, type: 'start' | 'stop') {
+	public invokeTime(
+		level: LogLevel,
+		val: string,
+		type: 'start' | 'stop',
+	): void {
 		if (!this.enabledFor(level)) return;
 
 		if (type == 'start') console.time(val);
 		else console.timeEnd(val);
 	}
 
-	protected readonly LevelMethods = new Map<LogLevel, LogMethods>([
-		[LogLevel.TRACE, 'trace'],
-		[LogLevel.DEBUG, 'debug'],
-		[LogLevel.INFO, 'info'],
-		[LogLevel.TIME, 'time'],
-		[LogLevel.WARN, 'warn'],
-		[LogLevel.ERROR, 'error'],
-	]);
-
+	/**
+	 * Sets the log level.
+	 * @param {LogLevel} level
+	 * @returns {void}
+	 */
 	public setLevel(level: LogLevel): void {
 		this.level = level;
 	}
 
+	/**
+	 * Gets the log level.
+	 * @returns {LogLevel}
+	 */
 	public getLevel(): LogLevel {
 		return this.level;
 	}
 
+	/**
+	 * Checks if the given level is enabled.
+	 * @param {LogLevel} level
+	 * @returns {boolean}
+	 */
 	public enabledFor(level: LogLevel): boolean {
 		return level >= this.level;
 	}
@@ -338,6 +408,15 @@ export class ILogger extends EventEmitter {
 	public createDefaultHandler(): void {
 		this.warn('This feature is not supported.');
 	}
+
+	protected readonly LevelMethods = new Map<LogLevel, LogMethods>([
+		[LogLevel.TRACE, 'trace'],
+		[LogLevel.DEBUG, 'debug'],
+		[LogLevel.INFO, 'info'],
+		[LogLevel.TIME, 'time'],
+		[LogLevel.WARN, 'warn'],
+		[LogLevel.ERROR, 'error'],
+	]);
 }
 
 export const Logger = new ILogger();

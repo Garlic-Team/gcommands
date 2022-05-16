@@ -31,15 +31,21 @@ export type GClientMessagePrefix = string | string[] | null;
  */
 export enum AutoDeferType {
 	/**
+	 * Automatically deferReply interaction (+ ephemeral) if application doesn't respond in 3s
 	 * @example interaction.deferReply({ ephemeral: true })
+	 * @type {number}
 	 */
 	'EPHEMERAL' = 1,
 	/**
+	 * Automatically deferReply interaction if application doesn't respond in 3s
 	 * @example interaction.deferReply()
+	 * @type {number}
 	 */
 	'NORMAL' = 2,
 	/**
+	 * Automatically deferUpdate interaction if application doesn't respond in 3s
 	 * @example interaction.deferUpdate()
+	 * @type {number}
 	 */
 	'UPDATE' = 3,
 }
