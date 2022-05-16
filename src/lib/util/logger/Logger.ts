@@ -27,6 +27,7 @@ export enum Events {
 	'PLUGIN_REGISTERED' = 'pluginRegistered',
 }
 
+/* eslint-disable max-len */
 export interface LoggerEvents {
 	/**
 	 * Emitted when a handler is run.
@@ -126,6 +127,7 @@ export interface LoggerEvents {
 	 */
 	pluginRegistered: [plugin: Plugin];
 }
+/* eslint-enable max-len */
 
 export declare interface ILogger {
 	on<U extends keyof LoggerEvents>(event: U, listener: LoggerEvents[U]): this;
