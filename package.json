@@ -24,8 +24,7 @@
 		"changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
 		"build:tsc": "tsc -p . && gen-esm-wrapper dist/index.js dist/index.mjs",
 		"build:fix": "node scripts/fixer.mjs",
-		"build:docs": "typedoc --json docs/out-latest.json src/index.ts && node scripts/docs.mjs",
-		"build:next-docs": "typedoc --json docs/out-next.json src/index.ts && node scripts/next-docs.mjs",
+		"build:docs": "typedoc --json docs/typedoc-out.json src/index.ts && node scripts/docs.mjs",
 		"prepare": "husky install"
 	},
 	"author": "Garlic-Team",
@@ -56,10 +55,10 @@
 		"zod": "^3.11.6"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "16.3.0",
-		"@commitlint/config-angular": "16.3.0",
+		"@commitlint/cli": "17.0.0",
+		"@commitlint/config-angular": "17.0.0",
 		"@discordjs/ts-docgen": "0.4.1",
-		"@gcommands/plugin-language": "1.0.4",
+		"@gcommands/plugin-language": "1.0.5",
 		"@google-cloud/firestore": "5.0.2",
 		"@octokit/action": "3.18.1",
 		"@prisma/client": "3.14.0",

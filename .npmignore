@@ -10,6 +10,5 @@ package-lock.json
 .commitlintrc.json
 .github/
 tsconfig.tsbuildinfo
-docs.yml
 tsconfig.json
 renovate.json
