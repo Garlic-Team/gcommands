@@ -69,7 +69,7 @@
 		"@typescript-eslint/parser": "5.23.0",
 		"conventional-changelog-cli": "2.2.2",
 		"discord.js": "13.7.0",
-		"eslint": "8.15.0",
+		"eslint": "8.16.0",
 		"eslint-config-prettier": "8.5.0",
 		"eslint-plugin-import": "2.26.0",
 		"eslint-plugin-prettier": "4.0.0",
