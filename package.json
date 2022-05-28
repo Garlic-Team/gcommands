@@ -55,7 +55,7 @@
 		"zod": "^3.11.6"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "17.0.0",
+		"@commitlint/cli": "17.0.1",
 		"@commitlint/config-angular": "17.0.0",
 		"@discordjs/ts-docgen": "0.4.1",
 		"@gcommands/plugin-language": "1.0.5",
