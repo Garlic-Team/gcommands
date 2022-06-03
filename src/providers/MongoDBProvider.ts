@@ -19,27 +19,27 @@ export class MongoDBProvider extends Provider {
 	 * MongoDB connection uri
 	 * @type {string}
 	 */
-	uri: string;
+	public uri: string;
 	/**
 	 * MongoDB database name
 	 * @type {?string}
 	 */
-	dbName?: string | undefined;
+	public dbName?: string | undefined;
 	/**
 	 * MongoDB client
 	 * @type {MongoClient}
 	 */
-	client: MongoClient;
+	public client: MongoClient;
 	/**
 	 * MongoDB database
 	 * @type {?Db}
 	 */
-	db: Db | null;
+	public db: Db | null;
 	/**
 	 * The type of the provider.
 	 * @type {ProviderTypes}
 	 */
-	type: ProviderTypes;
+	public type: ProviderTypes;
 
 	constructor(uri: string, dbName?: string) {
 		super();
