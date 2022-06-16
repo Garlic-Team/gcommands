@@ -79,7 +79,7 @@
 		"lint-staged": "13.0.1",
 		"lru-cache": "7.10.1",
 		"mongodb": "4.7.0",
-		"prettier": "2.7.0",
+		"prettier": "2.7.1",
 		"typedoc-plugin-djs-links": "1.0.4",
 		"typescript": "4.7.3"
 	},
