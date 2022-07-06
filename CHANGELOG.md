@@ -1,3 +1,20 @@
+# [9.3.0](https://github.com/Garlic-Team/GCommands/compare/9.2.0...9.3.0) (2022-07-06)
+
+
+### Bug Fixes
+
+* command defaults inhibitor ([418d048](https://github.com/Garlic-Team/GCommands/commit/418d04825890b60ebdd01c502cddf23c514c0f58))
+* **deps:** update dependency @discordjs/rest to ^0.5.0 ([208fc8c](https://github.com/Garlic-Team/GCommands/commit/208fc8c40736752074932f85b0fc6068c1630f0f))
+* update name ([3023b47](https://github.com/Garlic-Team/GCommands/commit/3023b47f70ef4cdef5f911f7754c128029c619d1))
+* use length check ([50946dd](https://github.com/Garlic-Team/GCommands/commit/50946dd9dd9406631db671bd52b843d8c55228ef))
+
+
+### Features
+
+* add max & min length in string option ([ff84e4a](https://github.com/Garlic-Team/GCommands/commit/ff84e4a4dafdc289c2b3cc3edd332a69bc80dcff))
+
+
+
 # [9.2.0](https://github.com/Garlic-Team/GCommands/compare/9.1.0...9.2.0) (2022-05-15)
 
 
