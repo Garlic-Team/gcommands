@@ -58,6 +58,8 @@ export interface ArgumentOptions {
 	channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	minValue?: number;
 	maxValue?: number;
+	minLength?: number;
+	maxLength?: number;
 	run?: (ctx: AutocompleteContext) => any;
 }
 
@@ -129,6 +131,8 @@ const validationSchema = z
 			.optional(),
 		minValue: z.number().optional(),
 		maxValue: z.number().optional(),
+		minLength: z.number().min(0).max(6000).optional(),
+		maxLength: z.number().min(1).max(6000).optional(),
 		run: z.function().optional(),
 	})
 	.passthrough();
@@ -150,6 +154,8 @@ export class Argument {
 	public channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
 	public minValue?: number;
 	public maxValue?: number;
+	public minLength?: number;
+	public maxLength?: number;
 	public run?: (ctx: AutocompleteContext) => any;
 
 	constructor(options: ArgumentOptions) {
@@ -180,6 +186,8 @@ export class Argument {
 				this.channelTypes = options.channelTypes;
 				this.minValue = options.minValue;
 				this.maxValue = options.maxValue;
+				this.minLength = options.minLength;
+				this.maxLength = options.maxLength;
 				this.run = options.run;
 			})
 			.catch(error => {
@@ -217,6 +225,8 @@ export class Argument {
 			channel_types: this.channelTypes,
 			min_value: this.minValue,
 			max_value: this.maxValue,
+			min_length: this.minLength,
+			max_length: this.maxLength,
 			autocomplete: typeof this.run === 'function',
 		};
 	}
