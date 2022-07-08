@@ -60,7 +60,7 @@
 		"@discordjs/ts-docgen": "0.4.1",
 		"@gcommands/plugin-language": "1.0.5",
 		"@google-cloud/firestore": "5.0.2",
-		"@octokit/action": "3.18.1",
+		"@octokit/action": "4.0.4",
 		"@prisma/client": "4.0.0",
 		"@types/keyv": "3.1.4",
 		"@types/lru-cache": "7.10.9",
