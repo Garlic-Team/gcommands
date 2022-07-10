@@ -36,7 +36,7 @@ export type CommandInhibitors = Array<CommandInhibitor>;
 export interface CommandOptions {
 	name: string;
 	nameLocalizations?: Record<LocaleString, string>;
-	description?: string;
+	description: string;
 	descriptionLocalizations?: Record<LocaleString, string>;
 	type: Array<CommandType | keyof typeof CommandType>;
 	defaultMemberPermissions?: PermissionResolvable;
@@ -66,7 +66,7 @@ const validationSchema = z
 				z.string().max(32).regex(commandAndOptionNameRegexp),
 			)
 			.optional(),
-		description: z.string().max(100).optional(),
+		description: z.string().max(100),
 		descriptionLocalizations: z
 			.record(
 				z
@@ -112,7 +112,7 @@ export class Command {
 	public client: GClient;
 	public name: string;
 	public nameLocalizations?: Record<LocaleString, string>;
-	public description?: string;
+	public description: string;
 	public descriptionLocalizations?: Record<LocaleString, string>;
 	public type: Array<CommandType | keyof typeof CommandType>;
 	public defaultMemberPermissions?: PermissionResolvable;
