@@ -20,7 +20,7 @@
 ## Description
 GCommands is a [discord.js](https://discord.js.org) framework that makes an incredible amount of work easier, it's very customizable.
 
-> **Warning**
+> **Warning**  
 > Currently supports only djs v13.x, v14 support is in progress [here](https://github.com/Garlic-Team/gcommands/pull/539)
 
 ## Features
