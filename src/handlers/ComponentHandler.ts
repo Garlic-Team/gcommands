@@ -1,5 +1,10 @@
 import { setTimeout } from 'node:timers';
-import { Collection, InteractionType, MessageComponentInteraction, ModalSubmitInteraction } from 'discord.js';
+import {
+	Collection,
+	InteractionType,
+	MessageComponentInteraction,
+	ModalSubmitInteraction,
+} from 'discord.js';
 import { AutoDeferType, GClient } from '../lib/GClient';
 import { Components } from '../lib/managers/ComponentManager';
 import { Handlers } from '../lib/managers/HandlerManager';
@@ -66,9 +71,17 @@ export async function ComponentHandler(
 		customId: interaction.customId,
 		arguments: args,
 		values: interaction.isSelectMenu() ? interaction.values : undefined,
-		fields: interaction.type === InteractionType.ModalSubmit ? interaction.fields : undefined,
+		fields:
+			interaction.type === InteractionType.ModalSubmit
+				? interaction.fields
+				: undefined,
 		deferReply: interaction.deferReply.bind(interaction),
-		deferUpdate: interaction.type !== InteractionType.ModalSubmit ? interaction.deferUpdate.bind(interaction): () => { throw new Error('Cannot defer update in modal submit interaction'); },
+		deferUpdate:
+			interaction.type !== InteractionType.ModalSubmit
+				? interaction.deferUpdate.bind(interaction)
+				: () => {
+						throw new Error('Cannot defer update in modal submit interaction');
+				  },
 		deleteReply: interaction.deleteReply.bind(interaction),
 		editReply: interaction.editReply.bind(interaction),
 		fetchReply: interaction.fetchReply.bind(interaction),
