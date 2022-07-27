@@ -2,7 +2,7 @@ import { setTimeout } from 'node:timers';
 import {
 	Collection,
 	CommandInteraction,
-	ContextMenuInteraction,
+	ContextMenuCommandInteraction,
 } from 'discord.js';
 import { AutoDeferType, GClient } from '../lib/GClient';
 import { Commands } from '../lib/managers/CommandManager';
@@ -14,7 +14,7 @@ import { Events, Logger } from '../lib/util/logger/Logger';
 const cooldowns = new Collection<string, Collection<string, number>>();
 
 export async function InteractionCommandHandler(
-	interaction: CommandInteraction | ContextMenuInteraction,
+	interaction: CommandInteraction | ContextMenuCommandInteraction,
 ) {
 	const client = interaction.client as GClient;
 

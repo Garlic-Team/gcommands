@@ -1,4 +1,4 @@
-import type { ClientEvents, WSEventType } from 'discord.js';
+import type { ClientEvents, GatewayDispatchEvents } from 'discord.js';
 import { z } from 'zod';
 import type { GClient } from '../GClient';
 import { Listeners } from '../managers/ListenerManager';
@@ -6,7 +6,7 @@ import { Logger } from '../util/logger/Logger';
 
 export interface ListenerOptions<
 	WS extends boolean,
-	Event extends WS extends true ? WSEventType : keyof ClientEvents,
+	Event extends WS extends true ? GatewayDispatchEvents : keyof ClientEvents,
 > {
 	event: Event | string;
 	name: string;
@@ -32,8 +32,8 @@ const validationSchema = z
 export class Listener<
 	WS extends boolean = boolean,
 	Event extends WS extends true
-		? WSEventType
-		: keyof ClientEvents = WS extends true ? WSEventType : keyof ClientEvents,
+		? GatewayDispatchEvents
+		: keyof ClientEvents = WS extends true ? GatewayDispatchEvents : keyof ClientEvents,
 > {
 	public client: GClient;
 	public event: Event | string;
@@ -77,7 +77,7 @@ export class Listener<
 
 		if (this.ws)
 			client.ws[this.once ? 'once' : 'on'](
-				this.event as WSEventType,
+				this.event as GatewayDispatchEvents,
 				this._run.bind(this),
 			);
 		else

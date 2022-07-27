@@ -4,12 +4,13 @@ import {
 	CommandInteractionOptionResolver,
 	Guild,
 	Message,
-	MessageAttachment,
 	MessagePayload,
 	ReplyMessageOptions,
 	SelectMenuInteraction,
 	TextChannel,
 	User,
+	ComponentType,
+	Attachment,
 } from 'discord.js';
 import type { GClient } from '../lib/GClient';
 import { Commands } from '../lib/managers/CommandManager';
@@ -30,7 +31,7 @@ const cooldowns = new Collection<string, Collection<string, number>>();
 
 const checkValidation = async (
 	arg: MessageArgumentTypes,
-	content: string | MessageAttachment,
+	content: string | Attachment,
 	client: Client,
 	guild: Guild,
 	argument: Argument,
@@ -75,7 +76,7 @@ const checkValidation = async (
 			const component: SelectMenuInteraction =
 				(await channel.awaitMessageComponent({
 					filter: m =>
-						m.componentType === 'SELECT_MENU' &&
+						m.componentType === ComponentType.SelectMenu &&
 						m.user.id === user.id &&
 						m.channelId === channel.id &&
 						m.message.id === message.id &&

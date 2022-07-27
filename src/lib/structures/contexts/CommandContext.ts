@@ -2,7 +2,7 @@ import type {
 	CacheType,
 	CommandInteraction,
 	CommandInteractionOptionResolver,
-	ContextMenuInteraction,
+	ContextMenuCommandInteraction,
 	GuildCacheMessage,
 	InteractionDeferReplyOptions,
 	InteractionReplyOptions,
@@ -16,7 +16,7 @@ import type { Command } from '../Command';
 
 export interface CommandContextOptions<Cached extends CacheType = CacheType>
 	extends ContextOptions<Cached> {
-	interaction?: CommandInteraction | ContextMenuInteraction;
+	interaction?: CommandInteraction | ContextMenuCommandInteraction;
 	message?: Message;
 	command: Command;
 	arguments: CommandInteractionOptionResolver<Cached>;
@@ -44,7 +44,7 @@ export class CommandContext<
 	Cached extends CacheType = CacheType,
 > extends Context<Cached> {
 	[key: string]: any;
-	public interaction?: CommandInteraction | ContextMenuInteraction;
+	public interaction?: CommandInteraction | ContextMenuCommandInteraction;
 	public message?: Message;
 	public readonly command: Command;
 	public readonly commandName: string;
