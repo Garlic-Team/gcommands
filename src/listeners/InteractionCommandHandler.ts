@@ -1,4 +1,4 @@
-import type { Interaction, InteractionType } from 'discord.js';
+import { type Interaction, InteractionType } from 'discord.js';
 import { Handlers } from '../lib/managers/HandlerManager';
 import { Listener } from '../lib/structures/Listener';
 import { Logger } from '../lib/util/logger/Logger';
