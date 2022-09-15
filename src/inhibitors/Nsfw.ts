@@ -1,10 +1,11 @@
 import { Inhibitor } from './Inhibitor';
 import type { CommandContext } from '../lib/structures/contexts/CommandContext';
 import type { ComponentContext } from '../lib/structures/contexts/ComponentContext';
+import { ChannelType } from 'discord.js';
 
 export class Nsfw extends Inhibitor {
 	run(ctx: CommandContext | ComponentContext): boolean | any {
-		if (!ctx.inGuild() || ctx.channel.type !== 'GUILD_TEXT') return;
+		if (!ctx.inGuild() || ctx.channel.type !== ChannelType.GuildText) return;
 
 		if (!ctx.channel.nsfw) {
 			return ctx.reply({

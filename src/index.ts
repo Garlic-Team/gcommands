@@ -48,8 +48,20 @@ export * from './lib/util/Util';
 
 // Re-exports
 export {
-	MessageEmbed,
-	MessageActionRow,
-	MessageButton,
-	MessageSelectMenu,
+	/**
+	 * @deprecated Import from djs instead of gcommands
+	 */
+	EmbedBuilder as MessageEmbed,
+	/**
+	 * @deprecated Import from djs instead of gcommands
+	 */
+	ActionRowBuilder as MessageActionRow,
+	/**
+	 * @deprecated Import from djs instead of gcommands
+	 */
+	ButtonBuilder as MessageButton,
+	/**
+	 * @deprecated Import from djs instead of gcommands
+	 */
+	SelectMenuBuilder as MessageSelectMenu,
 } from 'discord.js';
