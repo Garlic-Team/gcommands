@@ -37,7 +37,7 @@ const pullRequest = await octokit.pulls.create({
 	owner: OWNER,
 	repo: REPOSITORY,
 	maintainer_can_modify: true,
-	title: `chore(release): ${packageJson.version} 🎉`,
+	title: `chore(Release): ${packageJson.version} 🎉`,
 	body: pullRequestBody.join('\n'),
 });
 
