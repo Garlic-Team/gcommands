@@ -5,7 +5,7 @@ import {
 	Guild,
 	Message,
 	MessagePayload,
-	ReplyMessageOptions,
+	MessageReplyOptions,
 	SelectMenuInteraction,
 	TextChannel,
 	User,
@@ -228,7 +228,7 @@ export async function MessageCommandHandler(
 		fetchReply: async () => replied,
 		followUp: message.reply.bind(message),
 		// @ts-expect-error This will not be fixed (typings for interaction are more important)
-		reply: async (options: string | MessagePayload | ReplyMessageOptions) => {
+		reply: async (options: string | MessagePayload | MessageReplyOptions) => {
 			const msg = await message.reply(options);
 			replied = msg;
 			return msg;
