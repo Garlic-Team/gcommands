@@ -2,7 +2,6 @@
 import {
 	Client,
 	CommandInteractionOption,
-	ApplicationCommandType,
 	ApplicationCommandOptionType,
 } from 'discord.js';
 import { Logger } from './logger/Logger';
