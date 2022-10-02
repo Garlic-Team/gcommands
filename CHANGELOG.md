@@ -1,3 +1,18 @@
+# [10.0.0](https://github.com/Garlic-Team/GCommands/compare/9.3.0...10.0.0) (2022-10-02)
+
+
+### Bug Fixes
+
+* dont import InteractionType as type ([716cabd](https://github.com/Garlic-Team/GCommands/commit/716cabd573457b0d0bfb3ab6fefb8e0902a3dce0))
+* make .husky/* executable ([8386336](https://github.com/Garlic-Team/GCommands/commit/83863361445a141f4a77a7ee3dcd4a2ac5d9fa91))
+
+
+### Features
+
+* support for djs v14 ([78aba15](https://github.com/Garlic-Team/GCommands/commit/78aba151dfe9e24c8c094769107749cf6667cd95))
+
+
+
 # [9.3.0](https://github.com/Garlic-Team/GCommands/compare/9.2.0...9.3.0) (2022-07-27)
 
 
