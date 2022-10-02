@@ -47,7 +47,7 @@ jobs:
           npm run changelog
 
           git add --all .
-          git commit -m "chore(release): ${{ steps.get_version.outputs.version }} 🎉" -m "Build ran for ${GITHUB_SHA}"
+          git commit -m "chore(release): ${{ steps.get_version.outputs.version }} 🎉"
           git push -u origin "chore/release/${{ steps.get_version.outputs.version }}"
 
       - name: Create Pull Request
