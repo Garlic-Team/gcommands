@@ -17,7 +17,7 @@ export class ClientPermissions extends Inhibitor {
 
 	run(ctx: CommandContext | ComponentContext): boolean | any {
 		if (!ctx.inGuild()) return;
-		if (!ctx.guild.me.permissions.has(this.permissions)) {
+		if (!ctx.guild.members.me.permissions.has(this.permissions)) {
 			return ctx.reply({
 				content:
 					this.resolveMessage(ctx) ||

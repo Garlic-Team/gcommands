@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
-import type {
+import {
 	Client,
 	CommandInteractionOption,
 	ApplicationCommandType,
+	ApplicationCommandOptionType,
 } from 'discord.js';
 import { Logger } from './logger/Logger';
 import type { GClient } from '../GClient';
@@ -64,17 +65,15 @@ export class Util extends null {
 
 	/**
 	 * Check if the type is a sub command or sub command group
-	 * @param {ApplicationCommandType} type The type to check
+	 * @param {ApplicationCommandOptionType} type The type to check
 	 * @deprecated We don't support arguments in object/array. Use [CommandInteractionOptionResolveer](https://discord.js.org/#/docs/discord.js/stable/class/CommandInteractionOptionResolver)
 	 * @returns {boolean}
 	 */
-	static checkIfSubOrGroup(type: ApplicationCommandType): boolean {
+	static checkIfSubOrGroup(type: ApplicationCommandOptionType): boolean {
 		// Why? Because discord.js v14 (:
 		return !![
-			'SUB_COMMAND',
-			'SUB_COMMAND_GROUP',
-			'Subcommand',
-			'SubcommandGroup',
+			ApplicationCommandOptionType.Subcommand,
+			ApplicationCommandOptionType.SubcommandGroup,
 		].includes(type);
 	}
 

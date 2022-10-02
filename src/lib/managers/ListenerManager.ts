@@ -1,4 +1,4 @@
-import { ClientEvents, Collection, WSEventType } from 'discord.js';
+import { ClientEvents, Collection, GatewayDispatchEvents } from 'discord.js';
 import { Plugins } from './PluginManager';
 import type { GClient } from '../GClient';
 import { Listener } from '../structures/Listener';
@@ -42,7 +42,7 @@ export class ListenerManager extends Collection<string, Listener> {
 				if (maxListeners !== 0) this.client.setMaxListeners(maxListeners - 1);
 
 				listener.ws
-					? this.client.ws.off(listener.event as WSEventType, listener._run)
+					? this.client.ws.off(listener.event as GatewayDispatchEvents, listener._run)
 					: this.client.off(
 							listener.event as keyof ClientEvents,
 							listener._run,

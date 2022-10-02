@@ -1,8 +1,9 @@
 import {
 	ButtonInteraction,
-	MessageActionRow,
-	MessageButton,
-	MessageButtonStyle,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	ComponentType,
 } from 'discord.js';
 import { customId } from './customId';
 import type { CommandContext } from '../lib/structures/contexts/CommandContext';
@@ -14,7 +15,7 @@ export interface ConfirmOptions {
 	ephemeral?: boolean;
 	button?: {
 		label?: string;
-		style?: MessageButtonStyle;
+		style?: ButtonStyle;
 		emoji?: string;
 	};
 }
@@ -24,10 +25,10 @@ export async function confirm(
 	options: ConfirmOptions = {},
 ) {
 	const id = customId('confirm', ctx.userId);
-	const button = new MessageButton()
+	const button = new ButtonBuilder()
 		.setCustomId(id)
 		.setLabel('Confirm')
-		.setStyle('DANGER');
+		.setStyle(ButtonStyle.Danger);
 
 	if (typeof options.button?.label === 'string')
 		button.setLabel(options.button.label);
@@ -36,7 +37,7 @@ export async function confirm(
 	if (typeof options.button?.emoji === 'string')
 		button.setEmoji(options.button.emoji);
 
-	const row = new MessageActionRow().addComponents([button]);
+	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 
 	const messageContent = {
 		content:
@@ -58,7 +59,7 @@ export async function confirm(
 		?.awaitMessageComponent({
 			filter,
 			time: options.time || 10000,
-			componentType: 'BUTTON',
+			componentType: ComponentType.Button,
 		})
 		?.catch(() => undefined);
 

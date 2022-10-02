@@ -29,7 +29,7 @@ export class ClientRoles extends Inhibitor {
 		if (dynamicRoles) this.ids = dynamicRoles;
 
 		if (
-			!ctx.guild.me.roles.cache[this.requireAll ? 'hasAll' : 'hasAny'](
+			!ctx.guild.members.me.roles.cache[this.requireAll ? 'hasAll' : 'hasAny'](
 				...this.ids,
 			)
 		) {

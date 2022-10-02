@@ -2,7 +2,7 @@ import type {
 	AutocompleteInteraction,
 	Collection,
 	CommandInteraction,
-	ContextMenuInteraction,
+	ContextMenuCommandInteraction,
 	Message,
 	MessageComponentInteraction,
 	ModalSubmitInteraction,
@@ -17,7 +17,7 @@ import type { Component } from '../structures/Component';
 
 export class HandlerManager {
 	public interactionCommandHandler: (
-		interaction: CommandInteraction | ContextMenuInteraction,
+		interaction: CommandInteraction | ContextMenuCommandInteraction,
 	) => any;
 	public messageCommandHandler: (
 		message: Message,
@@ -43,7 +43,7 @@ export class HandlerManager {
 	}
 
 	public setInteractionCommandHandler(
-		handler: (interaction: CommandInteraction | ContextMenuInteraction) => any,
+		handler: (interaction: CommandInteraction | ContextMenuCommandInteraction) => any,
 	): HandlerManager {
 		this.interactionCommandHandler = handler;
 

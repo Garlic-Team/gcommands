@@ -1,12 +1,12 @@
-import { MessageAttachment } from 'discord.js';
+import { Attachment } from 'discord.js';
 import { MessageArgumentTypeBase } from './base';
 import { Argument, ArgumentType } from '../Argument';
 
 export class AttachmentType extends MessageArgumentTypeBase {
 	value;
 
-	validate(attachment: string | MessageAttachment) {
-		if (attachment instanceof MessageAttachment) {
+	validate(attachment: string |  Attachment) {
+		if (attachment instanceof Attachment) {
 			this.value = attachment;
 			return true;
 		}

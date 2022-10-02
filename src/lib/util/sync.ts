@@ -1,6 +1,6 @@
 import { setTimeout } from 'node:timers';
 import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
+import { Routes } from 'discord.js';
 import { Logger } from './logger/Logger';
 import type { GClient } from '../GClient';
 import { Commands } from '../managers/CommandManager';

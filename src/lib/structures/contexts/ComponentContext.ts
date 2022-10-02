@@ -6,7 +6,7 @@ import type {
 	InteractionReplyOptions,
 	MessageComponentInteraction,
 	MessagePayload,
-	ModalSubmitFieldsResolver,
+	ModalSubmitFields,
 	ModalSubmitInteraction,
 	WebhookEditMessageOptions,
 } from 'discord.js';
@@ -21,7 +21,7 @@ export interface ComponentContextOptions<Cached extends CacheType = CacheType>
 	customId: string;
 	arguments: Array<string>;
 	values?: Array<string>;
-	fields?: ModalSubmitFieldsResolver;
+	fields?: ModalSubmitFields;
 	deferReply: <Fetch extends boolean = boolean>(
 		options?: InteractionDeferReplyOptions & { fetchReply?: Fetch },
 	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
@@ -55,7 +55,7 @@ export class ComponentContext<
 	public readonly customId: string;
 	public arguments: Array<string>;
 	public values?: Array<string>;
-	public fields?: ModalSubmitFieldsResolver;
+	public fields?: ModalSubmitFields;
 	public deferred = false;
 	public replied = false;
 	public deferReply: <Fetch extends boolean = boolean>(

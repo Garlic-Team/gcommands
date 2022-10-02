@@ -1,7 +1,6 @@
-import type { ApplicationCommandOptionType } from 'discord-api-types/v9';
+import { ApplicationCommandOptionType, Locale, LocaleString } from 'discord.js';
 import { z } from 'zod';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
-import { Locale, LocaleString } from '../util/common';
 import { Logger } from '../util/logger/Logger';
 import { commandAndOptionNameRegexp } from '../util/regexes';
 
