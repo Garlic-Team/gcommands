@@ -40,6 +40,7 @@ export interface CommandOptions {
 	type: Array<CommandType | keyof typeof CommandType>;
 	defaultMemberPermissions?: PermissionResolvable;
 	dmPermission?: boolean;
+	nsfw?: boolean;
 	arguments?: Array<Argument | ArgumentOptions>;
 	inhibitors?: CommandInhibitors;
 	guildId?: string;
@@ -89,6 +90,7 @@ const validationSchema = z
 			.nonempty(),
 		defaultMemberPermissions: z.any().optional(),
 		dmPermission: z.boolean().optional(),
+		nsfw: z.boolean().optional(),
 		arguments: z.any().array().optional(),
 		inhibitors: z.any().array().optional().default([]),
 		guildId: z.string().optional(),
@@ -116,6 +118,7 @@ export class Command {
 	public type: Array<CommandType | keyof typeof CommandType>;
 	public defaultMemberPermissions?: PermissionResolvable;
 	public dmPermission?: boolean;
+	public nsfw?: boolean;
 	public arguments?: Array<Argument>;
 	public inhibitors: CommandInhibitors;
 	public options: Partial<CommandOptions>;
@@ -149,6 +152,7 @@ export class Command {
 					Command.defaults?.defaultMemberPermissions;
 				this.dmPermission =
 					options.dmPermission ?? Command.defaults?.dmPermission;
+				this.nsfw = options.nsfw ?? Command.defaults?.nsfw;
 				this.arguments = options.arguments?.map(argument => {
 					if (argument instanceof Argument) return argument;
 					else return new Argument(argument);
@@ -219,6 +223,7 @@ export class Command {
 						description: this.description,
 						description_localizations: this.descriptionLocalizations,
 						dm_permission: this.dmPermission,
+						nsfw: this.nsfw,
 						default_member_permissions: this.defaultMemberPermissions
 							? new PermissionsBitField(
 									this.defaultMemberPermissions,
