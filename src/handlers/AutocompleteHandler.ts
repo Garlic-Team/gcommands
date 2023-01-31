@@ -31,6 +31,7 @@ export async function AutocompleteHandler(
 	const ctx = new AutocompleteContext(client, {
 		interaction: interaction,
 		channel: interaction.channel,
+		channelId: interaction.channelId,
 		createdAt: interaction.createdAt,
 		createdTimestamp: interaction.createdTimestamp,
 		guild: interaction.guild,

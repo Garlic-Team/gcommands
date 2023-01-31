@@ -23,6 +23,7 @@ export interface ContextOptions<Cached extends CacheType = CacheType> {
 		GuildTextBasedChannel | null,
 		TextBasedChannel | null
 	>;
+	channelId: Snowflake;
 	createdAt: Date;
 	createdTimestamp: number;
 	guild: CacheTypeReducer<Cached, Guild, null>;
@@ -42,7 +43,7 @@ export class Context<Cached extends CacheType = CacheType> {
 		GuildTextBasedChannel | null,
 		TextBasedChannel | null
 	>;
-	public channelId: Snowflake | null;
+	public channelId: Snowflake;
 	public readonly createdAt: Date;
 	public readonly createdTimestamp: number;
 	public readonly guild: CacheTypeReducer<Cached, Guild, null>;
@@ -54,13 +55,16 @@ export class Context<Cached extends CacheType = CacheType> {
 	>;
 	public user: User;
 	public userId: Snowflake;
-	public memberPermissions: CacheTypeReducer<Cached, Readonly<PermissionsBitField>>;
+	public memberPermissions: CacheTypeReducer<
+		Cached,
+		Readonly<PermissionsBitField>
+	>;
 	public type: 'COMMAND' | 'BUTTON' | 'SELECT_MENU' | 'AUTOCOMPLETE';
 
 	constructor(client: GClient, options: ContextOptions<Cached>) {
 		this.client = client;
 		this.channel = options.channel;
-		this.channelId = options.channel.id;
+		this.channelId = options.channelId;
 		this.createdAt = options.createdAt;
 		this.createdTimestamp = options.createdTimestamp;
 		this.guild = options.guild;

@@ -50,6 +50,7 @@ export async function InteractionCommandHandler(
 	const ctx = new CommandContext(client, {
 		interaction: interaction,
 		channel: interaction.channel,
+		channelId: interaction.channelId,
 		createdAt: interaction.createdAt,
 		createdTimestamp: interaction.createdTimestamp,
 		guild: interaction.guild,

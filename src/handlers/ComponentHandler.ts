@@ -60,6 +60,7 @@ export async function ComponentHandler(
 	const ctx = new ComponentContext(client, {
 		interaction: interaction,
 		channel: interaction.channel,
+		channelId: interaction.channelId,
 		createdAt: interaction.createdAt,
 		createdTimestamp: interaction.createdTimestamp,
 		guild: interaction.guild,

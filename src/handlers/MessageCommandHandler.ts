@@ -206,6 +206,7 @@ export async function MessageCommandHandler(
 		message: message,
 		// @ts-expect-error Idk what this is
 		channel: message.channel,
+		channelId: message.channelId,
 		createdAt: message.createdAt,
 		createdTimestamp: message.createdTimestamp,
 		guild: message.guild,
