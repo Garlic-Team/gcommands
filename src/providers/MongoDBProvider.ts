@@ -10,12 +10,36 @@ import {
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 import { Logger } from '../lib/util/logger/Logger';
 
+/**
+ * The class that represents the MongoDB provider.
+ * @extends {Provider}
+ */
 export class MongoDBProvider extends Provider {
-	uri: string;
-	dbName?: string | undefined;
-	client: MongoClient;
-	db: Db | null;
-	type: ProviderTypes;
+	/**
+	 * MongoDB connection uri
+	 * @type {string}
+	 */
+	public uri: string;
+	/**
+	 * MongoDB database name
+	 * @type {?string}
+	 */
+	public dbName?: string | undefined;
+	/**
+	 * MongoDB client
+	 * @type {MongoClient}
+	 */
+	public client: MongoClient;
+	/**
+	 * MongoDB database
+	 * @type {?Db}
+	 */
+	public db: Db | null;
+	/**
+	 * The type of the provider.
+	 * @type {ProviderTypes}
+	 */
+	public type: ProviderTypes;
 
 	constructor(uri: string, dbName?: string) {
 		super();
@@ -28,6 +52,9 @@ export class MongoDBProvider extends Provider {
 		this.db = null;
 	}
 
+	/**
+	 * The method that initializes the provider.
+	 */
 	async init(): Promise<void> {
 		await this.client
 			.connect()
@@ -46,6 +73,12 @@ export class MongoDBProvider extends Provider {
 			});
 	}
 
+	/**
+	 * The method that create a new collection.
+	 * @param {String} collectionName The collection name to create document into.
+	 * @param {Document} document The document to create.
+	 * @returns {any}
+	 */
 	async insert(collectionName: string, document: Document) {
 		const collection = this.db?.collection(collectionName);
 		const data = await collection?.insertOne(document);
@@ -53,6 +86,13 @@ export class MongoDBProvider extends Provider {
 		return data;
 	}
 
+	/**
+	 * The method that return an existing document.
+	 * @param {String} collectionName The collection name to search document into.
+	 * @param {Filter<Document>} filter The filter to search document.
+	 * @param {FindOptions<Document>} options The options to search document.
+	 * @returns {Promise<WithId<Document>>}
+	 */
 	async get(
 		collectionName: string,
 		filter: Filter<Document>,
@@ -66,6 +106,13 @@ export class MongoDBProvider extends Provider {
 		return data;
 	}
 
+	/**
+	 * The method that return an existing documents.
+	 * @param {String} collectionName The collection name to search documents into.
+	 * @param {Filter<Document>} filter The filter to search documents.
+	 * @param {FindOptions<Document>} options The options to search documents.
+	 * @returns {Promise<FindCursor<WithId<Document>>>}
+	 */
 	async getMany(
 		collectionName: string,
 		filter: Filter<Document>,
@@ -79,6 +126,14 @@ export class MongoDBProvider extends Provider {
 		return data;
 	}
 
+	/**
+	 * The method that update an existing document.
+	 * @param {String} collectionName The collection name to update document into.
+	 * @param {Filter<Document> }filter The filter to update document.
+	 * @param {UpdateFilter<Document>} set New options for document.
+	 * @param {UpdateOptions} options The options to update document.
+	 * @returns {Promise<UpdateResult>}
+	 */
 	async update(
 		collectionName: string,
 		filter: Filter<Document>,
@@ -93,6 +148,12 @@ export class MongoDBProvider extends Provider {
 		return data;
 	}
 
+	/**
+	 * The method that deletes an existing documents.
+	 * @param {String} collectionName The collection name to delete documents into.
+	 * @param {Filter<Document>} filter The filter to delete document.
+	 * @returns {Promise<DeleteResult>}
+	 */
 	async delete(collectionName: string, filter: Filter<Document>) {
 		const collection = this.db?.collection(collectionName);
 		const data = await collection?.deleteOne(filter);
