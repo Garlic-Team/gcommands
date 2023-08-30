@@ -77,7 +77,7 @@
 		"keyv": "4.5.2",
 		"lint-staged": "13.0.3",
 		"lru-cache": "7.14.1",
-		"mongodb": "4.14.0",
+		"mongodb": "4.17.0",
 		"prettier": "2.8.8",
 		"typedoc": "0.23.25",
 		"typedoc-plugin-djs-links": "1.2.0",
