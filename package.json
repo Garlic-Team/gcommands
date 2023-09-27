@@ -58,7 +58,7 @@
 		"@commitlint/config-angular": "17.6.5",
 		"@discordjs/ts-docgen": "0.4.1",
 		"@gcommands/plugin-language": "1.0.5",
-		"@google-cloud/firestore": "6.4.2",
+		"@google-cloud/firestore": "6.8.0",
 		"@octokit/action": "4.0.10",
 		"@prisma/client": "4.10.1",
 		"@types/keyv": "3.1.4",
