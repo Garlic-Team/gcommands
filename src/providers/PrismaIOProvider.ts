@@ -1,3 +1,4 @@
+// @ts-ignore
 import { PrismaClient } from '@prisma/client';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 import { Logger } from '../lib/util/logger/Logger';
