@@ -121,7 +121,7 @@ jobs:
           echo ::set-output name=version::$variable
 
       - name: Publish a NPM package
-        run: pnpm publish --tag latest
+        run: npm publish --tag latest
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 

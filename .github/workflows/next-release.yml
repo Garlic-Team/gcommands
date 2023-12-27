@@ -74,6 +74,6 @@ jobs:
           TAG=$([[ '${{ github.event.inputs.prNumber }}' == '' ]] && echo 'next' || echo 'pr-${{ github.event.inputs.prNumber }}')
 
           npm version --git-tag-version=false $(jq --raw-output '.version' package.json)${TAG}.$(date +%s)
-          pnpm publish --tag ${TAG} || true
+          npm publish --tag ${TAG} || true
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
