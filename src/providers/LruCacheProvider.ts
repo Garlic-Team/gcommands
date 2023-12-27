@@ -3,7 +3,9 @@ import { Provider, ProviderTypes } from '../lib/structures/Provider';
 import { Logger } from '../lib/util/logger/Logger';
 
 export class LruCacheProvider<
+	// eslint-disable-next-line @typescript-eslint/ban-types
 	K extends {},
+	// eslint-disable-next-line @typescript-eslint/ban-types
 	V extends {},
 	FC = unknown,
 > extends Provider {
