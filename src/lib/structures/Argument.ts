@@ -1,4 +1,9 @@
-import { ApplicationCommandOptionType, Locale, LocaleString } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	Locale,
+	LocaleString,
+	ChannelType as DjsChannelType,
+} from 'discord.js';
 import { z } from 'zod';
 import type { AutocompleteContext } from './contexts/AutocompleteContext';
 import { Logger } from '../util/logger/Logger';
@@ -28,6 +33,8 @@ export enum ChannelType {
 	'GUILD_PUBLIC_THREAD' = 11,
 	'GUILD_PRIVATE_THREAD' = 12,
 	'GUILD_STAGE_VOICE' = 13,
+	'GUILD_FORUM' = 15,
+	'GUILD_MEDIA' = 16,
 }
 
 export interface ArgumentChoice {
@@ -54,7 +61,7 @@ export interface ArgumentOptions {
 	 * @link https://garlic-team.js.org/docs/#/docs/gcommands/next/typedef/ArgumentOptions
 	 */
 	options?: Array<Argument | ArgumentOptions>;
-	channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
+	channelTypes?: Array<ChannelType | keyof typeof ChannelType | DjsChannelType>;
 	minValue?: number;
 	maxValue?: number;
 	minLength?: number;
@@ -120,7 +127,11 @@ const validationSchema = z
 		options: z.any().array().optional(),
 		arguments: z.any().array().optional(),
 		channelTypes: z
-			.union([z.string(), z.nativeEnum(ChannelType)])
+			.union([
+				z.string(),
+				z.nativeEnum(ChannelType),
+				z.nativeEnum(DjsChannelType),
+			])
 			.transform(arg =>
 				typeof arg === 'string' && Object.keys(ChannelType).includes(arg)
 					? ChannelType[arg]
@@ -150,7 +161,9 @@ export class Argument {
 	 * @link https://garlic-team.js.org/docs/#/docs/gcommands/next/typedef/ArgumentOptions
 	 */
 	public options?: Array<Argument>;
-	public channelTypes?: Array<ChannelType | keyof typeof ChannelType>;
+	public channelTypes?: Array<
+		ChannelType | keyof typeof ChannelType | DjsChannelType
+	>;
 	public minValue?: number;
 	public maxValue?: number;
 	public minLength?: number;

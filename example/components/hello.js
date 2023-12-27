@@ -1,14 +1,14 @@
-const {Component, ComponentType} = require('../../dist');
+const { Component, ComponentType } = require('../../dist');
 
 new Component({
 	name: 'hello',
 	type: [ComponentType.BUTTON],
-	run: (ctx) => {
-		return ctx.reply(`Hello again ${ctx.username}!`);
-	}
+	run: ctx => {
+		return ctx.reply(`Hello again ${ctx.user.username}!`);
+	},
 });
 
-new class extends Component {
+new (class extends Component {
 	constructor() {
 		super({
 			name: 'hello',
@@ -17,6 +17,6 @@ new class extends Component {
 	}
 
 	run(ctx) {
-		return ctx.reply(`Hello again ${ctx.username}!`);
+		return ctx.reply(`Hello again ${ctx.user.username}!`);
 	}
-};
+})();

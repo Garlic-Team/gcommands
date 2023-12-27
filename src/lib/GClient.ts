@@ -3,6 +3,7 @@ import {
 	Awaitable,
 	Client,
 	ClientOptions,
+	IntentsBitField,
 	Message,
 	Snowflake,
 } from 'discord.js';
@@ -135,7 +136,9 @@ export class GClient<Ready extends boolean = boolean> extends Client<Ready> {
 	 * Object of all provided options.
 	 * @see {@link GClientOptions}
 	 */
-	public declare options: GClientOptions;
+	public declare options: Omit<GClientOptions, 'intents'> & {
+		intents: IntentsBitField;
+	};
 
 	constructor(options: GClientOptions) {
 		super(options);

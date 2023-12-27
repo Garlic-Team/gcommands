@@ -1,7 +1,7 @@
 // const {GClient} = require('gcommands')!
 require('dotenv').config();
-const {GClient, Plugins, Logger} = require('../dist');
-const {Intents} = require('discord.js');
+const { GClient, Plugins, Logger } = require('../dist');
+const { IntentsBitField } = require('discord.js');
 const path = require('path');
 
 // Search for plugins in node_modules (folder names starting with gcommands-plugin- or @gcommands/plugin-) or plugins folder
@@ -14,11 +14,11 @@ const client = new GClient({
 	dirs: [
 		path.join(__dirname, 'commands'),
 		path.join(__dirname, 'components'),
-		path.join(__dirname, 'listeners')
+		path.join(__dirname, 'listeners'),
 	],
 	messagePrefix: '!',
 	devGuildId: process.env.DEV_SERVER,
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+	intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages],
 });
 
 // See commands/introduce.js (new syntax)
