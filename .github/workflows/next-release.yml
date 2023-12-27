@@ -27,10 +27,10 @@ jobs:
           repository: ${{ github.event.inputs.repository || 'Garlic-Team/GCommands' }}
           ref: ${{ github.event.inputs.ref || 'next' }}
 
-      - name: Install Node v16
+      - name: Install Node v20
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
