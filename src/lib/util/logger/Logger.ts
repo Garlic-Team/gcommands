@@ -129,6 +129,7 @@ export interface LoggerEvents {
 }
 /* eslint-enable max-len */
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface ILogger {
 	on<U extends keyof LoggerEvents>(event: U, listener: LoggerEvents[U]): this;
 
@@ -223,6 +224,7 @@ export type LogMethods =
 	| 'timeEnd'
 	| 'error';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class ILogger extends EventEmitter {
 	public TRACE: LogLevel.TRACE;
 	public DEBUG: LogLevel.DEBUG;

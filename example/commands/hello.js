@@ -1,22 +1,29 @@
-const {Command, CommandType, MessageActionRow, MessageButton, CustomId} = require('../../dist');
+const { ButtonStyle } = require('discord.js');
+const {
+	Command,
+	CommandType,
+	MessageActionRow,
+	MessageButton,
+	customId,
+} = require('../../dist');
 
 new Command({
 	name: 'hello',
 	description: 'Says hello!',
 	type: [CommandType.SLASH, CommandType.MESSAGE],
-	run: (ctx) => {
+	run: ctx => {
 		const row = new MessageActionRow().addComponents([
 			new MessageButton()
-				.setCustomId(CustomId('hello', ctx.userId))
+				.setCustomId(customId('hello', ctx.userId))
 				.setLabel('Click me!')
-				.setStyle('SUCCESS')
+				.setStyle(ButtonStyle.Success),
 		]);
 
-		return ctx.reply({content: `Hello ${ctx.username}!`, components: [row]});
-	}
+		return ctx.reply({ content: `Hello ${ctx.username}!`, components: [row] });
+	},
 });
 
-new class extends Command {
+new (class extends Command {
 	constructor() {
 		super({
 			name: 'hello',
@@ -28,11 +35,11 @@ new class extends Command {
 	run(ctx) {
 		const row = new MessageActionRow().addComponents([
 			new MessageButton()
-				.setCustomId(CustomId('hello', ctx.userId))
+				.setCustomId(customId('hello', ctx.userId))
 				.setLabel('Click me!')
-				.setStyle('SUCCESS')
+				.setStyle(ButtonStyle.Success),
 		]);
 
-		return ctx.reply({content: `Hello ${ctx.username}!`, components: [row]});
+		return ctx.reply({ content: `Hello ${ctx.username}!`, components: [row] });
 	}
-};
+})();

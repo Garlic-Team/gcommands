@@ -8,7 +8,7 @@ import type {
 	MessagePayload,
 	ModalSubmitFields,
 	ModalSubmitInteraction,
-	WebhookEditMessageOptions,
+	WebhookMessageEditOptions,
 } from 'discord.js';
 import { Context, ContextOptions } from './Context';
 import type { GClient } from '../../GClient';
@@ -30,7 +30,7 @@ export interface ComponentContextOptions<Cached extends CacheType = CacheType>
 	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
 	deleteReply: () => Promise<void>;
 	editReply: (
-		options: string | MessagePayload | WebhookEditMessageOptions,
+		options: string | MessagePayload | WebhookMessageEditOptions,
 	) => Promise<GuildCacheMessage<Cached>>;
 	fetchReply: () => Promise<GuildCacheMessage<Cached>>;
 	followUp: (
@@ -66,7 +66,7 @@ export class ComponentContext<
 	) => Promise<Fetch extends true ? GuildCacheMessage<Cached> : void>;
 	public deleteReply: () => Promise<void>;
 	public editReply: (
-		options: string | MessagePayload | WebhookEditMessageOptions,
+		options: string | MessagePayload | WebhookMessageEditOptions,
 	) => Promise<GuildCacheMessage<Cached>>;
 	public fetchReply: () => Promise<GuildCacheMessage<Cached>>;
 	public followUp: (

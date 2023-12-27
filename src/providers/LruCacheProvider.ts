@@ -1,16 +1,22 @@
-import LruCache from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { Provider, ProviderTypes } from '../lib/structures/Provider';
 import { Logger } from '../lib/util/logger/Logger';
 
-export class LruCacheProvider extends Provider {
-	client: LruCache<unknown, unknown>;
+export class LruCacheProvider<
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	K extends {},
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	V extends {},
+	FC = unknown,
+> extends Provider {
+	client: LRUCache<K, V, FC>;
 	type: ProviderTypes;
 
-	constructor(options: LruCache.Options<unknown, unknown>) {
+	constructor(options: LRUCache.Options<K, V, FC>) {
 		super();
 
 		this.type = 'lrucache';
-		this.client = new LruCache(options);
+		this.client = new LRUCache(options);
 	}
 
 	async init(): Promise<void> {
@@ -18,28 +24,28 @@ export class LruCacheProvider extends Provider {
 		this.emit('connected', this.client);
 	}
 
-	async insert(key: string, value: any, maxAge?: number) {
-		const data = await this.update(key, value, maxAge);
+	insert(key: K, value: V, maxAge?: number) {
+		const data = this.update(key, value, maxAge);
 
 		return data;
 	}
 
-	async get(key: string) {
-		const data = await this.client.get(key);
+	get(key: K): V {
+		const data = this.client.get(key);
 
 		return data;
 	}
 
-	async update(key: string, value: any, maxAge?: number) {
-		const data = await this.client.set(key, value, {
+	update(key: K, value: V, maxAge?: number) {
+		const data = this.client.set(key, value, {
 			ttl: maxAge,
 		});
 
 		return data;
 	}
 
-	async delete(key: string) {
-		const data = await this.client.delete(key);
+	delete(key: K) {
+		const data = this.client.delete(key);
 
 		return data;
 	}

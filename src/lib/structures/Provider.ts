@@ -13,6 +13,7 @@ export interface ProviderEvents {
 	connected: (client?: any) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export declare interface Provider {
 	on<U extends keyof ProviderEvents>(
 		event: U,
@@ -32,6 +33,7 @@ export declare interface Provider {
 	delete(...args): Promise<any> | any;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Provider extends EventEmitter {
 	init() {
 		Util.throwError('Init method is not implemented!', this.constructor.name);

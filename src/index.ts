@@ -46,7 +46,11 @@ export * from './lib/util/registerDirectories';
 export * from './util/confirm';
 export * from './lib/util/Util';
 
-// Re-exports
+/**
+ * Re-exports
+ *
+ * @deprecated Import from djs instead of gcommands
+ */
 export {
 	/**
 	 * @deprecated Import from djs instead of gcommands
