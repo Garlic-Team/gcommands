@@ -54,8 +54,8 @@
 		"zod": "^3.19.1"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "17.6.5",
-		"@commitlint/config-angular": "17.6.5",
+		"@commitlint/cli": "17.8.1",
+		"@commitlint/config-angular": "17.8.1",
 		"@discordjs/ts-docgen": "0.4.1",
 		"@gcommands/plugin-language": "1.0.5",
 		"@google-cloud/firestore": "6.4.2",
