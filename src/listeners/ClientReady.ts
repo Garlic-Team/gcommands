@@ -5,7 +5,7 @@ import { Logger } from '../lib/util/logger/Logger';
 import { sync } from '../lib/util/sync';
 
 new Listener({
-	event: 'ready',
+	event: 'clientReady',
 	name: 'gcommands-ready',
 	run: async (client: Client<true>) => {
 		Logger.info('Client is ready with %s guild(s)', client.guilds.cache.size);
