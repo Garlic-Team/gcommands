@@ -1,3 +1,21 @@
+## [10.0.1](https://github.com/Garlic-Team/GCommands/compare/10.0.0...10.0.1) (2026-01-19)
+
+
+### Bug Fixes
+
+* **Context:** add channelId ([97a71ef](https://github.com/Garlic-Team/GCommands/commit/97a71ef52d44253b08614fd53f862aa7cb318c4a))
+* **deps:** update dependency zod to v3.22.3 [security] ([49ea986](https://github.com/Garlic-Team/GCommands/commit/49ea98623f0ea55844f39e7c783abe2bf2ea0787))
+* missing public ([88309b6](https://github.com/Garlic-Team/GCommands/commit/88309b63d4299bf19a07b27cbe42a75461984ae2))
+* replace deprecated ready event with clientReady ([4d1da87](https://github.com/Garlic-Team/GCommands/commit/4d1da87e51ec409ebb76c308479ed169f39e5b42))
+
+
+### Features
+
+* add nsfw commands support ([9c0fa7c](https://github.com/Garlic-Team/GCommands/commit/9c0fa7c89b6af50dd50d761fda700dfe0c8116f6))
+* logger jsdocs ([e0a937a](https://github.com/Garlic-Team/GCommands/commit/e0a937af5aa5aa914263db284c57f8f3a16224ee))
+
+
+
 # [10.0.0](https://github.com/Garlic-Team/GCommands/compare/9.3.0...10.0.0) (2022-10-02)
 
 
