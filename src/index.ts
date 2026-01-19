@@ -1,5 +1,5 @@
 // Listeners
-import './listeners/Ready';
+import './listeners/ClientReady';
 import './listeners/InteractionCommandHandler';
 import './listeners/MessageCommandHandler';
 import './listeners/ComponentHandler';
